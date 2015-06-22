@@ -1,0 +1,118 @@
+section#editor {
+	position fixed
+	top 0
+	left 0
+	height 100%
+	width ($editorWidth)%
+	color white
+	background-color rgb(36,36,36)
+	border-right 7px solid $primaryColor
+	box-sizing border-box
+	overflow-x scroll
+	transition left .5s ease
+	
+	section#sectionInner {
+		min-width 500px
+		color inherit
+		
+		div#editorBar {
+			background-color rgb(55,55,55)
+			height 40px
+			width 100%
+			line-height 40px
+			color inherit
+			
+			
+			div#brandName {
+				color inherit
+				height 100%
+				float left
+				font-size 1.25em
+				padding 0 10px
+				margin 0 10px
+				max-width 250px
+				overflow hidden
+				position relative
+				// background-color orange
+				
+				&.narrow:before {
+					content: ""
+					display block
+					position absolute
+					top 0
+					right 0
+					height 100%
+					width 30px
+					background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
+				}
+			}
+			
+			span.arrow {
+				color inherit
+				display inline-block
+				margin 0 4px
+				height 100%
+				float left
+			}
+			
+			div#projectName {
+				color inherit
+				height 100%
+				float left
+				font-size 1.25em
+				padding 0 10px
+				margin 0 10px
+				max-width 250px
+				overflow hidden
+				position relative
+				// background-color purple
+				
+				&.narrow:before {
+					content: ""
+					display block
+					position absolute
+					top 0
+					right 0
+					height 100%
+					width 30px
+					background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
+				}
+			}
+
+		}
+		
+		.btn {
+			background-color rgba(255,255,255,0)
+			cursor pointer
+			transition background-color .3s ease
+			
+			&:hover {
+				background-color rgba(255,255,255,.2)
+			}
+		}
+	}
+	
+
+	
+	&.hide {
+		left -100%
+	}
+	
+	@media screen and (max-width:1200px) {
+		section#sectionInner {
+			div#editorBar {
+				font-size 80%
+				div#brandName {
+
+				}
+				
+				div#projectName {
+
+				}
+
+			}
+		}
+	}
+
+
+}
