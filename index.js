@@ -4,9 +4,12 @@ var gulp = require("gulp");
 var Menu = require("menu");
 
 global.sharedObject = {
-  canQuit: false
+  canQuit: false,
+  menuStatus: {
+    devToolsOpen: false
+  }
 };
-
+var $$ = global.sharedObject;
 // ==== APP MENU ====
 var menuTemplate = [
   {
@@ -96,7 +99,7 @@ var menuTemplate = [
         accelerator: 'Shift+Command+E'
       },
       {
-        label: 'Updload (Release Manager)',
+        label: 'Upload (Release Manager)',
         type: "checkbox",
         checked: false,
         accelerator: 'Shift+Command+U'
@@ -293,9 +296,19 @@ var menuTemplate = [
         label: "Toggle Developer Tools",
         accelerator: "Alt+Command+J",
         click: function(){
-          mainWindow.toggleDevTools();
-          mainWindow.webContents.executeJavaScript("console.log(el('#preview').openDevTools());");
+          if($$.devToolsOpen){
+            mainWindow.webContents.executeJavaScript("el('#preview').closeDevTools();");
+            $$.devToolsOpen = false;
+          } else {
+            mainWindow.webContents.executeJavaScript("el('#preview').openDevTools();");
+            $$.devToolsOpen = true;
+          }  
         }
+      },
+      {
+        label: "* Electron Developer Tools",
+        accelerator: "Alt+Command+C",
+        click: function(){mainWindow.toggleDevTools();}
       }
     ]
   },
