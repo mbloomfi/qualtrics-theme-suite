@@ -1,6 +1,321 @@
 var app = require("app");
 var BrowserWindow = require("browser-window");
 var gulp = require("gulp");
+var Menu = require("menu");
+
+global.sharedObject = {
+  canQuit: false
+};
+
+// ==== APP MENU ====
+var menuTemplate = [
+  {
+    label: "QTS",
+    submenu: [
+      {
+        label: 'About QTS',
+        selector: 'orderFrontStandardAboutPanel:'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: "Preferences...",
+        accelerator: "Command+,"
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Hide Electron',
+        accelerator: 'Command+H',
+        selector: 'hide:'
+      },
+      {
+        label: 'Hide Others',
+        accelerator: 'Command+Shift+H',
+        selector: 'hideOtherApplications:'
+      },
+      {
+        label: 'Show All',
+        selector: 'unhideAllApplications:'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        selector: 'terminate:'
+      },
+    ]
+  },
+
+  {
+    label: "Project",
+    submenu: [
+      {
+        label: 'Recent Projects',
+        submenu: [
+          {
+            label:"underarmour (underarmour2 new)"
+          },
+          {
+            label:"ferrari (ferrari_SPA)"
+          },
+          {
+            label:"instagram (moments1)"
+          }
+        ]
+      },
+      {
+        label: 'Project Files',
+        submenu: [
+          {
+            label: "(empty)"
+          }
+        ]
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: 'Duplicate Project'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Project Mode',
+        enabled: false
+      },
+      {
+        label: 'Edit/Preview',
+        type: "checkbox",
+        checked: true,
+        accelerator: 'Shift+Command+E'
+      },
+      {
+        label: 'Updload (Release Manager)',
+        type: "checkbox",
+        checked: false,
+        accelerator: 'Shift+Command+U'
+      }
+    ]
+  },
+
+  {
+
+    label: "Edit",
+    submenu: [
+      {
+        label: 'Undo',
+        accelerator: 'Command+Z',
+        selector: 'undo:'
+      },
+      {
+        label: 'Redo',
+        accelerator: 'Shift+Command+Z',
+        selector: 'redo:'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Cut',
+        accelerator: 'Command+X',
+        selector: 'cut:'
+      },
+      {
+        label: 'Copy',
+        accelerator: 'Command+C',
+        selector: 'copy:'
+      },
+      {
+        label: 'Paste',
+        accelerator: 'Command+V',
+        selector: 'paste:'
+      },
+      {
+        label: 'Select All',
+        accelerator: 'Command+A',
+        selector: 'selectAll:'
+      }
+    ]
+  },
+
+  {
+    label: "Snippets",
+    submenu: [
+      {
+        label: 'Recent Snippets',
+        submenu: []
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: 'Snippets Library',
+        accelerator: "Shift+Command+S"
+      },
+      {
+        label: 'Key Bindings',
+        accelerator: "Shift+Command+K"
+      },
+    ]
+  },
+  {
+    label: "Preview",
+    submenu: [
+      {
+        label: 'Preview File',
+        submenu: [
+          {
+            label: "v4 Vertical",
+            type: "checkbox",
+            checked: true
+          },
+          {
+            
+            label: "v4 Horizontal",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            
+            label: "v4 Full",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            type: "separator"
+          },
+          {
+            label: "v3 Vertical",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            
+            label: "v3 Horizontal",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            
+            label: "v3 Full",
+            type: "checkbox",
+            checked: false
+          }
+        ]
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Preview Mode',
+        enabled: false
+      },
+      {
+        label: 'Regular',
+        accelerator: 'Command+0'
+      },
+      {
+        label: 'Mobile',
+        accelerator: 'Command+1'
+      },
+      {
+        label: 'Screenshot',
+        accelerator: 'Command+2'
+      },
+      {
+        label: 'Thumbnail',
+        accelerator: 'Command+3'
+      }
+    ]
+  },
+  {
+    label: "Window",
+    submenu: [
+      {
+        label: "Editor/Preview Size Ratio",
+        submenu: [
+          {
+            label: "Editor 20% | Preview 80%",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            label: "Editor 30% | Preview 70%",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            label: "Editor 40% | Preview 60%",
+            type: "checkbox",
+            checked: true
+          },
+          {
+            label: "Editor 50% | Preview 50%",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            label: "Editor 60% | Preview 40%",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            label: "Editor 70% | Preview 30%",
+            type: "checkbox",
+            checked: false
+          },
+          {
+            type: "separator"
+          },
+          {
+            label: "Select Previous",
+            accelerator: "Alt+Command+Up",
+            click: function(){ console.log("Smaller Editor, Bigger Preview"); }
+          },
+          {
+            label: "Select Next",
+            accelerator: "Alt+Command+Down",
+            click: function(){ console.log("Bigger Editor, Smaller Preview"); }
+          },
+
+        ]
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: "Toggle Developer Tools",
+        accelerator: "Alt+Command+J",
+        click: function(){
+          mainWindow.toggleDevTools();
+          mainWindow.webContents.executeJavaScript("console.log(el('#preview').openDevTools());");
+        }
+      }
+    ]
+  },
+  {
+    label: "Help",
+    submenu: [
+      {
+        label: 'Write'
+      }
+    ]
+  }
+    
+];
+
+var appMenu = Menu.buildFromTemplate(menuTemplate);
+
+
+
+
+
 
 // create global reference
 var mainWindow = null;
@@ -13,12 +328,16 @@ app.on('window-all-closed', function() {
 });
 
 app.on("ready", function(){
+ 
+  Menu.setApplicationMenu(appMenu);
+
+  console.log(appMenu.items[5].submenu.items[0]);
+
 	mainWindow = new BrowserWindow({width: 1600, height: 900});
 	mainWindow.loadUrl("file://"+__dirname+"/index.html");
 
-	global.sharedObject = {
-		canQuit: false
-	};
+  console.log("web contents: ", mainWindow.webContents);
+	
 	mainWindow.on('close', function(e) {
 		if(!global.sharedObject.canQuit){
 			e.preventDefault()
