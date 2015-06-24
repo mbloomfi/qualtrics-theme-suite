@@ -9,8 +9,8 @@ var stylus = require("gulp-stylus");
 var autoprefixer = require("gulp-autoprefixer");
 var uglify = require("gulp-uglify");
 
-// Files named with an underscore are the result of an compiled stylus or javascript. 
-// They are included into the final html view.
+// Files named with an underscore are the result of a compiled stylus or javascript task. 
+// They are included into the final html view. See (src > view > index.html).
 
 //HTML ==
 gulp.task("view", ["styles", "scripts"], function(){
