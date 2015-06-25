@@ -2,6 +2,7 @@ var app = require("app");
 var BrowserWindow = require("browser-window");
 var gulp = require("gulp");
 var Menu = require("menu");
+// var Preferences = require("./local/preferences.js");
 
 global.sharedObject = {
   canQuit: false,
@@ -9,6 +10,25 @@ global.sharedObject = {
     devToolsOpen: false
   }
 };
+
+var preferencesWindow = null;
+function openPreferences() {
+  preferencesWindow = new BrowserWindow({
+    "width": 800, 
+    "height": 500, 
+    "always-on-top": true,
+    "fullscreen": false,
+    "resizable": false,
+    frame: false
+  });
+  //  preferencesWindow.on("load", function(){
+    
+  // })
+  preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
+  preferencesWindow.toggleDevTools();
+}
+
+
 var $$ = global.sharedObject;
 // ==== APP MENU ====
 var menuTemplate = [
@@ -24,7 +44,13 @@ var menuTemplate = [
       },
       {
         label: "Preferences...",
-        accelerator: "Command+,"
+        accelerator: "Command+,",
+        click: function(){
+          // if not open, then open
+          openPreferences();
+
+          // if open, bring to front
+        }
       },
       {
         type: 'separator'
@@ -341,15 +367,13 @@ app.on('window-all-closed', function() {
 });
 
 app.on("ready", function(){
- 
-  Menu.setApplicationMenu(appMenu);
 
-  console.log(appMenu.items[5].submenu.items[0]);
+  // MAIN WINDOW
+  //==================
+  Menu.setApplicationMenu(appMenu);
 
 	mainWindow = new BrowserWindow({width: 1600, height: 900});
 	mainWindow.loadUrl("file://"+__dirname+"/index.html");
-
-  console.log("web contents: ", mainWindow.webContents);
 	
 	mainWindow.on('close', function(e) {
 		if(!global.sharedObject.canQuit){
@@ -366,14 +390,39 @@ app.on("ready", function(){
     // mainWindow = null;
   });
 
+  // PREFERENCES WINDOW
+  //===================
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //GULP TASKS
   gulp.task("reload", function(){
     mainWindow.reload();
+    preferencesWindow.reload();
   });
   gulp.task("watch", function(){
     gulp.watch("index.html",["reload"]);
   });
   gulp.tasks["watch"].fn();
 
-  console.log(__dirname);
+  // console.log(__dirname);
 });

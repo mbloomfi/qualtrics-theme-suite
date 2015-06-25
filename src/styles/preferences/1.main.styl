@@ -1,0 +1,92 @@
+$primaryColor = rgb(223,72,72)
+$primaryColor-r = red($primaryColor)
+$primaryColor-g = green($primaryColor)
+$primaryColor-b = blue($primaryColor)
+
+$font-stack = "Source Sans Pro", "Helvetica Neue"
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url(local/fonts/SourceSansPro-Regular.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: url(local/fonts/SourceSansPro-It.otf);
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  src: url(local/fonts/SourceSansPro-Bold.otf);
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 600;
+  src: url(local/fonts/SourceSansPro-BoldIt.otf);
+}
+
+html, section, body, p, h1, h2, div, span, input, textarea, label, a {
+  padding 0
+  margin 0
+  border none
+  outline none
+  font-size 100% 
+  text-decoration none
+  color rgb(70,70,70)
+  text-decoration none
+  font-weight normal
+  font-family $font-stack
+}
+
+html, body {
+  background rgb(255,255,255)
+  width 100%
+  height 100%
+  position: relative
+  overflow hidden
+}
+
+
+#top-bar {
+  height 30px
+  width 100%
+  position fixed
+  top 0
+  left 0
+  background-color rgb(210,210,210)
+  text-align center
+  line-height 30px
+  div.btn {
+    height 100%
+    width 50%
+    position absolute
+    top 0
+    background lime
+    &:first-child {
+      left 0
+      background-color rgb(223,72,72)
+    }
+    &:last-child {
+      right 0
+      background-color rgb(50,200,50)
+    }
+  }
+}
+
+#preferences-wrapper {
+  height 470px
+  width 100%
+  // background rgb(240,240,240)
+  background-color lime
+  position relative
+  top 40px
+  
+  
+}

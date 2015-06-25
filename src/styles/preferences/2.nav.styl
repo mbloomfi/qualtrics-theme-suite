@@ -1,0 +1,35 @@
+$primaryColor = rgb(223,72,72)
+
+nav#nav {
+	height 470px
+	width 25%
+	position absolute
+	top 0
+	left 0
+	background red
+	transition left .3s ease
+
+	div.nav_option {
+		height 20%
+		box-sizing border-box
+		background rgb(60,60,60)
+		color white
+		// line-height 120px
+		padding 0 0 0 20px
+		font-size 32px
+		text-transform uppercase
+		cursor pointer
+		transition background .25s ease, color .25s ease
+		&:first-child {
+			border-top none
+		}
+		&:hover {
+			background $primaryColor
+			// background white
+			// color rgb(60,60,60)
+		}
+		&.hide {
+			left -300px
+		}
+	}
+}
