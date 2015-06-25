@@ -8,24 +8,28 @@ global.sharedObject = {
   canQuit: false,
   menuStatus: {
     devToolsOpen: false
-  }
+  },
+  preferencesWindow: null
 };
 
-var preferencesWindow = null;
 function openPreferences() {
-  preferencesWindow = new BrowserWindow({
-    "width": 800, 
-    "height": 500, 
-    "always-on-top": true,
-    "fullscreen": false,
-    "resizable": false,
-    frame: false
-  });
-  //  preferencesWindow.on("load", function(){
-    
-  // })
-  preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
-  preferencesWindow.toggleDevTools();
+  if(global.sharedObject.preferencesWindow ===null){
+    global.sharedObject.preferencesWindow = new BrowserWindow({
+      "width": 800, 
+      "height": 486, 
+      "always-on-top": true,
+      "fullscreen": false,
+      "resizable": false,
+      frame: false
+    });
+
+    global.sharedObject.preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
+    // global.sharedObject.preferencesWindow.toggleDevTools();
+    global.sharedObject.preferencesWindow.on("close", function(){
+      console.log("closed prefs");
+      global.sharedObject.preferencesWindow = null;
+    })
+  } 
 }
 
 

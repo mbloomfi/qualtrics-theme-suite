@@ -5,6 +5,11 @@ $primaryColor-b = blue($primaryColor)
 
 $font-stack = "Source Sans Pro", "Helvetica Neue"
 
+$windowHeight = 530
+$barHeight = 30
+$navHeight = $windowHeight - $barHeight
+
+
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
@@ -51,42 +56,72 @@ html, body {
   height 100%
   position: relative
   overflow hidden
+  background-color rgb(120,120,120)
+  -webkit-user-select none
+  -webkit-app-region drag
+  
+}
+body {
+  background-color rgb(210,210,210)
+  box-sizing border-box
+  border-top 1px solid rgba(120,120,120,.5)
+  border-right 1px solid rgba(80,80,80,.5)
+  border-left 1px solid rgba(80,80,80,.5)
+  border-bottom 1px solid rgba(80,80,80,.5)
+  border-radius 5px
 }
 
-
-#top-bar {
-  height 30px
+#bottom-bar {
+  height ($barHeight)px
   width 100%
-  position fixed
-  top 0
+  position absolute
+  bottom 0
   left 0
   background-color rgb(210,210,210)
   text-align center
-  line-height 30px
+  line-height ($barHeight)px
+  transition bottom .3s ease
   div.btn {
+    -webkit-app-region: no-drag;
     height 100%
     width 50%
     position absolute
     top 0
-    background lime
+    color white
+    text-transform uppercase
+    cursor pointer
+    box-sizing border-box
+    transition background-color .25s ease
     &:first-child {
       left 0
       background-color rgb(223,72,72)
+      border-right 1px solid rgb(95,95,95)
+      &:hover {
+        background-color rgb(245,85,80)
+      }
     }
     &:last-child {
       right 0
-      background-color rgb(50,200,50)
+      background-color rgb(40,180,50)
+      // border-left 1px solid rgb(95,95,95)
+      &:hover {
+        background-color rgb(50,200,55)
+      }
     }
+
+  }
+  &.hide {
+    bottom -($barHeight * 2)px
   }
 }
 
 #preferences-wrapper {
-  height 470px
+  height ($navHeight)px
   width 100%
-  // background rgb(240,240,240)
-  background-color lime
+  background rgb(230,230,230)
+  // background-color lime
   position relative
-  top 40px
+  top 0
   
   
 }
