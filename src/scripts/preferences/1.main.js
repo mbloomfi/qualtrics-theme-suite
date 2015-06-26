@@ -78,9 +78,12 @@ panel.getPanelData = function() {
 
 panel.buildPanel = function(_newPanel) {
 	if(_newPanel === "QTS"){
-		return "QTS Prefs";
+		return el("+form#qtsForm").addClass("QTS").append(
+			el("+label").text("QTS Thing").append( el("+input") )
+		);
+
 	} else if(_newPanel === "files"){
-		var form = el("+form").addClass("files");
+		var form = el("+form#filesForm").addClass("files");
 		form.append( el("+label").text("Path To Brands").append( el("+input") ) );
 
 		// <select>
@@ -90,9 +93,11 @@ panel.buildPanel = function(_newPanel) {
 		// </select>
 		form.append( 
 			el("+label").text("Default Preview File").append( 
-				el("+select").append(
-					el.join(
-						[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full"), el("+option").text("V3-Vertical")]
+				el("+div").addClass("select_cont").append(	
+					el("+select").append(
+						el.join(
+							[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full"), el("+option").text("V3-Vertical")]
+						)
 					)
 				)
 			)
@@ -100,22 +105,23 @@ panel.buildPanel = function(_newPanel) {
 		form.append( el("+button").text("Manage Preview Files") );
 		return form;
 
-		return "files Prefs";
 	} else if(_newPanel === "snippets"){
-		return "snippets Prefs";
+		return el("+form#snippetsForm").addClass("snippets").append(
+			el("+label").text("Snippets Stuff").append( el("+input") )
+		);
 	} else if(_newPanel === "preview"){
-		return "preview Prefs";
+		return el("+form#previewForm").addClass("preview").append(
+			el("+label").text("Preview Stuff").append( el("+input") )
+		);
 	} else if(_newPanel === "window"){
-		return "window Prefs";
+		return el("+form#windowForm").addClass("window").append(
+			el("+label").text("Window Thing").append( el("+input") )
+		);
 	}
 }
 
 panel.setPanel = function(_newPanel) {
 	panel.purge().append(_newPanel);
 }
-
-
-
-
 
 
