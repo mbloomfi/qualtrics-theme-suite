@@ -37,15 +37,17 @@ $navHeight = $windowHeight - $barHeight
   src: url(local/fonts/SourceSansPro-BoldIt.otf);
 }
 
-html, section, body, p, h1, h2, div, span, input, textarea, label, a {
+html, section, body, p, h1, h2, div, span, input, textarea, label, a, button, select {
   padding 0
   margin 0
   border none
+  border-radius 0
   outline none
   font-size 100% 
   text-decoration none
   color rgb(70,70,70)
   text-decoration none
+  // appearance none // remove dropdown arrow for the "select" drop down element
   font-weight normal
   font-family $font-stack
 }

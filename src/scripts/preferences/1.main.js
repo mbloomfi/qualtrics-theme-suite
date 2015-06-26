@@ -80,6 +80,26 @@ panel.buildPanel = function(_newPanel) {
 	if(_newPanel === "QTS"){
 		return "QTS Prefs";
 	} else if(_newPanel === "files"){
+		var form = el("+form").addClass("files");
+		form.append( el("+label").text("Path To Brands").append( el("+input") ) );
+
+		// <select>
+		// 	<option value="" disabled="disabled" selected="selected">Please select a name</option>
+		// 	<option value="1">One</option>
+		// 	<option value="2">Two</option>
+		// </select>
+		form.append( 
+			el("+label").text("Default Preview File").append( 
+				el("+select").append(
+					el.join(
+						[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full"), el("+option").text("V3-Vertical")]
+					)
+				)
+			)
+		);
+		form.append( el("+button").text("Manage Preview Files") );
+		return form;
+
 		return "files Prefs";
 	} else if(_newPanel === "snippets"){
 		return "snippets Prefs";
@@ -91,7 +111,7 @@ panel.buildPanel = function(_newPanel) {
 }
 
 panel.setPanel = function(_newPanel) {
-	panel.purge().text(_newPanel);
+	panel.purge().append(_newPanel);
 }
 
 
