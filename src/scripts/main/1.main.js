@@ -18,3 +18,19 @@ el.on("load", function(){
 
 });
 
+var dimmer = {
+	on: function() {
+		var _dimmer = el("+div").addClass("dimmer");
+		el("body").append(_dimmer);
+		setTimeout(function(){
+			el(".dimmer")[0].addClass("show");
+		},10);
+	},
+	off: function(){
+		var _dimmer = el(".dimmer").rmClass("show");
+		setTimeout(function(){
+			_dimmer.rm();
+		},500);
+	}
+};
+	

@@ -14,6 +14,7 @@ global.sharedObject = {
 
 function openPreferences() {
   if(global.sharedObject.preferencesWindow ===null){
+
     global.sharedObject.preferencesWindow = new BrowserWindow({
       "width": 800, 
       "height": 486, 
@@ -23,12 +24,15 @@ function openPreferences() {
       frame: false
     });
 
+    mainWindow.webContents.executeJavaScript("dimmer.on();");
     global.sharedObject.preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
     // global.sharedObject.preferencesWindow.toggleDevTools();
+
     global.sharedObject.preferencesWindow.on("close", function(){
-      console.log("closed prefs");
+      mainWindow.webContents.executeJavaScript("dimmer.off();");
       global.sharedObject.preferencesWindow = null;
-    })
+    });
+
   } 
 }
 
@@ -420,8 +424,11 @@ app.on("ready", function(){
 
   //GULP TASKS
   gulp.task("reload", function(){
-    mainWindow.reload();
-    preferencesWindow.reload();
+    setTimeout(function(){
+      mainWindow.reload();
+      if(global.sharedObject.preferencesWindow) global.sharedObject.preferencesWindow.reload();
+    },500);
+    
   });
   gulp.task("watch", function(){
     gulp.watch("index.html",["reload"]);

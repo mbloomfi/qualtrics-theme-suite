@@ -5,10 +5,40 @@ section#panel {
 	right 0
 	height 100%
 	width 75%
+	opacity 1
 	
 	// for dev
 	font-size 2em
-	line-height 500px
+	// line-height 500px
 	text-align center
+	transition opacity .3s ease
+	
+	div#preferences_splash {
+		height 100%
+		line-height 500px
+		font-size 2.6em
+		color rgb(200,200,200)
+	}
+
+	form {
+		position relative
+		z-index 10
+		width 80%
+		// background red
+		
+		-webkit-app-region no-drag
+		input {
+			outline 2px solid rgb(215,215,215)
+			margin 0 0 20px
+			text-indent 2px
+		}
+		
+		&#preferences_form {
+			padding 50px 0 0 0
+		}
+	}
+	&.hide {
+		opacity 0
+	}
 
 }
