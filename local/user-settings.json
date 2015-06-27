@@ -1,0 +1,12 @@
+{
+	"files": {
+		"pathToBrands": "",
+		"defaultPreviewFile": "",
+		"previewFiles":[
+			{"fileName":""}
+		]
+	},
+	"preview": {
+		"refreshPreview": "onSave"
+	}
+}

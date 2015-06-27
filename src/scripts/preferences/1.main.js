@@ -76,44 +76,89 @@ panel.getPanelData = function() {
 
 }
 
+
+// BUILD PANEL
 panel.buildPanel = function(_newPanel) {
+
 	if(_newPanel === "QTS"){
 		return el("+form#qtsForm").addClass("QTS").append(
 			el("+label").text("QTS Thing").append( el("+input") )
 		);
 
-	} else if(_newPanel === "files"){
-		var form = el("+form#filesForm").addClass("files");
-		form.append( el("+label").text("Path To Brands").append( el("+input") ) );
+	} 
 
-		// <select>
-		// 	<option value="" disabled="disabled" selected="selected">Please select a name</option>
-		// 	<option value="1">One</option>
-		// 	<option value="2">Two</option>
-		// </select>
+	else if(_newPanel === "files"){
+		var form = el("+form#filesForm").addClass("files");
+		//Path To Brands
+		form.append( el("+label").text("Path To Brands").append( el("+input") ) );
+		//Default Preview File
 		form.append( 
 			el("+label").text("Default Preview File").append( 
-				el("+div").addClass("select_cont").append(	
+				el("+div").addClass("select_cont").append(
 					el("+select").append(
 						el.join(
-							[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full"), el("+option").text("V3-Vertical")]
+							[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full")]
 						)
 					)
 				)
 			)
 		);
+		//Manage Preview Files
 		form.append( el("+button").text("Manage Preview Files") );
 		return form;
 
-	} else if(_newPanel === "snippets"){
+	} 
+
+	else if(_newPanel === "snippets"){
 		return el("+form#snippetsForm").addClass("snippets").append(
 			el("+label").text("Snippets Stuff").append( el("+input") )
 		);
-	} else if(_newPanel === "preview"){
+	} 
+
+	else if(_newPanel === "preview"){
+		
 		return el("+form#previewForm").addClass("preview").append(
-			el("+label").text("Preview Stuff").append( el("+input") )
+			el.join([
+				el("+div").addClass("fieldSet").append(
+					el.join([
+						el("+h2").text("Refresh Preview Window"),
+						el("+label").addClass(["radioLabel", "dog"]).text("On Save").append(
+							el("+span").text(" (⌘S) ")
+						).text(" and Command ").append(
+							el.join([
+								el("+span").text(" (⌘R) "),
+								el("+input").attr("type", "radio").attr("value", 1).attr("name", "refreshPreview")
+							])
+						),
+						el("+label").addClass("radioLabel").text("On Command Only").append(
+							el.join([
+								el("+span").text(" (⌘R) "),
+								el("+input").attr("type", "radio").attr("value", 2).attr("name", "refreshPreview")
+							])
+						)
+					])
+				),
+				el("+div").addClass("fieldSet").append(
+					el.join([
+						el("+h2").text("Default Thumbnail Name"),
+						el("+input").addClass("thumbnailName").attr("name", "thumbnailName"),
+						el("+div").addClass(["select_cont", "inline-block"]).append(
+							el("+select").append(
+								el.join([
+									el("+option").text(".gif"), 
+									el("+option").text(".png"), 
+									el("+option").text(".jpg")
+								])
+							)
+						)
+					])
+				),
+			])
 		);
-	} else if(_newPanel === "window"){
+
+	} 
+
+	else if(_newPanel === "window"){
 		return el("+form#windowForm").addClass("window").append(
 			el("+label").text("Window Thing").append( el("+input") )
 		);
@@ -122,6 +167,10 @@ panel.buildPanel = function(_newPanel) {
 
 panel.setPanel = function(_newPanel) {
 	panel.purge().append(_newPanel);
+	checkAndRadio();
 }
 
+function checkAndRadio(){
+	el(document.querySelectorAll("input[type=radio]"))
+}
 

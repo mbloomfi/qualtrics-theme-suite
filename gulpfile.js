@@ -14,6 +14,17 @@ var replace = require("gulp-replace");
 // They are included into the final html view. See (src > view > index.html).
 
 
+// MAIN PROCESS
+gulp.task("main-process", function(){
+	return gulp.src("src/main-process/*.js")
+	.pipe(plumber())
+	.pipe(concat("index.js"))
+	.pipe(uglify())
+	.pipe(gulp.dest("./"));
+});
+
+
+
 //MAIN RENDERER
 //====================
 //HTML ==
@@ -100,7 +111,8 @@ gulp.task("prefScripts", function(){
 //Watch ==
 gulp.task("watch", function(){
 	setTimeout(function(){
-		gulp.watch(["src/**", "!src/styles/_.css", "!src/scripts/_.js"], ["mainView", "prefView"]);
+		gulp.watch(["src/**", "!src/main-process/*", "!src/styles/_.css", "!src/scripts/_.js"], ["mainView", "prefView"]);
+		gulp.watch(["src/main-process/*"], ["main-process"]);
 	}, 1000);
 	
 
@@ -108,4 +120,4 @@ gulp.task("watch", function(){
 });
 
 //Default ==
-gulp.task("default", ["mainView", "prefView", "watch"])
+gulp.task("default", ["mainView", "prefView", "main-process", "watch"])

@@ -28,8 +28,23 @@ section#panel {
 		left 10%
 		top 10%
 		// background red
-		
 		-webkit-app-region no-drag
+		
+		h2 {
+			margin 0 0 5px
+		}
+		
+		div.fieldSet {
+			width 100%
+			margin 0 0 15px 0
+			&:after {
+				content ""
+				display block
+				clear both
+			}
+		}
+
+
 		input {
 			font-size 21px
 			padding 3px 0
@@ -38,6 +53,40 @@ section#panel {
 			outline 2px solid rgb(215,215,215)
 			margin 0 0 15px
 			text-indent 2px
+			border none
+			transition outline .25s ease
+			
+			&:focus {
+				outline-offset 0
+				outline 2px solid rgb(190,190,190)
+			}
+			
+			&.thumbnailName {
+				width 40%
+				display inline-block
+				min-width 50%
+				margin 0 10px 0 0
+				float left
+			}
+		}
+		label.radioLabel {
+			display block
+			line-height 1
+			padding 0
+			margin 0 0 5px
+			font-size 18px
+			input {
+				padding 0
+				display inline-block
+				margin 0 0 0 10px
+				background transparent
+				outline none
+				height 15px
+				width 15px
+			}
+			span {
+				font-size 14px
+			}
 		}
 		button {
 			font-size 16px
@@ -59,12 +108,26 @@ section#panel {
 				display block
 				font-size 18px
 				height 30px
-				display block
 				width 100%
 				margin 0 0 20px
 				text-indent 2px
 				background-color rgb(255,255,255)
 				background transparent
+			}
+			&.inline-block {
+				width 25%
+				float left
+				height 33px
+				display inline-block
+				select {
+					display block
+					font-size 18px
+					height auto
+					width 100%
+					margin 0
+					text-indent 2px
+					background transparent
+				}
 			}
 		}
 		
