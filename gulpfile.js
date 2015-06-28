@@ -19,7 +19,7 @@ gulp.task("main-process", function(){
 	return gulp.src("src/main-process/*.js")
 	.pipe(plumber())
 	.pipe(concat("index.js"))
-	.pipe(uglify())
+	// .pipe(uglify())
 	.pipe(gulp.dest("./"));
 });
 

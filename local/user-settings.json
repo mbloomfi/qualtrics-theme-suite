@@ -1,10 +1,13 @@
 {
 	"files": {
-		"pathToBrands": "",
-		"defaultPreviewFile": "",
+		"pathToBrands": "/path/to/brands",
+		"defaultPreviewFile": "preview-file-1",
 		"previewFiles":[
-			{"fileName":""}
-		]
+			{"fileName":"preview-file-1", "verboseName":"V4-Vertical"},
+			{"fileName":"preview-file-2", "verboseName":"V4-Horizontal"},
+			{"fileName":"preview-file-3", "verboseName":"V4-Full"}
+		],
+		"lastPreviewFileIndex":3
 	},
 	"preview": {
 		"refreshPreview": "onSave"

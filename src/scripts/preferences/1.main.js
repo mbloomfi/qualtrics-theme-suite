@@ -2,7 +2,13 @@
 var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
+var fs = require("fs");
+var currentPanel = {};
 
+
+fs.watch('local/', function (evt) {
+  console.log('You are doing a ' + evt);
+});
 
 var logo = el("#logo");
 var panel = el("#panel");
@@ -56,84 +62,129 @@ el("#window-option").on("click", function(){
 
 
 
+panel.transitionTo = function(_newPanelName) {
 
-
-
-
-
-
-panel.transitionTo = function(_newPanel) {
 	panel.addClass("hide");
-	var panelData = panel.getPanelData(_newPanel);
-	_newPanel = panel.buildPanel(_newPanel);
+	var _newPanel = panel.buildPanel(_newPanelName);
+	panel.getPanelData(_newPanelName);
 	setTimeout(function(){
 		panel.setPanel(_newPanel);
 		panel.rmClass("hide");
 	}, 300);
+
 }
 
-panel.getPanelData = function() {
+panel.getPanelData = function(_panel) {
+
+	fs.readFile("local/user-settings.json", function(err, _data){
+		var data = JSON.parse(_data);
+		panel.insertData(_panel, data);
+	});
+	
+}
+
+panel.insertData = function(_panel, data){
+
+	if(_panel === "QTS"){
+
+	} else if(_panel === "files"){
+		// add path to Brands folder
+		currentPanel.el("#path-to-brands").attr("value",data.files.pathToBrands);
+
+		// Populate the preview files and select the default		
+		var defaultPreviewFile = currentPanel.el("#default-preview-file");
+		var tempArray = [];		
+		for(var i = 0, ii = data.files.previewFiles.length; i < ii; i++ ){
+			var pF = data.files.previewFiles;			
+			if( pF[i].fileName === data.files.defaultPreviewFile ) {
+				var selectedOption = el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName );
+				selectedOption.selected = true;
+				tempArray.push(selectedOption);				
+			} else {				
+				tempArray.push(el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName ))				
+			}
+
+		}		
+		defaultPreviewFile.append( el(tempArray) );		
+
+		// currentPanel.el("#path-to-brands").attr("value",data.files.pathToBrands);
+		// .append(
+		// 				el.join([
+		// 					el("+option").attr("value","preview-file-001").text("V4-Vertical"), 
+		// 					el("+option").attr("value","preview-file-002").text("V4-Horizontal"), 
+		// 					el("+option").attr("value","preview-file-003").text("V4-Full")
+		// 				])
+		// 			)
+	} else if(_panel === "snippets"){
+
+	} else if(_panel === "preview"){
+		// currentPanel.el("#path-to-brands").attr("value",data.files.pathToBrands);
+		
+
+	} else if(_panel === "window"){
+
+	}
 
 }
 
 
 // BUILD PANEL
 panel.buildPanel = function(_newPanel) {
-
 	if(_newPanel === "QTS"){
-		return el("+form#qtsForm").addClass("QTS").append(
+
+		currentPanel = el("+form#qtsForm").addClass("QTS").append(
 			el("+label").text("QTS Thing").append( el("+input") )
 		);
-
+		return currentPanel;
 	} 
 
 	else if(_newPanel === "files"){
-		var form = el("+form#filesForm").addClass("files");
+
+		currentPanel = el("+form#filesForm").addClass("files");
 		//Path To Brands
-		form.append( el("+label").text("Path To Brands").append( el("+input") ) );
+		currentPanel.append( el("+label").text("Path To Brands").append( el("+input#path-to-brands") ) );
 		//Default Preview File
-		form.append( 
+		currentPanel.append( 
 			el("+label").text("Default Preview File").append( 
 				el("+div").addClass("select_cont").append(
-					el("+select").append(
-						el.join(
-							[el("+option").text("V4-Vertical"), el("+option").text("V4-Horizontal"), el("+option").text("V4-Full")]
-						)
-					)
+					el("+select#default-preview-file").attr("name", "default-preview-file")
 				)
 			)
 		);
 		//Manage Preview Files
-		form.append( el("+button").text("Manage Preview Files") );
-		return form;
-
+		currentPanel.append( el("+button").text("Manage Preview Files") );
+		return currentPanel;
 	} 
 
 	else if(_newPanel === "snippets"){
-		return el("+form#snippetsForm").addClass("snippets").append(
+
+		currentPanel = el("+form#snippetsForm").addClass("snippets").append(
 			el("+label").text("Snippets Stuff").append( el("+input") )
 		);
+
+		return currentPanel;
+
 	} 
 
 	else if(_newPanel === "preview"){
 		
-		return el("+form#previewForm").addClass("preview").append(
+		currentPanel = el("+form#previewForm").addClass("preview").append(
 			el.join([
 				el("+div").addClass("fieldSet").append(
 					el.join([
 						el("+h2").text("Refresh Preview Window"),
-						el("+label").addClass(["radioLabel", "dog"]).text("On Save").append(
+						el("+label").addClass(["radioLabel"]).text("On Save").append(
 							el("+span").text(" (⌘S) ")
 						).text(" and Command ").append(
 							el.join([
 								el("+span").text(" (⌘R) "),
-								el("+input").attr("type", "radio").attr("value", 1).attr("name", "refreshPreview")
+								el("+input#onSave").attr("type", "radio").attr("value", 1).attr("name", "refreshPreview")
 							])
 						),
 						el("+label").addClass("radioLabel").text("On Command Only").append(
 							el.join([
 								el("+span").text(" (⌘R) "),
-								el("+input").attr("type", "radio").attr("value", 2).attr("name", "refreshPreview")
+								el("+input#onCommand").attr("type", "radio").attr("value", 2).attr("name", "refreshPreview")
 							])
 						)
 					])
@@ -155,13 +206,16 @@ panel.buildPanel = function(_newPanel) {
 				),
 			])
 		);
-
+		return currentPanel;
 	} 
 
 	else if(_newPanel === "window"){
-		return el("+form#windowForm").addClass("window").append(
+
+		currentPanel = el("+form#windowForm").addClass("window").append(
 			el("+label").text("Window Thing").append( el("+input") )
 		);
+		return currentPanel;
+
 	}
 }
 
