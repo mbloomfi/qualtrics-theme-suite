@@ -99,8 +99,10 @@ gulp.task("prefScripts", function(){
 		"src/scripts/preferences/*.js", 
 		// "src/scripts/globalObjects/*.js", 
 		//exclude
-		"!src/scripts/preferences/_.js"])
+		"!src/scripts/preferences/_.js"
+		])
 	.pipe(plumber())
+	.pipe(include())
 	.pipe(concat("_.js"))
 	.pipe(uglify())
 	.pipe(gulp.dest("src/scripts/preferences/"));
@@ -111,7 +113,7 @@ gulp.task("prefScripts", function(){
 //Watch ==
 gulp.task("watch", function(){
 	setTimeout(function(){
-		gulp.watch(["src/**", "!src/main-process/*", "!src/styles/_.css", "!src/scripts/_.js"], ["mainView", "prefView"]);
+		gulp.watch(["src/**", "!src/main-process/*", "!src/styles/main/_.css", "!src/styles/preferences/_.css", "!src/scripts/main/_.js", "!src/scripts/preferences/_.js"], ["mainView", "prefView"]);
 		gulp.watch(["src/main-process/*"], ["main-process"]);
 	}, 1000);
 	
