@@ -20,6 +20,7 @@
     "gulp-uglify": "^1.2.0"
   },
   "dependencies": {
-    "escape-html": "^1.0.2"
+    "escape-html": "^1.0.2",
+    "jsonfile": "^2.2.1"
   }
 }

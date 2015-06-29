@@ -1,89 +1,79 @@
-// == GLOBAL VARS ==
+// --------------------------------
+//				GLOBAL VARS
+// --------------------------------
 var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
 var fs = require("fs");
+var json = require("jsonfile");
 var escape = require("escape-html");
 
 var currentPanel = {};
-var tempUserPrefData = {};
-var writeInProgress = false;
-var preferencesChanged = false;
+var localUserPrefData = {};
 
 var logo = el("#logo");
 var panel = el("#panel");
 var navOptions = el(".nav_option");
 
-// INIT 
-fs.readFile("local/user-settings.json", function(_err, _data){
-	/* 
-	Write user-config file to a temp file at start.
-	This temp file will be re-written each time the user fiddles with the prefs. 
-	This temp file will overwrite the actual user settings on save. 
-	*/
-	writeInProgress = true;
-	fs.writeFile("local/temp-user-settings.json", _data, function(err){
-		writeInProgress = false;
-		setTimeout(function(){
-			panel.rmClass("hide")
-			logo.rmClass("hide");
-			el("#nav").rmClass("hide");
-			el("html")[0].rmClass("white");
-			el("body")[0].rmClass("white");
-			el("#bottom-bar").rmClass("hide");
-		}, 200);
 
-	})
+console.log("process.env.HOME", process.env.HOME);
+
+fs.stat("/Users/samueleaton/", function(err, stats){
+	console.log("stats.isDirectory:",stats.isDirectory());
 })
 
+
+
+// --------------------------------
+//		INIT (USER PREFS TO LOCAL)
+// --------------------------------
+json.readFile("local/user-settings.json", function(_err, _data){
+	
+	/* 
+	Store user-config file to a local json at start.
+	This json object will be re-written each time the user fiddles with the prefs. 
+	This json object will overwrite the actual user settings on save. 
+	*/
+
+	// set local object
+	localUserPrefData = _data;
+
+	// init preferences
+	setTimeout(function(){
+		panel.rmClass("hide")
+		logo.rmClass("hide");
+		el("#nav").rmClass("hide");
+		el("html")[0].rmClass("white");
+		el("body")[0].rmClass("white");
+		el("#bottom-bar").rmClass("hide");
+	}, 200);
+});
 	
 
-
-
+// --------------------------------
+//				CANCEL BUTTON
+// --------------------------------
 el("#cancel").on("click", function(){
 	Global.preferencesWindow.close();
 })
 
 
-// SAVE TEMP TO USER-PREFERENCES
+// --------------------------------
+//				SAVE BUTTON
+// --------------------------------
 el("#save").on("click", function(e){
-	function saveUserPrefs(){
-		if(preferencesChanged){
-			console.log("saving prefs");
-			fs.writeFile("local/user-settings.json", JSON.stringify(tempUserPrefData), function(err){
-				if(err) alert("Error Saving Changes");
-				else Global.preferencesWindow.close();
-			})
-		} else {
-			console.log("no changes");
-		}
-	}
-
-	if(writeInProgress){
-
-		var checkWriteInterval = setInterval(function(){
-			if(!writeInProgress) {
-				saveUserPrefs();
-				clearInterval(checkWriteInterval);
-			} 
-		},50);
-
-	} else {
-		saveUserPrefs();
-	}
-})
-
-
-fs.watch('local/temp-user-settings.json', function (evt) {
-  console.log('You are doing a ' + evt +' to TEMP-user-settings.json');
-});
-
-fs.watch('local/user-settings.json', function (evt) {
-  console.log('You are doing a ' + evt +' to user-settings.json');
+	// saves from local to user-prefs file if any changes
+	console.log("saving prefs");
+	json.writeFile("local/user-settings.json", localUserPrefData, function(err){
+		if(err) alert("Error Saving Changes");
+		else Global.preferencesWindow.close();
+	});
 });
 
 
-
+// --------------------------------
+//			PREFERENCES NAV
+// --------------------------------
 el("#QTS-option").on("click", function(){
 	panel.transitionTo("QTS");
 	navOptions.rmClass("current");
@@ -111,78 +101,24 @@ el("#window-option").on("click", function(){
 })
 
 
-
+// --------------------------------
+//		CHANGE PREFERENCES PANEL
+// --------------------------------
 panel.transitionTo = function(_newPanelName) {
-
 	panel.addClass("hide");
 	var _newPanel = panel.buildPanel(_newPanelName);
-	panel.getPanelData(_newPanelName);
+	// panel.getPanelData(_newPanelName);
+	panel.insertData(_newPanelName);
 	setTimeout(function(){
 		panel.setPanel(_newPanel);
 		panel.rmClass("hide");
 	}, 300);
-
-}
-
-panel.getPanelData = function(_panel) {
-
-	fs.readFile("local/temp-user-settings.json", function(err, _data){
-		console.log("reading temp");
-		tempUserPrefData = JSON.parse(_data);
-		panel.insertData(_panel);
-	});
-	
-}
-
-panel.insertData = function(_panel){
-	if(_panel === "QTS"){
-
-	} else if(_panel === "files"){
-
-		// add path to Brands folder
-		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",tempUserPrefData.files.pathToBrands);
-
-		// Populate the preview files and select the default		
-		var defaultPreviewFile = currentPanel.el("#default-preview-file");
-		// ADD OPTIONS
-		var tempArray = [];		
-		for(var i = 0, ii = tempUserPrefData.files.previewFiles.length; i < ii; i++ ){
-			var pF = tempUserPrefData.files.previewFiles;			
-			var currentOption = el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName );
-			if( pF[i].fileName === tempUserPrefData.files.defaultPreviewFile ) currentOption.selected = true;
-			tempArray.push(currentOption);	
-		}		
-
-		defaultPreviewFile.append( el(tempArray) );		
-
-		//= include update-temp-preferences/files-include.js
-
-
-	} else if(_panel === "snippets"){
-
-	} else if(_panel === "preview"){
-		currentPanel.el("#"+tempUserPrefData.preview.refreshPreview).checked = true;
-		currentPanel.el("#thumbnailName").attr("value", tempUserPrefData.preview.defaultThumbnailName);
-
-		var defaultThumbnailExt = currentPanel.el("#default-thumbnail-ext");
-		// ADD OPTIONS
-		var tempArray = [];		
-		for(var i = 0, ii = tempUserPrefData.preview.thumbnailExtensions.length; i < ii; i++ ){
-			var tnE = tempUserPrefData.preview.thumbnailExtensions;		
-			var currentOption = el("+option").attr("value", tnE[i]).text( tnE[i] );
-			if( tnE[i] === tempUserPrefData.preview.defaultThumbnailExt ) currentOption.selected = true;
-			tempArray.push(currentOption);
-		}		
-		defaultThumbnailExt.append( el(tempArray) );		
-
-	} else if(_panel === "window"){
-
-	}
-
 }
 
 
-// BUILD PANEL
+// --------------------------------
+//			BUILD PANEL (FORM)
+// --------------------------------
 panel.buildPanel = function(_newPanel) {
 	if(_newPanel === "QTS"){
 
@@ -197,7 +133,14 @@ panel.buildPanel = function(_newPanel) {
 		currentPanel = el("+form#filesForm").addClass("files");
 		//Path To Brands
 		currentPanel.append( 
-			el("+label").text("Path To Brands").append( el("+input#path-to-brands") ) 
+			el("+label#path-to-brands-label").append( 
+				el.join([
+					el("+div").text("Path To Brands"),
+					el("+span#homeDirectory").text(process.env.HOME+"/ "),
+					el("+input#path-to-brands")
+				])
+				 
+			) 
 		);
 		//Default Preview File
 		currentPanel.append( 
@@ -267,23 +210,72 @@ panel.buildPanel = function(_newPanel) {
 	}
 }
 
+
+// --------------------------------
+//		APPLY THE BUILT PANNEL
+// --------------------------------
 panel.setPanel = function(_newPanel) {
 	panel.purge().append(_newPanel);
 	checkAndRadio();
 }
 
-panel.updateTempFile = function(){
-	preferencesChanged = true;
-	writeInProgress = true;
-	console.log("updating temp");
-	fs.writeFile("local/temp-user-settings.json", JSON.stringify(tempUserPrefData), function(err){
-		console.log("updated temps!");
-		if(err) console.log(err);
-		writeInProgress = false;
-	});
+
+// --------------------------------
+//		INSERT DATA INTO PANEL
+// --------------------------------
+panel.insertData = function(_panel){
+	if(_panel === "QTS"){
+
+	} else if(_panel === "files"){
+
+		// add path to Brands folder
+		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",localUserPrefData.files.pathToBrands);
+
+		// Populate the preview files and select the default		
+		var defaultPreviewFile = currentPanel.el("#default-preview-file");
+		// ADD OPTIONS
+		var tempArray = [];		
+		for(var i = 0, ii = localUserPrefData.files.previewFiles.length; i < ii; i++ ){
+			var pF = localUserPrefData.files.previewFiles;			
+			var currentOption = el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName );
+			if( pF[i].fileName === localUserPrefData.files.defaultPreviewFile ) currentOption.selected = true;
+			tempArray.push(currentOption);	
+		}		
+
+		defaultPreviewFile.append( el(tempArray) );		
+
+		//= include update-temp-preferences/files-include.js
+
+
+	} else if(_panel === "snippets"){
+
+	} else if(_panel === "preview"){
+		currentPanel.el("#"+localUserPrefData.preview.refreshPreview).checked = true;
+		currentPanel.el("#thumbnailName").attr("value", localUserPrefData.preview.defaultThumbnailName);
+
+		var defaultThumbnailExt = currentPanel.el("#default-thumbnail-ext");
+		// ADD OPTIONS
+		var tempArray = [];		
+		for(var i = 0, ii = localUserPrefData.preview.thumbnailExtensions.length; i < ii; i++ ){
+			var tnE = localUserPrefData.preview.thumbnailExtensions;		
+			var currentOption = el("+option").attr("value", tnE[i]).text( tnE[i] );
+			if( tnE[i] === localUserPrefData.preview.defaultThumbnailExt ) currentOption.selected = true;
+			tempArray.push(currentOption);
+		}		
+		defaultThumbnailExt.append( el(tempArray) );		
+
+		//= include update-temp-preferences/preview-include.js
+
+	} else if(_panel === "window"){
+
+	}
+
 }
 
-// add "el" methods to all radio buttons
+
+// --------------------------------
+// ELIFY APPENDED CHECK/RADIO BTNS
+// --------------------------------
 function checkAndRadio(){
 	el(document.querySelectorAll("input[type=radio]"))
 }

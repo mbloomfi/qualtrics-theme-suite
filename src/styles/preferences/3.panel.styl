@@ -30,6 +30,15 @@ section#panel {
 		// background red
 		-webkit-app-region no-drag
 		
+		label {
+			display block
+			&:after {
+				content ""
+				display block
+				clear both
+			}
+		}
+		
 		h2 {
 			margin 0 0 5px
 		}
@@ -134,6 +143,26 @@ section#panel {
 		&#preferences_form {
 			padding 50px 0 0 0
 		}
+		
+		label#path-to-brands-label {
+			span#homeDirectory {
+				font-size 14px
+				color rgb(120,120,120)
+				text-style italic
+				display inline-block
+				margin 0 5px 0 0
+				height 35px
+				line-height 35px
+				float left
+			}
+			input#path-to-brands {
+				float left
+				width 50%
+				min-width 0
+				display inline-block
+			}
+		}
+
 	}
 	&.hide {
 		opacity 0

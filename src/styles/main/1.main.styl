@@ -35,7 +35,7 @@ $previewWidth = (100 - ($editorWidth))
   src: url(local/fonts/SourceSansPro-BoldIt.otf);
 }
 
-html, section, body, p, h1, h2, div, span, input, textarea, label, a {
+html, body, p, h1, h2, input, textarea, label, a {
   padding 0
   margin 0
   border none
@@ -46,6 +46,10 @@ html, section, body, p, h1, h2, div, span, input, textarea, label, a {
   text-decoration none
   font-weight normal
   font-family $font-stack
+}
+
+pre, xmp, plaintext, listing {
+  font-family: "Source Code Pro", menlo, monospace;
 }
 
 html, body {

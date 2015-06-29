@@ -37,13 +37,20 @@ gulp.task("mainView", ["mainStyles", "mainScripts"], function(){
 
 
 //CSS ==
-gulp.task("mainStyles", function(){
+gulp.task("mainStyles", ["compile-stylus"], function(){
+	return gulp.src(["src/styles/libs/*.css","src/styles/main/_.css"])
+	.pipe(plumber())
+	.pipe(concat("_.css"))
+	.pipe(minifyCss())
+	.pipe(gulp.dest("src/styles/main/"));
+});
+
+gulp.task("compile-stylus", function(){
 	return gulp.src(["src/styles/main/*.styl", "src/styles/prompt.styl"])
 	.pipe(plumber())
 	.pipe(concat("_.styl"))
 	.pipe(stylus())
 	.pipe(autoprefixer())
-	.pipe(minifyCss())
 	.pipe(gulp.dest("src/styles/main/"));
 });
 
@@ -52,7 +59,9 @@ gulp.task("mainStyles", function(){
 gulp.task("mainScripts", function(){
 	return gulp.src([
 		//include
-		"src/scripts/libs/*.js", 
+		"src/scripts/libs/*.js",
+		"src/scripts/libs/codemirror/codemirror.js",
+		"src/scripts/libs/codemirror/**",
 		"src/scripts/main/*.js", 
 		"src/scripts/globalObjects/*.js", 
 		//exclude
@@ -95,7 +104,7 @@ gulp.task("prefStyles", function(){
 gulp.task("prefScripts", function(){
 	return gulp.src([
 		//include
-		"src/scripts/libs/*.js", 
+		"src/scripts/libs/00.el.min.js", 
 		"src/scripts/preferences/*.js", 
 		// "src/scripts/globalObjects/*.js", 
 		//exclude
@@ -112,13 +121,37 @@ gulp.task("prefScripts", function(){
 
 //Watch ==
 gulp.task("watch", function(){
-	setTimeout(function(){
-		gulp.watch(["src/**", "!src/main-process/*", "!src/styles/main/_.css", "!src/styles/preferences/_.css", "!src/scripts/main/_.js", "!src/scripts/preferences/_.js"], ["mainView", "prefView"]);
-		gulp.watch(["src/main-process/*"], ["main-process"]);
-	}, 1000);
-	
 
-	// gulp.watch(["src/**", "!src/styles/_.css", "!src/scripts/_.js"], ["prefView"]);
+
+		console.log("My watch begins.");
+		gulp.watch([
+
+			// include
+			"src/main-process/*", 
+
+			"src/scripts/globalObjects/*",
+			"src/scripts/libs/*",
+			"src/scripts/main/*.js",
+			"src/scripts/preferences/*.js",
+			"src/scripts/preferences/update-temp-preferences/*.js",
+
+			"src/styles/libs/*",
+			"src/styles/main/*.styl",
+			"src/styles/preferences/*.styl",
+			"src/styles/*.styl",
+
+			// exclude
+			"!src/main-process/*", 
+			"!src/styles/main/_.css", 
+			"!src/styles/preferences/_.css", 
+			"!src/scripts/main/_.js", 
+			"!src/scripts/preferences/_.js"
+
+		], ["mainView", "prefView"]);
+
+		gulp.watch(["src/main-process/*"], ["main-process"]);
+
+
 });
 
 //Default ==

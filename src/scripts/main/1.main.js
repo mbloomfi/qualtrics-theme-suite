@@ -16,6 +16,8 @@ el.on("load", function(){
 	// // add resize listener
 	// window.addEventListener('resize',onWindowResize);
 
+	codemirrorInit();
+
 });
 
 var dimmer = {
