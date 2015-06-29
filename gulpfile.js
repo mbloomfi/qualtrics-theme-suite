@@ -129,6 +129,8 @@ gulp.task("watch", function(){
 			// include
 			"src/main-process/*", 
 
+			"src/view/**",
+
 			"src/scripts/globalObjects/*",
 			"src/scripts/libs/*",
 			"src/scripts/main/*.js",
@@ -139,6 +141,7 @@ gulp.task("watch", function(){
 			"src/styles/main/*.styl",
 			"src/styles/preferences/*.styl",
 			"src/styles/*.styl",
+
 
 			// exclude
 			"!src/main-process/*", 

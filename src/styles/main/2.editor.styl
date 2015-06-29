@@ -19,79 +19,107 @@ section#editor {
 		height 100%
 		color inherit
 		
-		
 		div#editorBar {
 			background-color rgb(55,55,55)
-			height 40px
 			width 100%
-			line-height 40px
+			min-width 500px
+			height ($editorBarHeight)%
 			color inherit
-			
-			
-			div#brandName {
-				color inherit
-				height 100%
-				float left
-				font-size 1.25em
-				padding 0 10px
-				margin 0 10px
-				max-width 250px
-				overflow hidden
-				position relative
-				// background-color orange
-				
-				&.narrow:before {
-					content: ""
-					display block
-					position absolute
-					top 0
-					right 0
-					height 100%
-					width 30px
-					background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
-				}
-			}
-			
-			span.arrow {
-				color inherit
-				display inline-block
-				margin 0 4px
-				height 100%
-				float left
-			}
-			
-			div#projectName {
-				color inherit
-				height 100%
-				float left
-				font-size 1.25em
-				padding 0 10px
-				margin 0 10px
-				max-width 250px
-				overflow hidden
-				position relative
-				// background-color purple
-				
-				&.narrow:before {
-					content: ""
-					display block
-					position absolute
-					top 0
-					right 0
-					height 100%
-					width 30px
-					background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
-				}
-			}
+			position relative
+			top 0
+			left 0
+			z-index 10
 
+			@media screen and (max-height:600px) {
+				height ($editorBarHeight + $heightChange)%
+			}
+			
+			@media screen and (min-height:1200px) {
+				height ($editorBarHeight - ($heightChange * 0.5))%
+			}
+			
+			div#editorBarInner {
+				height 30px
+				line-height 30px
+				width 100%
+				position relative
+				top 50%
+				transform translateY(-50%)
+				
+				div#brandName {
+					color inherit
+					height 100%
+					float left
+					font-size 1.25em
+					padding 0 10px
+					margin 0 10px
+					max-width 250px
+					overflow hidden
+					position relative
+					// background-color orange
+					
+					&.narrow:before {
+						content: ""
+						display block
+						position absolute
+						top 0
+						right 0
+						height 100%
+						width 30px
+						background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
+					}
+				}
+				
+				span.arrow {
+					color inherit
+					display inline-block
+					margin 0 4px
+					height 100%
+					float left
+				}
+				
+				div#projectName {
+					color inherit
+					height 100%
+					float left
+					font-size 1.25em
+					padding 0 10px
+					margin 0 10px
+					max-width 250px
+					overflow hidden
+					position relative
+					// background-color purple
+					
+					&.narrow:before {
+						content: ""
+						display block
+						position absolute
+						top 0
+						right 0
+						height 100%
+						width 30px
+						background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
+					}
+				}
+			}
 		}
 		
 		#codemirror-wrapper {
-			height 95%
+			height ($codemirrorHeight)%
 			width 100%
+			min-width 400px
 			position absolute
-			top 40px
+			top ($editorBarHeight)%
 			left 0
+			z-index 5
+			@media screen and (max-height:600px){
+				height ($codemirrorHeight - $heightChange)%
+				top ($editorBarHeight + $heightChange)%
+			}
+			@media screen and (min-height:1200px){
+				height ($codemirrorHeight + ($heightChange * 0.5))%
+				top ($editorBarHeight - ($heightChange * 0.5))%
+			}
 		}
 		
 		.btn {
