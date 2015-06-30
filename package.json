@@ -2,9 +2,6 @@
   "name": "qualtrics-theme-suite",
   "version": "0.0.1",
   "main": "index.js",
-  "scripts": {
-    "build": "electron-packager . QTM --ignore=node_modules --ignore=gulpfile.js --ignore=src --platform=darwin --arch=x64 --version=0.26.0 && cp icns.icns QTM.app/Contents/Resources/atom.icns"
-  },
   "devDependencies": {
     "electron-packager": "^4.1.3",
     "gulp": "^3.9.0",
@@ -22,5 +19,8 @@
   "dependencies": {
     "escape-html": "^1.0.2",
     "jsonfile": "^2.2.1"
+  },
+  "scripts": {
+    "build": "electron-packager . QTS --ignore=node_modules --ignore=gulpfile.js --ignore=src --ignore=bower_components --platform=darwin --arch=x64 --version=0.28.2 && cp icns.icns QTS.app/Contents/Resources/atom.icns"
   }
 }

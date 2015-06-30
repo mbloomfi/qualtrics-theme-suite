@@ -464,7 +464,12 @@ app.on("ready", function(){
 
   Menu.setApplicationMenu(appMenu);
 
-	mainWindow = new BrowserWindow({width: 1800, height: 1000});
+	mainWindow = new BrowserWindow({
+		width: 1800, 
+		height: 1000,
+		"min-height": 400,
+		"min-width": 200
+	});
 	mainWindow.loadUrl("file://"+__dirname+"/index.html");
 	
 	mainWindow.on('close', function(e) {
