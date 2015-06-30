@@ -1,3 +1,5 @@
+$dropdown-menus-color = rgba(50,50,50,.85)
+
 section#editor {
 	position fixed
 	top 0
@@ -46,6 +48,8 @@ section#editor {
 				top 50%
 				transform translateY(-50%)
 				
+
+				
 				div#brandName {
 					color inherit
 					height 100%
@@ -54,19 +58,37 @@ section#editor {
 					padding 0 10px
 					margin 0 10px
 					max-width 250px
-					overflow hidden
+					// overflow hidden
 					position relative
 					// background-color orange
 					
-					&.narrow:before {
-						content: ""
-						display block
+					& div.dropdown {
+						min-height 250px
+						width 200px
+						background-color $dropdown-menus-color
+						box-shadow 0 3px 8px rgba(0,0,0,.3)
 						position absolute
-						top 0
-						right 0
-						height 100%
-						width 30px
-						background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
+						top 150%
+						left 0
+						&:before {
+							content ""
+							display block
+							width 0
+							height 0
+							position absolute
+							top -15px
+							left 10px
+							border-left 15px solid transparent
+							border-right 15px solid transparent
+							border-bottom 15px solid rgb(230,230,230)
+						}
+						& div#searchBrandsContainer {
+							padding 5px
+						}
+						& #recentBrands {
+							border-top: 1px solid rgb(150,150,150)
+							border-bottom: 1px solid rgb(150,150,150)
+						}
 					}
 				}
 				
@@ -86,7 +108,7 @@ section#editor {
 					padding 0 10px
 					margin 0 10px
 					max-width 250px
-					overflow hidden
+					// overflow hidden
 					position relative
 					// background-color purple
 					

@@ -7,8 +7,8 @@ var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
 
-var localData = null;
-
+var localSettingsData = null;
+var localPersistentData = null;
 
 // == INIT ==
 el.on("load", function(){
@@ -18,11 +18,25 @@ el.on("load", function(){
 	window.preview = el("#preview");
 
 
+	readUserPreferences(function(){		
+		readPersistantData(function(){
+
+			readBrands();
+			brandDropDown.populate();
+			
+			//un-hide page // show editor and webview
+			el.join( [editor, preview] ).rmClass("hide");
+
+		});
+	});
+
+	
+
+
 	//= include fileSystem.js
 
-
-	// show editor and webview
-	el.join( [editor, preview] ).rmClass("hide");
+	
+	
 
 	// // add resize listener
 	// window.addEventListener('resize',onWindowResize);
@@ -69,3 +83,9 @@ editorPreviewBar = {
 			);
 	}
 };
+
+function logError(_message, _err) {
+	console.log(_message, _err);
+}
+
+//

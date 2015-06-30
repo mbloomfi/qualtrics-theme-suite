@@ -9,17 +9,35 @@
 // 	setLocal = function(){},
 // };
 
-json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
-	if(!_err) localData = _data;
 
-	else console.log("ERROR!!!!", _err);
 
-	readBrands();
+function readUserPreferences(_successCallback){
+	json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+		if(!_err){ 
+			localSettingsData = _data;
+			if(typeof _successCallback === "function") _successCallback();
+		}
+		else {
+			logError("readUserPreferences ERROR:",_err);
+		}
+	});
+}
 
-});
+function readPersistantData(_successCallback){
+	json.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+		if(!_err) {
+			localPersistentData = _data;
+			if(typeof _successCallback === "function") _successCallback();
+		}
+		else {
+			logError("readPersistantData ERROR:",_err);
+		}
+	});
+}
+
 
 function readBrands(){
-	var pathToBrands = process.env.HOME+"/"+localData.files.pathToBrands;
+	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
 	var brandsList = [];
 	fs.readdir(pathToBrands, function(_err, _files){
 
