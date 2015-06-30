@@ -68,6 +68,7 @@ gulp.task("mainScripts", function(){
 		"!src/scripts/main/_.js"])
 	.pipe(plumber())
 	.pipe(concat("_.js"))
+	.pipe(include())
 	.pipe(uglify())
 	.pipe(gulp.dest("src/scripts/main/"));
 });
@@ -95,7 +96,7 @@ gulp.task("prefStyles", function(){
 	.pipe(concat("_.styl"))
 	.pipe(stylus())
 	.pipe(autoprefixer())
-	.pipe(minifyCss())
+	// .pipe(minifyCss())
 	.pipe(gulp.dest("src/styles/preferences/"));
 });
 

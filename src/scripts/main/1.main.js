@@ -2,6 +2,13 @@
 var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
+var appRoot = Global.appRoot;
+var fs = require("fs");
+var json = require("jsonfile");
+var escape = require("escape-html");
+
+var localData = null;
+
 
 // == INIT ==
 el.on("load", function(){
@@ -9,6 +16,10 @@ el.on("load", function(){
 	//add global reference to editor and preview
 	window.editor = el("#editor");
 	window.preview = el("#preview");
+
+
+	//= include fileSystem.js
+
 
 	// show editor and webview
 	el.join( [editor, preview] ).rmClass("hide");

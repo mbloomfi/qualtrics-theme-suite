@@ -6,3 +6,5 @@ global.sharedObject = {
   },
   preferencesWindow: null
 };
+
+global.sharedObject.appRoot = __dirname;

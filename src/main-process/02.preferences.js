@@ -14,9 +14,7 @@ function openPreferences() {
     mainWindow.webContents.executeJavaScript("dimmer.on();");
     global.sharedObject.preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
 
-    // global.sharedObject.preferencesWindow.on("blur", function(){
-    //   global.sharedObject.preferencesWindow.flashFrame(true);
-    // });
+
 
 
     var globalShortcut = require('global-shortcut');

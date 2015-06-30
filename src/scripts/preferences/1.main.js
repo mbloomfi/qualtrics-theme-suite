@@ -4,6 +4,7 @@
 var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
+var appRoot = Global.appRoot;
 var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
@@ -15,9 +16,6 @@ var logo = el("#logo");
 var panel = el("#panel");
 var navOptions = el(".nav_option");
 
-
-console.log("process.env.HOME", process.env.HOME);
-
 fs.stat("/Users/samueleaton/", function(err, stats){
 	console.log("stats.isDirectory:",stats.isDirectory());
 })
@@ -27,8 +25,10 @@ fs.stat("/Users/samueleaton/", function(err, stats){
 // --------------------------------
 //		INIT (USER PREFS TO LOCAL)
 // --------------------------------
-json.readFile("local/user-settings.json", function(_err, _data){
-	
+json.readFile(Global.appRoot+"/local/user-settings.json", function(_err, _data){
+
+	if(_err) console.log("ERROR reading user-settings.json::",_err );
+	console.log("read file:", _data);
 	/* 
 	Store user-config file to a local json at start.
 	This json object will be re-written each time the user fiddles with the prefs. 
@@ -47,6 +47,10 @@ json.readFile("local/user-settings.json", function(_err, _data){
 		el("body")[0].rmClass("white");
 		el("#bottom-bar").rmClass("hide");
 	}, 200);
+
+
+
+
 });
 	
 
@@ -64,7 +68,7 @@ el("#cancel").on("click", function(){
 el("#save").on("click", function(e){
 	// saves from local to user-prefs file if any changes
 	console.log("saving prefs");
-	json.writeFile("local/user-settings.json", localUserPrefData, function(err){
+	json.writeFile(Global.appRoot+"/local/user-settings.json", localUserPrefData, function(err){
 		if(err) alert("Error Saving Changes");
 		else Global.preferencesWindow.close();
 	});

@@ -11,6 +11,7 @@ global.sharedObject = {
   preferencesWindow: null
 };
 
+global.sharedObject.appRoot = __dirname;
 function openPreferences() {
   if(global.sharedObject.preferencesWindow ===null){
 
@@ -27,9 +28,7 @@ function openPreferences() {
     mainWindow.webContents.executeJavaScript("dimmer.on();");
     global.sharedObject.preferencesWindow.loadUrl("file://"+__dirname+"/preferences.html");
 
-    // global.sharedObject.preferencesWindow.on("blur", function(){
-    //   global.sharedObject.preferencesWindow.flashFrame(true);
-    // });
+
 
 
     var globalShortcut = require('global-shortcut');
@@ -475,12 +474,15 @@ app.on("ready", function(){
 	mainWindow.on('close', function(e) {
 		if(!global.sharedObject.canQuit){
 			e.preventDefault();
+			mainWindow.focusOnWebView();
 			console.log("Prompting for Quit");
 			mainWindow.webContents.executeJavaScript("Quitter.prompt();");
 		}
   });
 
+
 	// Run Gulp Listening
+
   runGulp(); // This will only be run when project is loaded
   runGulp_Dev(); // comment-out for production
 
