@@ -18,25 +18,22 @@ el.on("load", function(){
 	window.preview = el("#preview");
 
 
-	readUserPreferences(function(){		
-		readPersistantData(function(){
-
-			readBrands();
-			brandDropDown.populate();
-			
-			//un-hide page // show editor and webview
-			el.join( [editor, preview] ).rmClass("hide");
-
-		});
-	});
-
-	
-
-
 	//= include fileSystem.js
 
-	
-	
+	baton(function(next){
+		readUserPreferences(next);
+
+	}).then(function(next){
+		readPersistantData(next);
+
+	}).then(function(){
+		readBrands();
+		brandDropDown.populate();
+		//un-hide page // show editor and webview
+		el.join( [editor, preview] ).rmClass("hide");
+
+	}).yield();
+
 
 	// // add resize listener
 	// window.addEventListener('resize',onWindowResize);
