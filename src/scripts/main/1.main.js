@@ -21,18 +21,24 @@ el.on("load", function(){
 	//= include fileSystem.js
 
 	baton(function(next){
+
 		readUserPreferences(next);
 
-	}).then(function(next){
+	})
+	.then(function(next){
+
 		readPersistantData(next);
 
-	}).then(function(){
+	})
+	.then(function(){
+
 		readBrands();
 		brandDropDown.populate();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
-
-	}).yield();
+		enableDropdowns();
+	})
+	.yield();
 
 
 	// // add resize listener
@@ -84,5 +90,14 @@ editorPreviewBar = {
 function logError(_message, _err) {
 	console.log(_message, _err);
 }
+
+function pause(time, _callback) {
+	setTimeout(function(){
+		_callback();
+	}, time);
+}
+
+
+
 
 //

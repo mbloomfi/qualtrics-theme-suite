@@ -1,4 +1,4 @@
-$dropdown-menus-color = rgba(50,50,50,.85)
+$dropdown-menus-color = rgba(75,70,70,.85)
 
 section#editor {
 	position fixed
@@ -60,16 +60,19 @@ section#editor {
 					max-width 250px
 					// overflow hidden
 					position relative
+					
 					// background-color orange
 					
 					& div.dropdown {
-						min-height 250px
+						// overflow hidden
+						height 0
 						width 200px
 						background-color $dropdown-menus-color
-						box-shadow 0 3px 8px rgba(0,0,0,.3)
+						box-shadow 0 3px 10px rgba(0,0,0,.4)
 						position absolute
 						top 150%
 						left 0
+						outline 1px solid rgba(0,0,0,.2)
 						&:before {
 							content ""
 							display block
@@ -80,14 +83,33 @@ section#editor {
 							left 10px
 							border-left 15px solid transparent
 							border-right 15px solid transparent
-							border-bottom 15px solid rgb(230,230,230)
+							border-bottom 15px solid rgba(75,70,70,.85)
+							
+						}
+						&.show {
+							height 300px
 						}
 						& div#searchBrandsContainer {
-							padding 5px
+							padding 0
+							height 35px
+							input#searchBrands {
+								display block
+								width 100%
+								background-color rgba(255,255,255,0)
+								height 100%
+								color rgb(255,255,255)
+								text-indent 4px
+							}
 						}
 						& #recentBrands {
-							border-top: 1px solid rgb(150,150,150)
-							border-bottom: 1px solid rgb(150,150,150)
+							border-top: 1px solid rgb(120,120,120)
+							border-bottom: 1px solid rgb(120,120,120)
+							height 230px
+							box-sizing border-box
+						}
+						& #newBrand {
+							line-height 35px
+							padding 0 4px
 						}
 					}
 				}
@@ -112,16 +134,6 @@ section#editor {
 					position relative
 					// background-color purple
 					
-					&.narrow:before {
-						content: ""
-						display block
-						position absolute
-						top 0
-						right 0
-						height 100%
-						width 30px
-						background linear-gradient( to right, rgba(55,55,55,0), rgba(55,55,55,1) );   
-					}
 				}
 			}
 		}
