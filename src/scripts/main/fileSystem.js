@@ -36,7 +36,7 @@ function readPersistantData(_successCallback){
 }
 
 
-function readBrands(){
+function readBrands(_callback, _string){
 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
 	var brandsList = [];
 	fs.readdir(pathToBrands, function(_err, _files){
@@ -48,11 +48,13 @@ function readBrands(){
 			if(stats.isDirectory()) brandsList.push(_files[i]);
 
 		}
-
-		console.log("brandsList", brandsList);
-		
-
+		_callback(brandsList);
+		// console.log("brandsList", brandsList);
 	});
+}
+
+function updateSearchResults(_arr){
+	console.log(_arr)
 }
 
 

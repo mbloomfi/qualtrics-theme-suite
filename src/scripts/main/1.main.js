@@ -32,8 +32,10 @@ el.on("load", function(){
 	})
 	.then(function(){
 
-		readBrands();
 		brandDropDown.populate();
+		projectDropDown.populate();
+
+		brandSearch();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 		enableDropdowns();
