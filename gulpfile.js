@@ -105,7 +105,7 @@ gulp.task("prefStyles", function(){
 gulp.task("prefScripts", function(){
 	return gulp.src([
 		//include
-		"src/scripts/libs/00.el.min.js", 
+		"src/scripts/libs/el.min.js", 
 		"src/scripts/preferences/*.js", 
 		// "src/scripts/globalObjects/*.js", 
 		//exclude

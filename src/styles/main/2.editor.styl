@@ -34,6 +34,7 @@ section#editor {
 			top 0
 			left 0
 			z-index 10
+			user-select none
 
 			@media screen and (max-height:600px) {
 				height ($editorBarHeight + $heightChange)%
@@ -52,8 +53,7 @@ section#editor {
 				transform translateY(-50%)
 				
 				
-				
-				div#brandName {
+				div#brandName{
 					color inherit
 					height 100%
 					float left
@@ -63,10 +63,31 @@ section#editor {
 					max-width 250px
 					// overflow hidden
 					position relative
-					
-					
-						
-
+				}	
+				
+				span.arrow {
+					color inherit
+					display inline-block
+					margin 0 4px
+					height 100%
+					float left
+				}
+				
+				div#projectName {
+					color inherit
+					height 100%
+					float left
+					font-size 1.25em
+					padding 0 10px
+					margin 0 10px
+					max-width 250px
+					// overflow hidden
+					position relative
+					// background-color purple
+				}
+				
+				// DROPDOWN MENUS
+				div.btn {
 					
 					& div.dropdown {
 						overflow hidden
@@ -76,6 +97,7 @@ section#editor {
 						position absolute
 						top 120%
 						left 0
+						
 						transition height .2s ease, width .2s ease, top .2s ease
 						
 						
@@ -96,6 +118,7 @@ section#editor {
 						& .dropdownBody{
 							height 300px
 							width 100%
+							// pointer-events none
 							background-color $dropdown-menus-color
 							box-shadow 0 3px 10px rgba(0,0,0,.4)
 							position absolute
@@ -105,7 +128,8 @@ section#editor {
 							border-radius 1px
 							
 
-							
+
+							// BRANDS DROPDOWN BODY
 							& div#searchBrandsContainer {
 								padding 0
 								height 35px
@@ -117,6 +141,7 @@ section#editor {
 									height 100%
 									color rgba(255,255,255,1)
 									text-indent 4px
+									user-select text
 									transition color .15s ease
 									
 									&::-webkit-input-placeholder {
@@ -139,15 +164,23 @@ section#editor {
 								color rgba(255,255,255,1)
 								transition color .15s ease
 							}
+							
+							// PROJECTS DROPDOWN BODY
+							//
+
+
+
+
 						}
 						
 						&.hide {
 							height 0
 							width 0
-							top 100%
+							top 110%
 							
 							& .dropdownBody{
 								
+								// BRANDS DROPDOWN HIDDEN
 								& div#searchBrandsContainer {
 									
 									input#searchBrands {
@@ -167,35 +200,21 @@ section#editor {
 								& #newBrand {
 									color rgba(255,255,255,0)
 								}
+								
+
+								// PROJECTS DROPDOWN HIDDEN
+								//
+
+
 							}
 
 						}
 						
 					}
-					
+
 				}
 				
-				span.arrow {
-					color inherit
-					display inline-block
-					margin 0 4px
-					height 100%
-					float left
-				}
-				
-				div#projectName {
-					color inherit
-					height 100%
-					float left
-					font-size 1.25em
-					padding 0 10px
-					margin 0 10px
-					max-width 250px
-					// overflow hidden
-					position relative
-					// background-color purple
-					
-				}
+
 			}
 		}
 		
