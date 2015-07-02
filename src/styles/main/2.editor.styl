@@ -1,4 +1,7 @@
-$dropdown-menus-color = rgba(75,70,70,.85)
+// $dropdown-menus-color = rgba(90,82,82,.9)
+$dropdown-menus-color = alpha($primaryColor, 0.9)
+
+
 
 section#editor {
 	position fixed
@@ -48,7 +51,7 @@ section#editor {
 				top 50%
 				transform translateY(-50%)
 				
-
+				
 				
 				div#brandName {
 					color inherit
@@ -61,57 +64,115 @@ section#editor {
 					// overflow hidden
 					position relative
 					
-					// background-color orange
+					
+						
+
 					
 					& div.dropdown {
-						// overflow hidden
-						height 0
+						overflow hidden
+						height 316px
 						width 200px
-						background-color $dropdown-menus-color
-						box-shadow 0 3px 10px rgba(0,0,0,.4)
+						// background-color pink
 						position absolute
-						top 150%
+						top 120%
 						left 0
-						outline 1px solid rgba(0,0,0,.2)
-						&:before {
-							content ""
+						transition height .2s ease, width .2s ease, top .2s ease
+						
+						
+						
+						& .arrow {
 							display block
 							width 0
 							height 0
 							position absolute
-							top -15px
+							top 0px
 							left 10px
-							border-left 15px solid transparent
-							border-right 15px solid transparent
-							border-bottom 15px solid rgba(75,70,70,.85)
-							
+							border-left 18px solid transparent
+							border-right 18px solid transparent
+							border-bottom 16px solid $dropdown-menus-color
+							z-index 1000
 						}
-						&.show {
+						
+						& .dropdownBody{
 							height 300px
-						}
-						& div#searchBrandsContainer {
-							padding 0
-							height 35px
-							input#searchBrands {
-								display block
-								width 100%
-								background-color rgba(255,255,255,0)
-								height 100%
-								color rgb(255,255,255)
-								text-indent 4px
+							width 100%
+							background-color $dropdown-menus-color
+							box-shadow 0 3px 10px rgba(0,0,0,.4)
+							position absolute
+							bottom 0
+							outline 1px solid rgba(0,0,0,.2)
+							z-index 999
+							border-radius 1px
+							
+
+							
+							& div#searchBrandsContainer {
+								padding 0
+								height 35px
+								
+								input#searchBrands {
+									display block
+									width 100%
+									background-color rgba(255,255,255,0)
+									height 100%
+									color rgba(255,255,255,1)
+									text-indent 4px
+									transition color .15s ease
+									
+									&::-webkit-input-placeholder {
+										color rgb(230,230,230)
+										transition color .15s ease
+									}
+
+								}
+							}
+							& #recentBrands {
+								border-top: 1px solid rgba(255,255,255, .8)
+								border-bottom: 1px solid rgba(255,255,255, .8)
+								height 230px
+								box-sizing border-box
+								transition border-top .15s ease, border-bottom .15s ease
+							}
+							& #newBrand {
+								line-height 35px
+								padding 0 4px
+								color rgba(255,255,255,1)
+								transition color .15s ease
 							}
 						}
-						& #recentBrands {
-							border-top: 1px solid rgb(120,120,120)
-							border-bottom: 1px solid rgb(120,120,120)
-							height 230px
-							box-sizing border-box
+						
+						&.hide {
+							height 0
+							width 0
+							top 100%
+							
+							& .dropdownBody{
+								
+								& div#searchBrandsContainer {
+									
+									input#searchBrands {
+										color rgba(255,255,255,0)
+										
+										&::-webkit-input-placeholder {
+											color rgba(230,230,230,1)
+										}
+										
+									}
+									
+								}
+								& #recentBrands {
+									border-top: 1px solid rgba(255,255,255, 0)
+									border-bottom: 1px solid rgba(255,255,255, 0)
+								}
+								& #newBrand {
+									color rgba(255,255,255,0)
+								}
+							}
+
 						}
-						& #newBrand {
-							line-height 35px
-							padding 0 4px
-						}
+						
 					}
+					
 				}
 				
 				span.arrow {
