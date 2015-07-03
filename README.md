@@ -2,40 +2,67 @@
 An OS X app for managing, creating, editing, and uploading Qualtrics survey themes.
 
 
-## <span id="UserSettings">USER SETTINGS</span>
+## <span id="UserSettings">USER SETTINGS FILE &nbsp; *local/user-settings.json*</span>
 
 Description Here
 
-####Update `user-settings.json`
-| **Method** |  **`core.userSettingsFile.update()`** |
-| ----------------------- | ------------------------- |
-| Description |  Updates the user settings file based on the core.localData.userSettings |
+####Update the User Settings File
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.userSettingsFile.update()</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Updates the user settings file based on the core.localData.userSettings</td>
+  </tr>
+</table>
 <br>
-####Read `user-settings.json`
-| **Method** |  **`core.userSettingsFile.read()`** |
-| ----------------------- | ------------------------- |
-| Description |  Updates the user settings file based on the core.localData.userSettings |
-
-***NOTE:*** To read the user settings into the local data object, use the Local Data Methods instead relating to user settings
-
+####Read the User Settings File
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.userSettingsFile.read()</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Updates the user settings file based on the core.localData.userSettings</td>
+  </tr>
+  <tr>
+    <td>Note</td>
+    <td>To read the user settings into the local data object, use the Local Data Methods</td>
+  </tr>
+</table>  
 
 <br>
 
-## <span id="PersistentData">PERSISTENT DATA</span>
+## <span id="PersistentData">PERSISTENT DATA FILE &nbsp; *local/persitent-data.json*</span>
 
-The Persistent Data File (*local/persistent-data.json*) stores data that will carry over form session to session.
+The Persistent Data File stores data that will carry over form session to session.
 
-####Update `persistent-data.json`
-| **Method** |  **`core.persistentDataFile.update()`** |
-| ----------------------- | ------------------------- |
-| Description |  Updates the user settings file based on the core.localData.userSettings |
+####Update the Persistent Data File
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.persistentDataFile.update()</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Updates the user settings file based on the core.localData.userSettings</td>
+  </tr>
+</table>  
 <br>
-####Read `persistent-data.json`
-| **Method** |  **`core.persistentDataFile.read()`** |
-| ----------------------- | ------------------------- |
-| Description |  Updates the user settings file based on the core.localData.userSettings |
-
-***NOTE:*** To read the persistent data into the local data object, use the Local Data Methods instead relating to persistent data
+####Read  the Persistent Data File
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.persistentDataFile.read()</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Updates the user settings file based on the core.localData.userSettings</td>
+  </tr>
+  <tr>
+    <td>Note</td>
+    <td>To read the persistent data into the local data object, use the Local Data Methods instead</td>
+  </tr>
+</table>  
 
 <br>
 
@@ -54,10 +81,19 @@ The Local Data Object is primarily used to store data that will most likely be w
 <br>
 
 ####Update Local User Settings from `user-settings.json` (occurs *once*, on start-up)
-| **Method** |  **`core.localData.initUserSettings()`** |
-| ----------------------- | ------------------------- |
-| Description | Reads the contents of *local/user-settings.json* and stores it on the Local Data Object |
-| Note | The Local Uder Settings Data should only be copied from the User Settings File On start-up. Any time thereafter, the local settings will overwrite *user-settings.json* using `core.userSettingsFile.update()` |
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.localData.initUserSettings()</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Reads the contents of *local/user-settings.json* and stores it on the Local Data Object</td>
+  </tr>
+  <tr>
+    <td>Note</td>
+    <td>The Local Uder Settings Data should only be copied from the User Settings File On start-up. Any time thereafter, the local settings will overwrite <i>user-settings.json<i> using <code>core.userSettingsFile.update()</code></td>
+  </tr>
+</table>
 <br>
 ####Update the Recent Brand List
 <table>
