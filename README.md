@@ -15,8 +15,8 @@ Description Here
     <td>Description</td>
     <td>Updates the user settings file based on the core.localData.userSettings</td>
   </tr>
-</table>
-<br>
+</table>  
+
 ####Read the User Settings File
 <table>
   <tr>
@@ -24,15 +24,13 @@ Description Here
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Returns the contents of the user-settings.json file</td>
   </tr>
   <tr>
     <td>Note</td>
-    <td>To read the user settings into the local data object, use the Local Data Methods</td>
+    <td>To read the user settings into the local data object, use the `localData` Methods</td>
   </tr>
 </table>  
-
-<br>
 
 ## <span id="PersistentData">PERSISTENT DATA FILE &nbsp; *local/persitent-data.json*</span>
 
@@ -45,22 +43,22 @@ The Persistent Data File stores data that will carry over form session to sessio
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Updates the persitent data file based on the core.localData</td>
   </tr>
 </table>  
 <br>
-####Read  the Persistent Data File
+####Read the Persistent Data File
 <table>
   <tr>
     <td colspan="2"><strong><code>core.persistentDataFile.read()</code></strong></td>
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Returns the contents of the persistent data file</td>
   </tr>
   <tr>
     <td>Note</td>
-    <td>To read the persistent data into the local data object, use the Local Data Methods instead</td>
+    <td>To read the persistent data into the local data object, use the `localData` Methods instead</td>
   </tr>
 </table>  
 
@@ -95,14 +93,29 @@ The Local Data Object is primarily used to store data that will most likely be w
   </tr>
 </table>
 <br>
-####Update the Recent Brand List
+####Add a Brand to the Recent Brand List
 <table>
   <tr>
-    <td colspan="2"><strong><code>core.localData.updateRecentBrands()</code></strong></td>
+    <td colspan="2"><strong><code>core.localData.addToRecentBrands(brand)</code></strong></td>
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Pushes a brand to the front of the recent brands list and pops of the last brand</td>
+  </tr>
+</table>
+<br>
+####Update the Current Brand
+<table>
+  <tr>
+    <td colspan="2"><strong><code>core.localData.setCurrentBrand(brand)</code></strong></td>
+  </tr>
+  <tr>
+    <td>Description</td>
+    <td>Will set the current brand</td>
+  </tr>
+  <tr>
+    <td>Note</td>
+    <td>This method should be run after <code>addToRecentBrands</code></td>
   </tr>
 </table>
 <br>
@@ -113,25 +126,25 @@ The Local Data Object is primarily used to store data that will most likely be w
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Updates the Local Brand List based on the path in <code>core.localData.userSettings.files.pathToBrands</code></td>
   </tr>
 </table>
 <br>
 ####Get a Filtered Brand List
 <table>
   <tr>
-    <td colspan="2"><strong><code>core.localData.filterBrands()</code></strong></td>
+    <td colspan="2"><strong><code>core.localData.filterBrands(criteria_string)</code></strong></td>
   </tr>
   <tr>
     <td>Description</td>
-    <td>Updates the user settings file based on the core.localData.userSettings</td>
+    <td>Returns a list of brands that start with the same letters of the given criteria</td>
   </tr>
 </table>
 <br>
-####Update *All* of `LocalData`'s Objects
+####Update *All* of `LocalData`'s Objects (NOT currently used)
 <table>
   <tr>
-    <td colspan="2"><strong><code>core.localData.filterBrands()</code></strong></td>
+    <td colspan="2"><strong><code>core.localData.updateAll()</code></strong></td>
   </tr>
   <tr>
     <td>Description</td>
