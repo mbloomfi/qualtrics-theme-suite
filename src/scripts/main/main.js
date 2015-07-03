@@ -7,48 +7,8 @@ var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
 
-var localSettingsData = null;
-var localPersistentData = null;
 
-// == INIT ==
-el.on("load", function(){
-
-	//add global reference to editor and preview
-	window.editor = el("#editor");
-	window.preview = el("#preview");
-
-
-	//= include fileSystem.js
-
-	baton(function(next){
-		
-		codemirrorInit();
-		readUserPreferences(next);
-
-	})
-	.then(function(next){
-
-		readPersistantData(next);
-
-	})
-	.then(function(){
-
-		brandDropDown.populate();
-		projectDropDown.populate();
-
-		//un-hide page // show editor and webview
-		el.join( [editor, preview] ).rmClass("hide");
-		enableDropdowns();
-	})
-	.run();
-
-
-	// // add resize listener
-	// window.addEventListener('resize',onWindowResize);
-
-	
-
-});
+//= include app-core-methods.js
 
 var dimmer = {
 	on: function() {
@@ -59,6 +19,7 @@ var dimmer = {
 		},10);
 	},
 	off: function(){
+		readUserPreferences();
 		var _dimmer = el(".dimmer").rmClass("show");
 		setTimeout(function(){
 			_dimmer.rm();
@@ -66,7 +27,8 @@ var dimmer = {
 	}
 };
 
-editorPreviewBar = {
+
+var editorPreviewBar = {
 	set: function(_index){
 		var editorWidth = null;
 		var previewWidth = null;
@@ -89,29 +51,55 @@ editorPreviewBar = {
 	}
 };
 
-function logError(_message, _err) {
-	console.log(_message, _err);
-}
 
-function pause(_callback, time) {
-	setTimeout(function(){
-		_callback();
-	}, time);
-}
+// Init CodeMirror
+function codemirrorInit() {
+	window.codemirrorContainer = el("#codemirror-wrapper");
 
-
-function updatePersitentDataFile(_callback){
-	json.writeFile(Global.appRoot+"/local/persistent-data.json", localPersistentData, function(err){
-		
-		if(err) alert("Error Saving Changes");
-
-		else if(_callback!==undefined){
-			_callback();
-		}
-		
+	var myCodeMirror = CodeMirror(codemirrorContainer, {
+		value: "body { \n\tbackground: red;\n}",
+		mode: "css",
+		theme: "monokai",
+		tabSize: 2,
+		indentWithTabs: true,
+		keyMap: "sublime",
+		lineWrapping: true,
+		lineNumbers: true
 	});
 }
 
+//= include editor.js
+//= include brand-search.js
+//= include quitter.js
 
 
-//
+// INIT app
+el.on("load", function(){
+	//add global reference to editor and preview
+	window.editor = el("#editor");
+	window.preview = el("#preview");
+
+	baton(function(next){
+		
+		codemirrorInit();
+		readUserPreferences(next);
+
+	})
+	.then(function(next){
+
+		readPersistantData(next);
+
+	})
+	.then(function(){
+
+		brandDropDown.populate();
+		projectDropDown.populate();
+
+		//un-hide page // show editor and webview
+		el.join( [editor, preview] ).rmClass("hide");
+		enableDropdowns();
+	})
+	.run();
+});
+
+

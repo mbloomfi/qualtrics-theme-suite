@@ -1,4 +1,12 @@
 function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
+
+function pause(time, _callback) {
+	var args = Array.prototype.splice.call(arguments, 2);
+	console.log("args:",args);
+	setTimeout(function(){
+		_callback.apply(null, args);
+	}, time);
+}
 /*!
 <el> by samueleaton
 */
@@ -10752,6 +10760,7 @@ var dimmer = {
 		},10);
 	},
 	off: function(){
+		readUserPreferences();
 		var _dimmer = el(".dimmer").rmClass("show");
 		setTimeout(function(){
 			_dimmer.rm();
@@ -10786,11 +10795,6 @@ function logError(_message, _err) {
 	console.log(_message, _err);
 }
 
-function pause(_callback, time) {
-	setTimeout(function(){
-		_callback();
-	}, time);
-}
 
 
 function updatePersitentDataFile(_callback){
@@ -10981,11 +10985,11 @@ function enableDropdowns(){
 		if(_dropdown === "brands"){
 			baton(function(next){
 				brandsDropdown.addClass("hide");
-				pause(next, 200)
+				pause(200, next);
 			})
 			.then(function(next){
 				brandDropDown.purge();
-				pause(next,10);
+				pause(10, next);
 			})
 			.then(function(){
 				brandDropDown.refill();
@@ -10996,11 +11000,11 @@ function enableDropdowns(){
 		else if(_dropdown === "projects") {
 			baton(function(next){
 				projectDropdown.addClass("hide");
-				pause(next, 200);
+				pause(200, next);
 			})
 			.then(function(next){
 				projectDropdown.purge();
-				pause(next,10);
+				pause(10, next);
 			})
 			.then(function(){
 				projectDropDown.refill();
@@ -11100,10 +11104,11 @@ function updateBrandsList(_callback){
 }
 
 
+
 function filterBrands(next, criteria){
 	var matches = [];
 	for(var i = 0, ii = localPersistentData.brandList.length; i < ii; i++){
-		if(localPersistentData.brandList[i].slice(0,criteria.length) === criteria)
+		if(localPersistentData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
 			matches.push(localPersistentData.brandList[i]);
 	}
 	next(matches);

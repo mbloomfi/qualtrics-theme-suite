@@ -62,8 +62,7 @@ gulp.task("mainScripts", function(){
 		"src/scripts/libs/*.js",
 		"src/scripts/libs/codemirror/codemirror.js",
 		"src/scripts/libs/codemirror/**",
-		"src/scripts/main/*.js", 
-		"src/scripts/globalObjects/*.js", 
+		"src/scripts/main/main.js", 
 		//exclude
 		"!src/scripts/main/_.js"])
 	.pipe(plumber())
@@ -106,6 +105,7 @@ gulp.task("prefScripts", function(){
 	return gulp.src([
 		//include
 		"src/scripts/libs/el.min.js", 
+		"src/scripts/libs/baton.min.js", 
 		"src/scripts/preferences/*.js", 
 		// "src/scripts/globalObjects/*.js", 
 		//exclude

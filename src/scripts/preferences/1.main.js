@@ -66,40 +66,45 @@ el("#cancel").on("click", function(){
 //				SAVE BUTTON
 // --------------------------------
 el("#save").on("click", function(e){
+	savePreferences();
+});
+
+function savePreferences() {
 	// saves from local to user-prefs file if any changes
-	console.log("saving prefs");
 	json.writeFile(Global.appRoot+"/local/user-settings.json", localUserPrefData, function(err){
 		if(err) alert("Error Saving Changes");
-		else Global.preferencesWindow.close();
+		else Global.preferencesWindow.close();;
 	});
-});
+}
+
+
 
 
 // --------------------------------
 //			PREFERENCES NAV
 // --------------------------------
 el("#QTS-option").on("click", function(){
-	panel.transitionTo("QTS");
+	panel.transitionTo.run("QTS");
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
 el("#files-option").on("click", function(){
-	panel.transitionTo("files");
+	panel.transitionTo.run("files");
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
 el("#snippets-option").on("click", function(){
-	panel.transitionTo("snippets");
+	panel.transitionTo.run("snippets");
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
 el("#preview-option").on("click", function(){
-	panel.transitionTo("preview");
+	panel.transitionTo.run("preview");
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
 el("#window-option").on("click", function(){
-	panel.transitionTo("window");
+	panel.transitionTo.run("window");
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
@@ -108,16 +113,28 @@ el("#window-option").on("click", function(){
 // --------------------------------
 //		CHANGE PREFERENCES PANEL
 // --------------------------------
-panel.transitionTo = function(_newPanelName) {
+panel.transitionTo = baton(function(next, _newPanelName){
+
 	panel.addClass("hide");
 	var _newPanel = panel.buildPanel(_newPanelName);
-	// panel.getPanelData(_newPanelName);
 	panel.insertData(_newPanelName);
-	setTimeout(function(){
-		panel.setPanel(_newPanel);
-		panel.rmClass("hide");
-	}, 300);
-}
+	
+	pause(300, next, _newPanel);
+
+})
+.then(function(next, _newPanel){
+
+	panel.setPanel(next, _newPanel);
+	panel.rmClass("hide");
+
+})
+.then(function(next){
+	// console.log("currentPanel:",currentPanel);
+	currentPanel.on("submit", function(evt){
+		evt.preventDefault();
+	});
+
+});
 
 
 // --------------------------------
@@ -218,9 +235,10 @@ panel.buildPanel = function(_newPanel) {
 // --------------------------------
 //		APPLY THE BUILT PANNEL
 // --------------------------------
-panel.setPanel = function(_newPanel) {
+panel.setPanel = function(next, _newPanel) {
 	panel.purge().append(_newPanel);
 	checkAndRadio();
+	next();
 }
 
 
