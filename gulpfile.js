@@ -69,7 +69,7 @@ gulp.task("mainScripts", function(){
 	.pipe(plumber())
 	.pipe(concat("_.js"))
 	.pipe(include())
-	.pipe(uglify())
+	// .pipe(uglify())
 	.pipe(gulp.dest("src/scripts/main/"));
 });
 
@@ -114,7 +114,7 @@ gulp.task("prefScripts", function(){
 	.pipe(plumber())
 	.pipe(include())
 	.pipe(concat("_.js"))
-	.pipe(uglify())
+	// .pipe(uglify())
 	.pipe(gulp.dest("src/scripts/preferences/"));
 });
 

@@ -14,7 +14,9 @@ var brandDropDown = {
 							el("+div#searchBrandsContainer").append(
 								el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
 							),
-							el("+div#recentBrands").text("recent brands"),
+							el("+section#brandsListCont").append(
+								el("+div#recentBrands").text("recent brands")
+							),
 							el("+div#newBrand").text("New Brand")
 						])
 
@@ -24,7 +26,34 @@ var brandDropDown = {
 			) //dropdown
 
 		);
+
+		window.brandsDropdown = brandName.el(".dropdown")[0];
+	},
+	refill: function(){
+		brandsDropdown.append(
+			el.join([
+				el("+div").addClass("arrow"),
+
+				el("+div").addClass("dropdownBody").append(
+
+					el.join([
+						el("+div#searchBrandsContainer").append(
+							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+						),
+						el("+section#brandsListCont").append(
+							el("+div#recentBrands").text("recent brands")
+						),
+						el("+div#newBrand").text("New Brand")
+					])
+
+				)
+			])
+		);
+	},
+	purge: function(){
+		brandsDropdown.purge();
 	}
+
 };
 
 var projectDropDown = {
@@ -53,51 +82,47 @@ var projectDropDown = {
 			)
 
 		);
+		window.projectDropdown = projectName.el(".dropdown")[0];
+	},
+	refill: function(){
+		projectDropdown.append(
+			el.join([
+				el("+div").addClass("arrow"),
+
+				el("+div").addClass("dropdownBody").append(
+					el("+div").text("dropdown")
+					// el.join([
+					// 	el("+div#searchBrandsContainer").append(
+					// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+					// 	),
+					// 	el("+div#recentBrands").text("recent brands"),
+					// 	el("+div#newBrand").text("New Brand")
+					// ])
+
+				)
+			])
+		);
+	},
+	purge: function(){
+		projectDropdown.purge();
 	}
 }
 
 
-// var dropdownCheck = baton(function(next, data){
-
-// })
-// .then(function(next){
-
-// })
-
-var processBrandSearch = 
-baton(readBrands)
-	.then(updateSearchResults)
-
-function initBrandSearch() {
-
-	var brandSearchInput = el("#searchBrands");
-	brandSearchInput.on("keyup", function(){
-		console.log("keyup");
-		var inputValue = brandSearchInput.value;
-		if(inputValue.length > 0){
-			for(var i = 0, ii = inputValue.length; i < ii; i++){
-
-			}
-		}
-	})
-}
-
 
 	
 
+
+
+// DROPDOWNS
 function enableDropdowns(){
-
-
 	var dropdowns = {
 		brands: "closed",
 		projects: "closed"
-	}
+	};
 	
 	var brandName = el("#brandName");
 	var projectName = el("#projectName");
-
-	var brandsDropdown = brandName.el(".dropdown")[0];
-	var projectDropdown = projectName.el(".dropdown")[0];
 
 	function toggleDropdown(_dropdown){
 		if(dropdowns[_dropdown] === "opened") {
@@ -114,18 +139,42 @@ function enableDropdowns(){
 
 		if(_dropdown === "brands"){
 			brandsDropdown.rmClass("hide");
+			initBrandSearch();
 		}
 		else if(_dropdown === "projects") {
 			projectDropdown.rmClass("hide");
 		}
-		
 	}
+
 	function closeDropdown(_dropdown) {
+
 		if(_dropdown === "brands"){
-			brandsDropdown.addClass("hide");
+			baton(function(next){
+				brandsDropdown.addClass("hide");
+				pause(next, 200)
+			})
+			.then(function(next){
+				brandDropDown.purge();
+				pause(next,10);
+			})
+			.then(function(){
+				brandDropDown.refill();
+			})
+			.run();
 		}
+
 		else if(_dropdown === "projects") {
-			projectDropdown.addClass("hide");
+			baton(function(next){
+				projectDropdown.addClass("hide");
+				pause(next, 200);
+			})
+			.then(function(next){
+				projectDropdown.purge();
+				pause(next,10);
+			})
+			.then(function(){
+				projectDropDown.refill();
+			}).run();
 		}
 		
 	}
@@ -146,7 +195,6 @@ function enableDropdowns(){
 		evt.stopPropagation();
 	});
 
-
 	el("body")[0].on("click", function(evt){
 		if(dropdowns["brands"] === "opened" && evt.target !== brandName){
 			toggleDropdown("brands");
@@ -155,9 +203,6 @@ function enableDropdowns(){
 			toggleDropdown("projects");
 		}
 	});
-
-
-
 	
 }
 	

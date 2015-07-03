@@ -89,7 +89,7 @@ section#editor {
 				// DROPDOWN MENUS
 				div.btn {
 					
-					& div.dropdown {
+					div.dropdown {
 						overflow hidden
 						height 316px
 						width 200px
@@ -103,7 +103,7 @@ section#editor {
 						
 						
 						
-						& .arrow {
+						.arrow {
 							display block
 							width 0
 							height 0
@@ -116,7 +116,7 @@ section#editor {
 							z-index 1000
 						}
 						
-						& .dropdownBody{
+						.dropdownBody{
 							height 300px
 							width 100%
 							// pointer-events none
@@ -131,7 +131,7 @@ section#editor {
 
 
 							// BRANDS DROPDOWN BODY
-							& div#searchBrandsContainer {
+							div#searchBrandsContainer {
 								padding 0
 								height 35px
 								
@@ -152,14 +152,54 @@ section#editor {
 
 								}
 							}
-							& #recentBrands {
+							#brandsListCont {
 								border-top: 1px solid rgba(255,255,255, .8)
 								border-bottom: 1px solid rgba(255,255,255, .8)
 								height 230px
 								box-sizing border-box
+								overflow-y scroll
+								position relative
 								transition border-top .15s ease, border-bottom .15s ease
+										
+								
+								#searchResultsCont {
+									.arrow-down {
+										height 25px
+										width 100%
+										position absolute
+										bottom 0
+										pointer-events none
+										z-index 1000
+										
+										
+										
+										&:before {
+											content ""
+											position fixed
+											display block
+											height 25px
+											width 200px
+											background-color rgba(0,0,0,.1)
+											background-image url("local/images/arrow.svg")
+											background-size auto 50%
+											background-position center
+											background-repeat no-repeat
+												
+											
+										}
+									}
+									.search-result {
+										background-color rgba(0,0,0,0)
+										padding 4px 5px
+										transition background-color .3s ease
+										&:hover {
+											background-color rgba(0,0,0,.2)
+										}
+									}
+								}
+								
 							}
-							& #newBrand {
+							#newBrand {
 								line-height 35px
 								padding 0 4px
 								color rgba(255,255,255,1)
@@ -180,10 +220,10 @@ section#editor {
 							top 110%
 							opacity .5
 							
-							& .dropdownBody{
+							.dropdownBody{
 								
 								// BRANDS DROPDOWN HIDDEN
-								& div#searchBrandsContainer {
+								div#searchBrandsContainer {
 									
 									input#searchBrands {
 										color rgba(255,255,255,0)
@@ -195,11 +235,11 @@ section#editor {
 									}
 									
 								}
-								& #recentBrands {
+								#recentBrands {
 									border-top: 1px solid rgba(255,255,255, 0)
 									border-bottom: 1px solid rgba(255,255,255, 0)
 								}
-								& #newBrand {
+								#newBrand {
 									color rgba(255,255,255,0)
 								}
 								

@@ -21,7 +21,8 @@ el.on("load", function(){
 	//= include fileSystem.js
 
 	baton(function(next){
-
+		
+		codemirrorInit();
 		readUserPreferences(next);
 
 	})
@@ -35,18 +36,17 @@ el.on("load", function(){
 		brandDropDown.populate();
 		projectDropDown.populate();
 
-		brandSearch();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 		enableDropdowns();
 	})
-	.yield();
+	.run();
 
 
 	// // add resize listener
 	// window.addEventListener('resize',onWindowResize);
 
-	codemirrorInit();
+	
 
 });
 
@@ -93,12 +93,24 @@ function logError(_message, _err) {
 	console.log(_message, _err);
 }
 
-function pause(time, _callback) {
+function pause(_callback, time) {
 	setTimeout(function(){
 		_callback();
 	}, time);
 }
 
+
+function updatePersitentDataFile(_callback){
+	json.writeFile(Global.appRoot+"/local/persistent-data.json", localPersistentData, function(err){
+		
+		if(err) alert("Error Saving Changes");
+
+		else if(_callback!==undefined){
+			_callback();
+		}
+		
+	});
+}
 
 
 
