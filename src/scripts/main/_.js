@@ -10,22 +10,7 @@ function pause(time, _callback) {
 /*!
 <el> by samueleaton
 */
-!function(){el=function(e,t){function n(e){var n=e.charAt(0);switch(n){case"#":return i.getById(e.slice(1));case"+":if(e.slice(1).match(/#/)){var r=e.slice(1).split("#"),l=i.create(r[0],t);return el.isElementArray(l)?l.each(function(e){e.setAttribute("id",r[1])}):l.setAttribute("id",r[1]),l}return i.create(e.slice(1),t);case".":return i.getByClassName(e.slice(1));default:return i.getByTagName(e)}}var i=this===window?window.el:this;return"string"==typeof e?n(e):el.isElement(e)?el.elify(e):el.isCollection(e)||el.isNodeList(e)||el.isElementArray(e)?el.elify(e):void 0},el.create=function(e,t){if(t&&"number"==typeof t){for(var n=[],i=0,r=t;r>i;i++)n.push(el.elify(document.createElement(e)));return n}return el.elify(document.createElement(e))},el.getById=function(e){if(this===window.el)return el.elify(document.getElementById(e));if(el.isElement(this)){if(document.contains(this))return el.elify(document.getElementById(e));var t=this,n=!1,i=null;return t.el("*").each(function(t){return t.getAttribute("id")===e?(n=!0,i=t,0):void 0}),i}},el.getByClassName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByClassName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.getByTagName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByTagName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.on=function(e,t){var n=el.isElement(this)||el.isElementArray(this)?this:window;return n.addEventListener(e,t),this},el.join=function(e){var t=[];if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)el.isElement(e[n])?t.push(e[n]):el.isElementArray(e[n])&&e[n].each(function(e){t.push(e)});return el.elify(t)},el.elify=function(e){function t(e){return e.el=el,e.getById=el.getById,e.getByClassName=el.getByClassName,e.getByTagName=el.getByTagName,e.getByAttribute=el.getByAttribute,e.elify=el.elify,e.on=el.on,e.addClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.add(e[n]);else"string"==typeof e&&t.classList.add(e);return t},e.rmClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.remove(e[n]);else"string"==typeof e&&t.classList.remove(e);return t},e.hasClass=function(e){return this.classList.contains(e)},e.rm=function(){var e=this;return e.parentNode&&e.parentNode.removeChild(e),e},e.append=function(e){if(el.isElementArray(e)){var n=document.createDocumentFragment();e.each(function(e){e.el||(e=t(e)),n.appendChild(e)}),e=n}return this.appendChild(e),this},e.appendTo=function(e){var t=this;return el.isElementArray(e)?e.each(function(e){var n=t.cloneNode(!0);e.appendChild(n)}):e.appendChild(t),t},e.purge=function(){for(var e=this;e.firstChild;)e.removeChild(e.firstChild);return e},Object.defineProperty(e,"text",{configurable:!0,enumerable:!0,writable:!0,value:function(t){return"string"==typeof t&&e.appendChild(document.createTextNode(t)),e}}),e.attr=function(e,t){return"string"==typeof e&&this.setAttribute(e,void 0!==t?t:""),this},e}return el.isElement(e)?t(e):((el.isCollection(e)||el.isNodeList(e))&&(e=Array.prototype.slice.call(e)),e.each=function(e){for(var t=this,n=0,i=t.length;i>n;n++)if(0===e(t[n],n,t))return this===window.el?void 0:this;return this===window.el?void 0:this},e.each(function(e){t(e)}),e.addClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.addClass(n))}),e},e.rmClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rmClass(n))}),e},e.hasClass=function(n,i){if("all"===i||"undefined"==typeof i){var r=!0;return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.hasClass(n)||(r=!1))}),r}return"any"===i?(e.each(function(e){return"undefined"!=typeof e&&(e.el||(e=t(e)),e.hasClass(n))?!0:void 0}),!1):e},e.rm=function(n){return this.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rm())}),e},e.append=function(n){if(el.isElementArray(n)){var i=document.createDocumentFragment();n.each(function(e){void 0===e.el&&(e=t(e)),i.appendChild(e)}),n=i}return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.append(n.cloneNode(!0)))}),e},e.appendTo=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.appendTo(n))}),i!==!1&&e.rm(),e},e.purge=function(){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.purge())}),e},e.text=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.text(n))}),e},e.attr=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.attr(n,i))}),e},e.on=function(e,t){return this.each(function(n){n.addEventListener(e,t)}),this},e)},el.isArray=function(e){return Array.isArray(e)||e instanceof Array?!0:!1},el.isElementArray=function(e){return(Array.isArray(e)||e instanceof Array)&&el.isElement(e[0])?!0:!1},el.isElement=function(e){var t;try{t=e instanceof HTMLElement}catch(n){t=e&&e.nodeType?!0:!1}return t},el.isCollection=function(e){return e instanceof HTMLCollection},el.isNodeList=function(e){return e instanceof NodeList}}();
-// function fring(_initCallback){
-// 	var queue = [];
-
-	
-
-// }
-
-
-// fring(function(next){
-// 	someFunc(next);
-// })
-// .then(function(next){
-// 	functionTwo(next);
-// })
-// .then(superFunc3)
+!function(){el=function(e,t){function n(e){var n=e.charAt(0);switch(n){case"#":return i.getById(e.slice(1));case"+":if(e.slice(1).match(/#/)){var r=e.slice(1).split("#"),l=i.create(r[0],t);return el.isElementArray(l)?l.each(function(e){e.setAttribute("id",r[1])}):l.setAttribute("id",r[1]),l}return i.create(e.slice(1),t);case".":return i.getByClassName(e.slice(1));default:return i.getByTagName(e)}}var i=this===window?window.el:this;return"string"==typeof e?n(e):el.isElement(e)?el.elify(e):el.isCollection(e)||el.isNodeList(e)||el.isElementArray(e)?el.elify(e):void 0},el.create=function(e,t){if(t&&"number"==typeof t){for(var n=[],i=0,r=t;r>i;i++)n.push(el.elify(document.createElement(e)));return n}return el.elify(document.createElement(e))},el.getById=function(e){if(this===window.el)return el.elify(document.getElementById(e));if(el.isElement(this)){if(document.contains(this))return el.elify(document.getElementById(e));var t=this,n=!1,i=null;return t.el("*").each(function(t){return t.getAttribute("id")===e?(n=!0,i=t,0):void 0}),i}},el.getByClassName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByClassName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.getByTagName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByTagName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.on=function(e,t){var n=el.isElement(this)||el.isElementArray(this)?this:window;return n.addEventListener(e,t),this},el.join=function(e){var t=[];if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)el.isElement(e[n])?t.push(e[n]):el.isElementArray(e[n])&&e[n].each(function(e){t.push(e)});return el.elify(t)},el.elify=function(e){function t(e){return e.el=el,e.getById=el.getById,e.getByClassName=el.getByClassName,e.getByTagName=el.getByTagName,e.getByAttribute=el.getByAttribute,e.elify=el.elify,e.on=el.on,e.addClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.add(e[n]);else"string"==typeof e&&t.classList.add(e);return t},e.rmClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.remove(e[n]);else"string"==typeof e&&t.classList.remove(e);return t},e.hasClass=function(e){return this.classList.contains(e)},e.rm=function(){var e=this;return e.parentNode&&e.parentNode.removeChild(e),e},e.append=function(e){if(el.isElementArray(e)){var n=document.createDocumentFragment();e.each(function(e){e.el||(e=t(e)),n.appendChild(e)}),e=n}return this.appendChild(e),this},e.appendTo=function(e){var t=this;return el.isElementArray(e)?e.each(function(e){var n=t.cloneNode(!0);e.appendChild(n)}):e.appendChild(t),t},e.purge=function(){for(var e=this;e.firstChild;)e.removeChild(e.firstChild);return e},Object.defineProperty(e,"text",{configurable:!0,enumerable:!0,writable:!0,value:function(t){return"string"==typeof t&&e.appendChild(document.createTextNode(t)),e}}),e.attr=function(e,t){return"string"==typeof e&&this.setAttribute(e,void 0!==t?t:""),this},e}return el.isElement(e)?t(e):((el.isCollection(e)||el.isNodeList(e))&&(e=Array.prototype.slice.call(e)),e.each=function(e){for(var t=this,n=0,i=t.length;i>n;n++)if(0===e(t[n],n,t))return this===window.el?void 0:this;return this===window.el?void 0:this},e.each(function(e){t(e)}),e.addClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.addClass(n))}),e},e.rmClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rmClass(n))}),e},e.hasClass=function(n,i){if("all"===i||"undefined"==typeof i){var r=!0;return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.hasClass(n)||(r=!1))}),r}return"any"===i?(e.each(function(e){return"undefined"!=typeof e&&(e.el||(e=t(e)),e.hasClass(n))?!0:void 0}),!1):e},e.rm=function(n){return this.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rm())}),e},e.append=function(n){if(el.isElementArray(n)){var i=document.createDocumentFragment();n.each(function(e){void 0===e.el&&(e=t(e)),i.appendChild(e)}),n=i}return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.append(n.cloneNode(!0)))}),e},e.appendTo=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.appendTo(n))}),i!==!1&&e.rm(),e},e.purge=function(){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.purge())}),e},e.text=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.text(n))}),e},e.attr=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.attr(n,i))}),e},e.on=function(e,t){return this.each(function(n){n.addEventListener(e,t)}),this},e)},el.isArray=function(e){return Array.isArray(e)||e instanceof Array?!0:!1},el.isElementArray=function(e){return(Array.isArray(e)||e instanceof Array)&&el.isElement(e[0])?!0:!1},el.isElement=function(e){var t;try{t=e instanceof HTMLElement||e instanceof Element}catch(n){t=e&&e.nodeType?!0:!1}return t},el.isCollection=function(e){return e instanceof HTMLCollection},el.isNodeList=function(e){return e instanceof NodeList}}();
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -10708,48 +10693,448 @@ var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
 
-var localSettingsData = null;
-var localPersistentData = null;
-
-// == INIT ==
-el.on("load", function(){
-
-	//add global reference to editor and preview
-	window.editor = el("#editor");
-	window.preview = el("#preview");
+var core = Global.coreMethods = {
 
 
-	//= include fileSystem.js
 
-	baton(function(next){
+	// ----------------------------
+
+	//  Persistent Data File
+
+	// ----------------------------
+
+	persistentDataFile: {
+
+
+
+		read: function (_successCallback){
+
+			json.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+
+				if(!_err) {
+
+					if(typeof _successCallback === "function") _successCallback(_data);
+
+				}
+
+				else {
+
+					console.log("readPersistantData ERROR:",_err);
+
+				}
+
+			});
+
+		},
+
+
+
+		update: function (_successCallback){
+
+			var _DATA = {};
+
+			_DATA.recentBrands = core.localData.recentBrands;
+
+			//_DATA.x = core.localData.x;
+
+			json.writeFile(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
+
+				if(err) alert("Error Saving Changes");
+
+				else if(_successCallback!==undefined){
+
+					var args = Array.prototype.splice.call(arguments, 1);
+
+					_successCallback.apply(null, args);
+
+				}
+
+			});
+
+		}
+
 		
-		codemirrorInit();
-		readUserPreferences(next);
 
-	})
-	.then(function(next){
-
-		readPersistantData(next);
-
-	})
-	.then(function(){
-
-		brandDropDown.populate();
-		projectDropDown.populate();
-
-		//un-hide page // show editor and webview
-		el.join( [editor, preview] ).rmClass("hide");
-		enableDropdowns();
-	})
-	.run();
+	},
 
 
-	// // add resize listener
-	// window.addEventListener('resize',onWindowResize);
 
-	
+	// ----------------------------
 
-});
+	//  User Settings File
+
+	// ----------------------------
+
+	userSettingsFile: {
+
+		// function readUserSettings(_successCallback){
+
+		// 	
+
+		// }
+
+		read: function(_successCallback){
+
+			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+
+				if(!_err){ 
+
+					if(typeof _successCallback === "function") _successCallback(_data);
+
+				}
+
+				else {
+
+					console.log("User Settings READ ERROR:", _err);
+
+				}
+
+			});
+
+		},
+
+		update: function(_successCallback){
+
+			var self = this;
+
+
+
+			if(core.localData.userSettings === null){
+
+				alert("Error with settings, sucks to be you.");
+
+				return;
+
+			}
+
+
+
+			self.read(function(_data){
+
+				if(core.localData.userSettings !== _data){
+
+
+
+					json.writeFile(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
+
+						if(err) alert("Error Saving Changes");
+
+						else _successCallback();
+
+					});
+
+
+
+				}
+
+			});
+
+
+
+			
+
+
+
+			
+
+		}
+
+	},
+
+
+
+	brands: {
+
+
+
+		create: function(){
+
+
+
+		},
+
+
+
+		addRecentBrand: function(){
+
+
+
+		},
+
+
+
+		setCurrentBrand: function(){
+
+
+
+		},
+
+
+
+
+
+		exists: function(){
+
+
+
+		},
+
+
+
+		hasInfoFile: function(){
+
+
+
+		}
+
+
+
+	},
+
+
+
+	// ----------------------------
+
+	//  Local Temp Data
+
+	// ----------------------------
+
+	localData: {
+
+		recentBrands: null,
+
+		brandList: null,
+
+		userSettings: null,
+
+		currentBrand: null,
+
+
+
+		updateUserSettings: function(_callback){ // should only be run on app init
+
+			core.userSettingsFile.read(function(_data){
+
+				if(core.localData.userSettings === null || core.localData.userSettings !== _data){
+
+					core.localData.userSettings = _data;
+
+
+
+					if(_callback) _callback();
+
+				}
+
+				
+
+			});
+
+		},
+
+
+
+		updateBrandsList: function(_CALLBACK){
+
+			var pathToBrands = process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands;
+
+			var brandList = [];
+
+			fs.readdir(pathToBrands, function(_err, _files){
+
+				if(_err) console.log("error");
+
+				for(var i = 0, ii = _files.length; i < ii; i++){
+
+					var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+
+					if(stats.isDirectory()) brandList.push(_files[i]);
+
+				}
+
+				core.localData.brandList = brandList;
+
+				if(_CALLBACK!==undefined) _CALLBACK();
+
+			});
+
+		},
+
+
+
+		updateRecentBrands: function(_CALLBACK){
+
+			if(core.localData.recentBrands===null){
+
+				core.persistentDataFile.read(function(_persistent_data){
+
+					core.localData.recentBrands = _persistent_data.recentBrands;
+
+					_CALLBACK();
+
+				})
+
+			} else {
+
+				if(core.localData.currentBrand !== null){
+
+					core.localData.recentBrands.unshift(core.localData.currentBrand);
+
+					_CALLBACK();
+
+				}
+
+			}
+
+		},
+
+
+
+		filterBrands: function(criteria){
+
+			var matches = [];
+
+			for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
+
+				if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
+
+					matches.push(core.localData.brandList[i]);
+
+			}
+
+			return matches;
+
+		}
+
+		// ,
+
+
+
+		// updateAll: function (_successCallback){
+
+		// 	core.localData.data = persistentDataFile.read(function(_data){
+
+		// 		core.localData.data = _data;
+
+		// 		if(typeof _successCallback === "function") _successCallback();
+
+		// 	})
+
+		// }
+
+	}
+
+
+
+
+
+		
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // SAVE BRANDS TO LOCAL PERSISTENT DATA
+
+// function updateBrandsList(_callback){
+
+// 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
+
+// 	var brandsList = [];
+
+// 	fs.readdir(pathToBrands, function(_err, _files){
+
+// 		if(_err) console.log("error");
+
+// 		for(var i = 0, ii = _files.length; i < ii; i++){
+
+// 			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+
+// 			if(stats.isDirectory()) brandsList.push(_files[i]);
+
+// 		}
+
+
+
+// 		updatePersitentDataFile(_callback);
+
+
+
+// 		core.localData.brandList = brandsList;
+
+// 	});
+
+// }
+
+
+
+
+
+// function filterBrands(next, criteria){
+
+// 	var matches = [];
+
+// 	for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
+
+// 		if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
+
+// 			matches.push(core.localData.brandList[i]);
+
+// 	}
+
+// 	next(matches);
+
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+C
+
+R
+
+U
+
+D
+
+
+
+*/
+
 
 var dimmer = {
 	on: function() {
@@ -10760,15 +11145,18 @@ var dimmer = {
 		},10);
 	},
 	off: function(){
-		readUserPreferences();
-		var _dimmer = el(".dimmer").rmClass("show");
-		setTimeout(function(){
-			_dimmer.rm();
-		},500);
+		core.localData.updateUserSettings(function(){
+			var _dimmer = el(".dimmer").rmClass("show");
+			setTimeout(function(){
+				_dimmer.rm();
+				_dimmer = null;
+			},500);
+		});
 	}
 };
 
-editorPreviewBar = {
+
+var editorPreviewBar = {
 	set: function(_index){
 		var editorWidth = null;
 		var previewWidth = null;
@@ -10791,28 +11179,8 @@ editorPreviewBar = {
 	}
 };
 
-function logError(_message, _err) {
-	console.log(_message, _err);
-}
 
-
-
-function updatePersitentDataFile(_callback){
-	json.writeFile(Global.appRoot+"/local/persistent-data.json", localPersistentData, function(err){
-		
-		if(err) alert("Error Saving Changes");
-
-		else if(_callback!==undefined){
-			_callback();
-		}
-		
-	});
-}
-
-
-
-//
-
+// Init CodeMirror
 function codemirrorInit() {
 	window.codemirrorContainer = el("#codemirror-wrapper");
 
@@ -10828,239 +11196,284 @@ function codemirrorInit() {
 	});
 }
 
-// function codemirrorAdjustHeight(){
-// 	codemirrorContainer
-// }
+// ----------------------------
+//  Local Temp Data
+// ----------------------------
+var editorCore = {
 
-var brandDropDown = {
-	populate: function(){
-		var brandName = el("#brandName");
-		brandName.append(
+	// ----------------------------
+	//  Dropdowns
+	// ----------------------------
+	dropdowns: {
 
-			el("+div").addClass(["dropdown", "hide"]).append(
+		setDropdownGlobals: function(){
+			window.brandName = el("#brandName");
+			window.projectName = el("#projectName");
+		},
 
-				el.join([
-					el("+div").addClass("arrow"),
+		bodyClick: function(){
+			document.body.addEventListener('click', function(){
+				if(editorCore.dropdowns.brands.status === "opened"){
+					editorCore.dropdowns.brands.toggle();
+				}
+				else if(editorCore.dropdowns.projects.status === "opened"){
+					editorCore.dropdowns.projects.toggle();
+				}
+			});
+		},
 
-					el("+div").addClass("dropdownBody").append(
+		brands: {
+
+			search: {
+				preprare: baton(function(next, inputValue){
+						setBrandSearchGlobals();
+						next();
+					})
+					.then(function(next){
+						prepareForBrandSearch();
+					}),
+
+
+			},
+
+			status: "closed",
+
+			init: function(){
+					var self = this;
+					brandName.on("click", function(evt){
+						self.toggle();
+					});
+					brandsDropdown.on("click", function(evt){
+						evt.stopPropagation();
+					});
+			},
+
+			toggle: function(){
+				if(this.status === "opened") {
+					this.close();
+					this.status = "closed";
+				}
+				else if(this.status === "closed") {
+					this.open();
+					this.status = "opened";
+				}
+			},
+
+			open: function(){
+				var self = this;
+				brandsDropdown.rmClass("hide");
+				prepareForBrandSearch.run();
+				// self.init();
+			},
+
+			close: function(){
+				baton(function(next){
+					brandsDropdown.addClass("hide");
+					setTimeout(next, 200);
+				})
+				.then(function(next){
+					brandDropDown.purge();
+					next();
+				})
+				.then(function(){
+					brandDropDown.refill();
+				})
+				.run();
+			},
+
+			populate: function(){
+				brandName.append(
+
+					el("+div").addClass(["dropdown", "hide"]).append(
 
 						el.join([
-							el("+div#searchBrandsContainer").append(
-								el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-							),
-							el("+section#brandsListCont").append(
-								el("+div#recentBrands").text("recent brands")
-							),
-							el("+div#newBrand").text("New Brand")
+							el("+div").addClass("arrow"),
+
+							el("+div").addClass("dropdownBody").append(
+
+								el.join([
+									el("+div#searchBrandsContainer").append(
+										el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+									),
+									el("+section#brandsListCont").append(
+										el("+div#recentBrands").text("recent brands")
+									),
+									el("+div#newBrand").text("New Brand")
+								])
+
+							)
 						])
 
 					)
-				])
 
-			) //dropdown
+				);
 
-		);
+				window.brandsDropdown = brandName.el(".dropdown")[0];
+				// then enable dropdown
+				
+			},
 
-		window.brandsDropdown = brandName.el(".dropdown")[0];
-	},
-	refill: function(){
-		brandsDropdown.append(
-			el.join([
-				el("+div").addClass("arrow"),
-
-				el("+div").addClass("dropdownBody").append(
-
+			refill: function(){
+				brandsDropdown.append(
 					el.join([
-						el("+div#searchBrandsContainer").append(
-							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-						),
-						el("+section#brandsListCont").append(
-							el("+div#recentBrands").text("recent brands")
-						),
-						el("+div#newBrand").text("New Brand")
+						el("+div").addClass("arrow"),
+
+						el("+div").addClass("dropdownBody").append(
+
+							el.join([
+								el("+div#searchBrandsContainer").append(
+									el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+								),
+								el("+section#brandsListCont").append(
+									el("+div#recentBrands").text("recent brands")
+								),
+								el("+div#newBrand").text("New Brand")
+							])
+
+						)
 					])
+				);
+			},
+			
+			purge: function(){
+				brandsDropdown.purge();
+			}
 
-				)
-			])
-		);
-	},
-	purge: function(){
-		brandsDropdown.purge();
-	}
+		},
+		projects: {
 
-};
+			status: "closed",
 
-var projectDropDown = {
-	populate: function(){
-		var projectName = el("#projectName");
-		projectName.append(
+			init: function(){
+				// if(projectName.el(".dropdown")[0] === undefined || projectName.el(".dropdown")[0] === null){
+				// 	editorCore.dropdowns.projects.populate();
+				// }
+				// window.projectsDropdown = projectName.el(".dropdown")[0];
+				projectName.on("click", function(evt){
+					editorCore.dropdowns.projects.toggle();
+				});
+				projectDropdown.on("click", function(evt){
+					evt.stopPropagation();
+				});
+			},
 
-			el("+div").addClass(["dropdown", "hide"]).append(
+			toggle: function(){
+				if(this.status === "opened") {
+					this.close();
+					this.status = "closed";
+				}
+				else if(this.status === "closed") {
+					this.open();
+					this.status = "opened";
+				}
+			},
 
-				el.join([
-					el("+div").addClass("arrow"),
+			open: function(){
+				projectDropdown.rmClass("hide");
+			},
 
-					el("+div").addClass("dropdownBody").append(
-						el("+div").text("dropdown")
-						// el.join([
-						// 	el("+div#searchBrandsContainer").append(
-						// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-						// 	),
-						// 	el("+div#recentBrands").text("recent brands"),
-						// 	el("+div#newBrand").text("New Brand")
-						// ])
+			close: function(){
+				baton(function(next){
+					projectDropdown.addClass("hide");
+					setTimeout(next, 200);
+				})
+				.then(function(next){
+					projectDropdown.purge();
+					setTimeout(next, 10);
+				})
+				.then(function(){
+					projectDropDown.refill();
+				}).run();
+			},
+
+			populate: function(){
+				var projectName = el("#projectName");
+				projectName.append(
+
+					el("+div").addClass(["dropdown", "hide"]).append(
+
+						el.join([
+							el("+div").addClass("arrow"),
+
+							el("+div").addClass("dropdownBody").append(
+								el("+div").text("dropdown")
+								// el.join([
+								// 	el("+div#searchBrandsContainer").append(
+								// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+								// 	),
+								// 	el("+div#recentBrands").text("recent brands"),
+								// 	el("+div#newBrand").text("New Brand")
+								// ])
+
+							)
+						])
 
 					)
-				])
 
-			)
+				);
+				window.projectDropdown = projectName.el(".dropdown")[0];
+			},
+			refill: function(){
+				projectDropdown.append(
+					el.join([
+						el("+div").addClass("arrow"),
 
-		);
-		window.projectDropdown = projectName.el(".dropdown")[0];
-	},
-	refill: function(){
-		projectDropdown.append(
-			el.join([
-				el("+div").addClass("arrow"),
+						el("+div").addClass("dropdownBody").append(
+							el("+div").text("dropdown")
+							// el.join([
+							// 	el("+div#searchBrandsContainer").append(
+							// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+							// 	),
+							// 	el("+div#recentBrands").text("recent brands"),
+							// 	el("+div#newBrand").text("New Brand")
+							// ])
 
-				el("+div").addClass("dropdownBody").append(
-					el("+div").text("dropdown")
-					// el.join([
-					// 	el("+div#searchBrandsContainer").append(
-					// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-					// 	),
-					// 	el("+div#recentBrands").text("recent brands"),
-					// 	el("+div#newBrand").text("New Brand")
-					// ])
-
-				)
-			])
-		);
-	},
-	purge: function(){
-		projectDropdown.purge();
-	}
-}
-
-
-
-	
-
-
-
-// DROPDOWNS
-function enableDropdowns(){
-	var dropdowns = {
-		brands: "closed",
-		projects: "closed"
-	};
-	
-	var brandName = el("#brandName");
-	var projectName = el("#projectName");
-
-	function toggleDropdown(_dropdown){
-		if(dropdowns[_dropdown] === "opened") {
-			closeDropdown(_dropdown);
-			dropdowns[_dropdown] = "closed";
-		}
-		else if(dropdowns[_dropdown] === "closed") {
-			openDropdown(_dropdown);
-			dropdowns[_dropdown] = "opened";
-		}
-	}
-
-	function openDropdown(_dropdown) {
-
-		if(_dropdown === "brands"){
-			brandsDropdown.rmClass("hide");
-			initBrandSearch();
-		}
-		else if(_dropdown === "projects") {
-			projectDropdown.rmClass("hide");
-		}
-	}
-
-	function closeDropdown(_dropdown) {
-
-		if(_dropdown === "brands"){
-			baton(function(next){
-				brandsDropdown.addClass("hide");
-				pause(200, next);
-			})
-			.then(function(next){
-				brandDropDown.purge();
-				pause(10, next);
-			})
-			.then(function(){
-				brandDropDown.refill();
-			})
-			.run();
-		}
-
-		else if(_dropdown === "projects") {
-			baton(function(next){
-				projectDropdown.addClass("hide");
-				pause(200, next);
-			})
-			.then(function(next){
+						)
+					])
+				);
+			},
+			purge: function(){
 				projectDropdown.purge();
-				pause(10, next);
-			})
-			.then(function(){
-				projectDropDown.refill();
-			}).run();
+			}
 		}
-		
 	}
+};
 
-	brandName.on("click", function(evt){
-		toggleDropdown("brands");
-	});
 
-	projectName.on("click", function(evt){
-		toggleDropdown("projects");
-	});
 
-	brandsDropdown.on("click", function(evt){
-		evt.stopPropagation();
-	});
-
-	projectDropdown.on("click", function(evt){
-		evt.stopPropagation();
-	});
-
-	el("body")[0].on("click", function(evt){
-		if(dropdowns["brands"] === "opened" && evt.target !== brandName){
-			toggleDropdown("brands");
-		}
-		else if(dropdowns["projects"] === "opened" && evt.target !== projectName){
-			toggleDropdown("projects");
-		}
-	});
 	
-}
-	
-var processBrandSearch = 
+
+var prepareForBrandSearch = 
 baton(function(next, inputValue){
+	setBrandSearchGlobals();
+	next();
+})
+.then(function(next){
+	console.log("prepare");
+	prepareBrandSearch();
+});
 
-	filterBrands(next, inputValue);
-
+var searchBrands = 
+baton(function(next, inputValue){
+	var matches = core.localData.filterBrands(inputValue);
+	next(matches);
 })
 .then(function(next, matches){
-
 	updateSearchResults(matches);
-
-})
-
+});
 
 
-function initBrandSearch() {
+function setBrandSearchGlobals(){
 	window.brandSearchInput = el("#searchBrands");
 	window.brandsListCont = el("#brandsListCont");
-	var timeout = undefined;
-	brandSearchInput.on("keyup", function(){
+}
 
-		// Will delay the search for brands for 500ms and 
+function prepareBrandSearch() {
+
+	var timeout = undefined;
+
+	brandSearchInput.on("keyup", function(){
+		// Will delay the search for brands for 300ms and 
 		// batch the keystrokes into a single search
 		if(timeout != undefined) {
 		 clearTimeout(timeout);
@@ -11069,49 +11482,21 @@ function initBrandSearch() {
 			timeout = undefined;
 			var inputValue = brandSearchInput.value;
 			if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
-
 				// BEGIN SEARCHING
-				processBrandSearch.run(inputValue)
-
+				console.log("start searching");
+				searchBrands.run(inputValue);
 			} else {
 				// empty
 			}
 		}, 300);
 
-	})
+	});
 
 	// SAVE BRANDS TO LOCAL PERSISTENT DATA
 	brandSearchInput.on("focus", function(){
-		updateBrandsList();
+		core.localData.updateBrandsList();
 	});
-}
 
-// SAVE BRANDS TO LOCAL PERSISTENT DATA
-function updateBrandsList(_callback){
-	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
-	var brandsList = [];
-	fs.readdir(pathToBrands, function(_err, _files){
-		if(_err) console.log("error");
-		for(var i = 0, ii = _files.length; i < ii; i++){
-			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-			if(stats.isDirectory()) brandsList.push(_files[i]);
-		}
-
-		updatePersitentDataFile(_callback);
-
-		localPersistentData.brandList = brandsList;
-	});
-}
-
-
-
-function filterBrands(next, criteria){
-	var matches = [];
-	for(var i = 0, ii = localPersistentData.brandList.length; i < ii; i++){
-		if(localPersistentData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-			matches.push(localPersistentData.brandList[i]);
-	}
-	next(matches);
 }
 
 
@@ -11122,11 +11507,9 @@ function updateSearchResults(matches){
 			el("+div").addClass("search-result").text(matches[i])
 		)
 	}
-
 	if(matches.length > 6){ // add arrow
 		searchResultsCont.append( el("+div").addClass("arrow-down") )
 	}
-
 	brandsListCont.purge().append( searchResultsCont );
 }
 
@@ -11138,45 +11521,50 @@ function getBrandProjects(){
 function getProjectFiles(){
 
 }
-// var dataChief = {
-// // Things to do
-// 	remote: null,
-// 	local: null,
-// 	// read a json file // read remote->local
-// 	setRemote = function(_path){
-// 	},
-// 	// write to a json // save local->remote
-// 	setLocal = function(){},
-// };
 
-
-
-function readUserPreferences(_successCallback){
-	json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
-		if(!_err){ 
-			localSettingsData = _data;
-			if(typeof _successCallback === "function") _successCallback();
+(function(){
+	window.Quitter = {
+		quit: function(){
+			remote.getGlobal("sharedObject").canQuit = true;
+			app.quit();
+		},
+		prompt: function(){
+			(Saver.isSaved()) 
+			? //true
+				Prompter.prompt({
+					message: "Quit?",
+					mainBtn: {
+						text: "Yes",
+						onClick: Quitter.quit
+					},
+					btn2: {
+						text: "No",
+						onClick: Quitter.cancel
+					},
+					btn3: null,
+				}) 
+			: //false
+				Saver.prompt()
+			;
+		},
+		cancel: function(){
+			Global.canQuit = false;
+			Prompter.hide();
+			console.log("Quit Cancelled");
 		}
-		else {
-			logError("readUserPreferences ERROR:",_err);
+	};
+})();
+
+(function(){
+	window.Saver = {
+		prompt: function(){
+			alert("Save Changes?");
+		},
+		isSaved: function(){
+			return true;
 		}
-	});
-}
-
-function readPersistantData(_successCallback){
-	json.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
-		if(!_err) {
-			localPersistentData = _data;
-			if(typeof _successCallback === "function") _successCallback();
-		}
-		else {
-			logError("readPersistantData ERROR:",_err);
-		}
-	});
-}
-
-
-
+	};
+})();
 
 (function(){
 	window.Prompter = {
@@ -11228,45 +11616,45 @@ function readPersistantData(_successCallback){
 	Prompter.container = el("#Prompter");
 	
 })();
-(function(){
-	window.Quitter = {
-		quit: function(){
-			remote.getGlobal("sharedObject").canQuit = true;
-			app.quit();
-		},
-		prompt: function(){
-			(Saver.isSaved()) 
-			? //true
-				Prompter.prompt({
-					message: "Quit?",
-					mainBtn: {
-						text: "Yes",
-						onClick: Quitter.quit
-					},
-					btn2: {
-						text: "No",
-						onClick: Quitter.cancel
-					},
-					btn3: null,
-				}) 
-			: //false
-				Saver.prompt()
-			;
-		},
-		cancel: function(){
-			Global.canQuit = false;
-			Prompter.hide();
-			console.log("Quit Cancelled");
-		}
-	};
-})();
-(function(){
-	window.Saver = {
-		prompt: function(){
 
-		},
-		isSaved: function(){
-			return true;
-		}
-	};
-})();
+
+
+// INIT app
+el.on("load", function(){
+	//add global reference to editor and preview
+	window.editor = el("#editor");
+	window.preview = el("#preview");
+
+	baton(function(next){
+		
+		codemirrorInit();
+		core.localData.updateUserSettings(next);
+
+	})
+	.then(function(next){
+
+		core.localData.updateBrandsList(next);
+
+	})
+	.then(function(next){
+
+		core.localData.updateRecentBrands(next);
+
+	})
+	.then(function(next){
+		editorCore.dropdowns.setDropdownGlobals();
+
+		editorCore.dropdowns.brands.populate();
+		editorCore.dropdowns.brands.init();
+		
+		editorCore.dropdowns.projects.populate();
+		editorCore.dropdowns.projects.init();
+		
+
+		//un-hide page // show editor and webview
+		el.join( [editor, preview] ).rmClass("hide");
+	})
+	.run();
+});
+
+

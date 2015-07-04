@@ -9,49 +9,33 @@ var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
 
+//= include ../app-core-methods.js
+
+// --------------------------------
+//	Set core.LocalData
+// --------------------------------
+core.localData.updateUserSettings();
+
+
+
 var currentPanel = {};
-var localUserPrefData = {};
 
 var logo = el("#logo");
 var panel = el("#panel");
 var navOptions = el(".nav_option");
 
-fs.stat("/Users/samueleaton/", function(err, stats){
-	console.log("stats.isDirectory:",stats.isDirectory());
-})
-
-
-
 // --------------------------------
-//		INIT (USER PREFS TO LOCAL)
+//	Slide-in menus, btns etc.
 // --------------------------------
-json.readFile(Global.appRoot+"/local/user-settings.json", function(_err, _data){
+setTimeout(function(){
+	panel.rmClass("hide");
+	logo.rmClass("hide");
+	el("#nav").rmClass("hide");
+	el("html")[0].rmClass("white");
+	el("body")[0].rmClass("white");
+	el("#bottom-bar").rmClass("hide");
+}, 200);
 
-	if(_err) console.log("ERROR reading user-settings.json::",_err );
-	console.log("read file:", _data);
-	/* 
-	Store user-config file to a local json at start.
-	This json object will be re-written each time the user fiddles with the prefs. 
-	This json object will overwrite the actual user settings on save. 
-	*/
-
-	// set local object
-	localUserPrefData = _data;
-
-	// init preferences
-	setTimeout(function(){
-		panel.rmClass("hide")
-		logo.rmClass("hide");
-		el("#nav").rmClass("hide");
-		el("html")[0].rmClass("white");
-		el("body")[0].rmClass("white");
-		el("#bottom-bar").rmClass("hide");
-	}, 200);
-
-
-
-
-});
 	
 
 // --------------------------------
@@ -70,14 +54,14 @@ el("#save").on("click", function(e){
 });
 
 function savePreferences() {
-	// saves from local to user-prefs file if any changes
-	json.writeFile(Global.appRoot+"/local/user-settings.json", localUserPrefData, function(err){
-		if(err) alert("Error Saving Changes");
-		else Global.preferencesWindow.close();;
-	});
+	// saves from localData.userSettings to user-settings.json
+		core.userSettingsFile.update(function(){ // on success
+			logo.addClass("saved");
+			setTimeout(function(){
+				Global.preferencesWindow.close();
+			}, 450);
+		});
 }
-
-
 
 
 // --------------------------------
@@ -118,8 +102,10 @@ panel.transitionTo = baton(function(next, _newPanelName){
 	panel.addClass("hide");
 	var _newPanel = panel.buildPanel(_newPanelName);
 	panel.insertData(_newPanelName);
-	
-	pause(300, next, _newPanel);
+
+	setTimeout(function(){
+		next(_newPanel);
+	}, 300);
 
 })
 .then(function(next, _newPanel){
@@ -251,42 +237,64 @@ panel.insertData = function(_panel){
 	} else if(_panel === "files"){
 
 		// add path to Brands folder
-		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",localUserPrefData.files.pathToBrands);
+		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.userSettings.files.pathToBrands);
 
 		// Populate the preview files and select the default		
 		var defaultPreviewFile = currentPanel.el("#default-preview-file");
 		// ADD OPTIONS
 		var tempArray = [];		
-		for(var i = 0, ii = localUserPrefData.files.previewFiles.length; i < ii; i++ ){
-			var pF = localUserPrefData.files.previewFiles;			
+		for(var i = 0, ii = core.localData.userSettings.files.previewFiles.length; i < ii; i++ ){
+			var pF = core.localData.userSettings.files.previewFiles;			
 			var currentOption = el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName );
-			if( pF[i].fileName === localUserPrefData.files.defaultPreviewFile ) currentOption.selected = true;
+			if( pF[i].fileName === core.localData.userSettings.files.defaultPreviewFile ) currentOption.selected = true;
 			tempArray.push(currentOption);	
 		}		
 
 		defaultPreviewFile.append( el(tempArray) );		
 
-		//= include update-temp-preferences/files-include.js
+
+		currentPanel.el("#path-to-brands").on("blur", function(){
+			if(this.value !== core.localData.userSettings.files.pathToBrands){
+				core.localData.userSettings.files.pathToBrands = this.value;
+			}
+		});
+		currentPanel.el("#default-preview-file").on("blur", function(){
+			if(this.options[this.selectedIndex].value !== core.localData.userSettings.files.defaultPreviewFile){
+				core.localData.userSettings.files.defaultPreviewFile = this.options[this.selectedIndex].value;
+			}
+		});
 
 
 	} else if(_panel === "snippets"){
 
 	} else if(_panel === "preview"){
-		currentPanel.el("#"+localUserPrefData.preview.refreshPreview).checked = true;
-		currentPanel.el("#thumbnailName").attr("value", localUserPrefData.preview.defaultThumbnailName);
+		currentPanel.el("#"+core.localData.userSettings.preview.refreshPreview).checked = true;
+		currentPanel.el("#thumbnailName").attr("value", core.localData.userSettings.preview.defaultThumbnailName);
 
 		var defaultThumbnailExt = currentPanel.el("#default-thumbnail-ext");
 		// ADD OPTIONS
 		var tempArray = [];		
-		for(var i = 0, ii = localUserPrefData.preview.thumbnailExtensions.length; i < ii; i++ ){
-			var tnE = localUserPrefData.preview.thumbnailExtensions;		
+		for(var i = 0, ii = core.localData.userSettings.preview.thumbnailExtensions.length; i < ii; i++ ){
+			var tnE = core.localData.userSettings.preview.thumbnailExtensions;		
 			var currentOption = el("+option").attr("value", tnE[i]).text( tnE[i] );
-			if( tnE[i] === localUserPrefData.preview.defaultThumbnailExt ) currentOption.selected = true;
+			if( tnE[i] === core.localData.userSettings.preview.defaultThumbnailExt ) currentOption.selected = true;
 			tempArray.push(currentOption);
 		}		
 		defaultThumbnailExt.append( el(tempArray) );		
 
-		//= include update-temp-preferences/preview-include.js
+
+
+		currentPanel.el("#onSave").on("focus", function(){
+		if(core.localData.userSettings.preview.refreshPreview !== this.id){
+			core.localData.userSettings.preview.refreshPreview = this.id;
+		}
+	});
+	currentPanel.el("#onCommand").on("focus", function(){
+		if(core.localData.userSettings.preview.refreshPreview !== this.id){
+			core.localData.userSettings.preview.refreshPreview = this.id;
+		}
+	});
+
 
 	} else if(_panel === "window"){
 
@@ -301,4 +309,9 @@ panel.insertData = function(_panel){
 function checkAndRadio(){
 	el(document.querySelectorAll("input[type=radio]"))
 }
+
+
+
+
+
 

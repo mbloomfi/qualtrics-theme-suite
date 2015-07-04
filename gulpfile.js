@@ -19,7 +19,7 @@ gulp.task("main-process", function(){
 	return gulp.src("src/main-process/*.js")
 	.pipe(plumber())
 	.pipe(concat("index.js"))
-	// .pipe(uglify())
+	// .pipe(uglify({ mangle: false }))
 	.pipe(gulp.dest("./"));
 });
 
@@ -62,13 +62,15 @@ gulp.task("mainScripts", function(){
 		"src/scripts/libs/*.js",
 		"src/scripts/libs/codemirror/codemirror.js",
 		"src/scripts/libs/codemirror/**",
-		"src/scripts/main/main.js", 
+		"src/scripts/main/main.js"
 		//exclude
-		"!src/scripts/main/_.js"])
+		// "!src/scripts/main/_.js"
+		])
+
 	.pipe(plumber())
-	.pipe(concat("_.js"))
 	.pipe(include())
-	// .pipe(uglify())
+	.pipe(concat("_.js"))
+	// .pipe(uglify({ mangle: false }))
 	.pipe(gulp.dest("src/scripts/main/"));
 });
 
@@ -106,15 +108,14 @@ gulp.task("prefScripts", function(){
 		//include
 		"src/scripts/libs/el.min.js", 
 		"src/scripts/libs/baton.min.js", 
-		"src/scripts/preferences/*.js", 
-		// "src/scripts/globalObjects/*.js", 
+		"src/scripts/preferences/main.js",
 		//exclude
 		"!src/scripts/preferences/_.js"
 		])
 	.pipe(plumber())
 	.pipe(include())
 	.pipe(concat("_.js"))
-	// .pipe(uglify())
+	// .pipe(uglify({ mangle: false }))
 	.pipe(gulp.dest("src/scripts/preferences/"));
 });
 
@@ -137,6 +138,7 @@ gulp.task("watch", function(){
 			"src/scripts/main/*.js",
 			"src/scripts/preferences/*.js",
 			"src/scripts/preferences/update-temp-preferences/*.js",
+			"src/scripts/app-core-methods.js",
 
 			"src/styles/libs/*",
 			"src/styles/main/*.styl",

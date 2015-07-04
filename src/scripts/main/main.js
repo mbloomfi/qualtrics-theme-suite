@@ -8,7 +8,7 @@ var json = require("jsonfile");
 var escape = require("escape-html");
 
 
-//= include app-core-methods.js
+//= include ../app-core-methods.js
 
 var dimmer = {
 	on: function() {
@@ -19,11 +19,13 @@ var dimmer = {
 		},10);
 	},
 	off: function(){
-		readUserPreferences();
-		var _dimmer = el(".dimmer").rmClass("show");
-		setTimeout(function(){
-			_dimmer.rm();
-		},500);
+		core.localData.updateUserSettings(function(){
+			var _dimmer = el(".dimmer").rmClass("show");
+			setTimeout(function(){
+				_dimmer.rm();
+				_dimmer = null;
+			},500);
+		});
 	}
 };
 
@@ -68,9 +70,11 @@ function codemirrorInit() {
 	});
 }
 
-//= include editor.js
-//= include brand-search.js
-//= include quitter.js
+//= include ./editor.js
+//= include ./brand-search.js
+//= include ./Quitter.js
+//= include ./Saver.js
+//= include ./Prompter.js
 
 
 // INIT app
@@ -82,22 +86,31 @@ el.on("load", function(){
 	baton(function(next){
 		
 		codemirrorInit();
-		readUserPreferences(next);
+		core.localData.updateUserSettings(next);
 
 	})
 	.then(function(next){
 
-		readPersistantData(next);
+		core.localData.updateBrandsList(next);
 
 	})
-	.then(function(){
+	.then(function(next){
 
-		brandDropDown.populate();
-		projectDropDown.populate();
+		core.localData.updateRecentBrands(next);
+
+	})
+	.then(function(next){
+		editorCore.dropdowns.setDropdownGlobals();
+
+		editorCore.dropdowns.brands.populate();
+		editorCore.dropdowns.brands.init();
+		
+		editorCore.dropdowns.projects.populate();
+		editorCore.dropdowns.projects.init();
+		
 
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
-		enableDropdowns();
 	})
 	.run();
 });

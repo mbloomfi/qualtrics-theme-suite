@@ -64,8 +64,9 @@ html.white,
 body.white {
   background-color: #fff;
 }
-img.logo {
+svg.logo {
   height: 80px;
+  width: auto;
   position: absolute;
   top: 0;
   right: 0;
@@ -73,18 +74,25 @@ img.logo {
   padding: 0 30px 5px 0;
   -webkit-app-region: drag;
   cursor: default;
-  -webkit-filter: saturate(0) opacity(0.14);
-          filter: saturate(0) opacity(0.14);
-  -webkit-transition: top 0.3s ease, -webkit-filter 0.3s ease;
-          transition: top 0.3s ease, -webkit-filter 0.3s ease;
+  -webkit-transition: top 0.3s ease;
+          transition: top 0.3s ease;
 }
-img.logo:hover {
-  -webkit-filter: saturate(0) opacity(0.25);
-          filter: saturate(0) opacity(0.25);
+svg.logo path#QUALTRICS-LOGO {
+  fill: rgba(80,80,80,0.15);
+  -webkit-transition: fill 0.25s ease;
+          transition: fill 0.25s ease;
+}
+svg.logo:hover {
   cursor: -webkit-grab;
   cursor: grab;
 }
-img.logo.hide {
+svg.logo:hover path#QUALTRICS-LOGO {
+  fill: rgba(80,80,80,0.25);
+}
+svg.logo.saved path#QUALTRICS-LOGO {
+  fill: rgba(40,180,50,0.65);
+}
+svg.logo.hide {
   top: -100px;
 }
 #bottom-bar {
@@ -173,6 +181,7 @@ nav#nav.hide {
   left: -300px;
 }
 section#panel {
+  background-color: rgba(40,180,50,0);
   position: absolute;
   top: 0;
   right: 0;

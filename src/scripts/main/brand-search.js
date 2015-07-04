@@ -1,14 +1,17 @@
 var prepareForBrandSearch = 
 baton(function(next, inputValue){
-	setBrandSearchGlobals(next);
+	setBrandSearchGlobals();
+	next();
 })
 .then(function(next){
-	prepareBrandSearch(next);
+	console.log("prepare");
+	prepareBrandSearch();
 });
 
 var searchBrands = 
 baton(function(next, inputValue){
-	filterBrands(next, inputValue);
+	var matches = core.localData.filterBrands(inputValue);
+	next(matches);
 })
 .then(function(next, matches){
 	updateSearchResults(matches);
@@ -21,9 +24,10 @@ function setBrandSearchGlobals(){
 }
 
 function prepareBrandSearch() {
-	var timeout = undefined;
-	brandSearchInput.on("keyup", function(){
 
+	var timeout = undefined;
+
+	brandSearchInput.on("keyup", function(){
 		// Will delay the search for brands for 300ms and 
 		// batch the keystrokes into a single search
 		if(timeout != undefined) {
@@ -33,20 +37,19 @@ function prepareBrandSearch() {
 			timeout = undefined;
 			var inputValue = brandSearchInput.value;
 			if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
-
 				// BEGIN SEARCHING
-				searchBrands.run(inputValue)
-
+				console.log("start searching");
+				searchBrands.run(inputValue);
 			} else {
 				// empty
 			}
 		}, 300);
 
-	})
+	});
 
 	// SAVE BRANDS TO LOCAL PERSISTENT DATA
 	brandSearchInput.on("focus", function(){
-		updateBrandsList();
+		core.localData.updateBrandsList();
 	});
 
 }
