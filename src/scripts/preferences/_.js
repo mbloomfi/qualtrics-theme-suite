@@ -21,6 +21,8 @@ var appRoot = Global.appRoot;
 var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
+var mkdirp = require("mkdirp");
+var path = require("path");
 var core = Global.coreMethods = {
 
 	// ----------------------------
@@ -58,9 +60,7 @@ var core = Global.coreMethods = {
 	//  User Settings File
 	// ----------------------------
 	userSettingsFile: {
-		// function readUserSettings(_successCallback){
-		// 	
-		// }
+
 		read: function(_successCallback){
 			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
@@ -71,6 +71,7 @@ var core = Global.coreMethods = {
 				}
 			});
 		},
+
 		update: function(_successCallback){
 			var self = this;
 
@@ -96,11 +97,52 @@ var core = Global.coreMethods = {
 		}
 	},
 
+
+	// ----------------------------
+	//  Brands
+	// ----------------------------
 	brands: {
 
-		create: function(){
+		getPathToBrands: function(){
+			return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+		},
+
+		create: function(_brandName){
+			var self = this;
+			// create folder with brands name
+			baton(function(next){
+				self.exists(next, _brandName);
+			})
+			.then(function(next, exists){
+
+				if(exists) {
+					alert("Brand already exists. Nice try though.");
+				} else {
+					mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+						if(!err) next();
+					});
+				}
+				
+			})
+			.then(function(next){
+				editorCore.dropdowns.brands.close();
+				self.infoFile.create(_brandName);
+			})
+			.run();
 
 		},
+
+		infoFile: {
+			create: function(_brandName){
+
+				console.log("creating info file for:", _brandName);
+			},
+			update: function(_brandName, _key, _value){
+
+			}
+		},
+
+			
 
 		addRecentBrand: function(){
 
@@ -111,15 +153,26 @@ var core = Global.coreMethods = {
 		},
 
 
-		exists: function(){
-
+		exists: function(_callback, _brandName){
+			var self = this;
+			fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+				if(err) {
+					return _callback(false);
+				}
+				else {
+					return _callback(stats.isDirectory());
+				}
+			});
 		},
 
-		hasInfoFile: function(){
 
+		hasInfoFile: function(_brandName){
+			//check if brand exists
+			//check if brand has file
 		}
 
 	},
+
 
 	// ----------------------------
 	//  Local Temp Data
@@ -142,7 +195,7 @@ var core = Global.coreMethods = {
 		},
 
 		updateBrandsList: function(_CALLBACK){
-			var pathToBrands = process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands;
+			var pathToBrands = core.brands.getPathToBrands();
 			var brandList = [];
 			fs.readdir(pathToBrands, function(_err, _files){
 				if(_err) console.log("error");
@@ -156,14 +209,31 @@ var core = Global.coreMethods = {
 		},
 
 		updateRecentBrands: function(_CALLBACK){
-			if(core.localData.recentBrands===null){
+			/* Main purpose of this method is to: (1) Set the local recent brands 
+			in case its null, and (2) Add the current brand to the front of recent 
+			brands if its not already there */
+
+			// if local data is null
+			if(core.localData.recentBrands === null){
 				core.persistentDataFile.read(function(_persistent_data){
 					core.localData.recentBrands = _persistent_data.recentBrands;
 					_CALLBACK();
 				})
-			} else {
-				if(core.localData.currentBrand !== null){
+			} 
+			
+			else {
+
+				// if current brand is not the most recent brand
+				if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
 					core.localData.recentBrands.unshift(core.localData.currentBrand);
+					core.persistentDataFile.update(function(){
+						_CALLBACK();
+					});
+					
+				} 
+
+				// local recent brands is up to date
+				else {
 					_CALLBACK();
 				}
 			}
@@ -177,71 +247,9 @@ var core = Global.coreMethods = {
 			}
 			return matches;
 		}
-		// ,
+	}	
+};
 
-		// updateAll: function (_successCallback){
-		// 	core.localData.data = persistentDataFile.read(function(_data){
-		// 		core.localData.data = _data;
-		// 		if(typeof _successCallback === "function") _successCallback();
-		// 	})
-		// }
-	}
-
-
-		
-}
-
-
-
-
-
-
-
-
-
-// // SAVE BRANDS TO LOCAL PERSISTENT DATA
-// function updateBrandsList(_callback){
-// 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
-// 	var brandsList = [];
-// 	fs.readdir(pathToBrands, function(_err, _files){
-// 		if(_err) console.log("error");
-// 		for(var i = 0, ii = _files.length; i < ii; i++){
-// 			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-// 			if(stats.isDirectory()) brandsList.push(_files[i]);
-// 		}
-
-// 		updatePersitentDataFile(_callback);
-
-// 		core.localData.brandList = brandsList;
-// 	});
-// }
-
-
-// function filterBrands(next, criteria){
-// 	var matches = [];
-// 	for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
-// 		if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-// 			matches.push(core.localData.brandList[i]);
-// 	}
-// 	next(matches);
-// }
-
-
-
-
-
-
-
-
-
-
-/*
-C
-R
-U
-D
-
-*/
 
 
 // --------------------------------

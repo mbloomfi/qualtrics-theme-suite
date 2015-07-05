@@ -1,20 +1,15 @@
+// ----------------------
+// App Colors
+// ----------------------
 $primaryColor = rgb(223,72,72)
-$primaryColor-r = red($primaryColor)
-$primaryColor-g = green($primaryColor)
-$primaryColor-b = blue($primaryColor)
+// $affirmative-green = rgb(40,180,50)
+$affirmative-green = rgb(39,176,75)
+// $negative-red = rgb(223,72,72)
+$negative-red = rgb(225,68,68)
 
-$font-stack = "Source Sans Pro", "Helvetica Neue"
-
-$editorWidth = (100 - 60)
-$editorBarHeight = (100 - 95)
-$codemirrorHeight = (100 - ($editorBarHeight))
-
-$previewWidth = (100 - ($editorWidth))
-
-$heightChange = 2.5
-
-
+// ----------------------
 // Global Mix-ins
+// ----------------------
 lighterShade(_color){
   rgb(red(_color) + 12, green(_color) + 12, blue(_color) + 12)
 }
@@ -23,13 +18,17 @@ darkerShade(_color){
 }
 increaseOpacity(color){
   alphaVal = alpha(color)
-  alpha(color, alphaVal+2)
+  alpha(color, (alphaVal) + .2)
 }
 decreaseOpacity(color){
   alphaVal = alpha(color)
-  alpha(color, alphaVal-2)
+  alpha(color, (alphaVal) - .2)
 }
 
+// ----------------------
+// FONT STACK
+// ----------------------
+$font-stack = "Source Sans Pro", "Helvetica Neue"
 
 @font-face {
   font-family: 'Source Sans Pro';
@@ -67,14 +66,12 @@ decreaseOpacity(color){
   font-weight: 400;
   src: url(local/fonts/SourceSansPro-It.otf);
 }
-
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 600;
   src: url(local/fonts/SourceSansPro-Bold.otf);
 }
-
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
@@ -82,7 +79,10 @@ decreaseOpacity(color){
   src: url(local/fonts/SourceSansPro-BoldIt.otf);
 }
 
-html, body, p, h1, h2, input, textarea, label, a {
+// ----------------------
+// RESETS
+// ----------------------
+html, body, p, h1, h2, input, textarea, label, a, button {
   padding 0
   margin 0
   border none
@@ -94,36 +94,6 @@ html, body, p, h1, h2, input, textarea, label, a {
   font-weight normal
   font-family $font-stack
 }
-
 pre, xmp, plaintext, listing {
   font-family: "Source Code Pro", menlo, monospace;
 }
-
-html, body {
-  background rgb(255,255,255)
-  width 100%
-  height 100%
-  min-height: 600px
-  position: relative
-  overflow hidden
-}
-
-div.dimmer {
-  height 100%
-  width 100%
-  position fixed
-  top 0
-  left 0
-  background-color rgba(0,0,0,.4)
-  z-index 1000
-  opacity 0
-  transition opacity .5s ease
-  
-  &.show {
-    opacity 1
-  }
-  
-}
-
-
-

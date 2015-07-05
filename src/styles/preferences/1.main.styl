@@ -1,56 +1,7 @@
-$primaryColor = rgb(223,72,72)
-$primaryColor-r = red($primaryColor)
-$primaryColor-g = green($primaryColor)
-$primaryColor-b = blue($primaryColor)
-
-$font-stack = "Source Sans Pro", "Helvetica Neue"
-
 $windowHeight = 530
 $barHeight = 30
 $navHeight = $windowHeight - $barHeight
 
-
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: url(local/fonts/SourceSansPro-Regular.otf);
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 400;
-  src: url(local/fonts/SourceSansPro-It.otf);
-}
-
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 600;
-  src: url(local/fonts/SourceSansPro-Bold.otf);
-}
-
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 600;
-  src: url(local/fonts/SourceSansPro-BoldIt.otf);
-}
-
-html, section, body, p, h1, h2, div, span, input, textarea, label, a, button, select {
-  padding 0
-  margin 0
-  border none
-  border-radius 0
-  outline none
-  font-size 100% 
-  text-decoration none
-  color rgb(70,70,70)
-  text-decoration none
-  // appearance none // remove dropdown arrow for the "select" drop down element
-  font-weight normal
-  font-family $font-stack
-}
 
 html, body {
   width 100%
@@ -66,7 +17,9 @@ html, body {
   }
 }
 
+// ----------------------
 // QUALTRICS LOGO
+// ----------------------
 svg.logo {
   height 80px
   width auto
@@ -83,7 +36,7 @@ svg.logo {
     fill rgba(80,80,80,.15)
     transition fill .25s ease
   }
-
+  
   &:hover {
     cursor grab
     
@@ -92,14 +45,12 @@ svg.logo {
     }
     
   }
-    
+  
   &.saved {
     path#QUALTRICS-LOGO {
-      fill rgba(40, 180, 50, .65)
+      fill decreaseOpacity($affirmative-green)
     }
   }
-    
-
   
   &.hide {
     top -100px
@@ -120,6 +71,7 @@ svg.logo {
   text-align center
   line-height ($barHeight)px
   transition bottom .3s ease
+  
   div.btn {
     -webkit-app-region: no-drag;
     height 100%
@@ -131,36 +83,36 @@ svg.logo {
     cursor pointer
     box-sizing border-box
     transition background-color .25s ease
+    
     &:first-child {
       left 0
-      background-color rgb(223,72,72)
+      background-color $negative-red
       border-right 1px solid rgb(95,95,95)
       &:hover {
-        background-color rgb(245,85,80)
+        background-color lighterShade($negative-red)
       }
     }
+    
     &:last-child {
       right 0
-      background-color rgb(40,180,50)
+      background-color $affirmative-green
       // border-left 1px solid rgb(95,95,95)
       &:hover {
-        background-color rgb(50,200,55)
+        background-color lighterShade($affirmative-green)
       }
     }
 
   }
+  
   &.hide {
     bottom -($barHeight * 2)px
   }
+  
 }
 
 #preferences-wrapper {
   height ($navHeight)px
   width 100%
-  
-  // background-color lime
   position relative
   top 0
-  
-  
 }

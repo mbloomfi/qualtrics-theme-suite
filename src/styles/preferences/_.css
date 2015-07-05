@@ -1,6 +1,30 @@
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
+  font-weight: 200;
+  src: url("local/fonts/SourceSansPro-ExtraLight.otf");
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 200;
+  src: url("local/fonts/SourceSansPro-ExtraLight-It.otf");
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: url("local/fonts/SourceSansPro-Light.otf");
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 300;
+  src: url("local/fonts/SourceSansPro-Light-It.otf");
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
   font-weight: 400;
   src: url("local/fonts/SourceSansPro-Regular.otf");
 }
@@ -23,23 +47,18 @@
   src: url("local/fonts/SourceSansPro-BoldIt.otf");
 }
 html,
-section,
 body,
 p,
 h1,
 h2,
-div,
-span,
 input,
 textarea,
 label,
 a,
-button,
-select {
+button {
   padding: 0;
   margin: 0;
   border: none;
-  border-radius: 0;
   outline: none;
   font-size: 100%;
   text-decoration: none;
@@ -47,6 +66,12 @@ select {
   text-decoration: none;
   font-weight: normal;
   font-family: "Source Sans Pro", "Helvetica Neue";
+}
+pre,
+xmp,
+plaintext,
+listing {
+  font-family: "Source Code Pro", menlo, monospace;
 }
 html,
 body {
@@ -90,7 +115,7 @@ svg.logo:hover path#QUALTRICS-LOGO {
   fill: rgba(80,80,80,0.25);
 }
 svg.logo.saved path#QUALTRICS-LOGO {
-  fill: rgba(40,180,50,0.65);
+  fill: rgba(39,176,75,0.8);
 }
 svg.logo.hide {
   top: -100px;
@@ -122,18 +147,18 @@ svg.logo.hide {
 }
 #bottom-bar div.btn:first-child {
   left: 0;
-  background-color: #df4848;
+  background-color: #e14444;
   border-right: 1px solid #5f5f5f;
 }
 #bottom-bar div.btn:first-child:hover {
-  background-color: #f55550;
+  background-color: #ed5050;
 }
 #bottom-bar div.btn:last-child {
   right: 0;
-  background-color: #28b432;
+  background-color: #27b04b;
 }
 #bottom-bar div.btn:last-child:hover {
-  background-color: #32c837;
+  background-color: #33bc57;
 }
 #bottom-bar.hide {
   bottom: -60px;
@@ -388,6 +413,7 @@ section#Prompter .btn2 {
   margin: 0 20px 0 0;
 }
 section#Prompter .btn2:hover {
+  background-color: #eb5454;
   background-color: rgba(255,255,255,0.3);
 }
 div.overlay {

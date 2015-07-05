@@ -6,6 +6,8 @@ var appRoot = Global.appRoot;
 var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
+var mkdirp = require("mkdirp");
+var path = require("path");
 
 
 //= include ../app-core-methods.js
@@ -21,6 +23,11 @@ var dimmer = {
 	off: function(){
 		core.localData.updateUserSettings(function(){
 			var _dimmer = el(".dimmer").rmClass("show");
+
+			// if dropdowns are open, close them
+			if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+
 			setTimeout(function(){
 				_dimmer.rm();
 				_dimmer = null;
@@ -58,6 +65,12 @@ var editorPreviewBar = {
 function codemirrorInit() {
 	window.codemirrorContainer = el("#codemirror-wrapper");
 
+	// codemirrorContainer.el("textarea").attr("tabindex","-1");
+
+	setTimeout(function(){
+		codemirrorContainer.el("textarea").attr("tabindex", "-1");
+	}, 0);
+	
 	var myCodeMirror = CodeMirror(codemirrorContainer, {
 		value: "body { \n\tbackground: red;\n}",
 		mode: "css",
@@ -85,7 +98,7 @@ el.on("load", function(){
 
 	baton(function(next){
 		
-		codemirrorInit();
+		
 		core.localData.updateUserSettings(next);
 
 	})
@@ -100,15 +113,18 @@ el.on("load", function(){
 
 	})
 	.then(function(next){
+
 		editorCore.dropdowns.setDropdownGlobals();
+
+		editorCore.dropdowns.bodyClick();
 
 		editorCore.dropdowns.brands.populate();
 		editorCore.dropdowns.brands.init();
 		
 		editorCore.dropdowns.projects.populate();
 		editorCore.dropdowns.projects.init();
-		
 
+		codemirrorInit();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 	})

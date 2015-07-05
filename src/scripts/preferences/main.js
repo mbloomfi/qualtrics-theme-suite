@@ -8,6 +8,8 @@ var appRoot = Global.appRoot;
 var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
+var mkdirp = require("mkdirp");
+var path = require("path");
 
 //= include ../app-core-methods.js
 

@@ -4,7 +4,945 @@
 		<meta name="QTS" charset="UTF-8" content="Create, Edit, Preview, and Upload Themes for Qualtrics Surveys">
 		<title>QTS</title>
 		<style>
-			.CodeMirror,.CodeMirror pre,listing,plaintext,pre,xmp{font-family:"Source Code Pro",menlo,monospace}.CodeMirror{position:relative;width:100%;height:100%;color:#000}.CodeMirror-lines{padding:4px 0}.CodeMirror pre{padding:0 4px}.CodeMirror-gutter-filler,.CodeMirror-scrollbar-filler{background-color:#fff}.CodeMirror-gutters{border-right:1px solid #ddd;background-color:#f7f7f7;white-space:nowrap}.CodeMirror-linenumber{padding:0 3px 0 5px;min-width:20px;text-align:right;color:#999;white-space:nowrap}.CodeMirror-guttermarker{color:#000}.CodeMirror-guttermarker-subtle{color:#999}.CodeMirror div.CodeMirror-cursor{border-left:1px solid #000}.CodeMirror div.CodeMirror-secondarycursor{border-left:1px solid silver}.CodeMirror.cm-fat-cursor div.CodeMirror-cursor{width:auto;border:0;background:#7e7}.CodeMirror.cm-fat-cursor div.CodeMirror-cursors{z-index:1}.cm-animate-fat-cursor{width:auto;border:0;-webkit-animation:blink 1.06s steps(1) infinite;-moz-animation:blink 1.06s steps(1) infinite;animation:blink 1.06s steps(1) infinite}@-moz-keyframes blink{0%,100%{background:#7e7}50%{background:0 0}}@-webkit-keyframes blink{0%,100%{background:#7e7}50%{background:0 0}}@keyframes blink{0%,100%{background:#7e7}50%{background:0 0}}.cm-tab{display:inline-block;text-decoration:inherit}.CodeMirror-ruler{border-left:1px solid #ccc;position:absolute}.cm-s-default .cm-header{color:#00f}.cm-s-default .cm-quote{color:#090}.cm-negative{color:#d44}.cm-positive{color:#292}.cm-header,.cm-strong{font-weight:700}.cm-em{font-style:italic}.cm-link{text-decoration:underline}.cm-strikethrough{text-decoration:line-through}.cm-s-default .cm-keyword{color:#708}.cm-s-default .cm-atom{color:#219}.cm-s-default .cm-number{color:#164}.cm-s-default .cm-def{color:#00f}.cm-s-default .cm-variable-2{color:#05a}.cm-s-default .cm-variable-3{color:#085}.cm-s-default .cm-comment{color:#a50}.cm-s-default .cm-string{color:#a11}.cm-s-default .cm-string-2{color:#f50}.cm-s-default .cm-meta,.cm-s-default .cm-qualifier{color:#555}.cm-s-default .cm-builtin{color:#30a}.cm-s-default .cm-bracket{color:#997}.cm-s-default .cm-tag{color:#170}.cm-s-default .cm-attribute{color:#00c}.cm-s-default .cm-hr{color:#999}.cm-s-default .cm-link{color:#00c}.cm-invalidchar,.cm-s-default .cm-error{color:red}.CodeMirror-composing{border-bottom:2px solid}div.CodeMirror span.CodeMirror-matchingbracket{color:#0f0}div.CodeMirror span.CodeMirror-nonmatchingbracket{color:#f22}.CodeMirror-matchingtag{background:rgba(255,150,0,.3)}.CodeMirror-activeline-background{background:#e8f2ff}.CodeMirror{overflow:hidden;background:#fff}.CodeMirror-scroll{overflow:scroll!important;margin-bottom:-30px;margin-right:-30px;padding-bottom:30px;height:100%;outline:0;position:relative}.CodeMirror-sizer{position:relative;border-right:30px solid transparent}.CodeMirror-gutter-filler,.CodeMirror-hscrollbar,.CodeMirror-scrollbar-filler,.CodeMirror-vscrollbar{position:absolute;z-index:6;display:none}.CodeMirror-vscrollbar{right:0;top:0;overflow-x:hidden;overflow-y:scroll}.CodeMirror-hscrollbar{bottom:0;left:0;overflow-y:hidden;overflow-x:scroll}.CodeMirror-scrollbar-filler{right:0;bottom:0}.CodeMirror-gutter-filler{left:0;bottom:0}.CodeMirror-gutters{position:absolute;left:0;top:0;z-index:3}.CodeMirror-gutter{white-space:normal;height:100%;display:inline-block;margin-bottom:-30px}.CodeMirror-gutter-wrapper{position:absolute;z-index:4;height:100%;-webkit-user-select:none;-moz-user-select:none;user-select:none}.CodeMirror-gutter-elt{position:absolute;cursor:default;z-index:4}.CodeMirror-lines{cursor:text;min-height:1px}.CodeMirror pre{-moz-border-radius:0;-webkit-border-radius:0;border-radius:0;border-width:0;background:0 0;font-size:inherit;margin:0;white-space:pre;word-wrap:normal;line-height:inherit;color:inherit;z-index:2;position:relative;overflow:visible;-webkit-tap-highlight-color:transparent}.CodeMirror-wrap pre{word-wrap:break-word;white-space:pre-wrap;word-break:normal}.CodeMirror-linebackground{position:absolute;left:0;right:0;top:0;bottom:0;z-index:0}.CodeMirror-linewidget{position:relative;z-index:2;overflow:auto}.CodeMirror-code{outline:0}.CodeMirror-gutter,.CodeMirror-gutters,.CodeMirror-linenumber,.CodeMirror-scroll,.CodeMirror-sizer{-moz-box-sizing:content-box;box-sizing:content-box}.CodeMirror-measure{position:absolute;width:100%;height:0;overflow:hidden;visibility:hidden}.CodeMirror-measure pre{position:static}.CodeMirror div.CodeMirror-cursor{position:absolute;border-right:none;width:0}div.CodeMirror-cursors{visibility:hidden;position:relative;z-index:3}.CodeMirror-focused div.CodeMirror-cursors{visibility:visible}.CodeMirror-selected{background:#d9d9d9}.CodeMirror ::selection,.CodeMirror-focused .CodeMirror-selected{background:#d7d4f0}.CodeMirror-crosshair{cursor:crosshair}.CodeMirror ::-moz-selection{background:#d7d4f0}.cm-searching{background:#ffa;background:rgba(255,255,0,.4)}.cm-force-border{padding-right:.1px}@media print{.CodeMirror div.CodeMirror-cursors{visibility:hidden}}.cm-tab-wrap-hack:after{content:''}span.CodeMirror-selectedtext{background:0 0}.cm-s-monokai.CodeMirror{background:#242424;color:#f8f8f2}.cm-s-monokai div.CodeMirror-selected{background:#5a5050!important}.cm-s-monokai.CodeMirror ::selection{background:rgba(73,72,62,.99)}.cm-s-monokai.CodeMirror ::-moz-selection{background:rgba(73,72,62,.99)}.cm-s-monokai .CodeMirror-gutters{background:#292727;border-right:0}.cm-s-monokai .CodeMirror-guttermarker{color:#fff}.cm-s-monokai .CodeMirror-guttermarker-subtle{color:#d0d0d0}.cm-s-monokai .CodeMirror-linenumber{color:#646464}.cm-s-monokai .CodeMirror-cursor{border-left:1px solid #f8f8f0!important}.cm-s-monokai span.cm-comment{color:#75715e}.cm-s-monokai span.cm-atom,.cm-s-monokai span.cm-number{color:#ae81ff}.cm-s-monokai span.cm-attribute,.cm-s-monokai span.cm-property{color:#a6e22e}.cm-s-monokai span.cm-keyword{color:#f92672}.cm-s-monokai span.cm-string{color:#e6db74}.cm-s-monokai span.cm-variable{color:#f8f8f2}.cm-s-monokai span.cm-variable-2{color:#9effff}.cm-s-monokai span.cm-variable-3{color:#66d9ef}.cm-s-monokai span.cm-def{color:#fd971f}.cm-s-monokai span.cm-bracket{color:#f8f8f2}.cm-s-monokai span.cm-tag{color:#f92672}.cm-s-monokai span.cm-header,.cm-s-monokai span.cm-link{color:#ae81ff}.cm-s-monokai span.cm-error{background:rgba(105,50,50,.6)}.cm-s-monokai .CodeMirror-activeline-background{background:#373831!important}.cm-s-monokai .CodeMirror-matchingbracket{text-decoration:underline;color:#fff!important}@font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:400;src:url(local/fonts/SourceSansPro-Regular.otf)}@font-face{font-family:'Source Sans Pro';font-style:italic;font-weight:400;src:url(local/fonts/SourceSansPro-It.otf)}@font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:600;src:url(local/fonts/SourceSansPro-Bold.otf)}@font-face{font-family:'Source Sans Pro';font-style:italic;font-weight:600;src:url(local/fonts/SourceSansPro-BoldIt.otf)}a,body,h1,h2,html,input,label,p,textarea{padding:0;margin:0;border:none;outline:0;font-size:100%;color:#464646;text-decoration:none;font-weight:400;font-family:"Source Sans Pro","Helvetica Neue"}body,html{background:#fff;width:100%;height:100%;min-height:600px;position:relative;overflow:hidden}div.dimmer,section#editor{left:0;top:0;height:100%;position:fixed}div.dimmer{width:100%;background-color:rgba(0,0,0,.4);z-index:1000;opacity:0;-webkit-transition:opacity .5s ease;transition:opacity .5s ease}div.dimmer.show{opacity:1}section#editor{width:40%;color:#fff;background-color:#242424;border-right:7px solid #df4848;box-sizing:border-box;overflow-x:scroll;overflow-y:hidden;-webkit-transition:left .5s ease;transition:left .5s ease}section#editor section#sectionInner{min-width:500px;max-height:100%;min-height:100%;height:100%;color:inherit}section#editor section#sectionInner div#editorBar{background-color:#373737;width:100%;min-width:500px;height:5%;color:inherit;position:relative;top:0;left:0;z-index:10;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}@media screen and (max-height:600px){section#editor section#sectionInner div#editorBar{height:7.5%}}@media screen and (min-height:1200px){section#editor section#sectionInner div#editorBar{height:3.75%}}section#editor section#sectionInner div#editorBar div#editorBarInner{height:30px;line-height:30px;width:100%;position:relative;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}section#editor section#sectionInner div#editorBar div#editorBarInner div#brandName{color:inherit;height:100%;float:left;font-size:1.25em;padding:0 10px;margin:0 10px;max-width:250px;position:relative}section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow{color:inherit;display:inline-block;margin:0 4px;height:100%;float:left}section#editor section#sectionInner div#editorBar div#editorBarInner div#projectName{color:inherit;height:100%;float:left;font-size:1.25em;padding:0 10px;margin:0 10px;max-width:250px;position:relative}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown{overflow:hidden;height:316px;width:200px;position:absolute;top:120%;left:0;opacity:1;-webkit-transition:height .2s ease,width .2s ease,top .2s ease,opacity .2s ease;transition:height .2s ease,width .2s ease,top .2s ease,opacity .2s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .arrow{display:block;width:0;height:0;position:absolute;top:0;left:10px;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:16px solid rgba(223,72,72,.9);z-index:1000}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody{height:300px;width:100%;background-color:rgba(223,72,72,.9);box-shadow:0 3px 10px rgba(0,0,0,.4);position:absolute;bottom:0;outline:rgba(0,0,0,.2) solid 1px;z-index:999;border-radius:1px}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer{padding:0;height:35px}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands{display:block;width:100%;background-color:rgba(255,255,255,0);height:100%;color:#fff;text-indent:4px;-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text;-webkit-transition:color .15s ease;transition:color .15s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder{color:#e6e6e6;-webkit-transition:color .15s ease;transition:color .15s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont{border-top:1px solid rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.8);height:230px;box-sizing:border-box;overflow-y:scroll;position:relative;-webkit-transition:border-top .15s ease,border-bottom .15s ease;transition:border-top .15s ease,border-bottom .15s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont #searchResultsCont .arrow-down{height:25px;width:100%;position:absolute;bottom:0;pointer-events:none;z-index:1000}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont #searchResultsCont .arrow-down:before{content:"";position:fixed;display:block;height:25px;width:200px;background-color:rgba(0,0,0,.1);background-image:url(local/images/arrow.svg);background-size:auto 50%;background-position:center;background-repeat:no-repeat}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont #searchResultsCont .search-result{background-color:transparent;padding:4px 5px;-webkit-transition:background-color .3s ease;transition:background-color .3s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont #searchResultsCont .search-result:hover{background-color:rgba(0,0,0,.2)}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #newBrand{line-height:35px;padding:0 4px;color:#fff;-webkit-transition:color .15s ease;transition:color .15s ease}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide{height:0;width:0;top:110%;opacity:.5}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands{color:rgba(255,255,255,0)}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder{color:#e6e6e6}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #recentBrands{border-top:1px solid rgba(255,255,255,0);border-bottom:1px solid rgba(255,255,255,0)}section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #newBrand{color:rgba(255,255,255,0)}section#editor section#sectionInner #codemirror-wrapper{height:95%;width:100%;min-width:400px;position:absolute;top:5%;left:0;z-index:5}@media screen and (max-height:600px){section#editor section#sectionInner #codemirror-wrapper{height:92.5%;top:7.5%}}@media screen and (min-height:1200px){section#editor section#sectionInner #codemirror-wrapper{height:96.25%;top:3.75%}}section#editor section#sectionInner .btn{background-color:rgba(255,255,255,0);cursor:pointer;-webkit-transition:background-color .3s ease;transition:background-color .3s ease}section#editor section#sectionInner .btn:hover{background-color:rgba(255,255,255,.2)}section#editor.hide{left:-100%}@media screen and (max-width:1200px){section#editor section#sectionInner div#editorBar{font-size:80%}}webview#preview{display:block;position:absolute;top:0;right:0;height:100%;width:60%;-webkit-transition:right .5s ease;transition:right .5s ease}webview#preview.hide{right:-100%}section#Prompter{position:fixed;top:-120px;left:0;background:#242424;color:#fff;height:60px;width:100%;border-bottom:4px solid #df4848;box-shadow:0 10px 35px rgba(0,0,0,.5);z-index:10;-webkit-transition:top .5s ease;transition:top .5s ease}section#Prompter.show{top:0;-webkit-transition:top .25s ease;transition:top .25s ease}section#Prompter .message{color:inherit;font-weight:700;height:100%;position:relative;float:left;line-height:60px;margin:0 30px;font-size:1.75em}section#Prompter .btn{color:inherit;height:48px;position:relative;top:6px;float:left;line-height:48px;background:orange;padding:0 15px;font-size:1.25em;cursor:pointer;text-align:center;min-width:50px;background-color:rgba(255,255,255,.15);-webkit-transition:background-color .3s ease;transition:background-color .3s ease}section#Prompter .mainBtn{background-color:rgba(223,72,72,.85)}section#Prompter .mainBtn:hover{background-color:#eb5454}section#Prompter .btn2{margin:0 20px 0 0}section#Prompter .btn2:hover{background-color:rgba(255,255,255,.3)}div.overlay{position:fixed;top:0;left:0;height:100%;width:100%;background-color:rgba(0,0,0,.3);z-index:9;opacity:0;-webkit-transition:opacity .3s ease;transition:opacity .3s ease}div.overlay.visible{opacity:1}
+			/* BASICS */
+			
+			.CodeMirror {
+			  /* Set height, width, borders, and global font properties here */
+			  font-family: "Source Code Pro", menlo, monospace;
+			  position:relative;
+			  width: 100%;
+			  height: 100%;
+			  color: black;
+			
+			}
+			
+			/* PADDING */
+			
+			.CodeMirror-lines {
+			  padding: 4px 0; /* Vertical padding around content */
+			}
+			.CodeMirror pre {
+			  padding: 0 4px; /* Horizontal padding of content */
+			}
+			
+			.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+			  background-color: white; /* The little square between H and V scrollbars */
+			}
+			
+			/* GUTTER */
+			
+			.CodeMirror-gutters {
+			  border-right: 1px solid #ddd;
+			  background-color: #f7f7f7;
+			  white-space: nowrap;
+			}
+			.CodeMirror-linenumbers {}
+			.CodeMirror-linenumber {
+			  padding: 0 3px 0 5px;
+			  min-width: 20px;
+			  text-align: right;
+			  color: #999;
+			  white-space: nowrap;
+			}
+			
+			.CodeMirror-guttermarker { color: black; }
+			.CodeMirror-guttermarker-subtle { color: #999; }
+			
+			/* CURSOR */
+			
+			.CodeMirror div.CodeMirror-cursor {
+			  border-left: 1px solid black;
+			}
+			/* Shown when moving in bi-directional text */
+			.CodeMirror div.CodeMirror-secondarycursor {
+			  border-left: 1px solid silver;
+			}
+			.CodeMirror.cm-fat-cursor div.CodeMirror-cursor {
+			  width: auto;
+			  border: 0;
+			  background: #7e7;
+			}
+			.CodeMirror.cm-fat-cursor div.CodeMirror-cursors {
+			  z-index: 1;
+			}
+			
+			.cm-animate-fat-cursor {
+			  width: auto;
+			  border: 0;
+			  -webkit-animation: blink 1.06s steps(1) infinite;
+			  -moz-animation: blink 1.06s steps(1) infinite;
+			  animation: blink 1.06s steps(1) infinite;
+			}
+			@-moz-keyframes blink {
+			  0% { background: #7e7; }
+			  50% { background: none; }
+			  100% { background: #7e7; }
+			}
+			@-webkit-keyframes blink {
+			  0% { background: #7e7; }
+			  50% { background: none; }
+			  100% { background: #7e7; }
+			}
+			@keyframes blink {
+			  0% { background: #7e7; }
+			  50% { background: none; }
+			  100% { background: #7e7; }
+			}
+			
+			/* Can style cursor different in overwrite (non-insert) mode */
+			div.CodeMirror-overwrite div.CodeMirror-cursor {}
+			
+			.cm-tab { display: inline-block; text-decoration: inherit; }
+			
+			.CodeMirror-ruler {
+			  border-left: 1px solid #ccc;
+			  position: absolute;
+			}
+			
+			/* DEFAULT THEME */
+			
+			.cm-s-default .cm-header {color: blue;}
+			.cm-s-default .cm-quote {color: #090;}
+			.cm-negative {color: #d44;}
+			.cm-positive {color: #292;}
+			.cm-header, .cm-strong {font-weight: bold;}
+			.cm-em {font-style: italic;}
+			.cm-link {text-decoration: underline;}
+			.cm-strikethrough {text-decoration: line-through;}
+			
+			.cm-s-default .cm-keyword {color: #708;}
+			.cm-s-default .cm-atom {color: #219;}
+			.cm-s-default .cm-number {color: #164;}
+			.cm-s-default .cm-def {color: #00f;}
+			.cm-s-default .cm-variable,
+			.cm-s-default .cm-punctuation,
+			.cm-s-default .cm-property,
+			.cm-s-default .cm-operator {}
+			.cm-s-default .cm-variable-2 {color: #05a;}
+			.cm-s-default .cm-variable-3 {color: #085;}
+			.cm-s-default .cm-comment {color: #a50;}
+			.cm-s-default .cm-string {color: #a11;}
+			.cm-s-default .cm-string-2 {color: #f50;}
+			.cm-s-default .cm-meta {color: #555;}
+			.cm-s-default .cm-qualifier {color: #555;}
+			.cm-s-default .cm-builtin {color: #30a;}
+			.cm-s-default .cm-bracket {color: #997;}
+			.cm-s-default .cm-tag {color: #170;}
+			.cm-s-default .cm-attribute {color: #00c;}
+			.cm-s-default .cm-hr {color: #999;}
+			.cm-s-default .cm-link {color: #00c;}
+			
+			.cm-s-default .cm-error {color: #f00;}
+			.cm-invalidchar {color: #f00;}
+			
+			.CodeMirror-composing { border-bottom: 2px solid; }
+			
+			/* Default styles for common addons */
+			
+			div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}
+			div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
+			.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
+			.CodeMirror-activeline-background {background: #e8f2ff;}
+			
+			/* STOP */
+			
+			/* The rest of this file contains styles related to the mechanics of
+			   the editor. You probably shouldn't touch them. */
+			
+			.CodeMirror {
+			  overflow: hidden;
+			  background: white;
+			}
+			
+			.CodeMirror-scroll {
+			  overflow: scroll !important; /* Things will break if this is overridden */
+			  /* 30px is the magic margin used to hide the element's real scrollbars */
+			  /* See overflow: hidden in .CodeMirror */
+			  margin-bottom: -30px; margin-right: -30px;
+			  padding-bottom: 30px;
+			  height: 100%;
+			  outline: none; /* Prevent dragging from highlighting the element */
+			  position: relative;
+			}
+			.CodeMirror-sizer {
+			  position: relative;
+			  border-right: 30px solid transparent;
+			}
+			
+			/* The fake, visible scrollbars. Used to force redraw during scrolling
+			   before actuall scrolling happens, thus preventing shaking and
+			   flickering artifacts. */
+			.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+			  position: absolute;
+			  z-index: 6;
+			  display: none;
+			}
+			.CodeMirror-vscrollbar {
+			  right: 0; top: 0;
+			  overflow-x: hidden;
+			  overflow-y: scroll;
+			}
+			.CodeMirror-hscrollbar {
+			  bottom: 0; left: 0;
+			  overflow-y: hidden;
+			  overflow-x: scroll;
+			}
+			.CodeMirror-scrollbar-filler {
+			  right: 0; bottom: 0;
+			}
+			.CodeMirror-gutter-filler {
+			  left: 0; bottom: 0;
+			}
+			
+			.CodeMirror-gutters {
+			  position: absolute; left: 0; top: 0;
+			  z-index: 3;
+			}
+			.CodeMirror-gutter {
+			  white-space: normal;
+			  height: 100%;
+			  display: inline-block;
+			  margin-bottom: -30px;
+			  /* Hack to make IE7 behave */
+			  *zoom:1;
+			  *display:inline;
+			}
+			.CodeMirror-gutter-wrapper {
+			  position: absolute;
+			  z-index: 4;
+			  height: 100%;
+			}
+			.CodeMirror-gutter-elt {
+			  position: absolute;
+			  cursor: default;
+			  z-index: 4;
+			}
+			.CodeMirror-gutter-wrapper {
+			  -webkit-user-select: none;
+			  -moz-user-select: none;
+			  user-select: none;
+			}
+			
+			.CodeMirror-lines {
+			  cursor: text;
+			  min-height: 1px; /* prevents collapsing before first draw */
+			}
+			.CodeMirror pre {
+			  /* Reset some styles that the rest of the page might have set */
+			  -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
+			  border-width: 0;
+			  background: transparent;
+			  font-family: "Source Code Pro", menlo, monospace;;
+			  font-size: inherit;
+			  margin: 0;
+			  white-space: pre;
+			  word-wrap: normal;
+			  line-height: inherit;
+			  color: inherit;
+			  z-index: 2;
+			  position: relative;
+			  overflow: visible;
+			  -webkit-tap-highlight-color: transparent;
+			}
+			.CodeMirror-wrap pre {
+			  word-wrap: break-word;
+			  white-space: pre-wrap;
+			  word-break: normal;
+			}
+			
+			.CodeMirror-linebackground {
+			  position: absolute;
+			  left: 0; right: 0; top: 0; bottom: 0;
+			  z-index: 0;
+			}
+			
+			.CodeMirror-linewidget {
+			  position: relative;
+			  z-index: 2;
+			  overflow: auto;
+			}
+			
+			.CodeMirror-widget {}
+			
+			.CodeMirror-code {
+			  outline: none;
+			}
+			
+			/* Force content-box sizing for the elements where we expect it */
+			.CodeMirror-scroll,
+			.CodeMirror-sizer,
+			.CodeMirror-gutter,
+			.CodeMirror-gutters,
+			.CodeMirror-linenumber {
+			  -moz-box-sizing: content-box;
+			  box-sizing: content-box;
+			}
+			
+			.CodeMirror-measure {
+			  position: absolute;
+			  width: 100%;
+			  height: 0;
+			  overflow: hidden;
+			  visibility: hidden;
+			}
+			.CodeMirror-measure pre { position: static; }
+			
+			.CodeMirror div.CodeMirror-cursor {
+			  position: absolute;
+			  border-right: none;
+			  width: 0;
+			}
+			
+			div.CodeMirror-cursors {
+			  visibility: hidden;
+			  position: relative;
+			  z-index: 3;
+			}
+			.CodeMirror-focused div.CodeMirror-cursors {
+			  visibility: visible;
+			}
+			
+			.CodeMirror-selected { background: #d9d9d9; }
+			.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+			.CodeMirror-crosshair { cursor: crosshair; }
+			.CodeMirror ::selection { background: #d7d4f0; }
+			.CodeMirror ::-moz-selection { background: #d7d4f0; }
+			
+			.cm-searching {
+			  background: #ffa;
+			  background: rgba(255, 255, 0, .4);
+			}
+			
+			/* IE7 hack to prevent it from returning funny offsetTops on the spans */
+			.CodeMirror span { *vertical-align: text-bottom; }
+			
+			/* Used to force a border model for a node */
+			.cm-force-border { padding-right: .1px; }
+			
+			@media print {
+			  /* Hide the cursor when printing */
+			  .CodeMirror div.CodeMirror-cursors {
+			    visibility: hidden;
+			  }
+			}
+			
+			/* See issue #2901 */
+			.cm-tab-wrap-hack:after { content: ''; }
+			
+			/* Help users use markselection to safely style text background */
+			span.CodeMirror-selectedtext { background: none; }
+			
+			/* Based on Sublime Text's Monokai theme */
+			
+			.cm-s-monokai.CodeMirror {background: rgb(36,36,36); color: #f8f8f2;}
+			.cm-s-monokai div.CodeMirror-selected {background: rgb(90,80,80) !important;}
+			.cm-s-monokai.CodeMirror ::selection { background: rgba(73, 72, 62, .99); }
+			.cm-s-monokai.CodeMirror ::-moz-selection { background: rgba(73, 72, 62, .99); }
+			.cm-s-monokai .CodeMirror-gutters {background: rgb(41,39,39); border-right: 0;}
+			.cm-s-monokai .CodeMirror-guttermarker { color: white; }
+			.cm-s-monokai .CodeMirror-guttermarker-subtle { color: #d0d0d0; }
+			.cm-s-monokai .CodeMirror-linenumber {color: rgb(100,100,100);}
+			.cm-s-monokai .CodeMirror-cursor {border-left: 1px solid #f8f8f0 !important;}
+			
+			.cm-s-monokai span.cm-comment {color: #75715e;}
+			.cm-s-monokai span.cm-atom {color: #ae81ff;}
+			.cm-s-monokai span.cm-number {color: #ae81ff;}
+			
+			.cm-s-monokai span.cm-property, .cm-s-monokai span.cm-attribute {color: #a6e22e;}
+			.cm-s-monokai span.cm-keyword {color: #f92672;}
+			.cm-s-monokai span.cm-string {color: #e6db74;}
+			
+			.cm-s-monokai span.cm-variable {color: #f8f8f2;}
+			.cm-s-monokai span.cm-variable-2 {color: #9effff;}
+			.cm-s-monokai span.cm-variable-3 {color: #66d9ef;}
+			.cm-s-monokai span.cm-def {color: #fd971f;}
+			.cm-s-monokai span.cm-bracket {color: #f8f8f2;}
+			.cm-s-monokai span.cm-tag {color: #f92672;}
+			.cm-s-monokai span.cm-header {color: #ae81ff;}
+			.cm-s-monokai span.cm-link {color: #ae81ff;}
+			.cm-s-monokai span.cm-error {background: rgba(105,50,50,.6);}
+			
+			.cm-s-monokai .CodeMirror-activeline-background {background: #373831 !important;}
+			.cm-s-monokai .CodeMirror-matchingbracket {
+			  text-decoration: underline;
+			  color: white !important;
+			}
+			
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 200;
+			  src: url("local/fonts/SourceSansPro-ExtraLight.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 200;
+			  src: url("local/fonts/SourceSansPro-ExtraLight-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 300;
+			  src: url("local/fonts/SourceSansPro-Light.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 300;
+			  src: url("local/fonts/SourceSansPro-Light-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 400;
+			  src: url("local/fonts/SourceSansPro-Regular.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 400;
+			  src: url("local/fonts/SourceSansPro-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 600;
+			  src: url("local/fonts/SourceSansPro-Bold.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 600;
+			  src: url("local/fonts/SourceSansPro-BoldIt.otf");
+			}
+			html,
+			body,
+			p,
+			h1,
+			h2,
+			input,
+			textarea,
+			label,
+			a,
+			button {
+			  padding: 0;
+			  margin: 0;
+			  border: none;
+			  outline: none;
+			  font-size: 100%;
+			  text-decoration: none;
+			  color: #464646;
+			  text-decoration: none;
+			  font-weight: normal;
+			  font-family: "Source Sans Pro", "Helvetica Neue";
+			}
+			pre,
+			xmp,
+			plaintext,
+			listing {
+			  font-family: "Source Code Pro", menlo, monospace;
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 200;
+			  src: url("local/fonts/SourceSansPro-ExtraLight.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 200;
+			  src: url("local/fonts/SourceSansPro-ExtraLight-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 300;
+			  src: url("local/fonts/SourceSansPro-Light.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 300;
+			  src: url("local/fonts/SourceSansPro-Light-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 400;
+			  src: url("local/fonts/SourceSansPro-Regular.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 400;
+			  src: url("local/fonts/SourceSansPro-It.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: normal;
+			  font-weight: 600;
+			  src: url("local/fonts/SourceSansPro-Bold.otf");
+			}
+			@font-face {
+			  font-family: 'Source Sans Pro';
+			  font-style: italic;
+			  font-weight: 600;
+			  src: url("local/fonts/SourceSansPro-BoldIt.otf");
+			}
+			html,
+			body,
+			p,
+			h1,
+			h2,
+			input,
+			textarea,
+			label,
+			a {
+			  padding: 0;
+			  margin: 0;
+			  border: none;
+			  outline: none;
+			  font-size: 100%;
+			  text-decoration: none;
+			  color: #464646;
+			  text-decoration: none;
+			  font-weight: normal;
+			  font-family: "Source Sans Pro", "Helvetica Neue";
+			}
+			pre,
+			xmp,
+			plaintext,
+			listing {
+			  font-family: "Source Code Pro", menlo, monospace;
+			}
+			html,
+			body {
+			  background: #fff;
+			  width: 100%;
+			  height: 100%;
+			  min-height: 600px;
+			  position: relative;
+			  overflow: hidden;
+			}
+			div.dimmer {
+			  height: 100%;
+			  width: 100%;
+			  position: fixed;
+			  top: 0;
+			  left: 0;
+			  background-color: rgba(0,0,0,0.4);
+			  z-index: 1000;
+			  opacity: 0;
+			  -webkit-transition: opacity 0.5s ease;
+			          transition: opacity 0.5s ease;
+			}
+			div.dimmer.show {
+			  opacity: 1;
+			}
+			section#editor {
+			  position: fixed;
+			  top: 0;
+			  left: 0;
+			  height: 100%;
+			  width: 40%;
+			  color: #fff;
+			  background-color: #242424;
+			  border-right: 7px solid #df4848;
+			  box-sizing: border-box;
+			  overflow-x: scroll;
+			  overflow-y: hidden;
+			  -webkit-transition: left 0.5s ease;
+			          transition: left 0.5s ease;
+			}
+			section#editor section#sectionInner {
+			  min-width: 500px;
+			  max-height: 100%;
+			  min-height: 100%;
+			  height: 100%;
+			  color: inherit;
+			}
+			section#editor section#sectionInner div#editorBar {
+			  background-color: #373737;
+			  width: 100%;
+			  min-width: 500px;
+			  height: 5%;
+			  color: inherit;
+			  position: relative;
+			  top: 0;
+			  left: 0;
+			  z-index: 10;
+			  -webkit-user-select: none;
+			     -moz-user-select: none;
+			      -ms-user-select: none;
+			          user-select: none;
+			}
+			@media screen and (max-height: 600px) {
+			  section#editor section#sectionInner div#editorBar {
+			    height: 7.5%;
+			  }
+			}
+			@media screen and (min-height: 1200px) {
+			  section#editor section#sectionInner div#editorBar {
+			    height: 3.75%;
+			  }
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner {
+			  height: 30px;
+			  line-height: 30px;
+			  width: 100%;
+			  position: relative;
+			  top: 50%;
+			  -webkit-transform: translateY(-50%);
+			      -ms-transform: translateY(-50%);
+			          transform: translateY(-50%);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div#brandName {
+			  color: inherit;
+			  height: 100%;
+			  float: left;
+			  font-size: 1.25em;
+			  padding: 0 10px;
+			  margin: 0 10px;
+			  max-width: 250px;
+			  position: relative;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow {
+			  color: inherit;
+			  display: inline-block;
+			  margin: 0 4px;
+			  height: 100%;
+			  float: left;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div#projectName {
+			  color: inherit;
+			  height: 100%;
+			  float: left;
+			  font-size: 1.25em;
+			  padding: 0 10px;
+			  margin: 0 10px;
+			  max-width: 250px;
+			  position: relative;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
+			  background-color: rgba(255,255,255,0);
+			  cursor: pointer;
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn:hover {
+			  background-color: rgba(255,255,255,0.2);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.dropdown-active {
+			  background-color: rgba(255,255,255,0.2);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown {
+			  overflow: hidden;
+			  height: 316px;
+			  width: 200px;
+			  cursor: default;
+			  position: absolute;
+			  top: 120%;
+			  left: 0;
+			  opacity: 1;
+			  -webkit-transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
+			          transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .arrow {
+			  display: block;
+			  width: 0;
+			  height: 0;
+			  position: absolute;
+			  top: 0px;
+			  left: 10px;
+			  border-left: 18px solid transparent;
+			  border-right: 18px solid transparent;
+			  border-bottom: 16px solid rgba(223,72,72,0.9);
+			  z-index: 1000;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody {
+			  height: 300px;
+			  width: 100%;
+			  background-color: rgba(223,72,72,0.9);
+			  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+			  position: absolute;
+			  bottom: 0;
+			  outline: 1px solid rgba(0,0,0,0.2);
+			  z-index: 999;
+			  border-radius: 1px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer {
+			  padding: 0;
+			  height: 35px;
+			  border-bottom: 1px solid #f5f0f0;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands {
+			  display: block;
+			  width: 100%;
+			  background-color: rgba(255,255,255,0);
+			  height: 100%;
+			  color: #fff;
+			  text-indent: 4px;
+			  -webkit-user-select: text;
+			     -moz-user-select: text;
+			      -ms-user-select: text;
+			          user-select: text;
+			  -webkit-transition: color 0.15s ease;
+			          transition: color 0.15s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
+			  color: #e6e6e6;
+			  -webkit-transition: color 0.15s ease;
+			          transition: color 0.15s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont {
+			  height: 265px;
+			  overflow-y: scroll;
+			  position: relative;
+			  -webkit-transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
+			          transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .header {
+			  font-size: 18px;
+			  border-left: 0.5px solid rgba(255,255,255,0.05);
+			  border-right: 0.5px solid rgba(255,255,255,0.05);
+			  background-color: #464646;
+			  font-weight: 400;
+			  letter-spacing: 0.25px;
+			  text-indent: 5px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item {
+			  display: block;
+			  width: 100%;
+			  text-align: left;
+			  background-color: rgba(0,0,0,0);
+			  padding: 4px 5px;
+			  color: #fff;
+			  cursor: pointer;
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item:hover,
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item:focus {
+			  background-color: rgba(0,0,0,0.2);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont .noResults {
+			  color: rgba(255,255,255,0.9);
+			  font-size: 19px;
+			  position: absolute;
+			  top: 50px;
+			  font-weight: 300;
+			  text-align: center;
+			  width: 100%;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand {
+			  background-color: #323232;
+			  position: absolute;
+			  bottom: 20px;
+			  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+			  padding: 12px 0;
+			  cursor: pointer;
+			  text-align: center;
+			  width: 90%;
+			  left: 5%;
+			  overflow: hidden;
+			  -webkit-transition: background-color 0.15s ease;
+			          transition: background-color 0.15s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand:hover {
+			  background-color: #3c3c3c;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div {
+			  font-size: 17px;
+			  line-height: 18px;
+			  color: #fff;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname] {
+			  font-size: 22px;
+			  line-height: 22px;
+			  color: #fff;
+			  letter-spacing: 1px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname].long {
+			  font-size: 18px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.medium div[data-brandname] {
+			  font-size: 19px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large {
+			  width: 94%;
+			  left: 3%;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large div[data-brandname] {
+			  font-size: 17px;
+			  letter-spacing: 0.8px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.showBottomBtn {
+			  height: 235px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.no-results {
+			  height: 220px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand {
+			  position: relative;
+			  height: 30px;
+			  width: 100%;
+			  font-size: 17px;
+			  color: #e6e6e6;
+			  background-color: #464646;
+			  cursor: pointer;
+			  overflow: hidden;
+			  -webkit-transition: background-color 0.15s ease, color 0.15s ease, height 0.2s ease;
+			          transition: background-color 0.15s ease, color 0.15s ease, height 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand:hover {
+			  background-color: #505050;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.disabled {
+			  background-color: rgba(90,90,90,0.9);
+			  color: rgba(150,150,150,0.8);
+			  cursor: not-allowed;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.no-results {
+			  height: 45px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide {
+			  height: 0;
+			  width: 0;
+			  top: 110%;
+			  opacity: 0.5;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands {
+			  color: rgba(255,255,255,0);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
+			  color: #e6e6e6;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #recentBrands {
+			  border-top: 1px solid rgba(255,255,255,0);
+			  border-bottom: 1px solid rgba(255,255,255,0);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #newBrand {
+			  color: rgba(255,255,255,0);
+			}
+			section#editor section#sectionInner #codemirror-wrapper {
+			  height: 95%;
+			  width: 100%;
+			  min-width: 400px;
+			  position: absolute;
+			  top: 5%;
+			  left: 0;
+			  z-index: 5;
+			}
+			@media screen and (max-height: 600px) {
+			  section#editor section#sectionInner #codemirror-wrapper {
+			    height: 92.5%;
+			    top: 7.5%;
+			  }
+			}
+			@media screen and (min-height: 1200px) {
+			  section#editor section#sectionInner #codemirror-wrapper {
+			    height: 96.25%;
+			    top: 3.75%;
+			  }
+			}
+			section#editor.hide {
+			  left: -100%;
+			}
+			@media screen and (max-width: 1200px) {
+			  section#editor section#sectionInner div#editorBar {
+			    font-size: 80%;
+			  }
+			}
+			webview#preview {
+			  display: block;
+			  position: absolute;
+			  top: 0;
+			  right: 0;
+			  height: 100%;
+			  width: 60%;
+			  -webkit-transition: right 0.5s ease;
+			          transition: right 0.5s ease;
+			}
+			webview#preview.hide {
+			  right: -100%;
+			}
+			section#Prompter {
+			  position: fixed;
+			  top: -120px;
+			  left: 0;
+			  background: #242424;
+			  color: #fff;
+			  height: 60px;
+			  width: 100%;
+			  border-bottom: 4px solid #df4848;
+			  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
+			  z-index: 10;
+			  -webkit-transition: top 0.5s ease;
+			          transition: top 0.5s ease;
+			}
+			section#Prompter.show {
+			  top: 0;
+			  -webkit-transition: top 0.25s ease;
+			          transition: top 0.25s ease;
+			}
+			section#Prompter .message {
+			  color: inherit;
+			  font-weight: bold;
+			  height: 100%;
+			  position: relative;
+			  float: left;
+			  line-height: 60px;
+			  margin: 0 30px 0 30px;
+			  font-size: 1.75em;
+			}
+			section#Prompter .btn {
+			  color: inherit;
+			  height: 48px;
+			  position: relative;
+			  top: 6px;
+			  float: left;
+			  line-height: 48px;
+			  background: #ffa500;
+			  padding: 0 15px;
+			  font-size: 1.25em;
+			  cursor: pointer;
+			  text-align: center;
+			  min-width: 50px;
+			  background-color: rgba(255,255,255,0.15);
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			}
+			section#Prompter .mainBtn {
+			  background-color: rgba(223,72,72,0.85);
+			}
+			section#Prompter .mainBtn:hover {
+			  background-color: #eb5454;
+			}
+			section#Prompter .btn2 {
+			  margin: 0 20px 0 0;
+			}
+			section#Prompter .btn2:hover {
+			  background-color: #eb5454;
+			  background-color: rgba(255,255,255,0.3);
+			}
+			div.overlay {
+			  position: fixed;
+			  top: 0;
+			  left: 0;
+			  height: 100%;
+			  width: 100%;
+			  background-color: rgba(0,0,0,0.3);
+			  z-index: 9;
+			  opacity: 0;
+			  -webkit-transition: opacity 0.3s ease;
+			          transition: opacity 0.3s ease;
+			}
+			div.overlay.visible {
+			  opacity: 1;
+			}
+			
 
 		</style>
 		<style id="editor_preview_ratio"></style>
@@ -10725,6 +11663,8 @@
 			var fs = require("fs");
 			var json = require("jsonfile");
 			var escape = require("escape-html");
+			var mkdirp = require("mkdirp");
+			var path = require("path");
 			
 			var core = Global.coreMethods = {
 			
@@ -10800,11 +11740,7 @@
 			
 				userSettingsFile: {
 			
-					// function readUserSettings(_successCallback){
 			
-					// 	
-			
-					// }
 			
 					read: function(_successCallback){
 			
@@ -10825,6 +11761,8 @@
 						});
 			
 					},
+			
+			
 			
 					update: function(_successCallback){
 			
@@ -10876,15 +11814,97 @@
 			
 			
 			
+			
+			
+				// ----------------------------
+			
+				//  Brands
+			
+				// ----------------------------
+			
 				brands: {
 			
 			
 			
-					create: function(){
+					getPathToBrands: function(){
+			
+						return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+			
+					},
+			
+			
+			
+					create: function(_brandName){
+			
+						var self = this;
+			
+						// create folder with brands name
+			
+						baton(function(next){
+			
+							self.exists(next, _brandName);
+			
+						})
+			
+						.then(function(next, exists){
+			
+			
+			
+							if(exists) {
+			
+								alert("Brand already exists. Nice try though.");
+			
+							} else {
+			
+								mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+			
+									if(!err) next();
+			
+								});
+			
+							}
+			
+							
+			
+						})
+			
+						.then(function(next){
+			
+							editorCore.dropdowns.brands.close();
+			
+							self.infoFile.create(_brandName);
+			
+						})
+			
+						.run();
 			
 			
 			
 					},
+			
+			
+			
+					infoFile: {
+			
+						create: function(_brandName){
+			
+			
+			
+							console.log("creating info file for:", _brandName);
+			
+						},
+			
+						update: function(_brandName, _key, _value){
+			
+			
+			
+						}
+			
+					},
+			
+			
+			
+						
 			
 			
 			
@@ -10906,23 +11926,45 @@
 			
 			
 			
-					exists: function(){
+					exists: function(_callback, _brandName){
 			
+						var self = this;
 			
+						fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+			
+							if(err) {
+			
+								return _callback(false);
+			
+							}
+			
+							else {
+			
+								return _callback(stats.isDirectory());
+			
+							}
+			
+						});
 			
 					},
 			
 			
 			
-					hasInfoFile: function(){
 			
 			
+					hasInfoFile: function(_brandName){
+			
+						//check if brand exists
+			
+						//check if brand has file
 			
 					}
 			
 			
 			
 				},
+			
+			
 			
 			
 			
@@ -10968,7 +12010,7 @@
 			
 					updateBrandsList: function(_CALLBACK){
 			
-						var pathToBrands = process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands;
+						var pathToBrands = core.brands.getPathToBrands();
 			
 						var brandList = [];
 			
@@ -10996,7 +12038,17 @@
 			
 					updateRecentBrands: function(_CALLBACK){
 			
-						if(core.localData.recentBrands===null){
+						/* Main purpose of this method is to: (1) Set the local recent brands 
+			
+						in case its null, and (2) Add the current brand to the front of recent 
+			
+						brands if its not already there */
+			
+			
+			
+						// if local data is null
+			
+						if(core.localData.recentBrands === null){
 			
 							core.persistentDataFile.read(function(_persistent_data){
 			
@@ -11006,11 +12058,35 @@
 			
 							})
 			
-						} else {
+						} 
 			
-							if(core.localData.currentBrand !== null){
+						
+			
+						else {
+			
+			
+			
+							// if current brand is not the most recent brand
+			
+							if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
 			
 								core.localData.recentBrands.unshift(core.localData.currentBrand);
+			
+								core.persistentDataFile.update(function(){
+			
+									_CALLBACK();
+			
+								});
+			
+								
+			
+							} 
+			
+			
+			
+							// local recent brands is up to date
+			
+							else {
 			
 								_CALLBACK();
 			
@@ -11038,135 +12114,11 @@
 			
 					}
 			
-					// ,
+				}	
 			
+			};
 			
 			
-					// updateAll: function (_successCallback){
-			
-					// 	core.localData.data = persistentDataFile.read(function(_data){
-			
-					// 		core.localData.data = _data;
-			
-					// 		if(typeof _successCallback === "function") _successCallback();
-			
-					// 	})
-			
-					// }
-			
-				}
-			
-			
-			
-			
-			
-					
-			
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			// // SAVE BRANDS TO LOCAL PERSISTENT DATA
-			
-			// function updateBrandsList(_callback){
-			
-			// 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
-			
-			// 	var brandsList = [];
-			
-			// 	fs.readdir(pathToBrands, function(_err, _files){
-			
-			// 		if(_err) console.log("error");
-			
-			// 		for(var i = 0, ii = _files.length; i < ii; i++){
-			
-			// 			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-			
-			// 			if(stats.isDirectory()) brandsList.push(_files[i]);
-			
-			// 		}
-			
-			
-			
-			// 		updatePersitentDataFile(_callback);
-			
-			
-			
-			// 		core.localData.brandList = brandsList;
-			
-			// 	});
-			
-			// }
-			
-			
-			
-			
-			
-			// function filterBrands(next, criteria){
-			
-			// 	var matches = [];
-			
-			// 	for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
-			
-			// 		if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-			
-			// 			matches.push(core.localData.brandList[i]);
-			
-			// 	}
-			
-			// 	next(matches);
-			
-			// }
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			/*
-			
-			C
-			
-			R
-			
-			U
-			
-			D
-			
-			
-			
-			*/
 			
 			
 			var dimmer = {
@@ -11180,6 +12132,11 @@
 				off: function(){
 					core.localData.updateUserSettings(function(){
 						var _dimmer = el(".dimmer").rmClass("show");
+			
+						// if dropdowns are open, close them
+						if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+						if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+			
 						setTimeout(function(){
 							_dimmer.rm();
 							_dimmer = null;
@@ -11217,6 +12174,12 @@
 			function codemirrorInit() {
 				window.codemirrorContainer = el("#codemirror-wrapper");
 			
+				// codemirrorContainer.el("textarea").attr("tabindex","-1");
+			
+				setTimeout(function(){
+					codemirrorContainer.el("textarea").attr("tabindex", "-1");
+				}, 0);
+				
 				var myCodeMirror = CodeMirror(codemirrorContainer, {
 					value: "body { \n\tbackground: red;\n}",
 					mode: "css",
@@ -11247,26 +12210,260 @@
 					bodyClick: function(){
 						document.body.addEventListener('click', function(){
 							if(editorCore.dropdowns.brands.status === "opened"){
-								editorCore.dropdowns.brands.toggle();
+								editorCore.dropdowns.brands.close();
 							}
-							else if(editorCore.dropdowns.projects.status === "opened"){
-								editorCore.dropdowns.projects.toggle();
+							if(editorCore.dropdowns.projects.status === "opened"){
+								editorCore.dropdowns.projects.close();
 							}
 						});
 					},
 			
 					brands: {
 			
+						recent: {
+			
+							maxAmount: 15,
+			
+							populate: function(){
+								var self = this;
+								baton(function(next){
+									editorCore.dropdowns.brands.search.newBrandBtn.remove();
+									core.localData.updateRecentBrands(next);
+								})
+								.then(function(next){
+			
+									var recentBrandsArray = core.localData.recentBrands;
+			
+									var recentBrandsCont = el("+div#recentBrandsCont");
+			
+									// header
+									recentBrandsCont.append(
+										el("+div").addClass("header").text("Recent Brands")
+									)
+			
+									// add each result
+									if(recentBrandsArray.length > 0){
+			
+										var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
+			
+										for(var i = 0; i < brandLimit; i++){
+											recentBrandsCont.append(
+												el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
+											)
+										}
+			
+									} 
+			
+									else {
+										recentBrandsCont.text("No recent brands to display.");
+									}
+			
+			
+									brandsListCont.purge().append( recentBrandsCont );
+			
+			
+								})
+								.run();
+							}
+			
+						},
+			
+			
 						search: {
-							preprare: baton(function(next, inputValue){
-									setBrandSearchGlobals();
+			
+							activated: false,
+			
+							prepare:	function() {
+								var self = this;
+								baton(function(next, inputValue){
+									editorCore.dropdowns.brands.setGlobalVariables();
 									next();
 								})
 								.then(function(next){
-									prepareForBrandSearch();
-								}),
+									self.prepareInputListener();
+									// SAVE BRANDS TO LOCAL PERSISTENT DATA
+									brandSearchInput.on("focus", function(){
+										core.localData.updateBrandsList();
+									});
+			
+								}).run();
+							},
+			
+							prepareInputListener: function(){
+								var self = this;
+								var timeout = undefined;
+			
+								// Will delay the search for brands for 300ms and 
+								// batch the keystrokes into a single search
+			
+								brandSearchInput.on("keyup", function(){
+									if(timeout != undefined) {
+									 clearTimeout(timeout);
+									}
+									timeout = setTimeout(function() {
+										timeout = undefined;
+										var inputValue = brandSearchInput.value;
+										if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
+											// BEGIN SEARCHING
+											self.updateResults(inputValue);
+										} else {
+											editorCore.dropdowns.brands.recent.populate();
+										}
+										if(!self.activated){ 
+											self.activated = true;
+										}
+									}, 300);
+								});
+			
+							},
+			
+							noResults: function(_brandName){
+			
+								var nameSize;
+								if(_brandName.length < 8) nameSize = "small";
+								else if(_brandName.length < 14) nameSize = "medium";
+								else nameSize = "large";
+			
+								var noResultsContainer = el("+div").addClass("noResultsCont").append(
+									el("+div").addClass("noResults").text("(No results)")
+									// el.join([
+										
+										// el("+div#noResult-createBrand").addClass(nameSize).append(
+										// 	el.join([
+										// 		el("+div").text("Create Brand for :"),
+										// 		el("+div").text(_brandName).attr("data-brandname", _brandName)
+										// 	])
+										// ),
+			
+									// ])
+								)
+									
+								brandsListCont.purge().append( noResultsContainer );
 			
 			
+								// el("#noResult-createBrand").on("click", function(){
+								// 	core.brands.create(_brandName);
+								// });
+			
+							},
+			
+							updateResults: function(criteria){
+								var self = this;
+								var matches = core.localData.filterBrands(criteria);
+			
+								
+								if(matches.length > 0){
+			
+									var searchResultsCont = el("+div#searchResultsCont");
+			
+									if(matches.indexOf(criteria) === -1){
+										setTimeout(function(){ // helps with performance
+											editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
+											editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+											editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+										},0);
+									} else {
+										setTimeout(function(){ // helps with performance
+											editorCore.dropdowns.brands.search.newBrandBtn.disable(criteria);
+											editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+										},0);
+									}
+			
+									
+			
+									// header
+									searchResultsCont.append(
+										el("+div").addClass("header").text("Search Results")
+									)
+			
+									// add each result
+									for(var i = 0, ii = matches.length; i < ii; i++){
+										searchResultsCont.append(
+											el("+button").addClass("brand-item").attr("data-brandname",matches[i]).text(matches[i])
+										)
+									}
+			
+									// if(matches.length > 6){ // add arrow
+										// searchResultsCont.append( el("+div").addClass("arrow-down") )
+									// }
+			
+									brandsListCont.purge().append( searchResultsCont );
+			
+									brandsListCont.rmClass("no-results");
+									if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+											el("#createBrand").rmClass("no-results");
+									} 
+								}
+			
+			
+								// no results
+								else {
+									self.noResults(criteria);
+			
+									if(!editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+										editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
+									} 
+									if(!editorCore.dropdowns.brands.search.newBrandBtn.enabled) {
+										editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+									}
+									editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+									brandsListCont.addClass("no-results");
+									el("#createBrand").addClass("no-results");
+								}
+			
+			
+							},
+			
+							newBrandBtn: {
+								enabled: false,
+								exists: false,
+								add: function(_brandName){
+									if(!this.exists){
+										var btn = el("+button#createBrand").attr("data-brandname", _brandName).text("Create Brand");
+										brandName.el(".dropdown")[0].el(".dropdownBody")[0].append(btn);
+										brandsListCont.addClass("showBottomBtn");
+										this.exists = true;
+										btn.on("click", function(){
+											if(!btn.hasClass("disabled")) core.brands.create(btn.dataset.brandname);
+										});
+									}
+								},
+								remove: function(){
+									if(this.exists){
+										el("#createBrand").rm();
+										brandsListCont.rmClass("showBottomBtn");
+										this.exists = false;
+										this.enabled = false;
+									}
+								},
+								enable: function(_brandName){
+									if(!this.enabled){
+										el("#createBrand").rmClass("disabled").attr("data-brandname", _brandName);
+										this.enabled = true;
+									}
+								},
+								disable: function(){
+									if(this.enabled){
+										el("#createBrand").addClass("disabled");
+										this.enabled = false;
+									}
+								},
+								update: function(_brandName){
+									if(this.exists){
+										el("#createBrand").attr("data-brandname", _brandName);
+									}
+								}
+							}
+			
+			
+			
+			
+			
+						},
+			
+						setGlobalVariables: function(){
+							window.brandSearchInput = el("#searchBrands");
+							window.brandsListCont = el("#brandsListCont");
 						},
 			
 						status: "closed",
@@ -11274,7 +12471,9 @@
 						init: function(){
 								var self = this;
 								brandName.on("click", function(evt){
+									if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
 									self.toggle();
+									evt.stopPropagation();
 								});
 								brandsDropdown.on("click", function(evt){
 									evt.stopPropagation();
@@ -11284,32 +12483,42 @@
 						toggle: function(){
 							if(this.status === "opened") {
 								this.close();
-								this.status = "closed";
 							}
 							else if(this.status === "closed") {
 								this.open();
-								this.status = "opened";
 							}
 						},
 			
 						open: function(){
+			
 							var self = this;
-							brandsDropdown.rmClass("hide");
-							prepareForBrandSearch.run();
-							// self.init();
+							self.status = "opened";
+							self.search.prepare();
+							self.recent.populate();
+			
+							setTimeout(function(){
+								brandsDropdown.rmClass("hide");
+								brandName.addClass("dropdown-active");
+							},0);
+			
 						},
 			
 						close: function(){
+							var self = this;
+							self.status = "closed";
 							baton(function(next){
 								brandsDropdown.addClass("hide");
+								self.search.activated = false;
+								brandName.rmClass("dropdown-active");
 								setTimeout(next, 200);
 							})
 							.then(function(next){
-								brandDropDown.purge();
+								editorCore.dropdowns.brands.search.newBrandBtn.remove();
+								self.purge();
 								next();
 							})
 							.then(function(){
-								brandDropDown.refill();
+								self.refill();
 							})
 							.run();
 						},
@@ -11326,12 +12535,11 @@
 			
 											el.join([
 												el("+div#searchBrandsContainer").append(
-													el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+													el("+input#searchBrands").attr("placeholder", "Search")
 												),
 												el("+section#brandsListCont").append(
-													el("+div#recentBrands").text("recent brands")
-												),
-												el("+div#newBrand").text("New Brand")
+													el("+div#recentBrands").text("Recent Brands")
+												)
 											])
 			
 										)
@@ -11359,8 +12567,7 @@
 											),
 											el("+section#brandsListCont").append(
 												el("+div#recentBrands").text("recent brands")
-											),
-											el("+div#newBrand").text("New Brand")
+											)
 										])
 			
 									)
@@ -11378,12 +12585,11 @@
 						status: "closed",
 			
 						init: function(){
-							// if(projectName.el(".dropdown")[0] === undefined || projectName.el(".dropdown")[0] === null){
-							// 	editorCore.dropdowns.projects.populate();
-							// }
-							// window.projectsDropdown = projectName.el(".dropdown")[0];
+							var self = this;
 							projectName.on("click", function(evt){
-								editorCore.dropdowns.projects.toggle();
+								if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+								self.toggle();
+								evt.stopPropagation();
 							});
 							projectDropdown.on("click", function(evt){
 								evt.stopPropagation();
@@ -11393,34 +12599,37 @@
 						toggle: function(){
 							if(this.status === "opened") {
 								this.close();
-								this.status = "closed";
 							}
 							else if(this.status === "closed") {
 								this.open();
-								this.status = "opened";
 							}
 						},
 			
 						open: function(){
+							var self = this;
+							self.status = "opened";
+							projectName.addClass("dropdown-active");
 							projectDropdown.rmClass("hide");
 						},
 			
 						close: function(){
+							var self = this;
+							self.status = "closed";
 							baton(function(next){
 								projectDropdown.addClass("hide");
+								projectName.rmClass("dropdown-active");
 								setTimeout(next, 200);
 							})
 							.then(function(next){
-								projectDropdown.purge();
+								self.purge();
 								setTimeout(next, 10);
 							})
 							.then(function(){
-								projectDropDown.refill();
+								self.refill();
 							}).run();
 						},
 			
 						populate: function(){
-							var projectName = el("#projectName");
 							projectName.append(
 			
 								el("+div").addClass(["dropdown", "hide"]).append(
@@ -11430,14 +12639,6 @@
 			
 										el("+div").addClass("dropdownBody").append(
 											el("+div").text("dropdown")
-											// el.join([
-											// 	el("+div#searchBrandsContainer").append(
-											// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-											// 	),
-											// 	el("+div#recentBrands").text("recent brands"),
-											// 	el("+div#newBrand").text("New Brand")
-											// ])
-			
 										)
 									])
 			
@@ -11453,14 +12654,6 @@
 			
 									el("+div").addClass("dropdownBody").append(
 										el("+div").text("dropdown")
-										// el.join([
-										// 	el("+div#searchBrandsContainer").append(
-										// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-										// 	),
-										// 	el("+div#recentBrands").text("recent brands"),
-										// 	el("+div#newBrand").text("New Brand")
-										// ])
-			
 									)
 								])
 							);
@@ -11476,85 +12669,7 @@
 			
 				
 			
-			var prepareForBrandSearch = 
-			baton(function(next, inputValue){
-				setBrandSearchGlobals();
-				next();
-			})
-			.then(function(next){
-				console.log("prepare");
-				prepareBrandSearch();
-			});
-			
-			var searchBrands = 
-			baton(function(next, inputValue){
-				var matches = core.localData.filterBrands(inputValue);
-				next(matches);
-			})
-			.then(function(next, matches){
-				updateSearchResults(matches);
-			});
-			
-			
-			function setBrandSearchGlobals(){
-				window.brandSearchInput = el("#searchBrands");
-				window.brandsListCont = el("#brandsListCont");
-			}
-			
-			function prepareBrandSearch() {
-			
-				var timeout = undefined;
-			
-				brandSearchInput.on("keyup", function(){
-					// Will delay the search for brands for 300ms and 
-					// batch the keystrokes into a single search
-					if(timeout != undefined) {
-					 clearTimeout(timeout);
-					}
-					timeout = setTimeout(function() {
-						timeout = undefined;
-						var inputValue = brandSearchInput.value;
-						if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
-							// BEGIN SEARCHING
-							console.log("start searching");
-							searchBrands.run(inputValue);
-						} else {
-							// empty
-						}
-					}, 300);
-			
-				});
-			
-				// SAVE BRANDS TO LOCAL PERSISTENT DATA
-				brandSearchInput.on("focus", function(){
-					core.localData.updateBrandsList();
-				});
-			
-			}
-			
-			
-			function updateSearchResults(matches){
-				var searchResultsCont = el("+div#searchResultsCont");
-				for(var i = 0, ii = matches.length; i < ii; i++){
-					searchResultsCont.append(
-						el("+div").addClass("search-result").text(matches[i])
-					)
-				}
-				if(matches.length > 6){ // add arrow
-					searchResultsCont.append( el("+div").addClass("arrow-down") )
-				}
-				brandsListCont.purge().append( searchResultsCont );
-			}
-			
-			
-			function getBrandProjects(){
-			
-			}
-			
-			function getProjectFiles(){
-			
-			}
-			
+			//= include ./brand-search.js
 			(function(){
 				window.Quitter = {
 					quit: function(){
@@ -11660,7 +12775,7 @@
 			
 				baton(function(next){
 					
-					codemirrorInit();
+					
 					core.localData.updateUserSettings(next);
 			
 				})
@@ -11675,15 +12790,18 @@
 			
 				})
 				.then(function(next){
+			
 					editorCore.dropdowns.setDropdownGlobals();
+			
+					editorCore.dropdowns.bodyClick();
 			
 					editorCore.dropdowns.brands.populate();
 					editorCore.dropdowns.brands.init();
 					
 					editorCore.dropdowns.projects.populate();
 					editorCore.dropdowns.projects.init();
-					
 			
+					codemirrorInit();
 					//un-hide page // show editor and webview
 					el.join( [editor, preview] ).rmClass("hide");
 				})

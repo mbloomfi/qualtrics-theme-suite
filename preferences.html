@@ -9,6 +9,30 @@
 		@font-face {
 		  font-family: 'Source Sans Pro';
 		  font-style: normal;
+		  font-weight: 200;
+		  src: url("local/fonts/SourceSansPro-ExtraLight.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 200;
+		  src: url("local/fonts/SourceSansPro-ExtraLight-It.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
+		  font-weight: 300;
+		  src: url("local/fonts/SourceSansPro-Light.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 300;
+		  src: url("local/fonts/SourceSansPro-Light-It.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
 		  font-weight: 400;
 		  src: url("local/fonts/SourceSansPro-Regular.otf");
 		}
@@ -31,23 +55,18 @@
 		  src: url("local/fonts/SourceSansPro-BoldIt.otf");
 		}
 		html,
-		section,
 		body,
 		p,
 		h1,
 		h2,
-		div,
-		span,
 		input,
 		textarea,
 		label,
 		a,
-		button,
-		select {
+		button {
 		  padding: 0;
 		  margin: 0;
 		  border: none;
-		  border-radius: 0;
 		  outline: none;
 		  font-size: 100%;
 		  text-decoration: none;
@@ -55,6 +74,12 @@
 		  text-decoration: none;
 		  font-weight: normal;
 		  font-family: "Source Sans Pro", "Helvetica Neue";
+		}
+		pre,
+		xmp,
+		plaintext,
+		listing {
+		  font-family: "Source Code Pro", menlo, monospace;
 		}
 		html,
 		body {
@@ -98,7 +123,7 @@
 		  fill: rgba(80,80,80,0.25);
 		}
 		svg.logo.saved path#QUALTRICS-LOGO {
-		  fill: rgba(40,180,50,0.65);
+		  fill: rgba(39,176,75,0.8);
 		}
 		svg.logo.hide {
 		  top: -100px;
@@ -130,18 +155,18 @@
 		}
 		#bottom-bar div.btn:first-child {
 		  left: 0;
-		  background-color: #df4848;
+		  background-color: #e14444;
 		  border-right: 1px solid #5f5f5f;
 		}
 		#bottom-bar div.btn:first-child:hover {
-		  background-color: #f55550;
+		  background-color: #ed5050;
 		}
 		#bottom-bar div.btn:last-child {
 		  right: 0;
-		  background-color: #28b432;
+		  background-color: #27b04b;
 		}
 		#bottom-bar div.btn:last-child:hover {
-		  background-color: #32c837;
+		  background-color: #33bc57;
 		}
 		#bottom-bar.hide {
 		  bottom: -60px;
@@ -396,6 +421,7 @@
 		  margin: 0 20px 0 0;
 		}
 		section#Prompter .btn2:hover {
+		  background-color: #eb5454;
 		  background-color: rgba(255,255,255,0.3);
 		}
 		div.overlay {
@@ -475,6 +501,8 @@
 	var fs = require("fs");
 	var json = require("jsonfile");
 	var escape = require("escape-html");
+	var mkdirp = require("mkdirp");
+	var path = require("path");
 	var core = Global.coreMethods = {
 	
 		// ----------------------------
@@ -512,9 +540,7 @@
 		//  User Settings File
 		// ----------------------------
 		userSettingsFile: {
-			// function readUserSettings(_successCallback){
-			// 	
-			// }
+	
 			read: function(_successCallback){
 				json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 					if(!_err){ 
@@ -525,6 +551,7 @@
 					}
 				});
 			},
+	
 			update: function(_successCallback){
 				var self = this;
 	
@@ -550,11 +577,52 @@
 			}
 		},
 	
+	
+		// ----------------------------
+		//  Brands
+		// ----------------------------
 		brands: {
 	
-			create: function(){
+			getPathToBrands: function(){
+				return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+			},
+	
+			create: function(_brandName){
+				var self = this;
+				// create folder with brands name
+				baton(function(next){
+					self.exists(next, _brandName);
+				})
+				.then(function(next, exists){
+	
+					if(exists) {
+						alert("Brand already exists. Nice try though.");
+					} else {
+						mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+							if(!err) next();
+						});
+					}
+					
+				})
+				.then(function(next){
+					editorCore.dropdowns.brands.close();
+					self.infoFile.create(_brandName);
+				})
+				.run();
 	
 			},
+	
+			infoFile: {
+				create: function(_brandName){
+	
+					console.log("creating info file for:", _brandName);
+				},
+				update: function(_brandName, _key, _value){
+	
+				}
+			},
+	
+				
 	
 			addRecentBrand: function(){
 	
@@ -565,15 +633,26 @@
 			},
 	
 	
-			exists: function(){
-	
+			exists: function(_callback, _brandName){
+				var self = this;
+				fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+					if(err) {
+						return _callback(false);
+					}
+					else {
+						return _callback(stats.isDirectory());
+					}
+				});
 			},
 	
-			hasInfoFile: function(){
 	
+			hasInfoFile: function(_brandName){
+				//check if brand exists
+				//check if brand has file
 			}
 	
 		},
+	
 	
 		// ----------------------------
 		//  Local Temp Data
@@ -596,7 +675,7 @@
 			},
 	
 			updateBrandsList: function(_CALLBACK){
-				var pathToBrands = process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands;
+				var pathToBrands = core.brands.getPathToBrands();
 				var brandList = [];
 				fs.readdir(pathToBrands, function(_err, _files){
 					if(_err) console.log("error");
@@ -610,14 +689,31 @@
 			},
 	
 			updateRecentBrands: function(_CALLBACK){
-				if(core.localData.recentBrands===null){
+				/* Main purpose of this method is to: (1) Set the local recent brands 
+				in case its null, and (2) Add the current brand to the front of recent 
+				brands if its not already there */
+	
+				// if local data is null
+				if(core.localData.recentBrands === null){
 					core.persistentDataFile.read(function(_persistent_data){
 						core.localData.recentBrands = _persistent_data.recentBrands;
 						_CALLBACK();
 					})
-				} else {
-					if(core.localData.currentBrand !== null){
+				} 
+				
+				else {
+	
+					// if current brand is not the most recent brand
+					if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
 						core.localData.recentBrands.unshift(core.localData.currentBrand);
+						core.persistentDataFile.update(function(){
+							_CALLBACK();
+						});
+						
+					} 
+	
+					// local recent brands is up to date
+					else {
 						_CALLBACK();
 					}
 				}
@@ -631,71 +727,9 @@
 				}
 				return matches;
 			}
-			// ,
+		}	
+	};
 	
-			// updateAll: function (_successCallback){
-			// 	core.localData.data = persistentDataFile.read(function(_data){
-			// 		core.localData.data = _data;
-			// 		if(typeof _successCallback === "function") _successCallback();
-			// 	})
-			// }
-		}
-	
-	
-			
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// // SAVE BRANDS TO LOCAL PERSISTENT DATA
-	// function updateBrandsList(_callback){
-	// 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
-	// 	var brandsList = [];
-	// 	fs.readdir(pathToBrands, function(_err, _files){
-	// 		if(_err) console.log("error");
-	// 		for(var i = 0, ii = _files.length; i < ii; i++){
-	// 			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-	// 			if(stats.isDirectory()) brandsList.push(_files[i]);
-	// 		}
-	
-	// 		updatePersitentDataFile(_callback);
-	
-	// 		core.localData.brandList = brandsList;
-	// 	});
-	// }
-	
-	
-	// function filterBrands(next, criteria){
-	// 	var matches = [];
-	// 	for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
-	// 		if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-	// 			matches.push(core.localData.brandList[i]);
-	// 	}
-	// 	next(matches);
-	// }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	C
-	R
-	U
-	D
-	
-	*/
 	
 	
 	// --------------------------------

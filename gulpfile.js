@@ -9,6 +9,11 @@ var stylus = require("gulp-stylus");
 var autoprefixer = require("gulp-autoprefixer");
 var uglify = require("gulp-uglify");
 var replace = require("gulp-replace");
+var gulpif = require("gulp-if");
+
+//ENVIRONMENT - Change to TRUE when using for production
+var production = false;
+
 
 // Files named with an underscore are the result of a compiled stylus or javascript task. 
 // They are included into the final html view. See (src > view > index.html).
@@ -19,7 +24,7 @@ gulp.task("main-process", function(){
 	return gulp.src("src/main-process/*.js")
 	.pipe(plumber())
 	.pipe(concat("index.js"))
-	// .pipe(uglify({ mangle: false }))
+	.pipe(gulpif( production, uglify() ))
 	.pipe(gulp.dest("./"));
 });
 
@@ -41,12 +46,11 @@ gulp.task("mainStyles", ["compile-stylus"], function(){
 	return gulp.src(["src/styles/libs/*.css","src/styles/main/_.css"])
 	.pipe(plumber())
 	.pipe(concat("_.css"))
-	.pipe(minifyCss())
+	.pipe( gulpif( production, minifyCss() ) )
 	.pipe(gulp.dest("src/styles/main/"));
 });
-
 gulp.task("compile-stylus", function(){
-	return gulp.src(["src/styles/main/*.styl", "src/styles/prompt.styl"])
+	return gulp.src(["src/styles/global.styl", "src/styles/main/*.styl", "src/styles/prompt.styl"])
 	.pipe(plumber())
 	.pipe(concat("_.styl"))
 	.pipe(stylus())
@@ -70,7 +74,7 @@ gulp.task("mainScripts", function(){
 	.pipe(plumber())
 	.pipe(include())
 	.pipe(concat("_.js"))
-	// .pipe(uglify({ mangle: false }))
+	.pipe(gulpif( production, uglify() ))
 	.pipe(gulp.dest("src/scripts/main/"));
 });
 
@@ -92,12 +96,12 @@ gulp.task("prefView", ["prefStyles", "prefScripts"], function(){
 
 //CSS ==
 gulp.task("prefStyles", function(){
-	return gulp.src(["src/styles/preferences/*.styl", "src/styles/prompt.styl"])
+	return gulp.src(["src/styles/global.styl", "src/styles/preferences/*.styl", "src/styles/prompt.styl"])
 	.pipe(plumber())
 	.pipe(concat("_.styl"))
 	.pipe(stylus())
 	.pipe(autoprefixer())
-	// .pipe(minifyCss())
+	.pipe(gulpif( production, minifyCss() ))
 	.pipe(gulp.dest("src/styles/preferences/"));
 });
 
@@ -115,7 +119,7 @@ gulp.task("prefScripts", function(){
 	.pipe(plumber())
 	.pipe(include())
 	.pipe(concat("_.js"))
-	// .pipe(uglify({ mangle: false }))
+	.pipe(gulpif( production, uglify() ))
 	.pipe(gulp.dest("src/scripts/preferences/"));
 });
 

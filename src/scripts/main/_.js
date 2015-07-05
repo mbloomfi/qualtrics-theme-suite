@@ -10692,6 +10692,8 @@ var appRoot = Global.appRoot;
 var fs = require("fs");
 var json = require("jsonfile");
 var escape = require("escape-html");
+var mkdirp = require("mkdirp");
+var path = require("path");
 
 var core = Global.coreMethods = {
 
@@ -10767,11 +10769,7 @@ var core = Global.coreMethods = {
 
 	userSettingsFile: {
 
-		// function readUserSettings(_successCallback){
 
-		// 	
-
-		// }
 
 		read: function(_successCallback){
 
@@ -10792,6 +10790,8 @@ var core = Global.coreMethods = {
 			});
 
 		},
+
+
 
 		update: function(_successCallback){
 
@@ -10843,15 +10843,97 @@ var core = Global.coreMethods = {
 
 
 
+
+
+	// ----------------------------
+
+	//  Brands
+
+	// ----------------------------
+
 	brands: {
 
 
 
-		create: function(){
+		getPathToBrands: function(){
+
+			return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+
+		},
+
+
+
+		create: function(_brandName){
+
+			var self = this;
+
+			// create folder with brands name
+
+			baton(function(next){
+
+				self.exists(next, _brandName);
+
+			})
+
+			.then(function(next, exists){
+
+
+
+				if(exists) {
+
+					alert("Brand already exists. Nice try though.");
+
+				} else {
+
+					mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+
+						if(!err) next();
+
+					});
+
+				}
+
+				
+
+			})
+
+			.then(function(next){
+
+				editorCore.dropdowns.brands.close();
+
+				self.infoFile.create(_brandName);
+
+			})
+
+			.run();
 
 
 
 		},
+
+
+
+		infoFile: {
+
+			create: function(_brandName){
+
+
+
+				console.log("creating info file for:", _brandName);
+
+			},
+
+			update: function(_brandName, _key, _value){
+
+
+
+			}
+
+		},
+
+
+
+			
 
 
 
@@ -10873,23 +10955,45 @@ var core = Global.coreMethods = {
 
 
 
-		exists: function(){
+		exists: function(_callback, _brandName){
 
+			var self = this;
 
+			fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+
+				if(err) {
+
+					return _callback(false);
+
+				}
+
+				else {
+
+					return _callback(stats.isDirectory());
+
+				}
+
+			});
 
 		},
 
 
 
-		hasInfoFile: function(){
 
 
+		hasInfoFile: function(_brandName){
+
+			//check if brand exists
+
+			//check if brand has file
 
 		}
 
 
 
 	},
+
+
 
 
 
@@ -10935,7 +11039,7 @@ var core = Global.coreMethods = {
 
 		updateBrandsList: function(_CALLBACK){
 
-			var pathToBrands = process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands;
+			var pathToBrands = core.brands.getPathToBrands();
 
 			var brandList = [];
 
@@ -10963,7 +11067,17 @@ var core = Global.coreMethods = {
 
 		updateRecentBrands: function(_CALLBACK){
 
-			if(core.localData.recentBrands===null){
+			/* Main purpose of this method is to: (1) Set the local recent brands 
+
+			in case its null, and (2) Add the current brand to the front of recent 
+
+			brands if its not already there */
+
+
+
+			// if local data is null
+
+			if(core.localData.recentBrands === null){
 
 				core.persistentDataFile.read(function(_persistent_data){
 
@@ -10973,11 +11087,35 @@ var core = Global.coreMethods = {
 
 				})
 
-			} else {
+			} 
 
-				if(core.localData.currentBrand !== null){
+			
+
+			else {
+
+
+
+				// if current brand is not the most recent brand
+
+				if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
 
 					core.localData.recentBrands.unshift(core.localData.currentBrand);
+
+					core.persistentDataFile.update(function(){
+
+						_CALLBACK();
+
+					});
+
+					
+
+				} 
+
+
+
+				// local recent brands is up to date
+
+				else {
 
 					_CALLBACK();
 
@@ -11005,135 +11143,11 @@ var core = Global.coreMethods = {
 
 		}
 
-		// ,
+	}	
 
+};
 
 
-		// updateAll: function (_successCallback){
-
-		// 	core.localData.data = persistentDataFile.read(function(_data){
-
-		// 		core.localData.data = _data;
-
-		// 		if(typeof _successCallback === "function") _successCallback();
-
-		// 	})
-
-		// }
-
-	}
-
-
-
-
-
-		
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // SAVE BRANDS TO LOCAL PERSISTENT DATA
-
-// function updateBrandsList(_callback){
-
-// 	var pathToBrands = process.env.HOME+"/"+localSettingsData.files.pathToBrands;
-
-// 	var brandsList = [];
-
-// 	fs.readdir(pathToBrands, function(_err, _files){
-
-// 		if(_err) console.log("error");
-
-// 		for(var i = 0, ii = _files.length; i < ii; i++){
-
-// 			var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-
-// 			if(stats.isDirectory()) brandsList.push(_files[i]);
-
-// 		}
-
-
-
-// 		updatePersitentDataFile(_callback);
-
-
-
-// 		core.localData.brandList = brandsList;
-
-// 	});
-
-// }
-
-
-
-
-
-// function filterBrands(next, criteria){
-
-// 	var matches = [];
-
-// 	for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
-
-// 		if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-
-// 			matches.push(core.localData.brandList[i]);
-
-// 	}
-
-// 	next(matches);
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-C
-
-R
-
-U
-
-D
-
-
-
-*/
 
 
 var dimmer = {
@@ -11147,6 +11161,11 @@ var dimmer = {
 	off: function(){
 		core.localData.updateUserSettings(function(){
 			var _dimmer = el(".dimmer").rmClass("show");
+
+			// if dropdowns are open, close them
+			if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+
 			setTimeout(function(){
 				_dimmer.rm();
 				_dimmer = null;
@@ -11184,6 +11203,12 @@ var editorPreviewBar = {
 function codemirrorInit() {
 	window.codemirrorContainer = el("#codemirror-wrapper");
 
+	// codemirrorContainer.el("textarea").attr("tabindex","-1");
+
+	setTimeout(function(){
+		codemirrorContainer.el("textarea").attr("tabindex", "-1");
+	}, 0);
+	
 	var myCodeMirror = CodeMirror(codemirrorContainer, {
 		value: "body { \n\tbackground: red;\n}",
 		mode: "css",
@@ -11214,26 +11239,260 @@ var editorCore = {
 		bodyClick: function(){
 			document.body.addEventListener('click', function(){
 				if(editorCore.dropdowns.brands.status === "opened"){
-					editorCore.dropdowns.brands.toggle();
+					editorCore.dropdowns.brands.close();
 				}
-				else if(editorCore.dropdowns.projects.status === "opened"){
-					editorCore.dropdowns.projects.toggle();
+				if(editorCore.dropdowns.projects.status === "opened"){
+					editorCore.dropdowns.projects.close();
 				}
 			});
 		},
 
 		brands: {
 
+			recent: {
+
+				maxAmount: 15,
+
+				populate: function(){
+					var self = this;
+					baton(function(next){
+						editorCore.dropdowns.brands.search.newBrandBtn.remove();
+						core.localData.updateRecentBrands(next);
+					})
+					.then(function(next){
+
+						var recentBrandsArray = core.localData.recentBrands;
+
+						var recentBrandsCont = el("+div#recentBrandsCont");
+
+						// header
+						recentBrandsCont.append(
+							el("+div").addClass("header").text("Recent Brands")
+						)
+
+						// add each result
+						if(recentBrandsArray.length > 0){
+
+							var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
+
+							for(var i = 0; i < brandLimit; i++){
+								recentBrandsCont.append(
+									el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
+								)
+							}
+
+						} 
+
+						else {
+							recentBrandsCont.text("No recent brands to display.");
+						}
+
+
+						brandsListCont.purge().append( recentBrandsCont );
+
+
+					})
+					.run();
+				}
+
+			},
+
+
 			search: {
-				preprare: baton(function(next, inputValue){
-						setBrandSearchGlobals();
+
+				activated: false,
+
+				prepare:	function() {
+					var self = this;
+					baton(function(next, inputValue){
+						editorCore.dropdowns.brands.setGlobalVariables();
 						next();
 					})
 					.then(function(next){
-						prepareForBrandSearch();
-					}),
+						self.prepareInputListener();
+						// SAVE BRANDS TO LOCAL PERSISTENT DATA
+						brandSearchInput.on("focus", function(){
+							core.localData.updateBrandsList();
+						});
+
+					}).run();
+				},
+
+				prepareInputListener: function(){
+					var self = this;
+					var timeout = undefined;
+
+					// Will delay the search for brands for 300ms and 
+					// batch the keystrokes into a single search
+
+					brandSearchInput.on("keyup", function(){
+						if(timeout != undefined) {
+						 clearTimeout(timeout);
+						}
+						timeout = setTimeout(function() {
+							timeout = undefined;
+							var inputValue = brandSearchInput.value;
+							if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
+								// BEGIN SEARCHING
+								self.updateResults(inputValue);
+							} else {
+								editorCore.dropdowns.brands.recent.populate();
+							}
+							if(!self.activated){ 
+								self.activated = true;
+							}
+						}, 300);
+					});
+
+				},
+
+				noResults: function(_brandName){
+
+					var nameSize;
+					if(_brandName.length < 8) nameSize = "small";
+					else if(_brandName.length < 14) nameSize = "medium";
+					else nameSize = "large";
+
+					var noResultsContainer = el("+div").addClass("noResultsCont").append(
+						el("+div").addClass("noResults").text("(No results)")
+						// el.join([
+							
+							// el("+div#noResult-createBrand").addClass(nameSize).append(
+							// 	el.join([
+							// 		el("+div").text("Create Brand for :"),
+							// 		el("+div").text(_brandName).attr("data-brandname", _brandName)
+							// 	])
+							// ),
+
+						// ])
+					)
+						
+					brandsListCont.purge().append( noResultsContainer );
 
 
+					// el("#noResult-createBrand").on("click", function(){
+					// 	core.brands.create(_brandName);
+					// });
+
+				},
+
+				updateResults: function(criteria){
+					var self = this;
+					var matches = core.localData.filterBrands(criteria);
+
+					
+					if(matches.length > 0){
+
+						var searchResultsCont = el("+div#searchResultsCont");
+
+						if(matches.indexOf(criteria) === -1){
+							setTimeout(function(){ // helps with performance
+								editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
+								editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+								editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+							},0);
+						} else {
+							setTimeout(function(){ // helps with performance
+								editorCore.dropdowns.brands.search.newBrandBtn.disable(criteria);
+								editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+							},0);
+						}
+
+						
+
+						// header
+						searchResultsCont.append(
+							el("+div").addClass("header").text("Search Results")
+						)
+
+						// add each result
+						for(var i = 0, ii = matches.length; i < ii; i++){
+							searchResultsCont.append(
+								el("+button").addClass("brand-item").attr("data-brandname",matches[i]).text(matches[i])
+							)
+						}
+
+						// if(matches.length > 6){ // add arrow
+							// searchResultsCont.append( el("+div").addClass("arrow-down") )
+						// }
+
+						brandsListCont.purge().append( searchResultsCont );
+
+						brandsListCont.rmClass("no-results");
+						if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+								el("#createBrand").rmClass("no-results");
+						} 
+					}
+
+
+					// no results
+					else {
+						self.noResults(criteria);
+
+						if(!editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+							editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
+						} 
+						if(!editorCore.dropdowns.brands.search.newBrandBtn.enabled) {
+							editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+						}
+						editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+						brandsListCont.addClass("no-results");
+						el("#createBrand").addClass("no-results");
+					}
+
+
+				},
+
+				newBrandBtn: {
+					enabled: false,
+					exists: false,
+					add: function(_brandName){
+						if(!this.exists){
+							var btn = el("+button#createBrand").attr("data-brandname", _brandName).text("Create Brand");
+							brandName.el(".dropdown")[0].el(".dropdownBody")[0].append(btn);
+							brandsListCont.addClass("showBottomBtn");
+							this.exists = true;
+							btn.on("click", function(){
+								if(!btn.hasClass("disabled")) core.brands.create(btn.dataset.brandname);
+							});
+						}
+					},
+					remove: function(){
+						if(this.exists){
+							el("#createBrand").rm();
+							brandsListCont.rmClass("showBottomBtn");
+							this.exists = false;
+							this.enabled = false;
+						}
+					},
+					enable: function(_brandName){
+						if(!this.enabled){
+							el("#createBrand").rmClass("disabled").attr("data-brandname", _brandName);
+							this.enabled = true;
+						}
+					},
+					disable: function(){
+						if(this.enabled){
+							el("#createBrand").addClass("disabled");
+							this.enabled = false;
+						}
+					},
+					update: function(_brandName){
+						if(this.exists){
+							el("#createBrand").attr("data-brandname", _brandName);
+						}
+					}
+				}
+
+
+
+
+
+			},
+
+			setGlobalVariables: function(){
+				window.brandSearchInput = el("#searchBrands");
+				window.brandsListCont = el("#brandsListCont");
 			},
 
 			status: "closed",
@@ -11241,7 +11500,9 @@ var editorCore = {
 			init: function(){
 					var self = this;
 					brandName.on("click", function(evt){
+						if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
 						self.toggle();
+						evt.stopPropagation();
 					});
 					brandsDropdown.on("click", function(evt){
 						evt.stopPropagation();
@@ -11251,32 +11512,42 @@ var editorCore = {
 			toggle: function(){
 				if(this.status === "opened") {
 					this.close();
-					this.status = "closed";
 				}
 				else if(this.status === "closed") {
 					this.open();
-					this.status = "opened";
 				}
 			},
 
 			open: function(){
+
 				var self = this;
-				brandsDropdown.rmClass("hide");
-				prepareForBrandSearch.run();
-				// self.init();
+				self.status = "opened";
+				self.search.prepare();
+				self.recent.populate();
+
+				setTimeout(function(){
+					brandsDropdown.rmClass("hide");
+					brandName.addClass("dropdown-active");
+				},0);
+
 			},
 
 			close: function(){
+				var self = this;
+				self.status = "closed";
 				baton(function(next){
 					brandsDropdown.addClass("hide");
+					self.search.activated = false;
+					brandName.rmClass("dropdown-active");
 					setTimeout(next, 200);
 				})
 				.then(function(next){
-					brandDropDown.purge();
+					editorCore.dropdowns.brands.search.newBrandBtn.remove();
+					self.purge();
 					next();
 				})
 				.then(function(){
-					brandDropDown.refill();
+					self.refill();
 				})
 				.run();
 			},
@@ -11293,12 +11564,11 @@ var editorCore = {
 
 								el.join([
 									el("+div#searchBrandsContainer").append(
-										el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+										el("+input#searchBrands").attr("placeholder", "Search")
 									),
 									el("+section#brandsListCont").append(
-										el("+div#recentBrands").text("recent brands")
-									),
-									el("+div#newBrand").text("New Brand")
+										el("+div#recentBrands").text("Recent Brands")
+									)
 								])
 
 							)
@@ -11326,8 +11596,7 @@ var editorCore = {
 								),
 								el("+section#brandsListCont").append(
 									el("+div#recentBrands").text("recent brands")
-								),
-								el("+div#newBrand").text("New Brand")
+								)
 							])
 
 						)
@@ -11345,12 +11614,11 @@ var editorCore = {
 			status: "closed",
 
 			init: function(){
-				// if(projectName.el(".dropdown")[0] === undefined || projectName.el(".dropdown")[0] === null){
-				// 	editorCore.dropdowns.projects.populate();
-				// }
-				// window.projectsDropdown = projectName.el(".dropdown")[0];
+				var self = this;
 				projectName.on("click", function(evt){
-					editorCore.dropdowns.projects.toggle();
+					if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+					self.toggle();
+					evt.stopPropagation();
 				});
 				projectDropdown.on("click", function(evt){
 					evt.stopPropagation();
@@ -11360,34 +11628,37 @@ var editorCore = {
 			toggle: function(){
 				if(this.status === "opened") {
 					this.close();
-					this.status = "closed";
 				}
 				else if(this.status === "closed") {
 					this.open();
-					this.status = "opened";
 				}
 			},
 
 			open: function(){
+				var self = this;
+				self.status = "opened";
+				projectName.addClass("dropdown-active");
 				projectDropdown.rmClass("hide");
 			},
 
 			close: function(){
+				var self = this;
+				self.status = "closed";
 				baton(function(next){
 					projectDropdown.addClass("hide");
+					projectName.rmClass("dropdown-active");
 					setTimeout(next, 200);
 				})
 				.then(function(next){
-					projectDropdown.purge();
+					self.purge();
 					setTimeout(next, 10);
 				})
 				.then(function(){
-					projectDropDown.refill();
+					self.refill();
 				}).run();
 			},
 
 			populate: function(){
-				var projectName = el("#projectName");
 				projectName.append(
 
 					el("+div").addClass(["dropdown", "hide"]).append(
@@ -11397,14 +11668,6 @@ var editorCore = {
 
 							el("+div").addClass("dropdownBody").append(
 								el("+div").text("dropdown")
-								// el.join([
-								// 	el("+div#searchBrandsContainer").append(
-								// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-								// 	),
-								// 	el("+div#recentBrands").text("recent brands"),
-								// 	el("+div#newBrand").text("New Brand")
-								// ])
-
 							)
 						])
 
@@ -11420,14 +11683,6 @@ var editorCore = {
 
 						el("+div").addClass("dropdownBody").append(
 							el("+div").text("dropdown")
-							// el.join([
-							// 	el("+div#searchBrandsContainer").append(
-							// 		el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-							// 	),
-							// 	el("+div#recentBrands").text("recent brands"),
-							// 	el("+div#newBrand").text("New Brand")
-							// ])
-
 						)
 					])
 				);
@@ -11443,85 +11698,7 @@ var editorCore = {
 
 	
 
-var prepareForBrandSearch = 
-baton(function(next, inputValue){
-	setBrandSearchGlobals();
-	next();
-})
-.then(function(next){
-	console.log("prepare");
-	prepareBrandSearch();
-});
-
-var searchBrands = 
-baton(function(next, inputValue){
-	var matches = core.localData.filterBrands(inputValue);
-	next(matches);
-})
-.then(function(next, matches){
-	updateSearchResults(matches);
-});
-
-
-function setBrandSearchGlobals(){
-	window.brandSearchInput = el("#searchBrands");
-	window.brandsListCont = el("#brandsListCont");
-}
-
-function prepareBrandSearch() {
-
-	var timeout = undefined;
-
-	brandSearchInput.on("keyup", function(){
-		// Will delay the search for brands for 300ms and 
-		// batch the keystrokes into a single search
-		if(timeout != undefined) {
-		 clearTimeout(timeout);
-		}
-		timeout = setTimeout(function() {
-			timeout = undefined;
-			var inputValue = brandSearchInput.value;
-			if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
-				// BEGIN SEARCHING
-				console.log("start searching");
-				searchBrands.run(inputValue);
-			} else {
-				// empty
-			}
-		}, 300);
-
-	});
-
-	// SAVE BRANDS TO LOCAL PERSISTENT DATA
-	brandSearchInput.on("focus", function(){
-		core.localData.updateBrandsList();
-	});
-
-}
-
-
-function updateSearchResults(matches){
-	var searchResultsCont = el("+div#searchResultsCont");
-	for(var i = 0, ii = matches.length; i < ii; i++){
-		searchResultsCont.append(
-			el("+div").addClass("search-result").text(matches[i])
-		)
-	}
-	if(matches.length > 6){ // add arrow
-		searchResultsCont.append( el("+div").addClass("arrow-down") )
-	}
-	brandsListCont.purge().append( searchResultsCont );
-}
-
-
-function getBrandProjects(){
-
-}
-
-function getProjectFiles(){
-
-}
-
+//= include ./brand-search.js
 (function(){
 	window.Quitter = {
 		quit: function(){
@@ -11627,7 +11804,7 @@ el.on("load", function(){
 
 	baton(function(next){
 		
-		codemirrorInit();
+		
 		core.localData.updateUserSettings(next);
 
 	})
@@ -11642,15 +11819,18 @@ el.on("load", function(){
 
 	})
 	.then(function(next){
+
 		editorCore.dropdowns.setDropdownGlobals();
+
+		editorCore.dropdowns.bodyClick();
 
 		editorCore.dropdowns.brands.populate();
 		editorCore.dropdowns.brands.init();
 		
 		editorCore.dropdowns.projects.populate();
 		editorCore.dropdowns.projects.init();
-		
 
+		codemirrorInit();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 	})
