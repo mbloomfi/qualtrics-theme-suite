@@ -35,7 +35,7 @@ editorCore.dropdowns.brands = {
 				} 
 
 				else {
-					recentBrandsCont.text("No recent brands to display.");
+					recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
 				}
 
 

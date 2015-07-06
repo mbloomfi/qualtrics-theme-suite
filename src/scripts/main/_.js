@@ -11175,6 +11175,56 @@ var core = Global.coreMethods = {
 
 				.run();
 
+			},
+
+
+
+			files: {
+
+				list: function(_projectName, _callback){
+
+
+
+					baton(function(next){
+
+						// console.log("brandName:", _brandName);
+
+						var pathToProject = core.brands.getPathToBrands() + "/" + core.localData.currentBrand + "/" + _projectName + "/";
+
+						next(pathToProject);
+
+					})
+
+					.then(function(next, path){
+
+						var fileList = [];
+
+						fs.readdir(path, function(_err, _files){
+
+							if(_err) console.log("error listing projects");
+
+							for(var i = 0, ii = _files.length; i < ii; i++){
+
+								var stats = fs.statSync(path+"/"+_files[i]);
+
+								if(stats.isFile()) fileList.push(_files[i]);
+
+							}
+
+							// currentBrand.projects = projectsList // ADD this
+
+							if(_callback!==undefined) _callback(fileList);
+
+						});
+
+					})
+
+					.run();
+
+
+
+				}
+
 			}
 
 
@@ -11517,7 +11567,7 @@ editorCore.dropdowns.brands = {
 
 				else {
 
-					recentBrandsCont.text("No recent brands to display.");
+					recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
 
 				}
 
@@ -12196,6 +12246,9 @@ editorCore.dropdowns.projects = {
 		// Add this functionality
 		// core.brands.projects.select(_projectName);
 		
+		editorCore.dropdowns.files.activate(_projectName);
+
+
 	},
 
 
@@ -12375,8 +12428,24 @@ editorCore.dropdowns.projects = {
 
 editorCore.dropdowns.files = {
 	status: "closed",
-	activate: function(){},
-	select: function(_projectName){}
+	prepare: function(){
+		window.fileName = el("#fileName");
+	},
+	activate: function(_projectName){
+		fileName.rmClass("incactive");
+		console.log("getting files for:", _projectName)
+		core.brands.projects.files.list(_projectName, function(files){
+			console.log("files",files);
+
+		});
+	},
+	populate: function(){
+
+	},
+	select: function(_projectName){
+
+	}
+
 };
 
 

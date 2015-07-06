@@ -263,6 +263,31 @@ var core = Global.coreMethods = {
 					// self.infoFile.create(_brandName);
 				})
 				.run();
+			},
+
+			files: {
+				list: function(_projectName, _callback){
+
+					baton(function(next){
+						// console.log("brandName:", _brandName);
+						var pathToProject = core.brands.getPathToBrands() + "/" + core.localData.currentBrand + "/" + _projectName + "/";
+						next(pathToProject);
+					})
+					.then(function(next, path){
+						var fileList = [];
+						fs.readdir(path, function(_err, _files){
+							if(_err) console.log("error listing projects");
+							for(var i = 0, ii = _files.length; i < ii; i++){
+								var stats = fs.statSync(path+"/"+_files[i]);
+								if(stats.isFile()) fileList.push(_files[i]);
+							}
+							// currentBrand.projects = projectsList // ADD this
+							if(_callback!==undefined) _callback(fileList);
+						});
+					})
+					.run();
+
+				}
 			}
 
 		}

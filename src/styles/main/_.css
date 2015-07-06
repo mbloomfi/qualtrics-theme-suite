@@ -660,6 +660,10 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   z-index: 999;
   border-radius: 1px;
 }
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody .no-recent {
+  padding: 5px;
+  font-size: 17px;
+}
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer {
   padding: 0;
   height: 40px;

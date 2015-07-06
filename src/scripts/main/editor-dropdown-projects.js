@@ -11,6 +11,9 @@ editorCore.dropdowns.projects = {
 		// Add this functionality
 		// core.brands.projects.select(_projectName);
 		
+		editorCore.dropdowns.files.activate(_projectName);
+
+
 	},
 
 
