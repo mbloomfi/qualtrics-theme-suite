@@ -260,6 +260,7 @@ var core = Global.coreMethods = {
 				})
 				.then(function(next){
 					editorCore.dropdowns.projects.close();
+					editorCore.dropdowns.projects.select(_projectName);
 					// self.infoFile.create(_brandName);
 				})
 				.run();

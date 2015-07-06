@@ -11169,6 +11169,8 @@ var core = Global.coreMethods = {
 
 					editorCore.dropdowns.projects.close();
 
+					editorCore.dropdowns.projects.select(_projectName);
+
 					// self.infoFile.create(_brandName);
 
 				})
@@ -11487,6 +11489,9 @@ var editorCore = {
 				if(editorCore.dropdowns.projects.status === "opened"){
 					editorCore.dropdowns.projects.close();
 				}
+				if(editorCore.dropdowns.files.status === "opened"){
+					editorCore.dropdowns.files.close();
+				}
 			});
 		}	
 
@@ -11494,6 +11499,274 @@ var editorCore = {
 };
 
 editorCore.dropdowns.brands = {
+
+
+
+	
+
+
+
+	setGlobalVariables: function(){
+
+		window.brandSearchInput = el("#searchBrands");
+
+		window.brandsListCont = el("#brandsListCont");
+
+	},
+
+
+
+	status: "closed",
+
+
+
+	init: function(){
+
+			var self = this;
+
+			brandName.on("click", function(evt){
+
+				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+
+				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+
+				if(!this.hasClass("inactive")){
+
+					self.toggle();
+
+					evt.stopPropagation();
+
+				}
+
+			});
+
+			brandsDropdown.on("click", function(evt){
+
+				evt.stopPropagation();
+
+			});
+
+	},
+
+
+
+	select: function(_brandName){
+
+		var self = this;
+
+		self.close();
+
+		el("#brandNameText").purge().text(_brandName);
+
+		core.brands.select(_brandName);
+
+		
+
+		// activate projects dropdown
+
+		editorCore.dropdowns.projects.activate();
+
+		editorCore.dropdowns.files.deactivate();
+
+	},
+
+
+
+	toggle: function(){
+
+		if(this.status === "opened") {
+
+			this.close();
+
+		}
+
+		else if(this.status === "closed") {
+
+			this.open();
+
+		}
+
+	},
+
+
+
+	open: function(){
+
+
+
+		var self = this;
+
+		self.status = "opened";
+
+		self.search.prepare();
+
+		self.recent.populate();
+
+
+
+		setTimeout(function(){
+
+			brandsDropdown.rmClass("hide");
+
+			brandName.addClass("dropdown-active");
+
+		},0);
+
+
+
+	},
+
+
+
+	close: function(){
+
+		var self = this;
+
+		self.status = "closed";
+
+		baton(function(next){
+
+			brandsDropdown.addClass("hide");
+
+			self.search.activated = false;
+
+			brandName.rmClass("dropdown-active");
+
+			setTimeout(next, 200);
+
+		})
+
+		.then(function(next){
+
+			editorCore.dropdowns.brands.search.newBrandBtn.remove();
+
+			self.purge();
+
+			next();
+
+		})
+
+		.then(function(){
+
+			self.refill();
+
+		})
+
+		.run();
+
+	},
+
+
+
+	populate: function(){
+
+		brandName.append(
+
+
+
+			el("+div").addClass(["dropdown", "hide"]).append(
+
+
+
+				el.join([
+
+					el("+div").addClass("arrow"),
+
+
+
+					el("+div").addClass("dropdownBody").append(
+
+
+
+						el.join([
+
+							el("+div#searchBrandsContainer").append(
+
+								el("+input#searchBrands").attr("placeholder", "Search")
+
+							),
+
+							el("+section#brandsListCont").append(
+
+								el("+div#recentBrands").text("Recent Brands")
+
+							)
+
+						])
+
+
+
+					)
+
+				])
+
+
+
+			)
+
+
+
+		);
+
+
+
+		window.brandsDropdown = brandName.el(".dropdown")[0];
+
+		// then enable dropdown
+
+		
+
+	},
+
+
+
+	refill: function(){
+
+		brandsDropdown.append(
+
+			el.join([
+
+				el("+div").addClass("arrow"),
+
+
+
+				el("+div").addClass("dropdownBody").append(
+
+
+
+					el.join([
+
+						el("+div#searchBrandsContainer").append(
+
+							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+
+						),
+
+						el("+section#brandsListCont").append(
+
+							el("+div#recentBrands").text("recent brands")
+
+						)
+
+					])
+
+
+
+				)
+
+			])
+
+		);
+
+	},
+
+	
+
+	purge: function(){
+
+		brandsDropdown.purge();
+
+	},
 
 
 
@@ -11967,266 +12240,6 @@ editorCore.dropdowns.brands = {
 
 
 
-	},
-
-
-
-	setGlobalVariables: function(){
-
-		window.brandSearchInput = el("#searchBrands");
-
-		window.brandsListCont = el("#brandsListCont");
-
-	},
-
-
-
-	status: "closed",
-
-
-
-	init: function(){
-
-			var self = this;
-
-			brandName.on("click", function(evt){
-
-				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-
-				if(!this.hasClass("inactive")){
-
-					self.toggle();
-
-					evt.stopPropagation();
-
-				}
-
-			});
-
-			brandsDropdown.on("click", function(evt){
-
-				evt.stopPropagation();
-
-			});
-
-	},
-
-
-
-	select: function(_brandName){
-
-		var self = this;
-
-		self.close();
-
-		el("#brandNameText").purge().text(_brandName);
-
-		core.brands.select(_brandName);
-
-		
-
-		// activate projects dropdown
-
-		editorCore.dropdowns.projects.activate();
-
-	},
-
-
-
-	toggle: function(){
-
-		if(this.status === "opened") {
-
-			this.close();
-
-		}
-
-		else if(this.status === "closed") {
-
-			this.open();
-
-		}
-
-	},
-
-
-
-	open: function(){
-
-
-
-		var self = this;
-
-		self.status = "opened";
-
-		self.search.prepare();
-
-		self.recent.populate();
-
-
-
-		setTimeout(function(){
-
-			brandsDropdown.rmClass("hide");
-
-			brandName.addClass("dropdown-active");
-
-		},0);
-
-
-
-	},
-
-
-
-	close: function(){
-
-		var self = this;
-
-		self.status = "closed";
-
-		baton(function(next){
-
-			brandsDropdown.addClass("hide");
-
-			self.search.activated = false;
-
-			brandName.rmClass("dropdown-active");
-
-			setTimeout(next, 200);
-
-		})
-
-		.then(function(next){
-
-			editorCore.dropdowns.brands.search.newBrandBtn.remove();
-
-			self.purge();
-
-			next();
-
-		})
-
-		.then(function(){
-
-			self.refill();
-
-		})
-
-		.run();
-
-	},
-
-
-
-	populate: function(){
-
-		brandName.append(
-
-
-
-			el("+div").addClass(["dropdown", "hide"]).append(
-
-
-
-				el.join([
-
-					el("+div").addClass("arrow"),
-
-
-
-					el("+div").addClass("dropdownBody").append(
-
-
-
-						el.join([
-
-							el("+div#searchBrandsContainer").append(
-
-								el("+input#searchBrands").attr("placeholder", "Search")
-
-							),
-
-							el("+section#brandsListCont").append(
-
-								el("+div#recentBrands").text("Recent Brands")
-
-							)
-
-						])
-
-
-
-					)
-
-				])
-
-
-
-			)
-
-
-
-		);
-
-
-
-		window.brandsDropdown = brandName.el(".dropdown")[0];
-
-		// then enable dropdown
-
-		
-
-	},
-
-
-
-	refill: function(){
-
-		brandsDropdown.append(
-
-			el.join([
-
-				el("+div").addClass("arrow"),
-
-
-
-				el("+div").addClass("dropdownBody").append(
-
-
-
-					el.join([
-
-						el("+div#searchBrandsContainer").append(
-
-							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-
-						),
-
-						el("+section#brandsListCont").append(
-
-							el("+div#recentBrands").text("recent brands")
-
-						)
-
-					])
-
-
-
-				)
-
-			])
-
-		);
-
-	},
-
-	
-
-	purge: function(){
-
-		brandsDropdown.purge();
-
 	}
 
 
@@ -12247,6 +12260,7 @@ editorCore.dropdowns.projects = {
 		// core.brands.projects.select(_projectName);
 		
 		editorCore.dropdowns.files.activate(_projectName);
+		editorCore.dropdowns.files.populate(_projectName);
 
 
 	},
@@ -12257,6 +12271,7 @@ editorCore.dropdowns.projects = {
 
 		projectName.on("click", function(evt){
 			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+			if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
 			if(!this.hasClass("inactive")){
 				self.toggle();
 				evt.stopPropagation();
@@ -12428,22 +12443,136 @@ editorCore.dropdowns.projects = {
 
 editorCore.dropdowns.files = {
 	status: "closed",
-	prepare: function(){
-		window.fileName = el("#fileName");
-	},
-	activate: function(_projectName){
-		fileName.rmClass("incactive");
-		console.log("getting files for:", _projectName)
-		core.brands.projects.files.list(_projectName, function(files){
-			console.log("files",files);
+	active: false,
 
+
+	prepare: function(){
+		var self = this;
+		// console.log("running PREPARE")
+		window.fileName = el("#fileName");
+		fileName.append(
+
+			el("+div").addClass(["dropdown", "hide"]).append(
+
+				el.join([
+					el("+div").addClass("arrow"),
+
+					el("+div").addClass(["dropdownBody", "files"]).text("files here")
+				])
+
+			)
+
+		);
+
+		window.filesDropdown = fileName.el(".dropdown")[0];
+		window.filesDropdownBody = filesDropdown.el(".dropdownBody")[0];
+
+		fileName.on("click", function(evt){
+
+			if(editorCore.dropdowns.brands.status === "opened")
+				editorCore.dropdowns.brands.close();
+			if(editorCore.dropdowns.projects.status === "opened")
+				editorCore.dropdowns.projects.close();
+			
+			// console.log("status:",editorCore.dropdowns.files.status);
+			// console.log("active:",!this.hasClass("inactive"));
+
+			if(!this.hasClass("inactive")){
+				self.toggle();
+				evt.stopPropagation();
+			}
+		});
+
+		filesDropdown.on("click", function(evt){
+			evt.stopPropagation();
 		});
 	},
-	populate: function(){
 
+	activate: function(_projectName){
+		var self = this;
+		if(self.active === false) {
+			fileName.rmClass("inactive");
+			// console.log("getting files for:", _projectName);
+			self.active = true;
+		}
+	},
+	deactivate: function(_projectName){
+		var self = this;
+		if(self.active === true) {
+			fileName.addClass("inactive");
+			self.active = false;
+		}
+	},
+
+	populate: function(_projectName){
+		var self = this;
+		self.purge();
+		console.log("==populating")
+		core.brands.projects.files.list(_projectName, function(files){
+			console.log("files",files);
+			filesDropdownBody.append(
+				el("+div").addClass("header").text("Files")
+			)
+			for(var i = 0, ii = files.length; i < ii; i ++){
+				if(files[i].indexOf("StyleSheet") !== -1){
+					filesDropdownBody.append(
+						el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
+					)
+				}
+				else {
+					filesDropdownBody.append(
+						el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i])
+					)
+				}
+					
+			}
+		});
+	},
+
+	toggle: function(){
+		// console.log("current status:", this.status);
+		if(this.status === "opened") {
+			this.close();
+		}
+		else if(this.status === "closed") {
+			this.open();
+		}
+	},
+	open: function(){
+		// console.log("opening files");
+		var self = this;
+		self.status = "opened";
+
+		// self.refill();
+		// projectName.addClass("dropdown-active");
+		filesDropdown.rmClass("hide");
+	},
+	close: function(){
+		// console.log("closing files");
+		var self = this;
+		self.status = "closed";
+		baton(function(next){
+			filesDropdown.addClass("hide");
+			// projectName.rmClass("dropdown-active");
+			setTimeout(next, 200);
+		})
+		.then(function(next){
+			// self.purge();
+			setTimeout(next, 10);
+		})
+		.then(function(){
+			// self.refill();
+		}).run();
+	},
+	update: function(_projectName){
+		// add file-items container
+		// add the add new container
 	},
 	select: function(_projectName){
 
+	},
+	purge: function() {
+		filesDropdownBody.purge();
 	}
 
 };
@@ -12583,6 +12712,9 @@ el.on("load", function(){
 		
 		editorCore.dropdowns.projects.populate();
 		editorCore.dropdowns.projects.init();
+
+		editorCore.dropdowns.files.prepare();
+		// editorCore.dropdowns.files.init();
 
 		codemirrorInit();
 		//un-hide page // show editor and webview

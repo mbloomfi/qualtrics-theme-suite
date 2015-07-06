@@ -382,6 +382,44 @@ section#editor {
 
 							}
 							
+							&.files {
+								overflow-y scroll
+								overflow-x hidden
+								.header {
+									font-size 19px
+									padding 5px 0 0
+									// border-bottom 1px solid rgba(255,255,255, .2)
+									border-left 0.5px solid rgba(255,255,255, .05)
+									border-right 0.5px solid rgba(255,255,255, .05)
+									// background-color rgba(70,70,70,0)
+									color rgb(190,190,190)
+									font-weight 400
+									// text-transform uppercase
+									letter-spacing .25px
+									text-indent 5px
+									// text-align center
+								}
+								.file-item {
+									font-size 16px
+									font-weight 300
+									width 190px
+									overflow-x scroll
+									cursor pointer
+									text-align left
+									background-color rgba(0,0,0,0)
+									padding 4px 5px
+									color white
+									transition background-color .3s ease
+									&:hover, &:focus {
+										background-color rgba(0,0,0,.2)
+									}
+									&.bold {
+										font-size 17px
+										font-weight 600
+									}
+								}
+							}
+							
 							// PROJECTS DROPDOWN BODY
 							//
 							

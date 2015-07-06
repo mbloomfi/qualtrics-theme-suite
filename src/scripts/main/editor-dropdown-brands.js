@@ -1,5 +1,139 @@
 editorCore.dropdowns.brands = {
 
+	
+
+	setGlobalVariables: function(){
+		window.brandSearchInput = el("#searchBrands");
+		window.brandsListCont = el("#brandsListCont");
+	},
+
+	status: "closed",
+
+	init: function(){
+			var self = this;
+			brandName.on("click", function(evt){
+				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+				if(!this.hasClass("inactive")){
+					self.toggle();
+					evt.stopPropagation();
+				}
+			});
+			brandsDropdown.on("click", function(evt){
+				evt.stopPropagation();
+			});
+	},
+
+	select: function(_brandName){
+		var self = this;
+		self.close();
+		el("#brandNameText").purge().text(_brandName);
+		core.brands.select(_brandName);
+		
+		// activate projects dropdown
+		editorCore.dropdowns.projects.activate();
+		editorCore.dropdowns.files.deactivate();
+	},
+
+	toggle: function(){
+		if(this.status === "opened") {
+			this.close();
+		}
+		else if(this.status === "closed") {
+			this.open();
+		}
+	},
+
+	open: function(){
+
+		var self = this;
+		self.status = "opened";
+		self.search.prepare();
+		self.recent.populate();
+
+		setTimeout(function(){
+			brandsDropdown.rmClass("hide");
+			brandName.addClass("dropdown-active");
+		},0);
+
+	},
+
+	close: function(){
+		var self = this;
+		self.status = "closed";
+		baton(function(next){
+			brandsDropdown.addClass("hide");
+			self.search.activated = false;
+			brandName.rmClass("dropdown-active");
+			setTimeout(next, 200);
+		})
+		.then(function(next){
+			editorCore.dropdowns.brands.search.newBrandBtn.remove();
+			self.purge();
+			next();
+		})
+		.then(function(){
+			self.refill();
+		})
+		.run();
+	},
+
+	populate: function(){
+		brandName.append(
+
+			el("+div").addClass(["dropdown", "hide"]).append(
+
+				el.join([
+					el("+div").addClass("arrow"),
+
+					el("+div").addClass("dropdownBody").append(
+
+						el.join([
+							el("+div#searchBrandsContainer").append(
+								el("+input#searchBrands").attr("placeholder", "Search")
+							),
+							el("+section#brandsListCont").append(
+								el("+div#recentBrands").text("Recent Brands")
+							)
+						])
+
+					)
+				])
+
+			)
+
+		);
+
+		window.brandsDropdown = brandName.el(".dropdown")[0];
+		// then enable dropdown
+		
+	},
+
+	refill: function(){
+		brandsDropdown.append(
+			el.join([
+				el("+div").addClass("arrow"),
+
+				el("+div").addClass("dropdownBody").append(
+
+					el.join([
+						el("+div#searchBrandsContainer").append(
+							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+						),
+						el("+section#brandsListCont").append(
+							el("+div#recentBrands").text("recent brands")
+						)
+					])
+
+				)
+			])
+		);
+	},
+	
+	purge: function(){
+		brandsDropdown.purge();
+	},
+
 	recent: {
 
 		maxAmount: 15,
@@ -235,136 +369,6 @@ editorCore.dropdowns.brands = {
 
 
 
-	},
-
-	setGlobalVariables: function(){
-		window.brandSearchInput = el("#searchBrands");
-		window.brandsListCont = el("#brandsListCont");
-	},
-
-	status: "closed",
-
-	init: function(){
-			var self = this;
-			brandName.on("click", function(evt){
-				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-				if(!this.hasClass("inactive")){
-					self.toggle();
-					evt.stopPropagation();
-				}
-			});
-			brandsDropdown.on("click", function(evt){
-				evt.stopPropagation();
-			});
-	},
-
-	select: function(_brandName){
-		var self = this;
-		self.close();
-		el("#brandNameText").purge().text(_brandName);
-		core.brands.select(_brandName);
-		
-		// activate projects dropdown
-		editorCore.dropdowns.projects.activate();
-	},
-
-	toggle: function(){
-		if(this.status === "opened") {
-			this.close();
-		}
-		else if(this.status === "closed") {
-			this.open();
-		}
-	},
-
-	open: function(){
-
-		var self = this;
-		self.status = "opened";
-		self.search.prepare();
-		self.recent.populate();
-
-		setTimeout(function(){
-			brandsDropdown.rmClass("hide");
-			brandName.addClass("dropdown-active");
-		},0);
-
-	},
-
-	close: function(){
-		var self = this;
-		self.status = "closed";
-		baton(function(next){
-			brandsDropdown.addClass("hide");
-			self.search.activated = false;
-			brandName.rmClass("dropdown-active");
-			setTimeout(next, 200);
-		})
-		.then(function(next){
-			editorCore.dropdowns.brands.search.newBrandBtn.remove();
-			self.purge();
-			next();
-		})
-		.then(function(){
-			self.refill();
-		})
-		.run();
-	},
-
-	populate: function(){
-		brandName.append(
-
-			el("+div").addClass(["dropdown", "hide"]).append(
-
-				el.join([
-					el("+div").addClass("arrow"),
-
-					el("+div").addClass("dropdownBody").append(
-
-						el.join([
-							el("+div#searchBrandsContainer").append(
-								el("+input#searchBrands").attr("placeholder", "Search")
-							),
-							el("+section#brandsListCont").append(
-								el("+div#recentBrands").text("Recent Brands")
-							)
-						])
-
-					)
-				])
-
-			)
-
-		);
-
-		window.brandsDropdown = brandName.el(".dropdown")[0];
-		// then enable dropdown
-		
-	},
-
-	refill: function(){
-		brandsDropdown.append(
-			el.join([
-				el("+div").addClass("arrow"),
-
-				el("+div").addClass("dropdownBody").append(
-
-					el.join([
-						el("+div#searchBrandsContainer").append(
-							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
-						),
-						el("+section#brandsListCont").append(
-							el("+div#recentBrands").text("recent brands")
-						)
-					])
-
-				)
-			])
-		);
-	},
-	
-	purge: function(){
-		brandsDropdown.purge();
 	}
 
 };

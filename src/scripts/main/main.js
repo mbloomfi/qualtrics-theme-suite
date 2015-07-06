@@ -124,6 +124,9 @@ el.on("load", function(){
 		editorCore.dropdowns.projects.populate();
 		editorCore.dropdowns.projects.init();
 
+		editorCore.dropdowns.files.prepare();
+		// editorCore.dropdowns.files.init();
+
 		codemirrorInit();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");

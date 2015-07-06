@@ -12,6 +12,7 @@ editorCore.dropdowns.projects = {
 		// core.brands.projects.select(_projectName);
 		
 		editorCore.dropdowns.files.activate(_projectName);
+		editorCore.dropdowns.files.populate(_projectName);
 
 
 	},
@@ -22,6 +23,7 @@ editorCore.dropdowns.projects = {
 
 		projectName.on("click", function(evt){
 			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+			if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
 			if(!this.hasClass("inactive")){
 				self.toggle();
 				evt.stopPropagation();

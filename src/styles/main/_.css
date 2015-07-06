@@ -837,6 +837,41 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   text-align: center;
   width: 100%;
 }
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .header {
+  font-size: 19px;
+  padding: 5px 0 0;
+  border-left: 0.5px solid rgba(255,255,255,0.05);
+  border-right: 0.5px solid rgba(255,255,255,0.05);
+  color: #bebebe;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+  text-indent: 5px;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item {
+  font-size: 16px;
+  font-weight: 300;
+  width: 190px;
+  overflow-x: scroll;
+  cursor: pointer;
+  text-align: left;
+  background-color: rgba(0,0,0,0);
+  padding: 4px 5px;
+  color: #fff;
+  -webkit-transition: background-color 0.3s ease;
+          transition: background-color 0.3s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item:hover,
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item:focus {
+  background-color: rgba(0,0,0,0.2);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.bold {
+  font-size: 17px;
+  font-weight: 600;
+}
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide {
   height: 0;
   width: 0;

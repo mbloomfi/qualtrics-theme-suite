@@ -23,6 +23,9 @@ var editorCore = {
 				if(editorCore.dropdowns.projects.status === "opened"){
 					editorCore.dropdowns.projects.close();
 				}
+				if(editorCore.dropdowns.files.status === "opened"){
+					editorCore.dropdowns.files.close();
+				}
 			});
 		}	
 
