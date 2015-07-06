@@ -68,6 +68,10 @@ var editorCore = {
 
 						brandsListCont.purge().append( recentBrandsCont );
 
+						el(".brand-item").on("click", function(){
+							editorCore.dropdowns.brands.select(this.dataset.brandname);
+						});
+
 
 					})
 					.run();
@@ -133,24 +137,9 @@ var editorCore = {
 
 					var noResultsContainer = el("+div").addClass("noResultsCont").append(
 						el("+div").addClass("noResults").text("(No results)")
-						// el.join([
-							
-							// el("+div#noResult-createBrand").addClass(nameSize).append(
-							// 	el.join([
-							// 		el("+div").text("Create Brand for :"),
-							// 		el("+div").text(_brandName).attr("data-brandname", _brandName)
-							// 	])
-							// ),
-
-						// ])
 					)
 						
 					brandsListCont.purge().append( noResultsContainer );
-
-
-					// el("#noResult-createBrand").on("click", function(){
-					// 	core.brands.create(_brandName);
-					// });
 
 				},
 
@@ -195,6 +184,11 @@ var editorCore = {
 						// }
 
 						brandsListCont.purge().append( searchResultsCont );
+
+						// Add click listeners to each result
+						el(".brand-item").on("click", function(){
+							editorCore.dropdowns.brands.select(this.dataset.brandname);
+						});
 
 						brandsListCont.rmClass("no-results");
 						if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
@@ -279,12 +273,24 @@ var editorCore = {
 					var self = this;
 					brandName.on("click", function(evt){
 						if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-						self.toggle();
-						evt.stopPropagation();
+						if(!this.hasClass("inactive")){
+							self.toggle();
+							evt.stopPropagation();
+						}
 					});
 					brandsDropdown.on("click", function(evt){
 						evt.stopPropagation();
 					});
+			},
+
+			select: function(_brandName){
+				var self = this;
+				self.close();
+				el("#brandNameText").purge().text(_brandName);
+				core.brands.select(_brandName);
+				
+				// activate projects dropdown
+				editorCore.dropdowns.projects.activate();
 			},
 
 			toggle: function(){
@@ -391,16 +397,41 @@ var editorCore = {
 
 			status: "closed",
 
+			select: function(_projectName){
+				console.log("selecting", _projectName);
+			},
+
 			init: function(){
 				var self = this;
+
 				projectName.on("click", function(evt){
 					if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
-					self.toggle();
-					evt.stopPropagation();
+					if(!this.hasClass("inactive")){
+						self.toggle();
+						evt.stopPropagation();
+					}
 				});
+
 				projectDropdown.on("click", function(evt){
 					evt.stopPropagation();
 				});
+			},
+
+			/*resets the title name and closes dropdown*/
+			reset: function(){
+				var self = this;
+				if(self.status === "opened") self.close();
+				el("#projectNameText").purge().text("Projects");
+			},
+
+			/**/
+			activate: function() {
+				var self = this;
+				// read current brand from localData
+				var currentBrand = core.localData.currentBrand;
+				self.reset();
+				projectName.rmClass("inactive");
+				// remove inactive class
 			},
 
 			toggle: function(){
@@ -415,6 +446,8 @@ var editorCore = {
 			open: function(){
 				var self = this;
 				self.status = "opened";
+
+				self.refill();
 				projectName.addClass("dropdown-active");
 				projectDropdown.rmClass("hide");
 			},
@@ -432,41 +465,107 @@ var editorCore = {
 					setTimeout(next, 10);
 				})
 				.then(function(){
-					self.refill();
+					// self.refill();
 				}).run();
 			},
 
 			populate: function(){
+				// initial populate; for individual projects, see refill
 				projectName.append(
 
 					el("+div").addClass(["dropdown", "hide"]).append(
 
 						el.join([
 							el("+div").addClass("arrow"),
-
-							el("+div").addClass("dropdownBody").append(
-								el("+div").text("dropdown")
-							)
+							el("+div").addClass(["dropdownBody", "projects"]),
+							el("+div").addClass("inputCont")
 						])
 
 					)
 
 				);
 				window.projectDropdown = projectName.el(".dropdown")[0];
+				window.projectDropdownBody = projectName.el(".dropdownBody")[0];
+				window.projectDropdownInputCont = projectName.el(".inputCont")[0];
 			},
-			refill: function(){
-				projectDropdown.append(
-					el.join([
-						el("+div").addClass("arrow"),
 
-						el("+div").addClass("dropdownBody").append(
-							el("+div").text("dropdown")
+			noProjects: function(){
+				console.log("no projects");
+				projectDropdownBody.append(
+					el("+div").addClass("no-projects").text("(no projects)")
+				)
+			},
+
+			refill: function(){
+				var self = this;
+				core.brands.projects.list(core.localData.currentBrand, function(projects){
+
+					var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project");
+					var newProjectInputBtn = el("+div#newProject-btn").append(
+						el.join([
+							el("+div").addClass("vertical-bar"),
+							el("+div").addClass("horizontal-bar")
+						])
+					);
+					projectDropdownInputCont.append(newProjectInput);
+					projectDropdownInputCont.append(newProjectInputBtn);
+
+					if(projects.length === 0)
+					{
+						self.noProjects();
+					} 
+
+					else 
+					{
+						projectDropdownBody.append(
+							el("+div").addClass("header").text("Projects")
 						)
-					])
-				);
+						for(var i = 0, ii = projects.length; i < ii; i++){
+							projectDropdownBody.append(
+								el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i])
+							)
+						}
+					}
+
+					function newProject(inputVal, projects){
+							console.log("submit", inputVal);
+							var match = false;
+							for(var i = 0, ii = projects.length; i < ii; i++){
+								if( projects[i].toUpperCase() === inputVal.toUpperCase() ) match = true;
+							}
+
+							if(!match){
+								alert("Creating Project");
+							}
+							else {
+								alert("Project Name Already Exists");
+							}
+							console.log("arr", projects);
+					}
+
+					newProjectInput.on("keyup", function(e){
+						if(e.keyCode === 13 || e.keyIdentifier === "Enter"){
+							if(this.value.length > 0 && this.value.slice(0,1) !== " "){
+								newProject(this.value, projects);
+							}
+						}
+					});
+
+					newProjectInputBtn.on("click", function(e){
+
+						if(newProjectInput.value.length > 0 && newProjectInput.value.slice(0,1) !== " "){
+							newProject(newProjectInput.value, projects);
+						}
+					});
+
+						
+
+
+				})
 			},
 			purge: function(){
-				projectDropdown.purge();
+				projectDropdownBody.purge();
+				projectDropdownInputCont.purge();
 			}
 		}
 	}

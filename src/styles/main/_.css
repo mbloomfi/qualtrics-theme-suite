@@ -593,7 +593,6 @@ section#editor section#sectionInner div#editorBar div#editorBarInner {
           transform: translateY(-50%);
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div#brandName {
-  color: inherit;
   height: 100%;
   float: left;
   font-size: 1.25em;
@@ -610,7 +609,6 @@ section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow 
   float: left;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div#projectName {
-  color: inherit;
   height: 100%;
   float: left;
   font-size: 1.25em;
@@ -630,6 +628,12 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn:hov
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.dropdown-active {
   background-color: rgba(255,255,255,0.2);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive {
+  color: rgba(255,255,255,0.3);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive:hover {
+  background-color: rgba(255,255,255,0);
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown {
   overflow: hidden;
@@ -668,8 +672,8 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer {
   padding: 0;
-  height: 35px;
-  border-bottom: 1px solid #f5f0f0;
+  height: 40px;
+  border-bottom: 3px solid #f5f0f0;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands {
   display: block;
@@ -691,17 +695,18 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
           transition: color 0.15s ease;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont {
-  height: 265px;
+  height: 257px;
   overflow-y: scroll;
   position: relative;
   -webkit-transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
           transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .header {
-  font-size: 18px;
+  font-size: 19px;
+  padding: 5px 0 0;
   border-left: 0.5px solid rgba(255,255,255,0.05);
   border-right: 0.5px solid rgba(255,255,255,0.05);
-  background-color: #464646;
+  color: #bebebe;
   font-weight: 400;
   letter-spacing: 0.25px;
   text-indent: 5px;
@@ -773,10 +778,10 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   letter-spacing: 0.8px;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.showBottomBtn {
-  height: 235px;
+  height: 227px;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.no-results {
-  height: 220px;
+  height: 207px;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand {
   position: relative;
@@ -799,7 +804,44 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   cursor: not-allowed;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.no-results {
-  height: 45px;
+  height: 50px;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects {
+  overflow-x: visible;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .header {
+  font-size: 19px;
+  padding: 5px 0 0;
+  border-left: 0.5px solid rgba(255,255,255,0.05);
+  border-right: 0.5px solid rgba(255,255,255,0.05);
+  color: #bebebe;
+  font-weight: 400;
+  letter-spacing: 0.25px;
+  text-indent: 5px;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background-color: rgba(0,0,0,0);
+  padding: 4px 5px;
+  color: #fff;
+  cursor: pointer;
+  -webkit-transition: background-color 0.3s ease;
+          transition: background-color 0.3s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:hover,
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:focus {
+  background-color: rgba(0,0,0,0.2);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .no-projects {
+  color: rgba(255,255,255,0.9);
+  font-size: 19px;
+  position: absolute;
+  top: 50px;
+  font-weight: 300;
+  text-align: center;
+  width: 100%;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide {
   height: 0;
@@ -819,6 +861,66 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #newBrand {
   color: rgba(255,255,255,0);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 17px;
+  line-height: 40px;
+  text-indent: 4px;
+  z-index: 1001;
+  height: 40px;
+  background-color: transparent;
+  color: #fff;
+  border-top: 1px solid rgba(255,255,255,0.9);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
+  color: #e6e6e6;
+  -webkit-transition: color 0.15s ease;
+          transition: color 0.15s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn {
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  bottom: 11px;
+  right: 8px;
+  z-index: 1001;
+  cursor: pointer;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn .vertical-bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 3px;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+  background-color: #e6e1e1;
+  -webkit-transition: background-color 0.2s ease;
+          transition: background-color 0.2s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn .horizontal-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+  background-color: #e6e1e1;
+  -webkit-transition: background-color 0.2s ease;
+          transition: background-color 0.2s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn:hover .vertical-bar {
+  background-color: #fff;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn:hover .horizontal-bar {
+  background-color: #fff;
 }
 section#editor section#sectionInner #codemirror-wrapper {
   height: 95%;

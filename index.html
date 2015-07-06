@@ -599,7 +599,6 @@
 			          transform: translateY(-50%);
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div#brandName {
-			  color: inherit;
 			  height: 100%;
 			  float: left;
 			  font-size: 1.25em;
@@ -616,7 +615,6 @@
 			  float: left;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div#projectName {
-			  color: inherit;
 			  height: 100%;
 			  float: left;
 			  font-size: 1.25em;
@@ -636,6 +634,12 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.dropdown-active {
 			  background-color: rgba(255,255,255,0.2);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive {
+			  color: rgba(255,255,255,0.3);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive:hover {
+			  background-color: rgba(255,255,255,0);
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown {
 			  overflow: hidden;
@@ -674,8 +678,8 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer {
 			  padding: 0;
-			  height: 35px;
-			  border-bottom: 1px solid #f5f0f0;
+			  height: 40px;
+			  border-bottom: 3px solid #f5f0f0;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands {
 			  display: block;
@@ -697,17 +701,18 @@
 			          transition: color 0.15s ease;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont {
-			  height: 265px;
+			  height: 257px;
 			  overflow-y: scroll;
 			  position: relative;
 			  -webkit-transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
 			          transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .header {
-			  font-size: 18px;
+			  font-size: 19px;
+			  padding: 5px 0 0;
 			  border-left: 0.5px solid rgba(255,255,255,0.05);
 			  border-right: 0.5px solid rgba(255,255,255,0.05);
-			  background-color: #464646;
+			  color: #bebebe;
 			  font-weight: 400;
 			  letter-spacing: 0.25px;
 			  text-indent: 5px;
@@ -779,10 +784,10 @@
 			  letter-spacing: 0.8px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.showBottomBtn {
-			  height: 235px;
+			  height: 227px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.no-results {
-			  height: 220px;
+			  height: 207px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand {
 			  position: relative;
@@ -805,7 +810,44 @@
 			  cursor: not-allowed;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.no-results {
-			  height: 45px;
+			  height: 50px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects {
+			  overflow-x: visible;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .header {
+			  font-size: 19px;
+			  padding: 5px 0 0;
+			  border-left: 0.5px solid rgba(255,255,255,0.05);
+			  border-right: 0.5px solid rgba(255,255,255,0.05);
+			  color: #bebebe;
+			  font-weight: 400;
+			  letter-spacing: 0.25px;
+			  text-indent: 5px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item {
+			  display: block;
+			  width: 100%;
+			  text-align: left;
+			  background-color: rgba(0,0,0,0);
+			  padding: 4px 5px;
+			  color: #fff;
+			  cursor: pointer;
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:hover,
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:focus {
+			  background-color: rgba(0,0,0,0.2);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .no-projects {
+			  color: rgba(255,255,255,0.9);
+			  font-size: 19px;
+			  position: absolute;
+			  top: 50px;
+			  font-weight: 300;
+			  text-align: center;
+			  width: 100%;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide {
 			  height: 0;
@@ -825,6 +867,66 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #newBrand {
 			  color: rgba(255,255,255,0);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput {
+			  position: absolute;
+			  bottom: 0;
+			  left: 0;
+			  width: 100%;
+			  font-size: 17px;
+			  line-height: 40px;
+			  text-indent: 4px;
+			  z-index: 1001;
+			  height: 40px;
+			  background-color: transparent;
+			  color: #fff;
+			  border-top: 1px solid rgba(255,255,255,0.9);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
+			  color: #e6e6e6;
+			  -webkit-transition: color 0.15s ease;
+			          transition: color 0.15s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn {
+			  height: 18px;
+			  width: 18px;
+			  position: absolute;
+			  bottom: 11px;
+			  right: 8px;
+			  z-index: 1001;
+			  cursor: pointer;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn .vertical-bar {
+			  position: absolute;
+			  top: 0;
+			  left: 50%;
+			  height: 100%;
+			  width: 3px;
+			  -webkit-transform: translateX(-50%);
+			      -ms-transform: translateX(-50%);
+			          transform: translateX(-50%);
+			  background-color: #e6e1e1;
+			  -webkit-transition: background-color 0.2s ease;
+			          transition: background-color 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn .horizontal-bar {
+			  position: absolute;
+			  top: 50%;
+			  left: 0;
+			  height: 3px;
+			  width: 100%;
+			  -webkit-transform: translateY(-50%);
+			      -ms-transform: translateY(-50%);
+			          transform: translateY(-50%);
+			  background-color: #e6e1e1;
+			  -webkit-transition: background-color 0.2s ease;
+			          transition: background-color 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn:hover .vertical-bar {
+			  background-color: #fff;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProject-btn:hover .horizontal-bar {
+			  background-color: #fff;
 			}
 			section#editor section#sectionInner #codemirror-wrapper {
 			  height: 95%;
@@ -953,9 +1055,9 @@
 		
 				<div id="editorBar">
 					<div id="editorBarInner">
-						<div id="brandName" class="btn">underarmour</div>
+						<div id="brandName" class="btn"><span id="brandNameText">Brands</span></div>
 						<span class="arrow">></span>
-						<div id="projectName" class="btn">underarmour2 new</div>
+						<div id="projectName" class="btn inactive"><span id="projectNameText">Projects</span></div>
 					</div>
 				</div>
 		
@@ -11834,6 +11936,18 @@
 			
 			
 			
+					select: function(_brandName){
+			
+						console.log("core has it under control:", _brandName);
+			
+						// add brand to recent brands, current brand
+			
+						core.brands.setCurrentBrand(_brandName);
+			
+					},
+			
+			
+			
 					create: function(_brandName){
 			
 						var self = this;
@@ -11842,7 +11956,7 @@
 			
 						baton(function(next){
 			
-							self.exists(next, _brandName);
+							self.exists(_brandName, next);
 			
 						})
 			
@@ -11886,6 +12000,8 @@
 			
 					infoFile: {
 			
+						ext: ".qtheme",
+			
 						create: function(_brandName){
 			
 			
@@ -11908,25 +12024,39 @@
 			
 			
 			
-					addRecentBrand: function(){
+					updateRecentBrands: function(){
+			
+						var brand = core.localData.currentBrand;
+			
+						var i = core.localData.recentBrands.indexOf(brand);
+			
+						if(i !== -1) {
+			
+							core.localData.recentBrands.splice(i, 1);
+			
+						}
+			
+						core.localData.recentBrands.unshift(brand);
+			
+						core.persistentDataFile.update();
+			
+					},	
 			
 			
+			
+					setCurrentBrand: function(_brandName){
+			
+						core.localData.currentBrand = _brandName;
+			
+						core.brands.updateRecentBrands();
 			
 					},
 			
 			
 			
-					setCurrentBrand: function(){
 			
 			
-			
-					},
-			
-			
-			
-			
-			
-					exists: function(_callback, _brandName){
+					exists: function(_brandName, _callback){
 			
 						var self = this;
 			
@@ -11952,11 +12082,125 @@
 			
 			
 			
-					hasInfoFile: function(_brandName){
+					hasInfoFile: function(_callback, _brandName){
 			
-						//check if brand exists
+						var self = this;
 			
-						//check if brand has file
+						baton(function(next){
+			
+							//check if brand exists
+			
+							self.exists(_brandName, next);
+			
+						})
+			
+						.then(function(next, _exists){
+			
+							if(_exists){
+			
+								next();
+			
+							} 
+			
+							else _callback(false);
+			
+						})
+			
+						.then(function(){
+			
+							//check if brand has file
+			
+							fs.stat(self.getPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+			
+								if(err) {
+			
+									return _callback(false);
+			
+								}
+			
+								else {
+			
+									return _callback(stats.isFile());
+			
+								}
+			
+							});
+			
+						})
+			
+						.run();
+			
+						
+			
+					},
+			
+			
+			
+					projects: {
+			
+			
+			
+						/*Runs a callback, passing it an array of the names of the projects*/
+			
+						list: function(_brandName, _callback){
+			
+							
+			
+							baton(function(next){
+			
+								console.log("brandName:", _brandName);
+			
+								core.brands.exists(_brandName, next);
+			
+							})
+			
+							.then(function(next, exists){
+			
+								if(exists){
+			
+									var pathToBrand = core.brands.getPathToBrands() + "/" + _brandName;
+			
+									next(pathToBrand);
+			
+								}
+			
+							})
+			
+							.then(function(next, path){
+			
+								var projectList = [];
+			
+								fs.readdir(path, function(_err, _projects){
+			
+									if(_err) console.log("error listing projects");
+			
+									for(var i = 0, ii = _projects.length; i < ii; i++){
+			
+										var stats = fs.statSync(path+"/"+_projects[i]);
+			
+										if(stats.isDirectory()) projectList.push(_projects[i]);
+			
+									}
+			
+									// currentBrand.projects = projectsList // ADD this
+			
+									if(_callback!==undefined) _callback(projectList);
+			
+								});
+			
+							}).run();
+			
+							
+			
+							
+			
+							// console.log("pathToBrand",pathToBrand);
+			
+			
+			
+						}
+			
+			
 			
 					}
 			
@@ -12261,6 +12505,10 @@
 			
 									brandsListCont.purge().append( recentBrandsCont );
 			
+									el(".brand-item").on("click", function(){
+										editorCore.dropdowns.brands.select(this.dataset.brandname);
+									});
+			
 			
 								})
 								.run();
@@ -12326,24 +12574,9 @@
 			
 								var noResultsContainer = el("+div").addClass("noResultsCont").append(
 									el("+div").addClass("noResults").text("(No results)")
-									// el.join([
-										
-										// el("+div#noResult-createBrand").addClass(nameSize).append(
-										// 	el.join([
-										// 		el("+div").text("Create Brand for :"),
-										// 		el("+div").text(_brandName).attr("data-brandname", _brandName)
-										// 	])
-										// ),
-			
-									// ])
 								)
 									
 								brandsListCont.purge().append( noResultsContainer );
-			
-			
-								// el("#noResult-createBrand").on("click", function(){
-								// 	core.brands.create(_brandName);
-								// });
 			
 							},
 			
@@ -12388,6 +12621,11 @@
 									// }
 			
 									brandsListCont.purge().append( searchResultsCont );
+			
+									// Add click listeners to each result
+									el(".brand-item").on("click", function(){
+										editorCore.dropdowns.brands.select(this.dataset.brandname);
+									});
 			
 									brandsListCont.rmClass("no-results");
 									if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
@@ -12472,12 +12710,24 @@
 								var self = this;
 								brandName.on("click", function(evt){
 									if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-									self.toggle();
-									evt.stopPropagation();
+									if(!this.hasClass("inactive")){
+										self.toggle();
+										evt.stopPropagation();
+									}
 								});
 								brandsDropdown.on("click", function(evt){
 									evt.stopPropagation();
 								});
+						},
+			
+						select: function(_brandName){
+							var self = this;
+							self.close();
+							el("#brandNameText").purge().text(_brandName);
+							core.brands.select(_brandName);
+							
+							// activate projects dropdown
+							editorCore.dropdowns.projects.activate();
 						},
 			
 						toggle: function(){
@@ -12584,16 +12834,41 @@
 			
 						status: "closed",
 			
+						select: function(_projectName){
+							console.log("selecting", _projectName);
+						},
+			
 						init: function(){
 							var self = this;
+			
 							projectName.on("click", function(evt){
 								if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
-								self.toggle();
-								evt.stopPropagation();
+								if(!this.hasClass("inactive")){
+									self.toggle();
+									evt.stopPropagation();
+								}
 							});
+			
 							projectDropdown.on("click", function(evt){
 								evt.stopPropagation();
 							});
+						},
+			
+						/*resets the title name and closes dropdown*/
+						reset: function(){
+							var self = this;
+							if(self.status === "opened") self.close();
+							el("#projectNameText").purge().text("Projects");
+						},
+			
+						/**/
+						activate: function() {
+							var self = this;
+							// read current brand from localData
+							var currentBrand = core.localData.currentBrand;
+							self.reset();
+							projectName.rmClass("inactive");
+							// remove inactive class
 						},
 			
 						toggle: function(){
@@ -12608,6 +12883,8 @@
 						open: function(){
 							var self = this;
 							self.status = "opened";
+			
+							self.refill();
 							projectName.addClass("dropdown-active");
 							projectDropdown.rmClass("hide");
 						},
@@ -12625,41 +12902,107 @@
 								setTimeout(next, 10);
 							})
 							.then(function(){
-								self.refill();
+								// self.refill();
 							}).run();
 						},
 			
 						populate: function(){
+							// initial populate; for individual projects, see refill
 							projectName.append(
 			
 								el("+div").addClass(["dropdown", "hide"]).append(
 			
 									el.join([
 										el("+div").addClass("arrow"),
-			
-										el("+div").addClass("dropdownBody").append(
-											el("+div").text("dropdown")
-										)
+										el("+div").addClass(["dropdownBody", "projects"]),
+										el("+div").addClass("inputCont")
 									])
 			
 								)
 			
 							);
 							window.projectDropdown = projectName.el(".dropdown")[0];
+							window.projectDropdownBody = projectName.el(".dropdownBody")[0];
+							window.projectDropdownInputCont = projectName.el(".inputCont")[0];
 						},
-						refill: function(){
-							projectDropdown.append(
-								el.join([
-									el("+div").addClass("arrow"),
 			
-									el("+div").addClass("dropdownBody").append(
-										el("+div").text("dropdown")
+						noProjects: function(){
+							console.log("no projects");
+							projectDropdownBody.append(
+								el("+div").addClass("no-projects").text("(no projects)")
+							)
+						},
+			
+						refill: function(){
+							var self = this;
+							core.brands.projects.list(core.localData.currentBrand, function(projects){
+			
+								var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project");
+								var newProjectInputBtn = el("+div#newProject-btn").append(
+									el.join([
+										el("+div").addClass("vertical-bar"),
+										el("+div").addClass("horizontal-bar")
+									])
+								);
+								projectDropdownInputCont.append(newProjectInput);
+								projectDropdownInputCont.append(newProjectInputBtn);
+			
+								if(projects.length === 0)
+								{
+									self.noProjects();
+								} 
+			
+								else 
+								{
+									projectDropdownBody.append(
+										el("+div").addClass("header").text("Projects")
 									)
-								])
-							);
+									for(var i = 0, ii = projects.length; i < ii; i++){
+										projectDropdownBody.append(
+											el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i])
+										)
+									}
+								}
+			
+								function newProject(inputVal, projects){
+										console.log("submit", inputVal);
+										var match = false;
+										for(var i = 0, ii = projects.length; i < ii; i++){
+											if( projects[i].toUpperCase() === inputVal.toUpperCase() ) match = true;
+										}
+			
+										if(!match){
+											alert("Creating Project");
+										}
+										else {
+											alert("Project Name Already Exists");
+										}
+										console.log("arr", projects);
+								}
+			
+								newProjectInput.on("keyup", function(e){
+									if(e.keyCode === 13 || e.keyIdentifier === "Enter"){
+										if(this.value.length > 0 && this.value.slice(0,1) !== " "){
+											newProject(this.value, projects);
+										}
+									}
+								});
+			
+								newProjectInputBtn.on("click", function(e){
+			
+									if(newProjectInput.value.length > 0 && newProjectInput.value.slice(0,1) !== " "){
+										newProject(newProjectInput.value, projects);
+									}
+								});
+			
+									
+			
+			
+							})
 						},
 						purge: function(){
-							projectDropdown.purge();
+							projectDropdownBody.purge();
+							projectDropdownInputCont.purge();
 						}
 					}
 				}

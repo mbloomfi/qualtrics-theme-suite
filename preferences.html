@@ -587,11 +587,17 @@
 				return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
 			},
 	
+			select: function(_brandName){
+				console.log("core has it under control:", _brandName);
+				// add brand to recent brands, current brand
+				core.brands.setCurrentBrand(_brandName);
+			},
+	
 			create: function(_brandName){
 				var self = this;
 				// create folder with brands name
 				baton(function(next){
-					self.exists(next, _brandName);
+					self.exists(_brandName, next);
 				})
 				.then(function(next, exists){
 	
@@ -613,6 +619,7 @@
 			},
 	
 			infoFile: {
+				ext: ".qtheme",
 				create: function(_brandName){
 	
 					console.log("creating info file for:", _brandName);
@@ -624,16 +631,23 @@
 	
 				
 	
-			addRecentBrand: function(){
+			updateRecentBrands: function(){
+				var brand = core.localData.currentBrand;
+				var i = core.localData.recentBrands.indexOf(brand);
+				if(i !== -1) {
+					core.localData.recentBrands.splice(i, 1);
+				}
+				core.localData.recentBrands.unshift(brand);
+				core.persistentDataFile.update();
+			},	
 	
+			setCurrentBrand: function(_brandName){
+				core.localData.currentBrand = _brandName;
+				core.brands.updateRecentBrands();
 			},
 	
-			setCurrentBrand: function(){
 	
-			},
-	
-	
-			exists: function(_callback, _brandName){
+			exists: function(_brandName, _callback){
 				var self = this;
 				fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
 					if(err) {
@@ -646,9 +660,66 @@
 			},
 	
 	
-			hasInfoFile: function(_brandName){
-				//check if brand exists
-				//check if brand has file
+			hasInfoFile: function(_callback, _brandName){
+				var self = this;
+				baton(function(next){
+					//check if brand exists
+					self.exists(_brandName, next);
+				})
+				.then(function(next, _exists){
+					if(_exists){
+						next();
+					} 
+					else _callback(false);
+				})
+				.then(function(){
+					//check if brand has file
+					fs.stat(self.getPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+						if(err) {
+							return _callback(false);
+						}
+						else {
+							return _callback(stats.isFile());
+						}
+					});
+				})
+				.run();
+				
+			},
+	
+			projects: {
+	
+				/*Runs a callback, passing it an array of the names of the projects*/
+				list: function(_brandName, _callback){
+					
+					baton(function(next){
+						console.log("brandName:", _brandName);
+						core.brands.exists(_brandName, next);
+					})
+					.then(function(next, exists){
+						if(exists){
+							var pathToBrand = core.brands.getPathToBrands() + "/" + _brandName;
+							next(pathToBrand);
+						}
+					})
+					.then(function(next, path){
+						var projectList = [];
+						fs.readdir(path, function(_err, _projects){
+							if(_err) console.log("error listing projects");
+							for(var i = 0, ii = _projects.length; i < ii; i++){
+								var stats = fs.statSync(path+"/"+_projects[i]);
+								if(stats.isDirectory()) projectList.push(_projects[i]);
+							}
+							// currentBrand.projects = projectsList // ADD this
+							if(_callback!==undefined) _callback(projectList);
+						});
+					}).run();
+					
+					
+					// console.log("pathToBrand",pathToBrand);
+	
+				}
+	
 			}
 	
 		},

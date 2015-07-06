@@ -1,6 +1,14 @@
 // $dropdown-menus-color = rgba(90,82,82,.9)
 $dropdown-menus-color = alpha($primaryColor, 0.9)
 
+$dropdown_height = 300px
+$searchbar_height = 40px
+$newBrand_btn_height = 30px
+$brandsListCont_height = ($dropdown_height - ($searchbar_height + 3))
+$brandsListCont_bottomBtn_height = $brandsListCont_height - $newBrand_btn_height
+// $brandsListCont-bottomBtn-height = 227px
+
+
 section#editor {
 	position fixed
 	top 0
@@ -52,7 +60,6 @@ section#editor {
 				
 				
 				div#brandName{
-					color inherit
 					height 100%
 					float left
 					font-size 1.25em
@@ -72,7 +79,6 @@ section#editor {
 				}
 				
 				div#projectName {
-					color inherit
 					height 100%
 					float left
 					font-size 1.25em
@@ -82,6 +88,8 @@ section#editor {
 					// overflow hidden
 					position relative
 					// background-color purple
+						
+					
 				}
 				
 				// DROPDOWN MENUS
@@ -94,6 +102,13 @@ section#editor {
 					}
 					&.dropdown-active {
 						background-color rgba(255,255,255,.2)
+					}
+					
+					&.inactive {
+						color rgba(255,255,255,.3)
+						&:hover {
+							background-color rgba(255,255,255,0)
+						}
 					}
 					
 					div.dropdown {
@@ -124,7 +139,7 @@ section#editor {
 						}
 						
 						.dropdownBody{
-							height 300px
+							height $dropdown_height
 							width 100%
 							// pointer-events none
 							background-color $dropdown-menus-color
@@ -140,8 +155,8 @@ section#editor {
 							// BRANDS DROPDOWN BODY
 							div#searchBrandsContainer {
 								padding 0
-								height 35px
-								border-bottom 1px solid rgb(245,240,240)
+								height $searchbar_height
+								border-bottom 3px solid rgb(245,240,240)
 								
 								input#searchBrands {
 									display block
@@ -164,17 +179,19 @@ section#editor {
 							}
 							
 							#brandsListCont {
-								height 265px
+								height $brandsListCont_height
 								overflow-y scroll
 								position relative
 								transition border-top .15s ease, border-bottom .15s ease, height .2s ease
 								
 								.header {
-									font-size 18px
+									font-size 19px
+									padding 5px 0 0
 									// border-bottom 1px solid rgba(255,255,255, .2)
 									border-left 0.5px solid rgba(255,255,255, .05)
 									border-right 0.5px solid rgba(255,255,255, .05)
-									background-color rgba(70,70,70,1)
+									// background-color rgba(70,70,70,0)
+									color rgb(190,190,190)
 									font-weight 400
 									// text-transform uppercase
 									letter-spacing .25px
@@ -260,17 +277,17 @@ section#editor {
 								// }
 								
 								&.showBottomBtn {
-									height 235px
+									height $brandsListCont_bottomBtn_height
 								}
 								&.no-results {
-									height 220px
+									height $brandsListCont_bottomBtn_height - 20
 								}
 								
 							}
 						
 							button#createBrand {
 								position relative
-								height 30px
+								height $newBrand_btn_height
 								width 100%
 								font-size 17px
 								color rgb(230,230,230)
@@ -289,13 +306,61 @@ section#editor {
 									// transition background-color 0s ease
 								}
 								&.no-results {
-									height 45px
+									height $newBrand_btn_height + 20
 								}
+							
+
+							}
+							
+
+							&.projects {
+								overflow-x visible
+								
+								.header {
+									font-size 19px
+									padding 5px 0 0
+									// border-bottom 1px solid rgba(255,255,255, .2)
+									border-left 0.5px solid rgba(255,255,255, .05)
+									border-right 0.5px solid rgba(255,255,255, .05)
+									// background-color rgba(70,70,70,0)
+									color rgb(190,190,190)
+									font-weight 400
+									// text-transform uppercase
+									letter-spacing .25px
+									text-indent 5px
+									// text-align center
+								}
+								
+								.project-item {
+									display block
+									width 100%
+									text-align left
+									background-color rgba(0,0,0,0)
+									padding 4px 5px
+									color white
+									cursor pointer
+									transition background-color .3s ease
+									&:hover, &:focus {
+										background-color rgba(0,0,0,.2)
+									}
+								}
+								
+								.no-projects {
+									color rgba(255,255,255,.9)
+									font-size 19px;
+									position absolute
+									top 50px
+									font-weight 300
+									text-align center
+									width 100%
+								}
+								
+
 							}
 							
 							// PROJECTS DROPDOWN BODY
 							//
-
+							
 
 
 
@@ -339,9 +404,70 @@ section#editor {
 
 						}
 						
+						#newProjectInput {
+							position absolute
+							bottom 0
+							left 0
+							width 100%
+							font-size 17px
+							line-height 40px
+							text-indent 4px
+							z-index 1001
+							height 40px
+							background-color transparent
+							color white
+							border-top 1px solid rgba(255,255,255,.9)
+							
+							&::-webkit-input-placeholder {
+								color rgb(230,230,230)
+								transition color .15s ease
+							}
+						}
+						
+						#newProject-btn {
+							height 18px
+							width 18px
+							position absolute
+							bottom 11px
+							right 8px
+							z-index 1001
+							cursor pointer
+							.vertical-bar {
+								position absolute
+								top 0
+								left 50%
+								height 100%
+								width 3px
+								transform translateX(-50%)
+								background-color rgb(230,225,225)
+								transition background-color .2s ease
+							}
+							.horizontal-bar {
+								position absolute
+								top 50%
+								left 0
+								height 3px
+								width 100%
+								transform translateY(-50%)
+								background-color rgb(230,225,225)
+								transition background-color .2s ease
+							}
+							&:hover {
+								.vertical-bar {
+									background-color rgb(255,255,255)
+								}
+								.horizontal-bar {
+									background-color rgb(255,255,255)
+								}
+							}
+							
+
+						}
+						
 					}
 
 				}
+
 
 			}
 			
