@@ -113,7 +113,7 @@ var core = Global.coreMethods = {
 			core.brands.setCurrentBrand(_brandName);
 		},
 
-		create: function(_brandName){
+		create: function(_brandName, _CALLBACK){
 			var self = this;
 			// create folder with brands name
 			baton(function(next){
@@ -131,8 +131,9 @@ var core = Global.coreMethods = {
 				
 			})
 			.then(function(next){
-				editorCore.dropdowns.brands.close();
+				// editorCore.dropdowns.brands.close();
 				self.infoFile.create(_brandName);
+				_CALLBACK();
 			})
 			.run();
 
@@ -238,6 +239,30 @@ var core = Global.coreMethods = {
 				
 				// console.log("pathToBrand",pathToBrand);
 
+			},
+
+			create: function(_brandName, _projectName){
+				var self = this;
+				// create folder with brands name
+				baton(function(next){
+					core.brands.exists(_brandName, next);
+				})
+				.then(function(next, exists){
+
+					if(exists) {
+						mkdirp(core.brands.getPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+							if(!err) next();
+						});
+					} else {
+						alert("Brand doesn't exists. Nice try though.");
+					}
+					
+				})
+				.then(function(next){
+					editorCore.dropdowns.projects.close();
+					// self.infoFile.create(_brandName);
+				})
+				.run();
 			}
 
 		}

@@ -592,15 +592,6 @@ section#editor section#sectionInner div#editorBar div#editorBarInner {
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
-section#editor section#sectionInner div#editorBar div#editorBarInner div#brandName {
-  height: 100%;
-  float: left;
-  font-size: 1.25em;
-  padding: 0 10px;
-  margin: 0 10px;
-  max-width: 250px;
-  position: relative;
-}
 section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow {
   color: inherit;
   display: inline-block;
@@ -608,7 +599,7 @@ section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow 
   height: 100%;
   float: left;
 }
-section#editor section#sectionInner div#editorBar div#editorBarInner div#projectName {
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
   height: 100%;
   float: left;
   font-size: 1.25em;
@@ -616,8 +607,7 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div#project
   margin: 0 10px;
   max-width: 250px;
   position: relative;
-}
-section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
+  letter-spacing: 0.25px;
   background-color: rgba(255,255,255,0);
   cursor: pointer;
   -webkit-transition: background-color 0.3s ease;
