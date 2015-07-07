@@ -83,9 +83,10 @@ var core = Global.coreMethods = {
 		},
 
 		select: function(_brandName){
-			console.log("core has it under control:", _brandName);
+			// console.log("core has it under control:", _brandName);
 			// add brand to recent brands, current brand
 			core.brands.setCurrentBrand(_brandName);
+			core.brands.projects.setCurrentProject(null);
 		},
 
 		create: function(_brandName, _CALLBACK){
@@ -187,6 +188,10 @@ var core = Global.coreMethods = {
 
 		projects: {
 
+			setCurrentProject: function(_projectName){
+				core.localData.currentProject = _projectName;
+			},
+
 			/*Runs a callback, passing it an array of the names of the projects*/
 			list: function(_brandName, _callback){
 				
@@ -282,6 +287,8 @@ var core = Global.coreMethods = {
 		brandList: null,
 		userSettings: null,
 		currentBrand: null,
+		currentProject: null,
+		currentFile: null,
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 		updateUserSettings: function(_callback){ // should only be run on app init
@@ -356,31 +363,14 @@ var core = Global.coreMethods = {
 					matches.push(core.localData.brandList[i]);
 			}
 			return matches;
+		},
+
+		setCurrentFile: function(_fileName){
+			core.localData.currentFile = _fileName;
 		}
 	},
 
-	copyFile: function(src, dest, _callback){
-		var cbCalled = false;
-		var rd = fs.createReadStream(src);
-		rd.on("error", function(err) {
-		  done(err);
-		});
-		var wr = fs.createWriteStream(dest);
-		wr.on("error", function(err) {
-		  done(err);
-		});
-		wr.on("close", function(ex) {
-		  done();
-		});
-		rd.pipe(wr);
 
-		function done(err) {
-		  if (!cbCalled) {
-		    _callback(err);
-		    cbCalled = true;
-		  }
-		}
-	},
 
 	getFiles: function(path, _callback){
 		var fileList = [];
@@ -399,8 +389,15 @@ var core = Global.coreMethods = {
 
 		var extension = path.extname(pathToFile);
 		var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
+		
 		if(compatibleExtensions.indexOf(extension) !== -1){
+			console.log("");console.log("====");
+			console.log("brand:", core.localData.currentBrand);
+			console.log("project:", core.localData.currentProject);
+			console.log("file:", core.localData.currentFile);
 			console.log("extension:", extension);
+			console.log("====");
+
 		}
 	}
 };

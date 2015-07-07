@@ -12103,11 +12103,13 @@ var core = Global.coreMethods = {
 
 		select: function(_brandName){
 
-			console.log("core has it under control:", _brandName);
+			// console.log("core has it under control:", _brandName);
 
 			// add brand to recent brands, current brand
 
 			core.brands.setCurrentBrand(_brandName);
+
+			core.brands.projects.setCurrentProject(null);
 
 		},
 
@@ -12311,6 +12313,14 @@ var core = Global.coreMethods = {
 
 
 
+			setCurrentProject: function(_projectName){
+
+				core.localData.currentProject = _projectName;
+
+			},
+
+
+
 			/*Runs a callback, passing it an array of the names of the projects*/
 
 			list: function(_brandName, _callback){
@@ -12501,6 +12511,10 @@ var core = Global.coreMethods = {
 
 		currentBrand: null,
 
+		currentProject: null,
+
+		currentFile: null,
+
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 
@@ -12649,55 +12663,21 @@ var core = Global.coreMethods = {
 
 			return matches;
 
-		}
-
-	},
+		},
 
 
 
-	copyFile: function(src, dest, _callback){
+		setCurrentFile: function(_fileName){
 
-		var cbCalled = false;
-
-		var rd = fs.createReadStream(src);
-
-		rd.on("error", function(err) {
-
-		  done(err);
-
-		});
-
-		var wr = fs.createWriteStream(dest);
-
-		wr.on("error", function(err) {
-
-		  done(err);
-
-		});
-
-		wr.on("close", function(ex) {
-
-		  done();
-
-		});
-
-		rd.pipe(wr);
-
-
-
-		function done(err) {
-
-		  if (!cbCalled) {
-
-		    _callback(err);
-
-		    cbCalled = true;
-
-		  }
+			core.localData.currentFile = _fileName;
 
 		}
 
 	},
+
+
+
+
 
 
 
@@ -12735,9 +12715,23 @@ var core = Global.coreMethods = {
 
 		var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
 
+		
+
 		if(compatibleExtensions.indexOf(extension) !== -1){
 
+			console.log("");console.log("====");
+
+			console.log("brand:", core.localData.currentBrand);
+
+			console.log("project:", core.localData.currentProject);
+
+			console.log("file:", core.localData.currentFile);
+
 			console.log("extension:", extension);
+
+			console.log("====");
+
+
 
 		}
 
@@ -13656,7 +13650,7 @@ editorCore.dropdowns.projects = {
 
 		// Add this functionality
 		// core.brands.projects.select(_projectName);
-		
+		core.brands.projects.setCurrentProject(_projectName);
 		editorCore.dropdowns.files.activate(_projectName);
 		editorCore.dropdowns.files.populate(_projectName);
 
@@ -14007,6 +14001,7 @@ editorCore.dropdowns.files = {
 		console.log("selecting:",_fileName);
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
+		core.localData.setCurrentFile(_fileName);
 		core.updateEditor(_fileName);
 	},
 	purge: function() {

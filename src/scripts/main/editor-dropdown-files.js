@@ -135,6 +135,7 @@ editorCore.dropdowns.files = {
 		console.log("selecting:",_fileName);
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
+		core.localData.setCurrentFile(_fileName);
 		core.updateEditor(_fileName);
 	},
 	purge: function() {

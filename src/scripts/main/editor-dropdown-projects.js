@@ -10,7 +10,7 @@ editorCore.dropdowns.projects = {
 
 		// Add this functionality
 		// core.brands.projects.select(_projectName);
-		
+		core.brands.projects.setCurrentProject(_projectName);
 		editorCore.dropdowns.files.activate(_projectName);
 		editorCore.dropdowns.files.populate(_projectName);
 
