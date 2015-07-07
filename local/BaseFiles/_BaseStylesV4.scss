@@ -1,0 +1,4473 @@
+/* 
+ * BaseStyles Version: 4.1.6 
+ * Last Updated: 4-15-15
+ */
+
+//////////////////////////////
+//////////////////////////////
+//		HTML elements		//
+//////////////////////////////
+//////////////////////////////
+ul.ChoiceStructure, li.Selection { //classes for specificity, we still want formating if someone ads formatting via rich content editor
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, fieldset, legend, textarea, p, blockquote, th, td { //removed ul, ol, li, 
+	margin: 0;
+	padding: 0;
+}
+
+legend {
+	font-size: 100%;
+}
+//Need these classes
+.clear {
+	clear: both;
+}
+.zero {
+	font-size: 0;
+	height: 0;
+}
+th {
+	font-style:normal;
+	font-weight:normal;
+	text-align: left;
+}
+caption {
+	display: none;
+}
+a img {
+	border: none;
+}
+//Added this, so no image extends beyond its container
+img{
+	max-width:100%;
+	height: auto !important;
+}
+//Removes default border from fieldset that surrounds question
+fieldset {
+	border: none;
+}
+h2.noStyle {
+	font-style:normal;
+	font-weight:normal;
+	font-size: 1em;
+}
+//Added this, helps with Text Entry box formatting, etc.
+* {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+//Might want to add this.  At least to the slider/drag questions, so user doesn't accidentally highlight instead of drag
+.Skin .QuestionBody {
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	cursor: default;
+}
+
+//////////////////////////////
+//////////////////////////////
+//		CANNOT FIND			//
+// Classes I could not find //
+// anywhere, but I'm afraid //
+// to remove them. 			//
+//////////////////////////////
+//////////////////////////////
+
+#ServerTime {
+	display: none;
+}
+.Skin .ValidationErrorHighlight .Inner{
+	background:rgba(255,10,10,0.3);
+}
+.Skin legend {
+	white-space: normal;
+	width:100%;
+}
+.Skin .ValidationError.Sub {
+	font-size: 90%;
+	font-weight: normal;
+	padding: 5px;
+	position: relative;
+	top: 5px;
+	white-space: nowrap;
+}
+.Skin .AccessibleQuestionBody{
+	border: none;
+}
+.Skin .AccessibleQuestionBody legend{
+	padding-left: 0;
+	width: 100%;
+    color: inherit;
+}
+.Skin .SkinBody {
+	padding: 6pt 3pt;
+}
+.Skin .focused {
+	background-color: #fff7c0;
+}
+.Skin .QuestionText .UserTable{
+	border:1px solid #333;
+	margin:1px;
+	border-collapse:collapse;
+}
+.Skin .QuestionText .UserTable td,
+.Skin .QuestionText .UserTable th{
+	border:1px solid #333;
+	padding:0.5em 1em;
+	text-align:center;
+}
+.QuestionText .ExportTag {
+	font-style: italic;
+}
+// /* choice groups */
+.Skin .ChoiceGroup{
+	color: lighten($default-text-color, 20%);
+	padding-bottom: 10px;
+
+}
+.Skin .ChoiceGroupStructure{
+	margin-left:10px;
+	padding: 0; // reset this to 0 (overwrite normal ul style)
+}
+.Skin .ChoiceGroupStructure.HiddenTitle{
+	margin-left:0px;
+}
+// /* indent levels */
+.Skin .IndentLevel1{
+	margin-left:10px;
+}
+.Skin .IndentLevel2{
+	margin-left:20px;
+}
+.Skin .IndentLevel3{
+	margin-left:30px;
+}
+.Skin .IndentLevel4{
+	margin-left:40px;
+}
+.Skin .IndentLevel5{
+	margin-left:50px;
+}
+.Skin .IndentLevel6{
+	margin-left:60px;
+}
+
+// *
+// DB
+// *
+.Skin .DB .VRP .QuestionBody,
+.Skin .DB .ARP .QuestionBody,
+.Skin .DB .VWM .QuestionBody,
+.Skin .DB .AWM .QuestionBody {
+	text-align: center;
+}
+.Skin .DB .FLB .QuestionBody .NoFileMessage{
+	color: #808080;
+}
+
+// *
+// MC
+// *
+.Skin .MC .SAVR .SkinBody,
+.Skin .MC .MAVR .SkinBody,
+.Skin .MC .SACOL .SkinBody,
+.Skin .MC .MACOL .SkinBody {
+	padding: 6pt 0pt 0pt 0pt;
+}
+
+.Skin .MC .QuestionText li{
+	padding:0px;
+}
+.Skin .MC .QuestionText li {
+	float: none;
+}
+
+.Skin .MC .SB .SkinBody,
+.Skin .MC .MSB .SkinBody {
+	text-align: center;
+}
+
+.Skin .Matrix .ColumnLabels table {
+	width: 100%;
+}
+
+.Skin .Matrix table th.FullChoiceRow {
+	text-align: left;
+}
+
+// /* MSE Styles */
+.Skin #SkinContent .Matrix.CombinedQuestion table tbody th {
+	text-align: right;
+}
+.Skin #SkinContent .Matrix table tbody th.SubHeading {
+	font-weight: bold;
+	text-align: left;
+}
+.Skin .Matrix table td.FullChoiceRow{
+	text-align:left;
+}
+.Skin .Matrix td.ColumnLabels tr.SpreadLabels td.First,
+.Skin .Matrix td.ColumnLabels tr.SpreadLabels th.First{
+	text-align:left;
+}
+.Skin .Matrix td.ColumnLabels tr.SpreadLabels td.Last,
+.Skin .Matrix td.ColumnLabels tr.SpreadLabels th.Last{
+	text-align:right;
+}
+.Skin .Matrix table tr th.ColumnLabels,
+.Skin .Matrix table tr.ColumnLabels td,
+.Skin .Matrix table tr.ColumnLabelHeader th,
+.Skin .Matrix table tr.ColumnLabelHeader td{
+	border-style: none;
+}
+.Skin .Matrix .RepeatHeader{
+	vertical-align:bottom;
+}
+.Skin .Matrix .WhiteSpace td{
+	height:25px;
+}
+.Skin .Matrix table td.SymbolCell
+{
+	white-space: nowrap;
+}
+// /* DropDown */
+.Skin .Matrix .DL .Transposed table td.last{
+	text-align:center;
+}
+// /* Profile */
+.Skin .Matrix .Profile tr.LabelRow td{
+	padding-left:0px;
+	padding-right:0px;
+	font-size:80%;
+}
+.Skin .Matrix .CS .transposed tr.CSTotal th {
+	border-top-color:#333;
+	color:#333;
+	text-align: left;
+	font-weight: bold;
+}
+.Skin .Matrix .CS tr.CSTotal td.TextAbove
+{
+	text-align: left;
+}
+// * Dynamic Matrix
+.Skin .DynamicMatrix .TE input{
+	width:auto;
+}
+.Skin .DynamicMatrix .LogicEditor .ExpressionSet .Expression {
+	border:none;
+	background:none;
+}
+.Skin input.Searching
+{
+	background: white url('../../../../../WRQualtricsShared/Graphics/spinner.gif') no-repeat right 2px;
+}
+// ************************
+// * CS Sliding Bars
+// **************************
+.Skin .horizontalbar tr.xlabel th div{
+	position:relative;
+}
+.Skin .horizontalbar table.sliderGrid tr.xlabel th div span{
+//	/* to make them shift right and align to the grid lines */
+	position:absolute;
+	left:15px;
+	top:-25px;
+}
+// /* value styles */
+.Skin .horizontalbar table.sliderGrid tr.xlabel th.value div span{
+//	/* total th should be aligned right */
+	position:absolute;
+	right:0px;
+	top:-25px;
+	text-align:right;
+}
+.Skin .horizontalbar table.sliderGrid tr td.totalValue{
+	text-align:left;
+	border:none;
+	font-weight:bold;
+
+}
+.Skin .horizontalbar table.sliderGrid tr td.totalValue input{
+	width:80px;
+	background-color:transparent;
+	border:none;
+	text-align:left;
+	font-weight:bold;
+	font-size:1.2em;
+}
+.Skin .horizontalbar table.sliderGrid tr th.total{
+	padding:5px;
+	text-align:right;
+	border:none;
+	font-weight:bold;
+}
+// /* bars */
+.Skin .horizontalbar .barTd,
+.Skin .horizontalbar .yLabelTicksTd{
+	position:relative;
+	vertical-align:top;
+	border-bottom:1px solid #cccccc;
+//	/*float:left;  this puts the relative left at the start of the td instead of the screen */
+}
+.Skin .horizontalbar .yLabelTicksTd .labelTicks div{
+	position:absolute;
+	top:.2em;
+	text-align:right;
+	font-size:80%;
+}
+// ****************
+// SS Sliding Scale
+// *****************
+.Skin .SS .QuestionBody table.ChoiceStructure {
+	text-align: center;
+	width:auto;
+}
+// /** Question Overlay **/
+.Skin .QuestionOverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10000;
+	background-color: rgb(255,255,255);
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+// /** Display styles ***/
+.SkinTable #Buttons .ButtonText, .Skin #Buttons .ButtonText {
+	text-align:center;
+}
+#SurveyEngineBody .debug {
+	font-size: 12pt;
+}
+#SurveyEngineBody .debug pre {
+	font-size: 9pt;
+}
+#SurveyEngineBody .HideSelects select {
+	display:none !important; // /* For Look and Feel survey preview - hides selects under the Skins menu */
+}
+
+.Skin .PreviewResults em {
+	font-weight: normal;
+	font-size: 80%;
+}
+.Skin .PreviewResults ul,
+.Skin .PreviewResults li {
+	padding-top: 5px;
+}
+* html .Skin .LeadGenerator div {
+	background-image: none;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../../../../WRQualtricsShared/Graphics/leadGenerator.png", sizingMethod="crop")
+}
+.Skin .LeadGenerator {
+	text-align: center;
+	padding-top: 10px;
+	font-family:tahoma;
+}
+.Skin .LeadGenerator .imageHolder{
+	border: 0px;
+	width: 532px;
+	height: 176px;
+	background: url(../../../../../WRQualtricsShared/Graphics/leadGenerator.png) no-repeat;
+	line-height:24px;
+	margin:auto;
+}
+.Skin .LeadGenerator .imageHolderOuter {
+	width: 534px;
+	height: 178px;
+	margin: auto;
+}
+.Skin .LeadGenerator .imageHolder div{
+	padding-top:68px;
+}
+.Skin .LeadGenerator a{
+	text-decoration:none;
+	display:block;
+	width:528px;
+	margin:auto;
+	cursor:pointer;
+}
+.Skin .LeadGenerator .PoweredBy {
+	font-size:11pt;
+	color:#4d4d4d;
+}
+.Skin .LeadGenerator .Invite {
+	font-size:13pt;
+	color:#4d4d4d;
+}
+.Skin .LeadGenerator .ClickHere {
+	color:#b3131a;
+	font-weight:bold;
+}
+.ValidationConfirm .Q_Window{
+	text-align:center;
+	padding:25px;
+}
+//
+//End CANNOT FIND 
+
+//////////////////////////////
+//////////////////////////////
+//		General Styles		//
+//////////////////////////////
+//////////////////////////////
+
+//Makes label.QuestionText(s) same as div.QuestionText(s)
+.Skin label.QuestionText{
+	display: block;
+}
+//Not sure what this does
+.Skin .QuestionOuter{
+	-ms-overflow-style: none;
+	overflow-y: hidden;
+}
+//Makes SA/MAHR question answers 100% of available width
+// -- But some have inline widths. Why?  // added important tag to override inline widths of some .Matrix questions
+.Skin .QuestionBody table.ChoiceStructure {
+	width: 100% !important;
+}
+// // Why zoom: 1, or hasLayout?
+// // http://stackoverflow.com/questions/6287023/what-bug-does-zoom1-fix-in-css
+.Skin .QuestionBody ul.ChoiceStructure {
+	zoom: 1;
+}
+.Skin .QuestionText{
+	zoom: 1;
+}
+//Doesn't appear to do anything. 
+.Skin .HeaderValidationError li {
+	clear:both;
+}
+// Seems unecessary.  Leaving, in case. 
+.Skin .HeaderValidationError li a{
+	cursor:pointer;
+}
+.Skin .SurveyError { //This is the message that shows up if the survey has been closed. 
+	text-align: center;
+	padding: 60px $default-container-padding;
+
+	h1, h2, h3 {
+		font-weight: normal;
+		font-size: 120%;
+	}
+}
+
+// //We've pretty much removed these borders. 
+// //but the Light vs. Dark can be achieved easily in Sass as below.
+// $default-border-color: #555;
+// .Skin .BorderColor {
+// 	border-color: $default-border-color;
+// }
+// .Skin .LightBorderColor{
+// 	border-color: lighten($default-border-color, 10%);
+// }
+// .Skin .LightBorderColorRight{
+// 	border-right-color: lighten($default-border-color, 10%);
+// }
+// .Skin .DarkBorderColor {
+// 	border-color: darken($default-border-color, 10%);
+// }
+//
+
+
+//////////////////////////////
+//////////////////////////////
+//		Question Types		//
+//////////////////////////////
+//////////////////////////////
+
+//MC
+
+.Skin .MC li.reg{
+	// ie6 needs a bg for these list items or it renders them too big for some reason
+	background-color:transparent;
+}
+.Skin .MC .QuestionBody label{
+	// IE puts the label 1px higher 
+	// http://stackoverflow.com/questions/8557367/css-label-vertical-alignment-with-input-fields
+	vertical-align:1px;
+}
+.Skin .MC .SAVR li,
+.Skin .MC .MAVR li{
+	//Doesn't appear to do anything. 
+	clear:left;
+}
+//////////////////
+.Skin .MC .MAVR input.TextEntryBox,
+.Skin .MC .SAVR input.TextEntryBox{
+	display: inline-block; 	// This used to be display:block.  I think it should be inline-block, so it can come on the same line as the answer.  
+	clear:both;
+}
+//Centers answers in td
+.Skin .MC .SAHR table td,
+.Skin .MC .MAHR table td,
+.Skin .NPS table td{
+	text-align:center;
+}
+.Skin .MC .SAHR .QuestionBody table td label,
+.Skin .MC .MAHR .QuestionBody table td label{
+	//Doesn't seem to do anything
+	margin-right:0px;
+}
+//Aligns the label text "Not Likely" / "Extremely Likely" in NPS questions
+.Skin .NPS table .ColumnLabels .First {
+	text-align: left;
+}
+.Skin .NPS table .ColumnLabels .Center {
+	text-align: center;
+}
+.Skin .NPS table .ColumnLabels .Last {
+	text-align: right;
+}
+.Skin .MC .SAHR li,
+.Skin .MC .MAHR li{
+	// padding-right: 9pt;
+	padding: 0 $answer-label-spacing $answer-label-spacing 0; //Need space to the right and bottom of these, so they don't touch each other. 
+}
+.SAHR .Selection {
+	display: inline-block; //Needed for "Horizontal" option with side labels
+}
+
+//MATRIX
+
+.Skin .Matrix table{
+	//This is the default, does it matter?
+	border-collapse:separate;
+}
+.Skin .Matrix table td,
+.Skin .Matrix table th{
+	text-align:center;
+}
+.Skin .Matrix .TE td input {
+	//Need this to center the text boxes in matrix table cells
+	display: inline-block;
+}
+// changing from px to em so increased font-size will make box larger to accomodate
+.Skin .Matrix .TE .Short td input {
+	width: 30px;
+	width: 3em;
+}
+.Skin .Matrix .TE .Medium td input {
+	width: 60px;
+	width: 6em;
+}
+.Skin .Matrix .TE .Long td input {
+	width: 90px;
+	width: 9em;
+}
+//MSE Styles
+//Overrides the text-align center of the rest of other td, th
+.Skin .Matrix table th.c1{
+	text-align:left;
+}
+//Bipolar
+//Text for these questions needs to be on the left and right ends
+.Skin .Matrix .Bipolar td.AnswerLeft,
+ .Skin .Matrix .Bipolar th.AnswerLeft{
+	text-align:left; 
+	// //This percentage doesn't seem to do anything--there's already an inline width of 40%
+	width: 50%;
+}
+.Skin .Matrix .Bipolar td.AnswerRight,
+ .Skin .Matrix .Bipolar th.AnswerRight{
+	text-align:right;
+	// //This percentage doesn't seem to do anything--there's already an inline width of 40%
+	width: 50%;
+}
+//This seems unnecessary (it's the same same as above, but more specific and with an important tag.)
+#SurveyEngineBody .Skin .Matrix .Bipolar td.AnswerRight,
+#SurveyEngineBody .Skin .Matrix .Bipolar th.AnswerRight{
+	text-align:right!important;
+	width: 50%;
+}
+.Skin .Matrix .Bipolar .QuestionBody td.AnswerRight label,
+ .Skin .Matrix .Bipolar .QuestionBody th.AnswerRight label{
+	zoom:1;
+}
+
+
+//Text Entry
+// changing from px to em so increased font-size will make box larger to accomodate larger text
+.Skin .TE .ChoiceStructure .Short {
+	width: 30px;
+	width: 3em;
+}
+.Skin .TE .ChoiceStructure .Medium {
+	width: 60px;
+	width: 6em;
+}
+.Skin .TE .ChoiceStructure .Long {
+	width: 90px;
+	width: 9em;
+}
+//Multiline vs. Essay text entry boxes (essay should be taller I guess)
+.Skin .TE .ML textarea {
+	height: 4em;
+}
+.Skin .TE .ESTB textarea {
+	height: 8em;
+}
+.Skin .TE .ChoiceStructure .Essay {
+	width: 100%;
+	height: 4em;
+}
+
+
+//Sliders
+
+.Skin .horizontalbar tr.xlabel th{
+	//top values
+	//Needed for the position:absolute of the xlabels inside
+	position:relative;
+}
+// Needed to position labels (left, right, and center). Probably.
+.Skin .LabelDescriptionsContainer{
+	width:100%;
+}
+.Skin .LabelDescriptions{
+	position:relative;
+	width:100%;
+}
+.Skin .horizontalbar thead table.LabelDescriptions tr td,
+.Skin .horizontalbar thead tr td.NotApplicable{
+	//Needed to position labels. Override for .First (left) and .Last (right) (see below)
+	text-align:center;
+}
+.Skin .horizontalbar table.LabelDescriptions .LabelCount3 td.First,
+.Skin .horizontalbar table.LabelDescriptions .LabelCount2 td.First{
+	text-align: left;
+}
+.Skin .horizontalbar table.LabelDescriptions .LabelCount3 td.Last,
+.Skin .horizontalbar table.LabelDescriptions .LabelCount2 td.Last{
+	text-align: right;
+}
+//"Center Labels" option adds this class
+.Skin .horizontalbar table.LabelDescriptions.CenterLabels td.LightText {
+	text-align: center;
+}
+.Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount3 td.First label,
+.Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount2 td.First label{
+	position:relative;
+	left:-50%;
+}
+.Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount3 td.Last label,
+.Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount2 td.Last label{
+	position:relative;
+	left:50%;
+}
+//
+//The following needed to position 0 - 100 scale abolve slider questions
+.Skin .horizontalbar thead th span.TickContainer,
+.Skin .horizontalbar thead td span.TickContainer{
+	//Needed for position:absolute of the spans inside (see below)
+	position:relative;
+	//Not sure if these are needed, but they seem like it
+	display:block;
+	height:15px;
+	margin-bottom:1px;
+	white-space:nowrap;
+}
+.Skin .horizontalbar tr.xlabel th span.TickContainer span,
+.Skin .horizontalbar tr.xlabel td span.TickContainer span{
+	position:absolute;
+	bottom:0px;
+	width:100%;
+	left:50%;
+	text-align:center;
+}
+.Skin .horizontalbar tr.xlabel th span.TickContainer span.MinValue,
+.Skin .horizontalbar tr.xlabel td span.TickContainer span.MinValue{
+	left:-50%;
+}
+//Seems like we can just not style the .LeftBorder and .RightBorder...?
+//I wonder if the width and font-size are fixing some issue
+.Skin .horizontalbar .LeftBorder{
+	width:1px;
+	font-size:0px;
+}
+.Skin .horizontalbar .RightBorder{
+	width:1px;
+	font-size:0px;
+}
+.Skin .horizontalbar .BarOuter{
+	width:1px;
+	font-size:0px;
+}
+//Vertically aligns the sliders (draggable bars) themselves
+.Skin .horizontalbar td.BarOuter{
+	vertical-align:middle;
+}
+.Skin .horizontalbar .BarContainer{
+	position:relative;
+	top:-10px;
+}
+.Skin .horizontalbar {
+	zoom:1;
+}
+//Probably important..
+.Skin .horizontalbar .bar,
+.Skin .horizontalbar .handle,
+.Skin .horizontalbar .track{
+	height:20px;
+	-ms-touch-action: none;
+}
+.Skin .horizontalbar .track{
+	position:absolute;
+	//Why does this need a width?
+	width:3000px;
+	top:0px;
+	z-index:1000;
+}
+.Skin .horizontalbar .bar,
+.Skin .horizontalbar .handle{
+	top:0px; //to give the bars some middle positioning within the track
+}
+//This is the "draggable" part of the draggable bar element
+.Skin .horizontalbar .bar{
+	position:absolute;
+	left:0px;
+	width: 20px; //this is the width it starts at by default.  
+	// Changed from width:100px to 20px, because of the way the question kind of malfunctions on mobile -- where the user needs to start dragging from the far left end. 
+	z-index:500;
+	font-size:0;
+	// needs a background color
+	// doesn't need opacity, I don't think.
+	// 	opacity: 0.7;
+	// filter:alpha(opacity=70);
+}
+//This is the handle, but I don't understand what it's for.  It's just up in the top left corner.
+.Skin .horizontalbar .handle{
+	position:absolute;
+	width:1px;
+	height:1px;
+	cursor:move;
+	z-index:500;
+}
+//Seems important enough, and non-restrictive
+.Skin .horizontalbar table.sliderGrid{
+	empty-cells:show;
+	overflow:visible; //borders go missing in ie9 if overflow is hidden
+	border-collapse: collapse;
+}
+//value styles
+.Skin .horizontalbar table.sliderGrid tr td.value{
+	width:1px; //this is to shrink it in when it has a hidden input
+	text-align:center;
+	padding-left:10px;
+}
+// This is the box where the value for the slider goes
+// should it be invisible?  That's how it's set up by default as below.  
+.Skin .horizontalbar tr.Stars td.value input,
+.Skin .horizontalbar table.sliderGrid tr td.value input{
+	background-color:transparent;
+	border:none;
+}
+// Left labels on slider questions
+.Skin .horizontalbar th.ylabel{
+	text-align:right;
+}
+////This is for the gridline on the slider (not star) questions
+// .Skin .horizontalbar table.sliderGrid td.GridLine{
+// 	font-size:0px;
+// 	//The border-right is needed for the gridline... assuming we want it
+// 	border-right-width:1px;
+// 	border-right-style:solid;
+// 	border-left:1px solid transparent; // ie needs this to  render the gridlines the correct size
+// 	_border-left:1px solid white; // ie6 cant do transparent so it will be ugly
+// }
+.Skin .horizontalbar thead .NotApplicable{
+	//Seems important?
+	overflow:visible;
+}
+
+.Skin .horizontalbar thead .NotApplicable,
+.Skin .horizontalbar tbody .NotApplicable{
+	text-align:center;
+	padding-left: 20px; // so this doesn't run into the slider labels, etc. on the left
+}
+//Important for this quesiton type, I assume
+.Skin .horizontalbar .trackHolderRel{
+	position:relative;
+	left:0px;
+	top:0px;
+	margin:0px;
+}
+//
+//Slider // These are for the non-bar, non-star sliders.  
+//
+// Does the top -15px need to match the height of this container?
+.Skin .horizontalbar .Slider .BarContainer{
+	top:-15px;
+}
+// The actual slider (used to be a sprite)
+.Skin .SS .horizontalbar .SSTrack,
+.Skin .horizontalbar .Slider .track{
+	height:8px;
+	//needs a background color
+	opacity:0.5;
+	filter:alpha(opacity=50);
+
+	top: 10px; // centers the bar
+	border-radius: 40px;
+}
+//Not sure what this is for, but it's hidden
+.Skin .horizontalbar .Slider .bar{
+	display:none;
+}
+.Skin .SS .horizontalbar .handle,
+.Skin .horizontalbar .Slider .handle{
+	width: 20px;
+	height: 20px;
+	// needs a background color or image
+	top: -6px; // centers the handle on the bar
+	border-radius: 100%;
+}
+.Skin .SS .SSTrack:hover,
+.Skin .horizontalbar .Slider .activated .track,
+.Skin .horizontalbar .Slider .BarContainer:hover .track{
+	opacity:1;
+	filter:alpha(opacity=100);
+}
+.Skin .horizontalbar .Slider .track div{
+	filter:none; //fixes strange ie8 bug that causes handle to not update
+}
+
+
+// Stars
+//
+.Skin .STAR .Stars th.ylabel,
+.Skin .STAR .Stars td,
+.Skin .Slider .STAR .horizontalbar table.sliderGrid tr td.value,
+.Skin .STAR .Stars table td.BarOuter {
+	border: none;
+}
+// This is by default.  Do we need it?
+.Skin .STAR .horizontalbar table.sliderGrid {
+	table-layout: auto;
+}
+// This is overriding // .Skin .horizontalbar table.sliderGrid tr td.value { width: 1px; text-align: center;}
+.Skin .STAR .horizontalbar table.sliderGrid tr td.value {
+	width: auto;
+	text-align: left;
+}
+//Anything lower doesn't affect the height.
+//I don't understand tables really.
+.Skin .STAR .Stars tbody tr {
+	height: 46px;
+}
+.Skin .STAR tr.HideValue td.BarOuter {
+	width: auto;
+}
+//This is overriding  //.Skin .horizontalbar .BarContainer { top: -10px; }
+.Skin .STAR .BarContainer {
+	top: 0px;
+}
+.Skin .STAR .StarsStrut {
+	white-space: nowrap;
+}
+.Skin .STAR .StarsContainer,
+.Skin .STAR .StarsEventWatcher,
+.Skin .STAR .StarsContainer .Filled {
+	//Needs to be this height for the sprite to show up properly
+	//Do we want a new sprite? 
+	//Or a way to make these stars any color?
+	height: 26px;
+	background: transparent url('../../../../../WRQualtricsShared/Graphics/stars.png') 0px 0px;
+}
+// Not sure if we need this or not
+.Skin .STAR .StarsOuterContainer {
+	margin: 10px;
+}
+//Starts with the gray star
+.Skin .STAR .StarsContainer {
+	background-position: 0px -27px;
+	position: relative;
+}
+// This is what is actually clicked/hovered over
+.Skin .STAR .StarsEventWatcher{
+	top: 0px;
+	left: 0px;
+	position: absolute;
+	background-image: none;
+}
+//The .Filled class is set to width=0 at first
+//Then, on hover of StarsEventWatcher, it changes its width (30 60 90) to be as wide as the # of stars
+//And the star sprite is just repeating, so it shows up.  Neat.
+.Skin .STAR .StarsContainer .Filled {
+	background-position: 0px 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.Skin .STAR .StarsContainer .StarsOverlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.Skin .STAR .StarsContainer .Star {
+	width: 36px;
+	height: 30px;
+	background: transparent url('../../../../../WRQualtricsShared/Graphics/stars.png') 0px 0px;
+	float: left;
+}
+
+
+
+
+//Rank Order
+
+.Skin .RO .RankInput {
+	width: 3em;
+}
+//RB
+//Centers the options, to better use full width of question
+.Skin .RO .RB .ChoiceStructure thead th,
+.Skin .RO .RB .ChoiceStructure tbody td {
+	text-align: center;
+}
+//SB
+.Skin .RO .SB .ChoiceStructure,
+.Skin .RO .SB .ChoiceStructure select,
+.Skin .RO .SB .ChoiceStructure .Center {
+	width:100%;
+}
+//HR //Makes it so they are HORIZONTAL (could do display: inline-block instead?)
+.Skin .RO .HR li {
+	float: left;
+}
+
+
+//SBS
+
+.Skin .SBS thead th,
+.Skin .SBS td {
+	text-align: center;
+} 
+// changing from px to em so increased font-size will make box larger to accomodate
+.Skin .SBS .Short {
+	width: 30px;
+	width: 3em;
+}
+.Skin .SBS .Medium {
+	width: 60px;
+	width: 6em;
+	margin: 2px; // Just so they're not touching.  
+}
+.Skin .SBS .Long {
+	width: 90px;
+	width: 9em;
+	margin: 2px
+}
+.Skin .SBS .Essay {
+	width: 100%;
+	height: 4em;
+	margin: 2px;
+}
+.SBS table.ChoiceStructure{
+	border-collapse:collapse;
+}
+
+
+//Constan Sum
+//CS
+.Skin .CS .SumInput,
+.Skin .CS .SumTotal {
+	//Is this necessary? Doesn't seem to do anything.
+	white-space: nowrap;
+	// wide enough for 3 characters
+	width: 3em;
+	//needed to center
+	display: inline-block;
+}
+.Skin .CS .SumInput input,
+.Skin .CS .SumTotal input {
+	width: 3em
+}
+//Format li to put text entry box to the right.
+.Skin .CS .VRTL .ChoiceStructure li {
+	position: relative;	//Needed for the position:absolute of the text entry boxes
+	_height: 26px;	// This is some IE thing I think. 
+	min-height: 26px;	// Bookmark: Could put a line-height instead -- I think it would be better
+	zoom: 1; // force has layout
+	padding-right: 100px; // /* Gives space at right, so text doesn't overlap into text entry box */
+}
+//Positions these text entry boxes to the right
+$text-input-padding: 2px;
+.Skin .CS .VRTL .SumInput,
+.Skin .CS .VRTL .SumTotal {
+	position:absolute;
+	right: ($default-container-padding / 2) + $default-font-size; // This gives enough space for there to be a symbol to the left or right (e.g., % or $)
+	top: 50%; //
+	margin-top: -(($text-input-padding + $default-border-width)* 2 + $default-font-size + 3)/2; //this is the height of the input box plus borders 
+}
+//Makes it so they are HORIZONTAL .HR (could do display: inline-block instead?)
+.Skin .CS .HR li {
+	float: left;
+}
+
+
+// Pick, Group, and Rank
+//Drag and Drop
+.Skin #SkinContent .RO .DND .QuestionBody{
+	overflow:visible;
+}
+//Doesn't seem to change anything
+.Skin .RO .DND ul{
+	width: 100%;
+	margin:0;
+	padding:0;
+}
+.Skin .RO .DND ul li{
+	cursor:move;
+	position:relative;
+	zoom:1;
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+.Skin .RO .DND ul.NotEdited .rank{
+	visibility:hidden;
+}
+.Skin .RO .DND ul.Edited .rank,
+.Skin .RO .DND ul.NotEdited li:hover .rank{
+	visibility:visible;
+}
+//PGR
+.Skin .PGR td.itemsContainerTd {
+	//Keeps the "stack" option items at the top -- makes sense maybe
+	vertical-align: top;
+}
+.Skin .PGR td.groupsContainerTd {
+	//Pushes the groups containers next to the items container */
+	width:100%;
+}
+// DND
+.Skin .PGR .DragAndDrop td.itemsContainerTd {
+	// Doesn't seem to do anything. */
+	height: 100%;
+}
+.Skin .PGR .DragAndDrop td.groupsContainerTd{
+	// Keeps the group containers at the top -- makes sense?
+	vertical-align: top;
+}
+//Group Containers - where items are dragged 
+.Skin .PGR .DragAndDrop td.groupsContainerTd div > div {
+	border-collapse: collapse;
+	min-height:150px; // Needs a min-height or it collapses.  Or does it?  The ul inside also has a min-height.
+}
+.Skin .PGR .DragAndDrop .QuestionBody ul{
+	list-style: none;
+	height: 150px; // /* min height for ie < 7 */
+	width: 150px; // needs to be a set width, or it expands/contracts to li elements
+	border-collapse:collapse;
+	margin:0;
+	padding:0;
+}
+html > body .Skin .PGR .DragAndDrop .QuestionBody ul{
+	height:auto;
+	min-height:150px;
+}
+// ITEM container, "stack" option uls 
+html > body .Skin .PGR .DragAndDrop .stack ul.stack{
+	margin: 25px 25px 0 0; // /* This is to give space for the stacked items, if hanging over the top and right */
+}
+// GROUP container, "stack" option uls 
+html > body .Skin .PGR .DragAndDrop .stack div.Group ul.stack{
+	margin-left: 20px;	// Do we need this margin?
+}
+.Skin .PGR .DragAndDrop .QuestionBody ul li.stack{
+	position: absolute;
+}
+.Skin .PGR .DragAndDrop div ul li span label img {
+	max-width: 100%;
+}
+.Skin .PGR .DragAndDrop .stack div ul li.stack span label {
+	width: 187px; /////// Magic 187 width.  
+}
+.Skin .PGR .DragAndDrop .stack div ul li.stack span label img {
+	width: 187px; /////// Magic 187 width.  
+	visibility: visible;
+}
+//They're not ranking these (they're stacked). So hide the rank box.
+.Skin .PGR .DragAndDrop .stack .Group li.stack span.rank {
+	visibility: hidden;
+}
+.Skin .PGR .DragAndDrop .stack div.Group ul li span img {
+	width: 117px;
+}
+//Style of the "stacked" items (the box and box-shadow, etc.)
+.Skin .PGR .DragAndDrop .stack ul li.stack {
+	// need a background color and border, since they are stacked on top of each other
+	background-color: white;  
+	// needs a border
+}
+//What if we reversed these, etc.? As in the example below
+.Skin .PGR .DragAndDrop .stack ul li.stack.penultimate {
+	margin-top: -5px;
+	margin-left: 5px;
+}
+.Skin .PGR .DragAndDrop .stack ul li.stack.antepenultimate {
+	margin-top: -10px;
+	margin-left: 10px;
+}
+// *********************************************
+// 		EXAMPLE
+// *********************************************************/
+// .Skin .PGR .DragAndDrop .stack ul li.stack.penultimate {
+// 	margin-top: 5px;
+// 	margin-left: -5px;
+// }
+// .Skin .PGR .DragAndDrop .stack ul li.stack.antepenultimate {
+// 	margin-top: 10px;
+// 	margin-left: -10px;
+// }
+// *********************************************
+// 		/EXAMPLE
+// *********************************************************/
+.Skin .PGR .DragAndDrop .ProgressCounter{
+	text-align: center;
+}
+.Skin .PGR .DragAndDrop .Group h2,
+.Skin .PGR .DragAndDrop .Items h2{
+	text-align:center;
+	display:block;
+}
+.Skin .PGR .DragAndDrop .Items{
+	//height doesn't seem to do anything, but doesn't hurt either probably
+	height:100%;
+}
+.Skin .PGR .DragAndDrop .Group{
+	//Need float left (or display:inline-block) so they go to columns by default */
+	float: left;
+}
+//What's the different between the two below (html > body?), and why do these both exist?
+.Skin .PGR .DragAndDrop .Items ul{
+	border:none;
+	height:150px;
+}
+html > body .Skin .PGR .DragAndDrop .Items ul{
+	min-height:150px;
+	height:auto;
+}
+.Skin .PGR .DragAndDrop .Group ul,
+.Skin .PGR .DragAndDrop .Group h2,
+.Skin .PGR .DragAndDrop .Items ul,
+.Skin .PGR .DragAndDrop .Items h2{
+	//187 seems to be the magic number for PGR questions 
+ 	//This is for all the uls except the Non-column GROUP containers*/
+	width:187px; /////// Magic 187 width
+}
+@media all and (max-width: 480px) {
+	.Skin .PGR .DragAndDrop .stack div ul li.stack span label,
+	.Skin .PGR .DragAndDrop .stack div ul li.stack span label img,
+	.Skin .PGR .DragAndDrop .Group ul,
+	.Skin .PGR .DragAndDrop .Group h2,
+	.Skin .PGR .DragAndDrop .Items ul,
+	.Skin .PGR .DragAndDrop .Items h2 {
+		width: 140px; /////// Magic 187 width changes to 140 width for mobile.  
+	}
+	.Skin .PGR .DragAndDrop .Group div ul li.stack span label {
+		width: 80px; 
+	}
+	.Skin .PGR .DragAndDrop .Group .stack li {
+		width: 80px;
+		padding: 8px 0;
+	}
+	html > body .Skin .PGR .DragAndDrop .stack div.Group ul.stack {
+		margin-left: 10px; //don't want 20px on mobile.
+	}
+}
+//BOOKMARK
+.Skin .PGR .DragAndDrop .QuestionBody {overflow: hidden} //added styles above to make this fit in mobile, but it scrolls around sometimes when it doesn't need to.    
+
+
+.Skin .PGR .DragAndDrop .Items ul li .rank{
+	//Hides this until it is dragged into the group (where you're supposed to rank it)
+	display:none;
+}
+.Skin .PGR .DragAndDrop .QuestionBody label{
+	display:block;
+	zoom:1;
+	cursor: move;
+}
+.Skin .PGR .DragAndDrop .clear{
+	clear:both;
+	visibility:hidden;
+}
+
+.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div {
+	//Overrides default float:left.  For "No Columns" option.
+	float: none;
+}
+///////////*********************************************
+////	How can we get these to not extend over 100%
+///		Or... how do we want to position these when there's not enough horizontal space? 
+/////////////*********************************************************/
+.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div ul,
+.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div h2 {
+	width: 337px;
+}
+.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div > div {
+	width: 337px;
+}
+@media all and (max-width: 480px) {
+	.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div ul,
+	.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div h2, 
+	.Skin .PGR .DragAndDrop .NoColumns td.groupsContainerTd div > div {
+		width: 107px; 
+	}
+}
+// Do we want these on the right or left?
+// Might make sense to be on the right here, where it's not very wide.. Maybe not
+.Skin .PGR .DragAndDrop .rank{
+	position:absolute;
+	top:0;
+}
+.Skin .PGR .DragAndDrop .QuestionBody ul li{
+	position:relative; 
+	cursor: move;
+}
+/////////////////////////////
+// //I think "not drag and drop" are being phased out.  Won't bother restyling these. 
+///* not drag and drop */
+////////////////////////////
+.Skin .PGR .ItemsNoDnd select {
+	width: 185px;
+}
+.Skin .PGR .ItemsNoDnd h2,
+.Skin .PGR .GroupNoDnd h2 {
+	text-align: center;
+	font-size: 16px;
+}
+.Skin .PGR .GroupNoDnd h2 {
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	padding: 5px;
+}
+.Skin .PGR .groupsContainerTd .inner td.groupContainer {
+	padding: 10px 0 0 10px;
+}
+.Skin .PGR .GroupNoDnd {
+	width: 185px;
+}
+.Skin .PGR .GroupNoDnd {
+	border-width: 1px;
+	border-style: solid;
+}
+.Skin .PGR .GroupNoDnd .inner {
+	padding: 5px;
+}
+.Skin .PGR .GroupNoDnd .GroupItems,
+.Skin .PGR .GroupNoDnd .GroupItems th,
+.Skin .PGR .GroupNoDnd .GroupItems th select {
+	width: 100%;
+}
+.Skin .PGR .GroupNoDnd .GroupItems td {
+	width: 30px;
+}
+.Skin .PGR .GroupNoDnd h2 .GetItems,
+.Skin .PGR .GroupNoDnd .GroupItems td input{
+	white-space: nowrap;
+	width: 25px;
+	color:#333;//added for better text contrast on old school group and rank 
+}
+.Skin .PGR .NumGroups {
+	margin-top: 5px;
+}
+.Skin .PGR .QuestionBody .ChoiceStructure .LabelWrapper ul {
+	min-height: 0;
+}
+.Skin .PGR .QuestionBody .ChoiceStructure .Group ul {
+}
+.Skin	.PGR .RecipientDefined input[type="text"]{
+	width:100%; 
+}
+/////////////////////
+/// end of "not drag and drop"
+///////////////////
+
+
+//HotSpot
+
+.Skin .HotSpot .QuestionBody{
+	position: relative;		// All region locations must be based off of this
+}
+.Skin .HotSpot .HotSpotContainer {
+	position:relative;
+	margin: 0 auto;
+}
+.Skin .HotSpot .HotSpotContainer img{
+	cursor: pointer;
+}
+.Skin .HotSpot .HotSpotRegions {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.Skin .HotSpot .Region {
+	display: block;
+	position: absolute;
+	outline: 0;	// Don't let FF put a dotted border around the a href
+}
+.Skin .HotSpot .Region:hover
+{
+	border: 1px solid #666666;
+}
+.Skin .HotSpot .Region:hover .RegionInner
+{
+	border: 1px solid #FFFFFF;
+}
+.Skin .HotSpot .RegionInnerInner{
+	background-color: #FFFFFF;
+	filter: alpha(opacity=0);
+	opacity: 0.0;
+}
+.Skin .HotSpot .Like .RegionInner .RegionInnerInner{
+	background-color: #0F0;
+	filter: alpha(opacity=30);
+	opacity: 0.3;
+}
+.Skin .HotSpot .Dislike .RegionInner .RegionInnerInner{
+	background-color: #F00;
+	filter: alpha(opacity=30);
+	opacity: 0.3;
+}
+.Skin .HotSpot a.Region {
+    text-decoration:none;
+}
+.Skin .HotSpot .Region span{
+	position:absolute;
+	bottom:0;
+	right:0;
+	display:block;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+.Skin .HotSpot .Region:hover span{
+	bottom:3px;
+	right:3px;
+}
+.Skin .HotSpot .Like span{
+	background:transparent url('../../../../../WRQualtricsShared/Graphics/qicons.gif') -20px -5px no-repeat;
+	width:16px;
+	height:13px;
+}
+.Skin .HotSpot .Dislike span{
+	background:transparent url('../../../../../WRQualtricsShared/Graphics/qicons.gif') -3px -3px no-repeat;
+	width:15px;
+	height:15px;
+}
+
+
+//SS Sliding Scale (Graphic)
+
+// Horizontally centers the image for Graphic Sliding Scale
+.Skin .SS .SSImage img{
+	margin:0px auto;
+}
+//We could remove the width and add margin/padding on the slider and image instead?
+.Skin .SS .SSDisplay,
+.Skin .SS .ChoiceStructure table.SSDisplay{
+	width:200px;
+	margin: 0 auto;
+}
+//Probably won't mess with position and display for the sliding scale questions
+.Skin .SS .SSDisplay .SSTrack,
+.Skin .SS .SSDisplay .handle{
+	position:absolute;
+	display:block;
+}
+.Skin .SS .verticalbar,
+.Skin .SS .horizontalbar .SSTrack {
+	//BOOKMAR: what's going on here? this class is specified above for different reasons.
+	position:relative;
+	width:200px;
+	margin:0 auto;
+}
+.Skin .SS .verticalbar .SSTrack {
+	position:relative;
+	width:8px;
+	//Needs a background color
+	// background: $slider-bar-color;
+	height:120px;
+	float:left;
+	opacity:.5;
+	filter:alpha(opacity=50);
+
+	border-radius: 20px;
+}
+.Skin .SS .SSTrack.activated,
+.Skin .SS .verticalbar .SSTrack:hover{
+	opacity:1;
+	filter:alpha(opacity=100);
+}
+.Skin .verticalbar .SSTrack .handle{
+	height: 20px;
+	width: 20px;
+	cursor:move;
+	overflow:hidden;
+
+	border-radius: 100%;
+	left: -6px; // centers handle on bar
+}
+//Do we want/need this full-width?
+.Skin .SS .Container {
+	width: 100%;
+}
+// This is for the ones that are to the right of the QuestionText.  Not sure if we need it or not?
+.Skin .SS .QuestionBody{
+	width:40%;
+}
+// Centers the table.  Do we need it?
+.Skin .SS .ChoiceStructure table {
+	margin: 0 auto;
+}
+
+
+//GAP
+
+//This is one of many questions that is width:100%. 
+//I think it makes sense, I guess
+//Could we consolidate some of this though?
+.Skin .GAP .ChoiceStructure {
+	width: 100%;
+}
+// //Below are a bunch of borders for this question..
+// .Skin .GAP .ChoiceStructure td,
+// .Skin .GAP .ChoiceStructure th {
+// 	border-width: 0;
+// }
+// .Skin .GAP thead th {
+// 	font-weight: bold;
+// 	border-right-width: 1px;
+// 	border-style: solid;
+// }
+// .Skin .GAP thead .c1,
+// .Skin .GAP thead .c2,
+// .Skin .GAP thead .c3,
+// .Skin .GAP thead .c4 {
+// 	border-bottom-width: 1px;
+// 	border-style: solid;
+// }
+// .Skin .GAP .ChoiceStructure .c4,
+// .Skin .GAP .ChoiceStructure tbody .last,
+// .Skin .GAP .ChoiceStructure th {
+// 	border-right-width: 1px;
+// 	border-style: solid;
+// }
+// .Skin .GAP .ChoiceStructure thead .c5,
+// .Skin .GAP .ChoiceStructure thead .c6 {
+// 	border-top-width: 1px;
+// 	border-style: solid;
+// }
+// .Skin .GAP .bottom .c5,
+// .Skin .GAP .bottom .c6,
+// .Skin .GAP .bottom .Why {
+// 	border-bottom-width: 1px;
+// 	border-style: solid;
+// }
+.Skin .GAP .ChoiceStructure .WhyText,
+.Skin .GAP .Why,
+.Skin .GAP .Scale   {
+	text-align: center;
+}
+.Skin .GAP .GAPArrow {
+	width:16px;
+	height:16px;
+	margin:auto;
+	margin-top:2px;
+	//This is hard coded because it was originally in line, and needs to be overwritten for RTL
+	background-image:url('../../../../../WRQualtricsShared/Graphics/GAPRightArrow.gif');
+}
+// Why block or inline block
+.Skin .GAP .TextEntryBox{
+	display: block;
+}
+// Could style the right section like the following. Or something.
+// I just think this question type is leading and confusing though.  I hope we phase it out. 
+.Skin .GAP .LightBG {
+	background: darken($readable-hover-color, 10%);
+}
+// .Skin .GAP .bottom .c5 {
+// 	border-bottom-left-radius: 10px;
+// }
+// .Skin .GAP .ChoiceStructure thead .c5 {
+// 	border-top-left-radius: 10px;
+// }
+// .Skin .GAP .ChoiceStructure thead .c6 {
+// 	border-top-right-radius: 10px;
+// }
+
+
+// Timing - NOT REVISED YET
+
+ // Display the clock on a timer question to see all this
+
+.Skin .Timing .QuestionText {
+	margin-top: 6pt;
+}
+.Skin .Timing input {
+	width: 4em;
+}
+.Skin .Timing li {
+	padding: 3px;
+}
+.Skin .Timing .QuestionBody li label {
+	width: 20em;
+}
+
+.FlipClock {
+    background-color: #333;
+    padding: 2px;
+    border-radius: 2px;
+    margin:10px auto;
+    float:left;
+	box-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+.FlipClock:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+.FlipClock > span {
+    background-color: #000;
+    padding: 1px;
+	margin:2px 3px;
+    display:block;
+    float:left;
+    position:relative;
+
+	perspective: 40px;
+    -moz-perspective: 40px;
+	-webkit-perspective: 40px;
+}
+.FlipClock > span.T1 {
+	margin-right:0;
+}
+.FlipClock > span.T2 {
+	margin-left:0;
+}
+.FlipClock span span {
+    color:#333;
+    text-shadow: 0 1px #FFF;
+    background-color: #EFEFEF;
+    font-size: 40px;
+    display:block;
+    height:40px;
+    width: 30px;
+    line-height:40px;
+	text-align: center;
+}
+.FlipClock span span.Number {
+    border-radius: 1px;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #AAA;
+}
+.FlipClock span b {
+    display:block;
+    position:absolute;
+    width: 30px;
+    height:0;
+    top: 22px;
+    left: 1px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #FFF;
+    opacity:.3;
+	filter:alpha(opacity=30);
+    z-index:5;
+}
+
+.FlipClock span .Change {
+    position:absolute;
+    top: 2px;
+    left: 1px;
+    height: 20px;
+    overflow:hidden;
+
+	transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+
+	transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+	transition: all .2s ease-in;
+	-moz-transition: all .2s ease-in;
+    -webkit-transition: all .2s ease-in;
+
+	backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.FlipClock span .Change.TB {
+    line-height:0;
+    height:20px;
+    top:13px;
+
+	transform: rotateX(91deg);
+    -moz-transform: rotateX(91deg);
+	-webkit-transform: rotateX(91deg);
+
+	transition-delay: .15s;
+	-moz-transition-delay: .15s;
+    -webkit-transition-delay: .15s;
+
+	transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+    -webkit-transition-timing-function: ease-out;
+}
+.FlipClock span fieldset.Flip .Change.TF {
+    transform: rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+	-webkit-transform: rotateX(-90deg);
+    top:12px;
+}
+.FlipClock span fieldset.Flip .Change.TB {
+	transform:rotateX(0);
+	-moz-transform:rotateX(0);
+	-webkit-transform:rotateX(0);
+    top:22px;
+}
+
+
+// Captcha: makes the ugly white box containing the captcha image transparent.
+
+.recaptchatable .recaptcha_image_cell, #recaptcha_table{
+	background-color:transparent !important;
+	border: none!important;
+}
+//The below were pulled out of device width (480) media query
+.Skin .recaptchatable {
+	border: none;
+}
+.Skin .Captcha label.QuestionText {
+	width: 300px;
+}
+.Skin .recaptchatable tbody tr td {
+	padding: 0px !important;
+}
+
+//Conjoint -- BARELY REVISED
+
+.Skin .Conjoint .Table {
+	width: 100%;
+
+	//* Added these styles so the table doesn't touch the sides.  
+	margin-left: auto;
+	margin-right: auto; 
+	max-width: 95%;
+}
+
+// /* Mixed */
+.Skin .Conjoint .LeastMostTable tbody th,
+.Skin .Conjoint .LOPTable tbody th,
+.Skin .Conjoint .MPUTable tbody th,
+.Skin .Conjoint .CSTable tbody th,
+.Skin .Conjoint .EliminationTable tbody th {
+	padding: 3px 0 3px 0;
+}
+
+// /** EliminationTable **/
+.Skin .Conjoint .EliminationTable {
+	margin-top: 20pt;
+}
+.Skin .Conjoint .EliminationTable thead td {
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	padding-bottom: 2px;
+}
+.Skin .Conjoint .EliminationTable tbody td {
+	width: 15px;
+	padding: 3px;
+}
+
+// /** LeastMostTable */
+.Skin .Conjoint .LeastMostTable {
+	margin-top: 24pt;
+}
+.Skin .Conjoint .LeastMostTable thead td {
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+.Skin .Conjoint .LeastMostTable tbody th {
+	width: 70%;
+}
+.Skin .Conjoint .LeastMostTable tbody td {
+	text-align: center;
+}
+.Skin .Conjoint .LeastMostTable .PreferredTextCell {
+	text-align: center;
+}
+.Skin .Conjoint .LeastMostTable td,
+.Skin .Conjoint .LeastMostTable th {
+	border-right-width: 1px;
+	border-right-style: solid;
+}
+
+.Skin .Conjoint .LeastMostTable td.Last,
+.Skin .Conjoint .LeastMostTable th.Last {
+	border-right-width: 0px;
+}
+
+// /** LOPTable **/
+.Skin .Conjoint .LOPTable {
+	margin-top: 20pt;
+}
+.Skin .Conjoint .LOPTable tbody td {
+	width: 20px;
+	text-align: center;
+	border-left-width: 1px;
+	border-left-style: solid;
+}
+.Skin .Conjoint .LOPTable thead th {
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+.Skin .Conjoint .LOPTable thead td {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-left-width: 1px;
+	border-left-style: solid;
+	text-align: center;
+}
+.Skin .Conjoint .LOPTable thead.Small td {
+	border-top-width: 1px;
+	border-top-style: solid;
+}
+
+.Skin .Conjoint .LOPTable thead td.Last,
+.Skin .Conjoint .LOPTable tbody td.Last {
+	border-right-width: 1px;
+	border-right-style: solid;
+}
+.Skin .Conjoint .LOPTable tbody .Bottom td {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+// /** ULOPTable **/
+.Skin .Conjoint .MPUTable thead th {
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	padding-bottom: 2px;
+}
+
+// /** CSTable **/
+.Skin .Conjoint .CSTable thead td {
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	padding-bottom: 2px;
+}
+.Skin .Conjoint .CSTable tfoot td {
+	font-weight: bold;
+	border-top-width: 1px;
+	border-top-style: solid;
+}
+
+.Skin .Conjoint .CSTable tfoot input,
+.Skin .Conjoint .CSTable tbody input {
+	width: 30px;
+}
+
+.Skin .Conjoint .CSTable tfoot .Last,
+.Skin .Conjoint .CSTable tbody .Last {
+	text-align: center;
+	padding: 3px;
+}
+
+// /* Carried Forward choice */
+.Skin .CarryForwardSymbol{
+	color:#577033; // /* dark green */
+	font-weight:bold;
+	font-size:130%;
+	line-height:70%;
+}
+
+// /** Drill Down */
+.Skin .DD .QuestionBody table.ChoiceStructure {
+	width: auto;
+}
+.Skin .DD .QuestionBody th {
+	padding: 4px 10px 4px 0;
+}
+//Don't need this.  
+// .Skin .DD .QuestionBody .drillDownSelectDropDown {
+// 	margin: 3px 0 3px 7px;
+// }
+
+
+//Grading - NOT REVISED
+
+.Skin .Grading .Inner {
+	zoom: 1;
+}
+
+.Skin .Grading {
+	padding: 0 10px;
+}
+.Skin .Grading .Inner{
+	background: #FFFFC7;
+	border: 1px solid #FFDC81;
+	padding: 15px;
+	color: black;
+}
+
+.Skin .Grading .Score {
+	float: right;
+	font-size: 35px;
+	font-weight: bold;
+}
+.Skin .Grading .ChoiceStructure .Selected .Correct,
+.Skin .Grading .Correct {
+	color: #00A804;
+}
+
+.Skin .Grading .ChoiceStructure .Selected .Incorrect,
+.Skin .Grading .Incorrect {
+	color: #C00;
+}
+
+.Skin .Grading .GradingQuestionText {
+	font-weight: bold;
+}
+
+.Skin .Grading .ChoiceStructure {
+	padding-top: 5px;
+}
+
+.Skin .Grading .ChoiceStructure li {
+	padding: 5px;
+	margin-left: 10px;
+}
+
+.Skin .Grading .ChoiceStructure .Icon{
+	width: 18px;
+	height: 17px;
+	float: left;
+	margin-right: 5px;
+}
+.Skin .Grading .ChoiceStructure .Incorrect {
+	color: #BF8D8D;
+}
+
+.Skin .Grading .ChoiceStructure .Correct {
+	color: #8EC292;
+}
+
+.Skin .Grading .ChoiceStructure .Selected .Correct .Icon{
+	background-image: url(../../../../../WRQualtricsSurveyEngine/SEGraphics/gradingCheck.png);
+}
+
+.Skin .Grading .ChoiceStructure .Selected .Incorrect .Icon{
+	background-image: url(../../../../../WRQualtricsSurveyEngine/SEGraphics/gradingX.png);
+}
+
+.Skin .Grading .ChoiceStructure .Selected {
+	font-weight: bold;
+}
+
+// /* grading table */
+.Skin .Grading table.ChoiceStructure .Icon{
+	width: 18px;
+	height: 17px;
+	display: block;
+	margin: 0 auto;
+	float: none;
+}
+
+.Skin .Grading table.ChoiceStructure th {
+	font-weight: bold;
+}
+
+.Skin .Grading table.ChoiceStructure td,
+.Skin .Grading table.ChoiceStructure th {
+	padding: 5px;
+}
+
+.Skin .Grading table.ChoiceStructure tbody td {
+	text-align: center;
+}
+
+.Skin .Grading table.ChoiceStructure thead th,
+.Skin .Grading table.ChoiceStructure thead td {
+	border-bottom: 1px solid #FFDC81;
+	text-align: center;
+}
+.Skin .Grading table.ChoiceStructure tbody th,
+.Skin .Grading table.ChoiceStructure thead td {
+	border-right: 1px solid #FFDC81;
+	padding-left: 7px;
+}
+
+.Skin .Grading table.ChoiceStructure .Correct .Icon {
+	background-image: url(../../../../../WRQualtricsSurveyEngine/SEGraphics/gradingFadedCheck.png);
+}
+
+.Skin .Grading table.ChoiceStructure th.LeftBorder,
+.Skin .Grading table.ChoiceStructure td.LeftBorder{
+	border-left: 1px solid #FFDC81;
+}
+
+.Skin .Grading table.ChoiceStructure .NoRightBorder{
+	border-right:none;
+}
+
+// /** total score **/
+
+.Skin .Grading .TotalScore .Correct,
+.Skin .Grading .TotalScore .Incorrect {
+	color: #262626;
+}
+.Skin .Grading .TotalScore .GradingQuestionText {
+	line-height: 40px;
+}
+.Skin .Grading .TotalScore .QuestionBody {
+	display: none;
+}
+.Skin .Grading .TotalScore .GradingQuestionText .Score {
+	float: none;
+	font-size: 14pt;
+	color: #AD8416;
+}
+.Skin .Grading .TotalScore .GradingQuestionText span {
+	vertical-align: middle;
+}
+
+
+//Heat Mat -- NOT REVISED
+
+.Skin .HeatMapContainer {
+	position:relative;
+	margin: 0 auto;
+}
+.Skin .HeatMap .QuestionBody {
+	position:relative;
+}
+
+
+// This is the POINT in the middle of where you click
+// What's something interesting that could go here?  A color? Circle?
+.Skin .HeatMapContainer .point{
+	width:4px;
+    height:4px;
+    position:absolute;
+    background-color:#ffffff;
+    border:1px solid #000000;
+    z-index:5;
+    font-size:0px;
+    line-height:0px;
+    cursor:crosshair;
+}
+
+// This is the HORIZONTAL line where you click
+// Smart: there's a white line and a dark line
+// Maybe we could customize/color the dark line?
+.Skin .HeatMapContainer .chh{
+	height:0px;
+	position:absolute;
+	border-bottom:1px solid #666666;
+	border-top:1px solid #FFFFFF;
+	font-size:0px;
+	line-height:0px;
+	cursor:crosshair;
+}
+ 
+// This is the VERTICAL line where you click
+// Smart: there's a white line and a dark line
+// Maybe we could customize/color the dark line?
+.Skin .HeatMapContainer .chv{
+	width:0px;
+	position:absolute;
+	border-left:1px solid #666666;
+	border-right:1px solid #FFFFFF;
+    font-size:0px;
+    line-height:0px;
+    zoom: 1;
+    cursor:crosshair;
+}
+.Skin .HeatMapContainer img{
+	cursor:crosshair;
+	border:none !important;
+}
+
+
+//File Upload iframe skin -- NOT REVISED
+
+.Skin .FileUpload iframe {
+	width: 100%;
+	height: 56px;
+	border: none;
+	background-color:transparent;
+}
+
+.Skin .FileUpload .loadingError {
+	background-color:#CC0000;
+	font-weight:bold;
+	margin: 5px auto;
+	padding: 4px;
+	width: 26em;
+}
+
+.Skin .FileUpload .loadingImage {
+	background: transparent url('../../../../../WRQualtricsShared/Graphics/ajax-loading.gif') no-repeat;
+	width:220px;
+	height:19px;
+	margin:40px auto;
+}
+
+.Skin .FileUpload table{
+	text-align: center;
+}
+
+
+ // * Be careful about editing this class
+ // * We are not using display:none since it sets dimensions to zero in most
+ // * browsers. This breaks some questions that require javascript for setup.
+ 
+.Skin .IPDLHidden{
+	position:absolute;
+	visibility: hidden;
+	height: 0px;
+	overflow:hidden;
+}
+
+// IE7 has a bug where table borders show when visibility is set to hidden
+//  * Also, using transparent instead of none since it messes up the slider position
+
+.Skin .IPDLHidden td, .Skin .IPDLHidden th{
+	border-color: transparent !important;
+}
+
+//Accessibility needs text positioned off screen
+
+.offScreen{
+	position: fixed;
+	_position: absolute;
+	left: -9999px;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+
+//Table of Contents -- REVISED
+
+$ToCButton-width: 18px;
+$ToCButton-height: 3px;
+
+#TocHeaderContainer{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width:100%;
+}
+
+.TocMargin #SkinContent {
+padding-top: 48px; //added so that the menu icon doesn't cover the first question.
+}
+
+.TocMargin .Skin .LanguageSelectorContainer{
+	padding: 0 $default-container-padding 0 0; //added to reduce padding when ToC is present
+}
+
+#TocHeader {
+	position: relative;
+}
+
+#TocHeader table {
+	width:100%;
+}
+
+#TocHeader a {
+	text-align: center;
+}
+
+#TocSidebarContainer{
+	position:absolute;
+	top:0px;
+	z-index:5000;
+	overflow:hidden;
+	transition: left .5s ease-in-out;
+	left:-220px;
+	&.reduced{
+		top:0;
+		&.closed{
+			z-index:0;
+			transition: left 1s linear;
+			left:0;
+		}
+	}
+	&.closed{
+		background:transparent !important; 
+		left:0;
+		z-index:0;
+	}
+}
+.Skin #Buttons{
+	position:relative;
+	z-index:1;
+}
+
+// .IE7 #TocSidebarContainer{
+// 	z-index: 1;
+// }
+// 	.closed #TocSidebar{
+// 		//width:50px;
+// 		left:0;
+// 		top:0;
+// 		z-index:-1;
+// 	}
+
+// #TocSidebar{
+// 	left:0;
+// 	top:0;
+// 	z-index: 1;
+// 	//border: $default-border;
+// }
+
+
+.reduced #TocSidebar, .closed #TocSidebar{
+	left: 0;
+}
+
+#TocSidebarIcons{
+	background-color: transparent;
+	height: $ToCButton-width;
+	width:$ToCButton-width;
+	padding: 15px;
+	overflow: hidden;
+	box-sizing: content-box;
+	float:left;
+}
+
+// .reduced #TocSidebarIcons{
+// 	float: right;
+// }
+.reduced.closed #TocSidebarIcons, .closed #TocSidebarIcons{
+	//float: right;
+	transition: all .5s ease-in-out;
+}
+
+// .IE #TocSidebarIcons{
+// 	float: right;
+// }
+
+#TocIcon{
+	background-image: url(../../../../../WRQualtricsControlPanel/CPGraphics/flowicons.png);
+	background-position:-246px -1px;
+    width:16px;
+    height:16px;
+	float: left;
+}
+
+#TocArrow{
+	background-image: url(../../../../../WRQualtricsControlPanel/CPGraphics/editwidgets.png);
+	background-position:-1px -60px;
+  width:10px;
+  height:10px;
+	float: right;
+	margin-top: 5px;
+	display:none; //remove unecessary stuff ?
+}
+
+.closed #TocArrow{
+	background-position:-11px -60px;
+}
+
+#TocSidebarContent{
+	border: none;
+	margin-left:0;
+	width:200px;
+	background-color:transparent;
+	transition: margin .5s ease-in-out;
+	padding-bottom:20px;
+}
+.closed #TocSidebarContent{
+	display:block;
+	visibility: hidden;
+}
+.closed.reduced #TocSidebarContent{
+	display:block;
+	margin-left:-150px;
+	visibility: hidden;
+}
+
+
+#Toc{
+	padding: 0;
+	background-color: transparent;
+	position: relative;
+	z-index: 1;
+}
+
+#TocSidebar .Header, #TocSidebar .Footer {
+	font-size: 80%;
+}
+
+#TocSidebar .Header{
+	padding-bottom: 5px;
+	min-height: 5px;
+}
+
+#TocSidebar .Footer {
+	padding-top: 5px;
+	min-height: 5px;
+}
+#Toc ul{
+	margin:0;
+	padding:0;
+}
+#Toc ul li{
+	margin: 2px 0;
+	list-style-type: none;
+}
+
+#Toc a, #Toc strong, #TocHeader a{
+	padding: 4px 20px 4px 20px;
+	display:block;
+	font-size: 14px;
+}
+
+#TocSidebar a{
+	text-decoration: none;
+}
+
+#Toc ul a, #Toc ul strong{
+	padding-left:20px;
+}
+
+#Toc ul ul a, #Toc ul ul strong{
+	padding-left:36px;
+}
+
+#Toc ul ul ul a, #Toc ul ul ul strong{
+	padding-left:62px;
+}
+
+#Toc ul ul ul ul a, #Toc ul ul ul ul strong{
+	padding-left:78px;
+}
+
+#Toc li.Complete a{
+	color: #999;
+}
+
+#Toc li span.TocIcon{
+	height: 16px;
+	width: 16px;
+	display:block;
+	float: left;
+	font-size: 10px;
+	line-height: 16px;
+}
+
+
+#Toc li span.TocText{
+	display: block;
+	margin-left:21px;
+}
+
+#Toc li.Complete span.TocIcon, #TocHeader td.Complete span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -112px -224px transparent;
+}
+#Toc li.Complete.Current span.TocIcon, #TocHeader td.Complete.Current span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -112px -240px transparent;
+}
+
+#Toc li.Authenticator span.TocIcon, #TocHeader td.Authenticator span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -269px -225px transparent;
+}
+#Toc li.Authenticator.Current span.TocIcon, #TocHeader td.Authenticator.Current span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -269px -241px transparent;
+}
+
+#Toc li.Alert span.TocIcon, #TocHeader td.Alert span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -255px -224px transparent;
+}
+#Toc li.Alert.Current span.TocIcon, #TocHeader td.Alert.Current span.TocIcon{
+	background: url(../../../../../WRQualtricsControlPanel/CPGraphics/widgets.png) no-repeat scroll -255px -240px transparent;
+
+}
+
+#Toc li.Disabled{
+	display: none;
+}
+
+#TocHeader td span.TocIcon{
+	height: 16px;
+	width: 16px;
+	display:inline-block;
+	font-size: 10px;
+	line-height: 16px;
+	margin-right:5px;
+}
+
+.Hidden{
+	display:none;
+}
+
+// body.TocMargin div.Skin{
+// 	margin-left:70px; 
+// }
+
+/////////////////animated button//////////
+#TocIcon{
+	background-image:none;
+	display: inline-block;
+	width: $ToCButton-width;
+	height: $ToCButton-height;
+	background: $primary-color;
+	border-radius: $ToCButton-height/2;
+	transition: 0.3s;
+	position: relative;
+	top:8px;
+	&:before, &:after{
+		display: inline-block;
+		width: $ToCButton-width;
+		height: $ToCButton-height;
+		background: $primary-color;
+		border-radius: $ToCButton-height/2;
+		transition: 0.3s;
+		position: absolute;
+		right: 0;
+		content: '';
+		//width: 18px\9; //added for older ie.
+	}
+	&:before {
+	// -webkit-transform: rotate3d(0, 0, 1, -30deg);
+	// transform: rotate3d(0, 0, 1, -30deg);
+	top:6px;
+	//top: 6px \9; //added for older ie.
+	
+	}
+	&:after {
+	// -webkit-transform: rotate3d(0, 0, 1, 30deg);
+	// transform: rotate3d(0, 0, 1, 30deg);
+	top:-6px;
+	//top: -6px \9; //added for older ie.
+	}
+
+}
+
+.reduced {
+		#TocIcon:before {
+		// -webkit-transform: rotate3d(0, 0, 1, 30deg);
+		// transform: rotate3d(0, 0, 1, 30deg);
+		//top:2px;
+		//top: 6px \9; //added for older ie.
+		left:0;
+	}
+	#TocIcon:after {
+		// -webkit-transform: rotate3d(0, 0, 1, -30deg);
+		// transform: rotate3d(0, 0, 1, -30deg);
+		//top:-2px;
+		//top: -6px \9; //added for older ie.
+		left:0;
+	}
+}
+
+
+.closed { 
+	#TocIcon {
+		&:before{
+			top: 6px;
+		  // -webkit-transform-origin: 50% 50%;
+		  // transform-origin: 50% 50%;
+		  // -webkit-transform: rotate3d(0, 0, 1, 0deg);
+		  // transform: rotate3d(0, 0, 1, 0deg);
+		  width: $ToCButton-width;
+		}
+		&:after{
+			top: -6px;
+			// -webkit-transform-origin: 50% 50%;
+			// transform-origin: 50% 50%;
+		 //  -webkit-transform: rotate3d(0, 0, 1, 0deg);
+			// transform: rotate3d(0, 0, 1, 0deg);
+			width: $ToCButton-width;
+		}
+	}
+}
+
+//////////////END ToC Styles/////////////
+
+//Print styles
+
+@media print{
+	.Skin .ReadableAlt{
+		// /* this fixes a problem with pdfs on windows having uneven borders in the alt rows */
+		background:none;
+	}
+}
+@media print {
+	#Buttons button,
+	.PreviewBanner,
+	#Plug,
+	#ProgressBar,
+	#LogoBar  {
+		display:none;
+	}
+	#SkinContent{
+		border:none;
+	}
+}
+.ResponseSummary {
+	border:1px solid #aaa;
+	border-width:1px 0;
+	background:#eee;
+	padding:20px;
+}
+.ResponseSummary p{
+	float:left;
+	color:#333;
+}
+.ResponseSummary .DownloadResponsesPDF {
+	float:right;
+}
+
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////
+
+///////////////
+//		Display Styles (Most of this can probably be moved to the Main Sass file)
+//		Move what can't, up to general styles..?
+///////////////
+// $font-stack: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+// $default-font-size: 12px;
+// #SurveyEngineBody{
+// 	font-family: $font-stack;
+// 	font-size: $default-font-size; // /* to match the control panel*/ <-- does this matter? what control panel?
+// }
+.Skin #SkinContent{
+	zoom: 1; // /* give hasLayout, this important for some random installs of IE*/
+	z-index: 0;
+	position: relative;
+}
+.Skin legend {
+	white-space: normal;
+	width:100%;
+}
+.Skin .Invisible {
+	display:none;
+}
+// What is the save button?
+.Skin #Buttons #SaveButton { 
+	//Turn off Save button by default; manually enable in each skin when styled */
+	display: none;
+}
+
+
+// // Why do we need these?  Doesn't seem to serve a purpose
+// * html .Skin #Logo {
+// 	background-image: none;
+// }
+// * html .Skin #Header {
+// 	background-image: none;
+// }
+// * html .Skin #Footer {
+// 	background-image: none;
+// }
+
+// Centers the Progress Bar "Survey Completion" text
+.Skin .ProgressBarContainer label,
+.Skin .ProgressBarContainer span { // displays as a label in the survey, and as a span in the Look and Feel Preview.  Don't know why.
+	display: block;
+	text-align: center;
+	font-size: 80%;
+}
+//Click here if you are not automatically directed.  Hard to style cause this page only lasts for a second.
+.Skin .Redirect a {
+	padding-top: 6pt;
+}
+// Loading bar under "Click here if you are not automatically redirected"
+.Skin .EndOfSurvey .LoadingImage {
+	padding-top: 10pt;
+}
+//center-align text of auto generated end of survey messages
+.Skin .SystemEndOfSurvey {
+	text-align: center;
+}
+
+
+// BEGIN RETINA/HIDPI STYLES */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+	//STAR questions (need @2x sprite image)
+	.Skin .STAR .Stars th.ylabel,
+	.Skin .STAR .Stars td,
+	.Skin .Slider .STAR .horizontalbar table.sliderGrid tr td.value,
+	.Skin .STAR .Stars table td.BarOuter {
+		border: none;
+	}
+	.Skin .STAR .horizontalbar table.sliderGrid {
+		table-layout: auto;
+	}
+	.Skin .STAR .horizontalbar table.sliderGrid tr td.value {
+		width: auto;
+		text-align: left;
+	}
+	.Skin .STAR .Stars tbody tr {
+		height: 46px;
+	}
+	.Skin .STAR tr.HideValue td.BarOuter {
+		width: auto;
+	}
+	.Skin .STAR .BarContainer {
+		top: 0px;
+	}
+	.Skin .STAR .StarsStrut {
+		white-space: nowrap;
+	}
+	.Skin .STAR .StarsContainer,
+	.Skin .STAR .StarsEventWatcher,
+	.Skin .STAR .StarsContainer .Filled {
+		height: 26px;
+		background: transparent url('../../../../../WRQualtricsShared/Graphics/stars@2x.png') 0px 0px;
+		background-size: 30px 53px;
+	}
+	.Skin .STAR .StarsOuterContainer {
+		margin: 10px;
+	}
+	.Skin .STAR .StarsContainer {
+		background-position: 0px -27px;
+		position: relative;
+	}
+	.Skin .STAR .StarsEventWatcher{
+		top: 0px;
+		left: 0px;
+		position: absolute;
+		background-image: none;
+	}
+
+	.Skin .STAR .StarsContainer .Filled {
+		background-position: 0px 0px;
+		position: absolute;
+		top: 0px;
+		left: 0px;
+	}
+	.Skin .STAR .StarsContainer .StarsOverlay {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+	}
+	.Skin .STAR .StarsContainer .Star {
+		width: 36px;
+		height: 30px;
+		background: transparent url('../../../../../WRQualtricsShared/Graphics/stars@2x.png') 0px 0px;
+		background-size: 30px 53px;
+		float: left;
+	}
+}
+
+// BOOKMARK: 
+// PULLED OUT THE BELOW: It was making the questions not scroll now, what we did to make the QuestionBody scroll horizontally independent of the QuestionText seems to be incompatible with this.  
+
+// // MOBILE STYLES
+
+// // PULLED OUT THE SCROLLING/OVERFLOW STUFF below
+// // PULLED it out of the media query and compare to normal questions
+// // They should behave the same whether the browser is wide or narrow.
+// #SurveyEngineBody.iOS,
+// #SurveyEngineBody.Android {
+// 	overflow-x: hidden;
+// 	max-width: 100%;
+// 	display: block;
+// }
+// #SurveyEngineBody.iOS .Skin,
+// #SurveyEngineBody.Android .Skin {
+// 	overflow-x: hidden;
+// }
+// #SurveyEngineBody.iOS .Skin #Questions,
+// #SurveyEngineBody.Android .Skin #Questions, {
+// 	overflow-x: hidden;
+// }
+// // #SurveyEngineBody .Skin .QuestionOuter {
+// // 	border-radius: 0px;
+// // }
+// #SurveyEngineBody.iOS #Page,
+// #SurveyEngineBody.Android #Page {
+// 	overflow-x: hidden;
+// }
+// #SurveyEngineBody.iOS .Skin #Questions .QuestionOuter,
+// #SurveyEngineBody.Android .Skin #Questions .QuestionOuter {
+// 	overflow-x: scroll;
+// 	-webkit-overflow-scrolling: auto;
+// }
+// #SurveyEngineBody.iOS .Skin #Questions .QuestionOuter fieldset,
+// #SurveyEngineBody.Android .Skin #Questions .QuestionOuter fieldset {
+// 	overflow-x: hidden;
+// }
+// #SurveyEngineBody.iOS .Skin #Questions .QuestionOuter fieldset .QuestionBody,
+// #SurveyEngineBody.Android .Skin #Questions .QuestionOuter fieldset .QuestionBody {
+// 	overflow-x: hidden;
+// }
+
+
+//BOOKMARK: This was messing up the display:table test...
+// #SurveyEngineBody.iOS .SkinInner,
+// #SurveyEngineBody.Android .SkinInner {
+// 	margin: 0px;
+// 	max-width: 100%;
+// }
+
+// Arrow that shows up to indicate more content to right.
+.Skin .ScrollIndicator {
+	background: url('../../../../../WRQualtricsShared/Graphics/arrow.png') no-repeat center center;
+	background-size: 20px 13px;
+	height: 98%;
+	background-color: rgba(0,0,0,0.6);
+	top: 0px;
+	width: 25px;
+	-webkit-animation-delay: 0s;
+	-webkit-animation-direction: normal;
+	-webkit-animation-fill-mode: forwards;
+	opacity: 1.0;
+	border: 1px solid #666;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+//Not sure what this is for exactly
+.Android *::-webkit-scrollbar {
+	display: none;
+}
+// Don't want to mess with ability to scroll, really.  
+.Android .Skin #Questions .QuestionOuter fieldset {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: auto;
+	-webkit-transform: rotateZ(0);
+}
+.Android .QuestionOuter {
+	overflow-x: scroll;
+	-webkit-overflow-scrolling: auto;
+}
+
+//Changed from max-device-width to max-width
+@media only screen and (max-width: 480px) {
+	// this gets rid of the space at the top for the Preview Banner
+	// But why do we get rid of the preview banner on mobile anyway?
+	body {
+		top: 0px!important;
+	}
+
+	.Skin .HSLIDER .horizontalbar,
+	.Skin .HBAR .horizontalbar {
+		min-width: 250px; // To prevent slider questions from squishing together very small. 
+		padding-right: 15px; //BOOKMARK: Added this... so that slider question scale labels don't spill over and cause unecessary scrolling.  
+	}
+
+	//
+	// Cory is working on TOC
+	//
+	// body.TocMargin div.Skin {
+	// 	margin-left: 0px;
+	// }
+	// #TocSidebarContainer {
+	// 	position: absolute;
+	// 	right: -192px;
+	// }
+	// .Skin #TocSidebarContainer.reduced {
+	// 	right: 10px;
+	// 	top: 10px;
+	// 	left: auto;
+	// }
+	// .reduced #TocSidebarIcons {
+	// 	float: right;
+	// }
+	//
+	// What is the JumpButton?  And why do we hide it on mobile?
+	.Skin #JumpButton {
+		display: none;
+	}
+
+	.ScrollIndicator {
+		-webkit-animation: fadeInRight 1s;
+	}
+	@-webkit-keyframes fadeInRight {
+		0% {
+			opacity: 0;
+			-webkit-transform: translateX(20px);
+		}
+
+		100% {
+			opacity: 1;
+			-webkit-transform: translateX(0);
+		}
+	}
+	
+	// * Percentage width for lead generator.
+	
+	.Skin .LeadGenerator {
+		width: 90%;
+		margin: 0 auto;
+	}
+	.Skin .LeadGenerator .imageHolder {
+		width: 100%;
+	}
+	.Skin .LeadGenerator .imageHolderOuter {
+		width: 100%;
+	}
+	.Skin .LeadGenerator .imageHolder div {
+		padding-top:15px;
+	}
+	.Skin .LeadGenerator a {
+		width:100%;
+	}
+} // End of media query
+
+// *
+//  * END MOBILE STYLES
+ 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	Old StyleSheet styles 																				
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LAYOUT ELEMENTS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@media only screen and (max-width: 480px) { // Hide the Preview Banner on mobile (it's hidden anyway, but display: none makes it go away to prevent side scrolling issues.  
+	.PreviewBanner {
+		display: none;
+	}
+}
+
+a {
+	color: $link-color;
+}
+
+#SurveyEngineBody {
+	background: $body-background;
+	background-size: $body-background-size;
+}
+
+#RestoredResponseBar { // Welcome Back! Message at top of screen
+	background: #45464b !important; // Does this pull the color from the "Highlight Questions" option? -- No, it doesn't, I checked.
+	color: #888c8f !important;
+	font-family: $font-stack;
+	a {
+		color: $link-color !important;
+	}
+}
+
+@media all and (max-width: 480px) { //This makes the ResotredResponseBar not get hidden on mobile widths
+	#RestoredResponseBar {
+		height: auto !important;
+		margin-top: auto !important;
+	}
+}
+
+#RestoredResponseBar .BottomShadow {
+	display: none;
+}
+
+.Skin {
+
+	color: $default-text-color;
+	font-family: $font-stack;
+
+	#Wrapper{
+		@if $pushed-to-bottom-plug == T{
+			//These styles needed for Sticky Footer Plug - Do Not Remove
+			min-height: 100%;
+			height: auto !important; 
+			height: 100%;
+			margin: 0 auto (-$calculated-sticky-footer-height);
+		}
+	}
+
+	#Overlay {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: -9;
+		background: $overlay-background-backup;
+		background: $overlay-background;
+	}
+
+	#ProgressBar {
+		font-size: $progress-bar-font-size;
+		// padding: 0; // Do we even need this? Don't think so. 
+		position:relative;
+		@if $full-width-header == F { // This is here to add space between top of window and SkinInner... Can't add margin to SkinInner because it pushes the plug off the page.  
+			padding-bottom: ($default-container-padding * 2); 
+			@media only screen and (max-width: 767px) {
+				// SOLUTION: Add padding-bottom to the #ProgressBar (even if there's no progress bar, the div is still there...) Nice.  Kind of weird place to put padding, but fine. 
+				padding-bottom: 0; 
+			}
+		}
+	}
+
+	.ProgressBarContainer{
+		width:100%;
+		border-collapse:collapse;
+		//have to add these borders or there is a 1px space to right and left when the 0% and 100% tds are gone -- remove if we can figure out a better way
+		border-right: 4px solid $progress-bar-background-color;
+		border-left: 2px solid $progress-bar-fill-color;
+	}
+
+	// IE can't use nth-child -- this is a cross-browser workaround
+	#ProgressBar tr td:first-child {
+	  position: absolute;
+	  left: 0;
+	  color: $progress-bar-fill-color;
+	  line-height: $progress-bar-fill-height;
+	  border-left: 2px solid $progress-bar-fill-color;
+	  width: 100%;
+	  &:empty {
+		 //BOOKMARK: the progress bar is driving me crazy.  How can we get rid of the spaces at the left and right without using these extra borders
+	  }
+	}
+	
+	#ProgressBar tr td:first-child + td {
+		width:100%;
+	}
+	
+	#ProgressBar tr td:first-child + td + td {
+	  position: absolute;
+	  right: 0;
+	  line-height: $progress-bar-fill-height;
+	  color: $progress-bar-fill-color;
+	  &:empty {
+		 //BOOKMARK: the progress bar is driving me crazy.  How can we get rid of the spaces at the left and right
+	  }
+	}
+
+	.ProgressBarFillContainer {
+		border: none;
+		overflow:hidden;
+		background:$progress-bar-background-color;
+		width:100%;
+	}
+
+	.ProgressBarFill {
+		background-color: $progress-bar-fill-color;
+		height: $progress-bar-fill-height;
+	}
+	
+	.LanguageSelectorContainer {
+		margin: $default-container-padding;
+		margin-bottom: 0;
+		text-align: right;
+	}
+	
+	.SkinInner {
+		@if $full-width-header == F { // The SkinInner acts as the SkinContent (the "white box") ONLY in this case.  Otherwise, it's just the whole window (expands to allow full width header)
+			max-width: $skin-inner-max-width;
+			margin: 0 auto;
+			background: $skin-inner-background;
+			
+			@if $boxed-skincontent == T {
+				@if $question-container-box-shadow-on == T {
+					@include box-shadow($container-box-shadow-x, $container-box-shadow-y, $container-box-shadow-spread, $container-box-shadow-color);
+				}
+				@if $question-container-border-on == T {
+					border: $question-container-border;
+				}
+				@if $border-radius-on == T {
+					@include border-radius($question-container-border-radius);
+				}	
+				@media only screen and (max-width: 767px) {
+					margin: 0 auto; // Removes space at top and bottom
+					@if $border-radius-on {
+						@include border-radius(0)
+					}
+				}
+			}
+		}
+
+		// BELOW is the display:table method:
+		// So content that is too wide will stretch the survey box, rather than cutting it off (but only at screen widths over 980, so it can be responsive at widths below that)
+		@if $full-width-header == F {
+			@media (min-width: 980px) {
+				display: table;
+				min-width: $container-min-width;
+			}
+			@media print {
+              display: table; //these lines for @media print is added for when the content pushes the skininner wider than 770px
+      		  min-width: $container-min-width; 
+      		} 
+			// And this is because IE8 doesn't do media queries.  
+			@media (max-width: 979px){
+				display: block;
+				min-width: 0;
+			}
+		}		
+	} 
+	#LogoContainer {
+		background: $logo-container-background;
+		padding: 0 $default-container-padding;
+		@if $full-width-header == T {
+			@if $question-container-box-shadow-on == T  {
+				@include box-shadow($container-box-shadow-x, $container-box-shadow-y, $container-box-shadow-spread, $container-box-shadow-color);
+			}
+			@if $question-container-border-on == T {
+				border-bottom: $question-container-border;
+			}
+			@if $boxed-skincontent == T {
+				margin-bottom: ($default-container-padding * 1.5); // This makes it so the plug stays on the page.  If you add a margin to SkinInner or whatever it pushed it off. 
+			} 
+		}
+	}
+
+	@if $no-logo == F { //Only style the #Logo div if we're including it.  
+		#Logo  {
+			background: $logo-background-color $logo-image no-repeat $logo-position;
+			background-size: $logo-image-width $logo-image-height;
+			height: $logo-height;
+			max-width: $logo-max-width;
+			@media only screen and (max-width: 767px) {
+				background: $logo-background-color $logo-mobile-image no-repeat $logo-mobile-position;
+				background-size: $logo-mobile-width $logo-mobile-height;
+				height: $logo-mobile-height + $logo-padding;
+			}
+			@if $full-width-header == T {
+				margin: 0 auto;
+			}
+		} 
+	} @elseif $no-logo == T {
+		#Logo {
+			display:none;
+		}
+	}
+
+	#HeaderContainer {
+		@if $full-width-header == F {
+			//max-width: ($skin-inner-max-width + ($default-container-padding * 2)); No need for this
+			margin: 0 auto;
+		}
+		@if $full-width-header == T {
+			background: $logo-container-background;
+			margin-bottom: 30px;
+		}
+		@media only screen and (max-width: 767px) {
+			text-align: center;
+		}
+	}
+
+	#Header {
+		font-size: $header-font-size;
+		color: $header-text-color;
+		margin: 0px auto;
+		max-width: $header-max-width;
+		padding: $header-padding;
+		@if $no-logo == F or $no-logo == T and $full-width-header == F { // If there's a Permanent Logo - OR - If there's no Permanent Logo, but the Header/Logo is inside the box
+			&:empty { // Basically, we want this to hide when it would screw up the padding.  If it's a question of it disappearing completely or not, we'll leave it... so it doesn't look completely different from IE8. 
+				padding: 0; // wahoo!  This makes the padding go away if there's no text.  Not for IE8-.  
+			}
+		} 
+	}
+
+	#SkinContent {
+		margin: 0 auto;
+
+		@if $full-width-header == T { // Only in this scenario is the SkinContent the "white box," Otherwise it's the SkinInner
+			max-width: $skin-inner-max-width;
+			@if $boxed-skincontent == T {
+				background: $question-container-background-color;
+				@if $border-radius-on == T {
+					@include border-radius($default-border-radius * 2);
+				}	
+				@if $boxed-skincontent == T {
+					@if $question-container-box-shadow-on == T {
+						@include box-shadow($container-box-shadow-x, $container-box-shadow-y, $container-box-shadow-spread, $container-box-shadow-color);
+					}
+					@if $question-container-border-on == T {
+						border: $question-container-border;
+					}
+				} 
+			}
+		}
+		@media only screen and (max-width: 767px) {
+			border: none;
+			@include border-radius(0);
+		}
+
+		// BELOW is the display:table method:
+		// So content that is too wide will stretch the survey box, rather than cutting it off (but only at screen widths over 980, so it can be responsive at widths below that)	
+		@if $full-width-header == T {
+			@media (min-width: 980px) {
+				display: table;
+				min-width: $container-min-width;
+			}
+			@media print {
+              display: table; //these lines for @media print is added for when the content pushes the skincontent wider than 770px
+      		  min-width: $container-min-width; 
+      		} 
+
+			// And this is because IE8 doesn't do media queries.  
+			@media (max-width: 979px){
+				.Skin .SkinInner {
+					display: block;
+					min-width: 0;
+				}
+			}
+		}
+
+	}
+
+	#Questions {
+		overflow: auto; // Prevents the Validation Error Message from touching the top (previously used: padding-top: 1px;)
+	}
+	
+	@if $boxed-skincontent == F {
+		.QuestionOuter .Inner {
+			// Needed so we can add a border to the "highlighted" questions
+			border: $default-border; 
+			border-color: transparent;
+		}
+	}
+
+	.QuestionText {
+		font-size: $question-text-font-size;
+		color: $question-text-color;
+		padding: $default-container-padding;
+		line-height: 1.5em;
+		@media all and (max-width: 768px) {
+			padding: $default-mobile-container-padding;
+		}
+	}
+
+	.QuestionBody {
+		color: $question-body-text-color;
+		font-size: $question-body-font-size;
+		overflow-y:hidden;  // this allows the QuestionBody to scroll independently of the QuestionText
+		padding: $question-body-padding;
+		position:relative;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking - needs to be here for overflowing questions
+		z-index: 1; // Added for Table of Contents - so these aren't covered by TOC.  
+		@media all and (max-width: 768px) {
+			padding: 0 $default-mobile-container-padding $default-mobile-container-padding $default-mobile-container-padding;
+		}
+	}
+
+	.DB .TB .QuestionBody {
+		padding: 0;	//This removes the padding from the nonexistent .QuestionBody on Descriptive Text questions.
+	}
+
+	.WOTXB .QuestionBody {
+		padding-top: $default-container-padding; //This adds padding to the top of the Graphic Without Text question (since there's no .QuestionText div at the top)
+	}
+
+	// BOOKMARK: Side scrolling still needs testing
+	// Allows QuestionText to wrap, and QuestionBody to scroll left to right on mobile.
+	@-moz-document url-prefix() { // BOOKMARK: Removed this media query because this wasn't working in Firefox (which was the point), but then tested in IE and it causes problems
+	   fieldset {
+	       display: table-cell; //this is added so that it doesn't break in IE - Test in IE
+	       // This makes a lot of questions not 100% width when they should be in IE (like MAHR, SAHR, .FORM, SLIDERS, etc.)
+	   }
+	}
+	fieldset {
+		width:100%;
+		min-width:0;
+		max-width:none;
+	}
+	// Thanks, Cory.
+
+	//BUTTON STYLES.  
+
+	#Buttons {
+		text-align: $buttons-text-align;
+		padding: $buttons-container-padding;
+		@media only screen and (max-width: 768px) {
+			padding: $default-mobile-container-padding;
+		}
+		margin-top: 50px; // I think this margin helps make it not look stupid with just one question on the page.  Maybe not? 
+		@media only screen and (max-width: 480px) {
+			margin-top: 0; // Don't want it on mobile 
+		}
+		&:empty {
+			// hide the button div if there's not buttons on the page. 
+			margin-top: 0;
+			padding: 0;
+		}
+
+		@if $buttons-centered == F {
+			#PreviousButton {
+				float: left;
+			}
+		}
+	}
+
+	#Buttons #NextButton, #Buttons #PreviousButton {
+		border: $button-border;
+		color: $button-text-color;
+		font-size: $button-font-size;
+		padding: $button-padding;
+		@include border-radius($button-border-radius);
+		cursor: pointer;
+		margin: 0px;
+		text-align: center;
+		text-decoration: none;
+		-webkit-appearance: none;
+		transition: background .3s;
+
+		@if $button-style == 2 {
+			background-color: $button-background; 
+			&:focus {
+				background: $button-background-focus;
+				outline: none;
+			}
+			@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+				&:hover {
+					background: $button-background-hover;
+					border-color: $button-primary-color;
+				}
+				&:active {
+					background: $button-background-active;
+					border-color: $button-background-active;
+				}
+			}			
+		}
+		@if $button-style == 1 {
+			@include linear-gradient($button-background, darken($button-background, $button-gradient-percentage));
+			
+			&:focus {
+				@include linear-gradient($button-background-hover, darken($button-background, $button-gradient-percentage));
+				outline: none;
+			}
+			
+			@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+				&:hover {
+					@include linear-gradient($button-background-hover, darken($button-background-hover, $button-gradient-percentage));
+				}
+				&:active {
+					@include linear-gradient($button-background-active, darken($button-background-active, ($button-gradient-percentage / 2)));
+				}
+			}
+		}
+
+	}
+
+	#Footer {
+		color: $footer-text-color;
+		font-size: $footer-font-size;
+		max-width: $container-max-width + ($default-container-padding * 2);
+		margin: 0px auto;
+		padding: $footer-padding;
+		@media only screen and (max-width: 767px) {
+			padding: $default-mobile-container-padding;
+		}
+	}
+
+	#PushStickyFooter{
+		//Needed for Sticky Footer Plug - Do Not Remove
+		height: $calculated-sticky-footer-height;
+	}
+
+	#Plug {
+		text-align: center;
+		a {
+			font-size: $plug-font-size;
+			color: $footer-text-color;
+			text-decoration: none;
+			padding: $plug-padding;
+
+		}
+	}
+
+} // /.Skin
+
+@if $pushed-to-bottom-plug == T {
+	@media only screen and (min-device-width: 1281px) { // BOOKMARK: Added this media query to fix scrolling QuestionBody on mobile issue.  Also needed for .RO .DND to properly rank // This media query still sketches me out a little--the problem is touch, not device width.  1281px should be good though. 
+		//Needed for Sticky Footer Plug - Do Not Remove
+		.JFE, .JFEContent,
+		html, body, #Page, .Skin {
+			height: 100%;
+		}
+	
+		.Skin #Plug {
+			a {
+				color: $plug-link-color;
+				height: $calculated-sticky-footer-height;
+				float: right;
+				// IE Backup backgrounds
+				@if $body-background-image-on == F { // IE Backup - for color backgrounds
+					background: darken($body-background-color, 10%); 
+				} @elseif $body-background-image-on == T { // IE Backup - for image backgrounds 
+					@if $overlay-dark == T {
+						background: #2A2C31;
+					} @elseif $overlay-dark == F {
+						background: #888;
+					}
+				}
+				background: $plug-background;
+				-webkit-transition: background .3s;
+				text-align: center;
+				&:focus {
+					background: $plug-background-hover;
+					outline: none;
+				}
+				
+				@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+					&:hover {
+						background: $plug-background-hover;
+					}
+				}
+				@if $border-radius-on == T {
+					@include border-radius(5px 0 0 0);
+				}
+				@media only screen and (max-width: 767px) {
+					float: none;
+					@if $border-radius-on == T {
+						@include border-radius(0);
+					}
+				}
+			}
+		} // /END #Plug
+
+
+	} // /END 1281px media query
+}
+
+
+
+.Skin {	
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UNIVERSAL ELEMENTS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Styles for html elements that don't automatically style
+	button, input, select, textarea {
+		font-family: $font-stack;
+		font-size: $default-font-size;
+		color: $default-text-color;
+	} 
+
+	select {
+		min-width: 3em; // To prevent dropdown lists from being too small when only one character is added
+	}
+
+	// Text inputs and select menus
+	input.TextEntryBox, 
+	.TE textarea, 
+	textarea, 
+	input[type="password"], 
+	input[type="text"], 
+	input[type="search"],
+	select {
+		border: $default-border; // These inputs need a border, otherwise the focus class will be nonexistent (since we don't want the ugly native blue one)
+		@if $border-radius-on == T {
+			@include border-radius(2px);
+		}
+		padding: $text-input-padding; // If we add too much padding, it cuts off the text (with box-sizing: border-box). Probably stick with 4px or less.
+		// max-width: 100%;	//BOOKMARK: max-width: 100% causes problems in IE8 (the text inputs shrink down to "100%" of the td they are in)
+
+		@if $body-background-image-on == T and $boxed-skincontent == F and $overlay-dark == T or $default-text-color == #FFFFFF {
+			background: transparent;
+		} 
+
+		&:focus {
+			// Replacing native blue focus outline with new border color
+			border-color: $primary-color;
+			outline: none;
+		}
+	}
+
+	@media only screen and (max-width: 480px) { //Added so this doesn't make these items too long on mobile.  
+		.HSLIDER, .Slider, .Matrix, .PGR {
+			input[type="text"] {
+				width: 6em;
+				max-width: 100%;				
+			}
+		}
+	}
+
+	@if $body-background-image-on == T and $boxed-skincontent == F and $overlay-dark == T or $default-text-color == #FFFFFF {
+		select {
+			color: #ccc; //Can't be white, or it won't show up in some Firefox or IE select menus.			
+		}
+	}
+
+	// Text input width fixes
+	.TE .SL .InputText,
+	.TE .ML .InputText,
+	.TE .ESTB .InputText,
+	.TE .PW .InputText,
+	.TE .FORM .InputText,
+	.MC .TextEntryBox {
+		max-width: 100%; // So these can be edited in survey builder to be smaller (but not bigger than 100% of the space)
+		margin: 2px 0px; // This is the automatic, default style in Chrome, and it helps space these apart (Added for Firefox and IE)
+	}
+
+	@media (min-width: 980px) {
+
+		.TE .ESTB .InputText,
+		.TE .ML .InputText {
+			max-width: 1080px; // So the user can't stretch these to some ungodly width.  
+			// (Have to put it in this media query, where we're including the display:table fix, so it doesn't override the max-width:100%)
+		} 
+	}
+
+	.MC .SACOL .TextEntryBox,
+	.MC .MACOL .TextEntryBox {
+		width: 100% !important; // This is needed to keep the tds in these questions the same uniform width. Otherwise these textentryboxes make their tds wider. 	
+	}
+	@if $radio-buttons == F { 
+		.MC .MAHR .TextEntryBox,
+		.MC .SAHR .TextEntryBox {
+			width: 100% !important; // Don't want these to be 100% width in the "Radio Buttons" option
+			float: left; //This lets the lis (in Horizontal - Side label option) align to the top with lis that have a .TextEntryBox
+			@media only screen and (max-width: 480px) {
+				float: none;
+			}
+		}
+		.MC .MAHR li .TextEntryBox,
+		.MC .SAHR li .TextEntryBox {
+			float: left; //Only want this for the lis (side label option)
+			@media only screen and (max-width: 480px) { // don't want to float these on mobile, because we display:block these li's
+				float: none; 
+			}
+		}
+	}
+	@media only screen and (max-width: 767px) {
+		.TE .FORM .InputText {
+			width: 100% !important; // !important is to override inline width set in platform
+		}
+		.CS .TX .TextEntryBox,
+		.RO .TX .TextEntryBox {
+			// width: 50% !important; // Make these 100% and they automatically go to a new line... I guess 50% works
+			// or what about max-width: 100%? as long as it's fine in IE8.
+			max-width: 100%;
+		}
+	}	
+	// /end Text input width fixes
+
+	@if $boxed-skincontent == F and $overlay-dark == T or $default-text-color == #FFF { 
+		.yui-skin-sam .yui-calendar .calheader {
+			color: #000; //Fixes the white text on that custom calendar question
+		}		
+	}
+
+	.HeaderValidationError {
+		margin: $default-container-padding;
+		padding: 15px;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+		background: $error-background-color;
+		color: $error-text-color;
+		@media only screen and (max-width: 767px) {
+			margin: $default-mobile-container-padding;
+		}
+		h1 {
+			font-size: 120%;
+		}
+		a {
+			color: $error-text-color
+		}
+	}
+	.ValidationError {
+		font-size: $question-text-font-size;
+		text-align: center;
+		padding: 5px 0 10px 0;
+		color: $error-text-color;
+	}
+	.QuestionOuter.Highlight .Inner {
+		@if $boxed-skincontent == F {
+			border-color: $primary-color;
+			@include border-radius($default-border-radius);
+		}
+		@if $boxed-skincontent == T {
+			background: $primary-hue-color-light;
+		}
+	}
+	.Separator {
+		height: $separator-height;
+		background: $separator-color;
+		margin: $separator-margin $default-container-padding;
+		@media only screen and (max-width: 767px) {
+			margin: ($separator-margin / 2) $default-mobile-container-padding;
+		}
+	}
+	.EndOfSurvey {
+		color: $question-text-color;
+		padding: 60px ($default-container-padding * 2);
+	}
+
+	// Readable Hover state (rather than ReadableAlt class)
+	@media only screen and (min-width: 767px) {
+		.ChoiceRow,
+		.Choice,
+		.RO .RB tr,
+		.CS .VRTL li {
+			-webkit-transition: background .3s;
+			&:hover {
+				background: $readable-hover-backup; //backup for IE8
+				background: $readable-hover-color;
+			}
+		}
+		// Remove hover color for these question types, because it looks weird. 
+		.RO .RB tr.Answers,
+		.Matrix .Bipolar tr,
+		.Matrix .Profile tr {
+			background: inherit;
+		}
+	}
+
+	// Table of Contents
+	.closed #TocSidebarIcons, .reduced #TocSidebarIcons{
+		padding-left: $default-container-padding;
+		@media only screen and (max-width: 767px) {
+				padding-left: $default-mobile-container-padding;
+			}
+	}
+	#TocSidebarContainer{
+		@if $boxed-skincontent == T {
+
+			@include border-radius($default-border-radius);
+			@include box-shadow(0, 0, 20px, rgba(0,0,0, .2));
+			background:$question-container-background-color;
+			&.reduced{
+				background: $question-container-background-color;
+				left:0;
+				-webkit-border-top-left-radius: 0;
+			  -webkit-border-bottom-left-radius: 0;
+			  -moz-border-radius-topleft: 0;
+			  -moz-border-radius-bottomleft: 0;
+			  border-top-left-radius: 0;
+			  border-bottom-left-radius: 0;
+			}
+			&.closed{
+				box-shadow:none;
+				transition: 0s linear left;
+			}
+
+		}
+		@if $boxed-skincontent == F{
+			@if $overlay-dark == T{
+				@include border-radius($default-border-radius);
+				background:rgba(255,255,255,.1);
+				&.reduced{
+					background: #333;
+					left:0;
+				}
+			}
+			@if $overlay-dark == F{
+				@include border-radius($default-border-radius);
+				background:rgba(0,0,0,.1);
+
+				&.reduced{
+					background: $question-container-background-color;
+					left:0;
+				}
+			}
+		}
+	}
+	#Toc a, #Toc strong, #TocHeader a{
+		color:$default-text-color;
+	}
+		#Toc li.Incomplete a{
+		color: $default-text-color;
+	}
+	#TocHeader td.Current a, #Toc li.Current,  #Toc li.Current a, body #Toc li.Current a, #Toc li.Current strong, #Toc li.Current {
+		background-color: $primary-color;
+		color: #FFF;
+	}
+
+	#Toc li.Alert a{
+		color: red;
+	}
+	//End Table of Contents
+
+	// (Still inside .Skin)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// QUESTION TYPES
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////
+	// Pick Group & Rank / Rank Order
+	////////////////////////////////////////////////////////////////////
+	.RO .ChoiceStructure li {
+		padding: 10px 0;
+	}
+	.PGR .DragAndDrop td.groupsContainerTd div > div {
+		border: $default-border;
+		@include border-radius($default-border-radius);
+		margin: 5px;
+	}
+	.PGR .DragAndDrop h2 {
+		font-size: $default-font-size + 2px;
+	}
+	.PGR .DragAndDrop .Group h2 {
+		border-bottom: $default-border;
+		padding: 10px;
+		background: darken($question-container-background-color, 3%);
+		@if $body-background-image-on == T and $boxed-skincontent == F {
+			@if $overlay-dark == T {
+				background: transparent;
+			} @elseif $overlay-dark == F {
+				background: #FFF;
+			}
+
+		}
+	}
+	.RO .DND .rank,
+	.PGR .DragAndDrop .rank{
+		padding: 0px 10px;
+		margin: 7px 0;
+		left: 4px;
+		@if $border-radius-on == T {
+			@include border-radius(40px);
+		}
+		background-color: $primary-color;
+		color:$reverse-primary-text-color;
+	}
+	.RO .DND ul.Edited .rank,
+	.RO .DND ul.NotEdited li:hover .rank,
+	.RO .DND .rank {
+		background:$primary-color;
+		color:$reverse-primary-text-color;
+	}
+	.PGR .DragAndDrop .Group div {
+		// makes it so the ul and lis don't spill over
+		-moz-box-sizing: content-box;
+		box-sizing: content-box;
+	}
+	.PGR .DragAndDrop .stack ul li.stack {
+		border: $default-border;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+		@if $default-text-color == #FFF {
+			color: #444;  // this is so the "items" show up if the default text color is white.  
+		}
+	}
+	.RO .DND .Items ul li,
+	.PGR .DragAndDrop .Items ul li{
+		padding: 8px 0;
+		text-align: center;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+	}
+	.RO .DND .Group ul li,
+	.PGR .DragAndDrop .QuestionBody .Group ul li {
+		padding: 8px 2em;
+		text-align: center;
+		&:hover {
+			background: $readable-hover-backup; //backup for IE8
+			background: $readable-hover-color;
+		}
+		@media only screen and (max-width: 767px) {
+			padding: 8px 0 8px 2em; // don't want the padding on the right on mobile. 
+		}
+	}
+	.PGR .DragAndDrop .QuestionBody .Group ul li.stack {
+		padding: 8px 0; // remove the padding for the number - since they're just stacked and not ranked with a number
+		&:hover {
+			background: #FFF; 
+		}
+	}
+
+	.PGR .DragAndDrop ul li.stack {
+		&:hover {
+			background: #fff; // Change the hover state for the white "stacked" ones
+		}
+	}
+	.PGR .DragAndDrop .NoColumns td.groupsContainerTd div > div {
+		margin: 0 auto 10px auto; //Not sure we need this... seems like we want the group boxes close to the items 
+	}
+
+	// .RO .DND .Group ul li, .Skin .PGR .DragAndDrop ul li {
+	// 	padding: 8px 0 8px 40px; //change the padding for these. 
+	// }
+
+	// .PGR .DragAndDrop .QuestionBody .Group label { // makes these not spill over.  gracefully gets cut off. 
+	// 	text-overflow: ellipsis;
+	// 	white-space: nowrap;
+	// 	overflow: hidden;
+	// }
+
+
+
+	.CS .HR li,
+	.RO .HR li {
+		margin-right: $default-container-padding; //Gives space between these horizontal list items
+	}	
+	@media all and (max-width: 767px) { 
+		.CS .HR li,
+		.RO .HR li {
+			float: none; // Don't want the text entry ones to be on the same line on mobile.
+			margin-right: 0; //Don't want this space on mobile
+		}
+	}
+
+	.RO .DND ul li {
+		padding: ($default-container-padding / 2) 0;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+	}
+	.RO .DND ul li .rank {
+		margin: 0 10px;
+	}
+	// BOOKMARK: Removed the below because it affected something else, but I can't remember what it broke.  
+	// .QuestionOuter.RO {
+	// 	overflow-y: visible; //BOOKMARK://THESE WERE ADDED SO THE LIs are always visible, but it may break something...?  It did.. found it with Cory, but can't remember what it was. 
+	// }
+	// .QuestionOuter.RO .DND .QuestionBody {
+	// 	overflow-y: visible;
+	// 	overflow-x: visible !important; //BOOKMARK: do we need an important tag here? What is this? 
+	// }
+	//Rank Order - Radio Button
+	.RO .RB .ChoiceStructure td {
+		padding: ($default-container-padding / 2) inherit;
+	}
+	.RO .DND ul li:hover{
+		background: $readable-hover-backup; //backup for IE8
+		background: $readable-hover-color;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Constant Sum
+	////////////////////////////////////////////////////////////////////
+	.CS .ChoiceStructure li {
+		padding: $default-container-padding / 2;
+	}
+	.CS .CSTotal,
+	.CS .Total {
+		background: $readable-hover-backup;
+		background: $readable-hover-color;
+	}	
+	.Matrix .TE .Short td input, 
+	.Matrix .TE .Medium td input, 
+	.Matrix .TE .Long td input, 
+	.SBS .InputText, 
+	.CS input.SumInput, 
+	.CS .SumInput input.InputText, 
+	.CS .SumTotal input, 
+	.RO .RankInput {
+		text-align: center;	//Rank Order/Constant Sum inputs -- Center the number
+	}
+
+	.Matrix .RO td input,
+	.Matrix .CS td input {
+		width: 3em; //3em (same as BaseStyles)
+		text-align: center; //Because the SumInput class isn't being added on JFE, so need to be more general for these. 
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Slider
+	////////////////////////////////////////////////////////////////////
+	.horizontalbar .Slider .track {
+		background-color: $slider-bar-color; //BOOKMARK: what's a good way to make the area around the slider selectable, without having to use an image
+	}
+	.horizontalbar .LabelDescriptions {
+		margin-bottom: ($default-container-padding / 2);
+	}
+	.horizontalbar tbody th.ylabel {
+		padding:($default-container-padding / 2);
+		padding-left: 0; //Need all the room we can get for slider questions on mobile.  
+	}
+	.horizontalbar tr.Stars td.value input,
+	.horizontalbar table.sliderGrid tr td.value input {
+		width: 4em;
+		border: $default-border; // This is so the focus class can apply a color border
+		border-color: transparent;
+	}
+	.horizontalbar tr.Stars td.value, 
+	.horizontalbar table.sliderGrid tr td.value {
+		min-width: 4em;
+	}
+	@media all and (max-width: 480px) {  // Because we don't want this WidthStrut eating up all the space on mobile. 
+		.horizontalbar .LabelDescriptions .WidthStrut {
+			width: 0px !important;
+			height: 4px;
+		}
+		//This reduces the size of the font in the descript to the left of the slider. 
+		.horizontalbar th.ylabel,
+		// And this is so the number labels above the sliders don't squish together. 
+		.horizontalbar tr.xlabel th span.TickContainer span,
+		.horizontalbar tr.xlabel td span.TickContainer span,
+		.horizontalbar tr.xlabel th span.TickContainer span.MinValue,
+		.horizontalbar tr.xlabel td span.TickContainer span.MinValue{
+			font-size: 14px;
+		}
+	}
+	//Draggable Bar specific
+	.horizontalbar .bar{
+		background-color: $slider-bar-color;
+		@include border-radius(2px);
+	}
+	.HBAR .trackHolderRel .track {
+		border: $default-border;
+			@include border-radius(2px);
+		&:hover {
+			border-color: $slider-handle-color;
+		}
+	}
+	.HBAR .trackHolderRel.activated .track {
+		border-color: $slider-handle-color;
+	}
+	//Graphic Slider
+	.SS img {
+		max-width: none; // This overrides the max-width: 100% which makes the image disappear in IE8.  
+	}
+	.SS .horizontalbar .SSTrack,
+	.SS .verticalbar .SSTrack {
+		margin: 20px !important;
+		background-color: $slider-bar-color;
+	}
+	.horizontalbar .activated .bar,
+	.horizontalbar .BarContainer:hover .bar,
+	.SS .horizontalbar .handle,
+	.horizontalbar .Slider .handle,
+	.SS .verticalbar .SSTrack .handle{
+		background: $slider-handle-color;
+	}
+	.SS .horizontalbar .handle:hover,
+	.horizontalbar .Slider .handle:hover {
+		background-color: $primary-color;
+		padding: 10px;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Text Entry
+	////////////////////////////////////////////////////////////////////
+	.TE .FORM table {
+		width: 100%;
+	}
+	.TE .ControlContainer {
+		width: 50%; //Mobile
+	}
+	@media all and (min-width: 768px) {
+		.TE .FORM span.LabelWrapper {
+			padding-right: 1em;
+		}
+		.TE .ControlContainer {
+			width: 75%;
+		}
+	}
+	.TE textarea {
+		width: 100%;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Dropdown
+	////////////////////////////////////////////////////////////////////
+	.Matrix .DL table td.last{
+		padding-right: $default-container-padding / 2;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Select Box
+	////////////////////////////////////////////////////////////////////
+	.SB input {
+		background: $button-primary-color;
+		color:$button-text-color;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+		padding: 4px 12px;
+		border: none;	
+		border: $default-border;
+		border-color: $button-primary-color;
+		-webkit-appaerance: none;
+		margin-bottom:5px;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Matrix
+	////////////////////////////////////////////////////////////////////
+	.RO .RB th,
+	.SBSMatrix th,
+	.Matrix th {
+		padding: $default-container-padding / 2;
+		@media all and (max-width: 767px) { 
+			padding: 5px;		
+		}
+	}
+	.Matrix select {
+		width: 100%;
+	}
+	.Matrix .TE td input {
+		margin: 2px; // This keeps the long .TE inputs from touching each other.
+	}
+	.horizontalbar thead table.LabelDescriptions tr td, .horizontalbar thead tr td.NotApplicable,
+	.Matrix table thead th, .Matrix table thead td {
+		vertical-align: bottom; // Vertical align the matrix Headers to bottom (looks better, mimics old skins behavior)
+	}
+	//BIPOLAR
+	.Matrix .Bipolar tr.ChoiceRow td {
+		padding: 0 7px;
+	}
+	// // BOOKMARK: TEST STYLES
+	// .Matrix .Profile .MultipleAnswer table th.c1 {
+	// 	background: $primary-color;
+	// 	color: #fff;
+	// 	text-align: right;
+	// }
+	// .Matrix .Profile .MultipleAnswer table th {
+	// 	background: #ddd;
+	// }
+
+	// .Matrix .Profile .MultipleAnswer table tr:first-child th.c1 {
+	// 	border-radius: $default-border-radius 0 0 0;
+	// }
+
+	// .Matrix .Profile .MultipleAnswer table tr:nth-last-child(2) th.c1 {
+	// 	border-radius: 0 0 0 $default-border-radius;
+	// }
+
+	////////////////////////////////////////////////////////////////////
+	// Side by Side
+	////////////////////////////////////////////////////////////////////
+	.SBS .Separator1 {
+		border-right: $default-border;
+	}
+
+	// .SBS .Answers td, .Skin .SBS .Answers th {
+	// 	border-right: 1px solid red;
+	// }
+
+	.SBS .c2 {
+		border-right: $default-border;
+	}
+
+	.SBS .Answers td, .SBS .Answers th {
+		border-bottom: $default-border;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// NPS
+	////////////////////////////////////////////////////////////////////
+	.NPS label.SingleAnswer,
+	.NPS label.MultipleAnswer {
+		padding: $answer-label-padding-mobile;
+	}
+
+	@if $radio-buttons == T { // Prevent radio buttons from riding up
+		.NPS label.SingleAnswer {
+			display: block;
+			padding-bottom: $answer-label-spacing;
+		}
+		.NPS td.LabelContatiner {
+			text-align: center;
+		}
+		.NPS td.ColumnLabels {
+			padding-bottom: $answer-label-spacing;
+		}
+	}
+	////////////////////////////////////////////////////////////////////
+	// File Upload
+	////////////////////////////////////////////////////////////////////
+	.FileUpload .QuestionBody {
+		padding-bottom: 0; // There's already some space below the upload button. 
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Heat Map
+	////////////////////////////////////////////////////////////////////
+	// Can't include this, because it registers the click based on the fixed width and height.  
+	// .HeatMapContainer {
+	// 	max-width: 100%;
+	// 	height: auto !important;
+	// }
+
+	////////////////////////////////////////////////////////////////////
+	// Dill Down
+	////////////////////////////////////////////////////////////////////
+	.DD td {
+		padding-bottom: ($default-container-padding / 2);
+	}
+
+} // /.Skin
+
+
+
+// BOOKMARK: This change should be announced.  
+// Make questions break on mobile
+	
+.Skin {
+	.MC {
+		.MAHR, .SAHR {
+			@media all and (max-width: 480px) {
+				td, li { // td is for horizontal "above label" option, and li is for horizontal "side label" option
+					display: block;
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// LABEL STYLES
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// .SingleAnswer & .MultipleAnswer are the actual labels (with text in them)
+	// .q-radio & .q-checkbox are the labels that mimic the input
+
+	// .SinleAnswer & .MultipleAnswer are only styled in "No Radio Buttons" option
+	// .q-radio/checkbox are hidden for .MC, etc in the "No Radio Buttons" option
+
+/////////////////////////////
+/////////////////////////////
+
+	/* Start Radio Buttons */
+	////////////////////////////////////////////////////////////////////
+	// STYLED RADIO BUTTONS / CHECKBOXES
+	////////////////////////////////////////////////////////////////////
+	.Skin label.q-radio,
+	.Skin label.q-checkbox {
+		border: $q-radio-border;
+		width: $q-radio-size;
+		height: $q-radio-size;
+		display: inline-block;
+		background: $q-radio-background;
+
+		// FOCUS class - needed for accessibility, to tab through the survey.  
+		&.q-focused {
+			outline: thin dotted #aaa;
+		}
+	}	
+	// RADIO BUTTON
+	.Skin label.q-radio {
+		@include border-radius(100%); 	//Need to be circles
+		&.q-checked {
+			background-color: $q-radio-background-checked;
+			// Added this so the focus class doesn't apply when you click on answer.  Cause I think it looks dumb.  
+			outline: none;
+			&.q-focused {
+				background-color: lighten($q-radio-background-checked, 10%);
+			}
+		}
+	}
+	// CHECK BOX
+	.Skin label.q-checkbox {
+		@if $border-radius-on == T {
+			@include border-radius(2px);
+		}
+		&.q-checked {
+			background-image: url(check.png);
+			//BOOKMARK: DATA URI ok to use?
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAGtJREFUeNpiYqASYCJH0////wUoNghqyH4gPZ9s54MMAeLz/xFgPskugrkEiA2o6ZL/eL0GlEwAYWoYAgMJ5BoC0vAeTUMBSYYgGWaAxTDSDCHCsPnkxBC6YRQlPJhh8ynOhEBDFEhRDxBgAB+/ARRU5dv/AAAAAElFTkSuQmCC);
+			background-color: $q-radio-background-checked;
+			background-size: 100%;
+			background-position: center center;
+			background-repeat: no-repeat;	
+			// Added this so the focus class doesn't apply when you click on answer.  Cause I think it looks dumb.  
+			outline: none;
+			&.q-focused {
+				background-color: lighten($q-radio-background-checked, 10%);
+			}
+		}
+	}
+	.Skin input[type="radio"],
+	.Skin input[type="checkbox"] {
+		&:focus {
+			outline: none; //removes the outline from the hidden input on IE.  
+		}
+	}
+	////////////////////////////////////////////////////////////////////
+	// CONDITIONALS
+	////////////////////////////////////////////////////////////////////
+
+	//If radio buttons is TRUE - 
+		// hide ALL radio button inputs
+		// IE8: bring back ALL radio buttons
+
+@if $radio-buttons == T {
+
+	// /* Hides radio buttons and checkboxes */
+	.Skin input[type="radio"],
+	.Skin input[type="checkbox"] {
+		position: absolute;
+		//left: -9999px; //removed for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		opacity:0;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		z-index:-1;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		height:0;
+		width:0;
+
+	}
+
+	// Sometimes this seems to help and sometimes it doesn't.  Can't figure out the alignment of the radio buttons consistently.  
+	// .Skin .MC .q-radio,
+	// .Skin .MC .q-checkbox {
+	// 	margin-top: 4px;
+	// }
+
+	// Aligns the HR radio buttons vertically with each other
+	.Skin .MC .MAHR .QuestionBody td.LabelContatiner,
+	.Skin .MC .SAHR .QuestionBody td.LabelContatiner {
+		vertical-align: bottom;
+	}
+	// Puts the "input" labels below the answer options on HR questions
+	.Skin .MC .SAHR .QuestionBody td.LabelContatiner .LabelWrapper,
+	.Skin .MC .MAHR .QuestionBody td.LabelContatiner .LabelWrapper {
+		display: block;
+		width: 100%;
+	} 
+	// This is to group the answer with the correct associated input on mobile..
+	// Good idea? bad idea?
+	@media only screen and (max-width: 480px) {
+
+		.Skin .MC .MAHR .QuestionBody td.LabelContatiner,
+		.Skin .MC .SAHR .QuestionBody td.LabelContatiner {
+			padding: 10px 0;
+			&:last-child {
+				padding-bottom: none;
+			}
+		}
+	}
+
+	.Skin .ChoiceStructure li {
+		padding: .4em 0; //This adds space between MC vertical questions
+	}
+
+	.Skin .MC .SAVR label.q-radio,
+	.Skin .MC .MAVR label.q-checkbox {
+		float: left;
+		margin-right: 10px;
+		padding: 0;
+	}
+	.Skin .MC .SAVR .QuestionBody label.SingleAnswer, 
+	.Skin .MC .MAVR .QuestionBody label.MultipleAnswer {
+		display: inline-block; 
+		width: 85%; //makes the text on these questions wrap like the old themes.  protects the indent around the radio button. 
+	}
+	
+	.Skin .MC .SAHR label.SingleAnswer,
+	.Skin .MC .MAHR label.MultipleAnswer {
+		display: inline-block; //Allows the padding below to take effect (and put some space between the radio button).  Can't use "block" or it won't go on the same line as radio button in "side labels" option
+		padding-bottom: 20px;
+		@media only screen and (max-width: 480px) {
+			padding-bottom: 0;
+		}
+	}
+
+	.Skin .MC .MACOL .QuestionBody td.ControlContainer,
+	.Skin .MC .SACOL .QuestionBody td.ControlContainer,
+	.Skin .MC .MACOL .QuestionBody td.LabelContatiner,
+	.Skin .MC .SACOL .QuestionBody td.LabelContatiner {
+		padding: .4em .4em .4em 0; //This adds space between MC column questions
+		vertical-align: top;
+	}
+
+	// Because the "radio button" questions need different padding format
+	.Skin .MC .QuestionBody {
+		padding: $default-container-padding ($default-container-padding + 10px);
+		padding-top: 0;
+		@media all and (max-width: 767px) {
+			padding: $default-mobile-container-padding;
+			padding-top: 0;
+		}
+	}
+
+	.Skin .MC .SAVR span.LabelWrapper,
+	.Skin .MC .MAVR span.LabelWrapper {
+		width: 90%; //Added to allow long answers to wrap rather than start on line below label.q-radio
+	}
+
+
+} // end if $radio-buttons == T
+/* End Radio Buttons */
+
+
+/* Start Label Styles */
+
+	//If radio buttons is FALSE - 
+		// hide ALL radio button inputs
+		// IE8 bring back just non-MC radio buttons
+@if $radio-buttons == F {
+
+	.Skin input[type="radio"],
+	.Skin input[type="checkbox"] {
+		position: absolute;
+		//left: -9999px; //removed for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		opacity:0;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		z-index:-1;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		height:0;
+		width:0;
+
+	}
+
+	.Skin .MC input[type="radio"],
+	.Skin .MC input[type="checkbox"],
+	.Skin .Matrix .Profile input[type="radio"],
+	.Skin .Matrix .Profile input[type="checkbox"],
+	.Skin .GAP .Why input[type="radio"],
+	.Skin .GAP .Why input[type="checkbox"]	{
+		// Hide again (override IE8 styles above) for IE8 on .MC (and for Matrix Profile and GAP)
+		position: absolute;
+		//left: -9999px; //removed for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		opacity:0;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		z-index:-1;//added for /*new radio position absolute z -1*/ so the quesiton doesn't jump when clicking
+		height:0;
+		width:0;
+	}
+
+	.Skin input[type="radio"],
+	.Skin input[type="checkbox"] {
+		&:focus {
+			outline: none; // This was showing up in IE (even though the radio buttons are supposed to be hidden)
+		}
+	}
+
+	.Skin .Matrix .Profile label.q-radio,
+	.Skin .Matrix .Profile label.q-checkbox,
+	.Skin .GAP .Why label.q-radio,
+	.Skin .GAP .Why label.q-checkbox {
+		display: none; // hide the styled radio buttons for Matrix Profile questions, for "no radio buttons" themes
+	}
+	.Skin .GAP .Why.Scale label.q-radio,
+	.Skin .GAP .Why.Scale label.q-checkbox {
+		display: inline-block; // unhide the styled radio button for the "Scale" part of GAP analysis -- inline-block is the display of other label.q-radio elements
+	}
+	.Skin .GAP .ChoiceStructure .WhyText, .Skin .GAP .Why, .Skin .GAP .Scale {
+		padding: 4px; // give some space between the WHY elements in GAP analysis questions.  
+	}
+
+	// Just adds some space between the answer label (inside td) and the textbox below
+	.Skin .MC .TextEntryBox {
+		margin-top: 8px;
+	}
+	// @if $label-style == 1 {	// BOOKMARK: Makes these look more like text entry boxes. Maybe?
+	// 	.Skin .TextEntryBox {
+	// 		-webkit-box-shadow: inset 1px 1px 5px #ccc;
+	// 		-moz-box-shadow: inset 1px 1px 5px #ccc;
+	// 		box-shadow: inset 1px 1px 5px #ccc;
+	// 	}
+	// }
+
+	@media only screen and (min-width: 481px) {
+		.Skin .MC .ChoiceStructure {
+			border-spacing: $answer-label-spacing;
+		}
+	}
+
+	// /* Centers text entry boxes in spans*/
+	.Skin .LabelWrapper {
+		// Why did we want this in the first place?  It centers the new "large" TextEntryBox elements, which we don't want.  
+		// text-align: center;
+		width: 100%;
+	}
+	@media only screen and (max-width: 480px) { // Only want this margin on mobile, when they "stack" on each other. 
+		.Skin .MC .SAHR table td,
+		.Skin .MC .MAHR table td {
+			margin: 0 auto $answer-label-spacing auto;
+		}
+	}
+
+	.Skin .MC li .LabelWrapper {
+		margin: 0 auto $answer-label-spacing auto;
+	}
+
+	.Skin .MC .SACOL .ChoiceStructure,
+	.Skin .MC .MACOL .ChoiceStructure {
+		border-spacing: ($answer-label-spacing / 2 - 2) $answer-label-spacing; //The ($answer-label-spacing / 2) is because there is an extra td (ControlContainer) that we can't delete, but that throws off the spacing if you don't adjust for it. 
+	}
+
+	// /* General label styles */
+	.Skin label.SingleAnswer,
+	.Skin label.MultipleAnswer {
+		cursor: pointer;
+		background: $answer-label-background-backup;
+		background: $answer-label-background;
+		border: $answer-label-border;
+		// cursor: pointer; BOOKMARK: Do we want this or not?
+		transition: background .2s ease-in-out;
+		padding: $answer-label-padding;
+		@media all and (max-width: 480px) {
+			padding: $answer-label-padding-mobile;
+		}
+		display: block;
+		text-align: center;
+		@if $border-radius-on == T {
+			@include border-radius($default-border-radius);
+		}
+		@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+			&:hover {
+				
+				background: $answer-label-hover-background-backup;
+				background: $answer-label-hover-background;
+				border-color: $answer-label-hover-border;
+			}	
+		}
+		&.q-focused { // FOCUS class for tabbing through survey. 
+			background: $answer-label-focus-background-backup;
+			background: $answer-label-focus-background;
+			border-color: $answer-label-focus-border;
+		}
+		// Moved this below the focused class, so it overrides it
+		// when you initially click on the answer, you want the .q-checked class, not .q-focused class
+		&.q-checked { 
+			background: $answer-label-select-background;
+			border-color: $answer-label-select-border;
+			color: $answer-label-select-color;			
+			&.q-focused {
+				background: lighten($answer-label-select-background, 7%);
+			}
+		}
+	}
+
+	.Skin .SAVR label.SingleAnswer,
+	.Skin .MAVR label.MultipleAnswer {
+		text-align: left; //overrides the text-align: center.  "initial" does not work in any IE version
+	}
+
+	//Makes these wider. Not sure what's going on here exactly, or if it's needed -- Decided to take it out: //This is making them drop to a new line below radio button, on small window widths. 
+	// Found out it's necessary for the no radio buttons to have margin between the VR lis (not sure why) 
+	.Skin .MC .SAVR input,
+	.Skin .MC .SAVR span.LabelWrapper,
+	.Skin .MC .MAVR input,
+	.Skin .MC .MAVR span.LabelWrapper{
+		float:left; 
+	}
+
+	//BOOKMARK: Do we want this at all? Maybe we don't need a hover state for .q-checked class. 
+	// .Skin label.SingleAnswer.q-checked {
+	// 	@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+	// 		&:hover {
+	// 			background: $answer-label-select-background;
+	// 			border-color: darken($answer-label-select-background, 10%);
+	// 			// color: $answer-label-select-color; //
+	// 		}
+	// 	}
+	// }
+	// .Skin label.MultipleAnswer.q-checked {
+	// 	@media only screen and (min-device-width: 1025px) { // Don't want hover state to apply to touch devices <= iPad landscape (1024px) //BOOKMARK: apply this to all or most hover states (including Answer labels)
+	// 		&:hover {
+	// 			//Change color for MultipleAnswer (but not SingleAnswer), because you can click these again.
+	// 			background: darken($answer-label-select-background, 5%);
+	// 			border-color: darken($answer-label-select-background, 15%);
+	// 		}
+	// 	}
+	// }
+
+	//BOOKMARK: is this a good idea?
+	.Skin label.SingleAnswer.q-checked + input,
+	.Skin label.SingleAnswer.q-checked + textarea,
+	.Skin label.MultipleAnswer.q-checked + input,
+	.Skin label.MultipleAnswer.q-checked + textarea  {
+		border-color: $primary-color;
+	}
+
+	.Skin .SAHR td.LabelContatiner,
+	.Skin .MAHR td.LabelContatiner,
+	.Skin .SACOL td.LabelContatiner,
+	.Skin .MACOL td.LabelContatiner {
+		//Aligns the labels when there's a .TextEntryBox
+		vertical-align: top;
+	}
+	//Hide q-radio/checkbox for label questions
+	.Skin .MC label.q-radio,
+	.Skin .MC label.q-checkbox {
+		display: none;
+	}
+	// .Skin .SACOL label.SingleAnswer,
+	// .Skin .MACOL label.MultipleAnswer {
+	// 	//If a single word is too long, it will break rather than spill over -- not a good idea, I guess. It also breaks something small like 10 into 1 and 0. 
+	// 	word-break: break-word; 
+	// }
+
+
+} // end if $radio-buttons == F
+/* End Label Styles */
+
+
+//RTL Styles.
+/* RTL CSS */
+.RTL .Skin #Buttons {
+	text-align: left;
+}
+.RTL .Skin #Buttons #PreviousButton {
+	float: right;
+}
+
+.RTL .Skin .CS .VRTL .ChoiceStructure li {
+	padding-right: 10px;
+}
+
+.RTL .Skin .QuestionBody .TextEntryBox {
+	margin: 0;
+	margin-top: 8px;
+}
+.RTL .Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount3 td.First label, 
+.RTL .Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount2 td.First label,
+.RTL .Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount3 td.Last label, 
+.RTL .Skin .horizontalbar table.LabelDescriptions.CenterLabels .LabelCount2 td.Last label {
+	left: 0; //This removes the "centered" aspect, but at least they don't overlap. 
+}
+html > body.RTL .Skin .PGR .DragAndDrop .stack ul.stack {
+	margin: 0;
+}
+.RTL .Skin .PGR .DragAndDrop .Items h2 {
+	margin-bottom: 20px;
+}
+.RTL .Skin .PGR td.itemsContainerTd {
+	padding: 0;
+}
+.RTL .Skin .MC .SAVR label.q-radio,
+.RTL .Skin .MC .MAVR label.q-checkbox {
+	float: right;
+	margin-right: 0;
+	margin-left: 10px;
+}
+.RTL .Skin .CS .VRTL .SumInput, 
+.RTL .Skin .CS .VRTL .SumTotal {
+	right: auto;
+	left: 10px;
+}
+.RTL .Skin .SAVR label.SingleAnswer,
+.RTL .Skin .MAVR label.MultipleAnswer {
+	text-align: right; //overrides the text-align: left
+}
+
+// End LABEL STYLES
+/*Start YUI Calendar CSS */
+//YUI CALENDAR
+$Calendar-Header-Color: $primary-color!default;
+$Calendar-Background-Color: $answer-label-background;
+$Calendar-Today-Background: $answer-label-hover-background;
+$Calendar-Text-Color: $default-text-color;
+$Calendar-Select-Background-Color: $answer-label-select-background;
+$Calendar-Select-Color: $answer-label-select-color;
+$CalendarHover: $answer-label-hover-background; 
+$Calendar-Inactive-Color: #999;
+$Calendar-Weekdays-Color: $primary-color;
+
+.Skin{
+	.yui-skin-sam{
+		.yui-calcontainer{
+			border-radius: 4px;
+			background-color: $Calendar-Background-Color;
+			font-family: $font-stack;
+			border:none;
+			overflow:hidden;
+			padding:0; //test no padding
+		}
+		.yui-calendar{
+				.calheader{
+					padding:.6em;
+					background:$Calendar-Header-Color;
+					color:#FFF;
+					font-weight: 100;
+					a.calnavleft, a.calnavright{
+						position:relative;
+						color:#FFF;
+						margin:0;
+						right:0;
+						left:0;
+						width:18px;
+						height: 17px;
+						//border-radius: 10px;
+						background-image:none;
+						text-indent:0;
+					}
+					a.calnavleft{
+						float:left;
+						// background-position: 9px -900px;
+						&:before{
+							content:'\2190';
+						}
+					}
+					a.calnavright{
+						float:right;
+						// background-position: 9px -900px;
+						&:before{
+							content:'\2192';
+						}
+					}
+				}
+			.calweekdayrow{
+				background-color:$Calendar-Background-Color;
+			}
+			.calweekdaycell{
+				color:$Calendar-Weekdays-Color;
+				font-weight: 100;
+			}
+			td.calcell{
+				background: $Calendar-Background-Color;
+				border:0px;
+			}
+			 td.calcell a{
+				color: $Calendar-Text-Color;
+				font-weight:100;
+			}
+			td.calcell.today{
+				background-color: $Calendar-Today-Background;
+				border-radius:2px;
+			}
+			td.calcell.today a{
+				background-color: transparent;
+				border-radius: 2px;
+			}
+			 td.calcell.selected a{
+				background-color: $Calendar-Select-Background-Color;
+				border-radius: 3px;
+				color:$Calendar-Select-Color;
+			}
+			td.calcell.selected{
+				background-color: $Calendar-Background-Color;
+			}
+			 td.calcell.calcellhover{
+				background-color: $CalendarHover;
+				border-radius: 3px;
+			}
+			td.calcell.calcellhover a{
+				background-color: $CalendarHover;
+				border:none;
+				border-radius:3px;
+				color: $Calendar-Text-Color;
+			}
+			td.calcell.oom{
+				color: $Calendar-Inactive-Color;
+				background-color: $Calendar-Background-Color;
+				font-weight: 100;
+			}
+			td.calcell.previous{
+				color:$Calendar-Inactive-Color;
+				font-weight: 100;
+			}
+		}
+	}
+}
+/*End YUI Calendar CSS */
+
+
+
+
+
+
+
+
+
+

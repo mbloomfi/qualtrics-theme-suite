@@ -631,7 +631,9 @@
 			},
 	
 				
-	
+			/*
+				Adds the current brand to the front of the recent brands
+			*/
 			updateRecentBrands: function(){
 				var brand = core.localData.currentBrand;
 				var i = core.localData.recentBrands.indexOf(brand);
@@ -784,6 +786,7 @@
 			brandList: null,
 			userSettings: null,
 			currentBrand: null,
+			pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 	
 			updateUserSettings: function(_callback){ // should only be run on app init
 				core.userSettingsFile.read(function(_data){
@@ -801,13 +804,22 @@
 				var brandList = [];
 				fs.readdir(pathToBrands, function(_err, _files){
 					if(_err) console.log("error");
-					for(var i = 0, ii = _files.length; i < ii; i++){
+					for(var i = 0, ii = _files.length; i < ii; i++) {
 						var stats = fs.statSync(pathToBrands+"/"+_files[i]);
 						if(stats.isDirectory()) brandList.push(_files[i]);
 					}
 					core.localData.brandList = brandList;
 					if(_CALLBACK!==undefined) _CALLBACK();
 				});
+			},
+	
+			rmFromRecentBrands: function(_brandName, _CALLBACK){
+				var brandNameIndex = core.localData.recentBrands.indexOf(_brandName)
+				if(brandNameIndex !== -1){
+					core.localData.recentBrands.splice(brandNameIndex, 1);
+					core.persistentDataFile.update();
+				}
+				_CALLBACK();
 			},
 	
 			updateRecentBrands: function(_CALLBACK){
@@ -849,7 +861,43 @@
 				}
 				return matches;
 			}
-		}	
+		},
+	
+		copyFile: function(src, dest, _callback){
+			var cbCalled = false;
+			var rd = fs.createReadStream(src);
+			rd.on("error", function(err) {
+			  done(err);
+			});
+			var wr = fs.createWriteStream(dest);
+			wr.on("error", function(err) {
+			  done(err);
+			});
+			wr.on("close", function(ex) {
+			  done();
+			});
+			rd.pipe(wr);
+	
+			function done(err) {
+			  if (!cbCalled) {
+			    _callback(err);
+			    cbCalled = true;
+			  }
+			}
+		},
+	
+		getFiles: function(path, _callback){
+			var fileList = [];
+			fs.readdir(path, function(_err, _files){
+				if(_err) console.log("error getting files");
+				for(var i = 0, ii = _files.length; i < ii; i++){
+					var stats = fs.statSync(path+"/"+_files[i]);
+					if(stats.isFile()) fileList.push(_files[i]);
+				}
+				// currentBrand.projects = projectsList // ADD this
+				if(_callback!==undefined) _callback(fileList);
+			});
+		}
 	};
 	
 	

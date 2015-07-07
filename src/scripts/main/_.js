@@ -10951,7 +10951,11 @@ var core = Global.coreMethods = {
 
 			
 
+		/*
 
+			Adds the current brand to the front of the recent brands
+
+		*/
 
 		updateRecentBrands: function(){
 
@@ -11257,6 +11261,8 @@ var core = Global.coreMethods = {
 
 		currentBrand: null,
 
+		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
+
 
 
 		updateUserSettings: function(_callback){ // should only be run on app init
@@ -11291,7 +11297,7 @@ var core = Global.coreMethods = {
 
 				if(_err) console.log("error");
 
-				for(var i = 0, ii = _files.length; i < ii; i++){
+				for(var i = 0, ii = _files.length; i < ii; i++) {
 
 					var stats = fs.statSync(pathToBrands+"/"+_files[i]);
 
@@ -11304,6 +11310,24 @@ var core = Global.coreMethods = {
 				if(_CALLBACK!==undefined) _CALLBACK();
 
 			});
+
+		},
+
+
+
+		rmFromRecentBrands: function(_brandName, _CALLBACK){
+
+			var brandNameIndex = core.localData.recentBrands.indexOf(_brandName)
+
+			if(brandNameIndex !== -1){
+
+				core.localData.recentBrands.splice(brandNameIndex, 1);
+
+				core.persistentDataFile.update();
+
+			}
+
+			_CALLBACK();
 
 		},
 
@@ -11387,7 +11411,79 @@ var core = Global.coreMethods = {
 
 		}
 
-	}	
+	},
+
+
+
+	copyFile: function(src, dest, _callback){
+
+		var cbCalled = false;
+
+		var rd = fs.createReadStream(src);
+
+		rd.on("error", function(err) {
+
+		  done(err);
+
+		});
+
+		var wr = fs.createWriteStream(dest);
+
+		wr.on("error", function(err) {
+
+		  done(err);
+
+		});
+
+		wr.on("close", function(ex) {
+
+		  done();
+
+		});
+
+		rd.pipe(wr);
+
+
+
+		function done(err) {
+
+		  if (!cbCalled) {
+
+		    _callback(err);
+
+		    cbCalled = true;
+
+		  }
+
+		}
+
+	},
+
+
+
+	getFiles: function(path, _callback){
+
+		var fileList = [];
+
+		fs.readdir(path, function(_err, _files){
+
+			if(_err) console.log("error getting files");
+
+			for(var i = 0, ii = _files.length; i < ii; i++){
+
+				var stats = fs.statSync(path+"/"+_files[i]);
+
+				if(stats.isFile()) fileList.push(_files[i]);
+
+			}
+
+			// currentBrand.projects = projectsList // ADD this
+
+			if(_callback!==undefined) _callback(fileList);
+
+		});
+
+	}
 
 };
 
@@ -11554,19 +11650,41 @@ editorCore.dropdowns.brands = {
 
 		var self = this;
 
-		self.close();
+		core.brands.exists(_brandName, function(exists){
 
-		el("#brandNameText").purge().text(_brandName);
+				if(exists){
 
-		core.brands.select(_brandName);
+					el("#brandNameText").purge().text(_brandName);
+
+					core.brands.select(_brandName);
+
+					// activate projects dropdown
+
+					editorCore.dropdowns.projects.activate();
+
+					editorCore.dropdowns.files.deactivate();
+
+					self.close();
+
+				} else {
+
+					self.close();
+
+					core.localData.rmFromRecentBrands(_brandName, function(){
+
+						alert("Brand not found. Brand removed from recent brands.");
+
+					})
+
+				}
+
+				
+
+		});
 
 		
 
-		// activate projects dropdown
-
-		editorCore.dropdowns.projects.activate();
-
-		editorCore.dropdowns.files.deactivate();
+		
 
 	},
 
@@ -11610,6 +11728,12 @@ editorCore.dropdowns.brands = {
 
 			brandName.addClass("dropdown-active");
 
+
+
+			brandsDropdown.el(".arrow")[0].rmClass("hide");
+
+			
+
 		},0);
 
 
@@ -11632,6 +11756,8 @@ editorCore.dropdowns.brands = {
 
 			brandName.rmClass("dropdown-active");
 
+			brandsDropdown.el(".arrow")[0].addClass("hide");
+
 			setTimeout(next, 200);
 
 		})
@@ -11642,6 +11768,8 @@ editorCore.dropdowns.brands = {
 
 			self.purge();
 
+
+
 			next();
 
 		})
@@ -11649,6 +11777,8 @@ editorCore.dropdowns.brands = {
 		.then(function(){
 
 			self.refill();
+
+			brandsDropdown.el(".arrow")[0].addClass("hide");
 
 		})
 
@@ -11662,15 +11792,13 @@ editorCore.dropdowns.brands = {
 
 		brandName.append(
 
-
-
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 
 
 				el.join([
 
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 
 
 
@@ -11711,6 +11839,8 @@ editorCore.dropdowns.brands = {
 
 
 		window.brandsDropdown = brandName.el(".dropdown")[0];
+
+
 
 		// then enable dropdown
 
@@ -12309,6 +12439,10 @@ editorCore.dropdowns.projects = {
 		}
 	},
 
+	addBaseFiles:function(_projectName){
+
+	},
+
 	open: function(){
 		var self = this;
 		self.status = "opened";
@@ -12316,6 +12450,7 @@ editorCore.dropdowns.projects = {
 		self.refill();
 		projectName.addClass("dropdown-active");
 		projectDropdown.rmClass("hide");
+		projectDropdown.el(".arrow")[0].rmClass("hide");
 	},
 
 	close: function(){
@@ -12324,6 +12459,7 @@ editorCore.dropdowns.projects = {
 		baton(function(next){
 			projectDropdown.addClass("hide");
 			projectName.rmClass("dropdown-active");
+			projectDropdown.el(".arrow")[0].addClass("hide");
 			setTimeout(next, 200);
 		})
 		.then(function(next){
@@ -12342,7 +12478,7 @@ editorCore.dropdowns.projects = {
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 				el.join([
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 					el("+div").addClass(["dropdownBody", "projects"]),
 					el("+div").addClass("inputCont")
 				])
@@ -12407,7 +12543,6 @@ editorCore.dropdowns.projects = {
 					}
 
 					if(!match){
-						alert("Creating Project");
 						core.brands.projects.create(core.localData.currentBrand, inputVal);
 					}
 					else {
@@ -12438,6 +12573,18 @@ editorCore.dropdowns.projects = {
 	purge: function(){
 		projectDropdownBody.purge();
 		projectDropdownInputCont.purge();
+	},
+
+	copyBaseFilesToProject: function(_projectName){
+		var _brandName = core.localData.currentBrand;
+		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
+		var pathToBaseFiles = core.localData.pathToBaseFiles;
+
+		core.getFiles(pathToBaseFiles, function(files){
+
+		})
+
+
 	}
 };
 
@@ -12455,7 +12602,7 @@ editorCore.dropdowns.files = {
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 				el.join([
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 
 					el("+div").addClass(["dropdownBody", "files"]).text("files here")
 				])
@@ -12546,6 +12693,7 @@ editorCore.dropdowns.files = {
 		// self.refill();
 		// projectName.addClass("dropdown-active");
 		filesDropdown.rmClass("hide");
+		filesDropdown.el(".arrow")[0].rmClass("hide");
 	},
 	close: function(){
 		// console.log("closing files");
@@ -12553,6 +12701,7 @@ editorCore.dropdowns.files = {
 		self.status = "closed";
 		baton(function(next){
 			filesDropdown.addClass("hide");
+			filesDropdown.el(".arrow")[0].addClass("hide");
 			// projectName.rmClass("dropdown-active");
 			setTimeout(next, 200);
 		})

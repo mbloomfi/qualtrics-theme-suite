@@ -12,7 +12,7 @@ editorCore.dropdowns.files = {
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 				el.join([
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 
 					el("+div").addClass(["dropdownBody", "files"]).text("files here")
 				])
@@ -103,6 +103,7 @@ editorCore.dropdowns.files = {
 		// self.refill();
 		// projectName.addClass("dropdown-active");
 		filesDropdown.rmClass("hide");
+		filesDropdown.el(".arrow")[0].rmClass("hide");
 	},
 	close: function(){
 		// console.log("closing files");
@@ -110,6 +111,7 @@ editorCore.dropdowns.files = {
 		self.status = "closed";
 		baton(function(next){
 			filesDropdown.addClass("hide");
+			filesDropdown.el(".arrow")[0].addClass("hide");
 			// projectName.rmClass("dropdown-active");
 			setTimeout(next, 200);
 		})

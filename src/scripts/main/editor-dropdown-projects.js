@@ -61,6 +61,10 @@ editorCore.dropdowns.projects = {
 		}
 	},
 
+	addBaseFiles:function(_projectName){
+
+	},
+
 	open: function(){
 		var self = this;
 		self.status = "opened";
@@ -68,6 +72,7 @@ editorCore.dropdowns.projects = {
 		self.refill();
 		projectName.addClass("dropdown-active");
 		projectDropdown.rmClass("hide");
+		projectDropdown.el(".arrow")[0].rmClass("hide");
 	},
 
 	close: function(){
@@ -76,6 +81,7 @@ editorCore.dropdowns.projects = {
 		baton(function(next){
 			projectDropdown.addClass("hide");
 			projectName.rmClass("dropdown-active");
+			projectDropdown.el(".arrow")[0].addClass("hide");
 			setTimeout(next, 200);
 		})
 		.then(function(next){
@@ -94,7 +100,7 @@ editorCore.dropdowns.projects = {
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 				el.join([
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 					el("+div").addClass(["dropdownBody", "projects"]),
 					el("+div").addClass("inputCont")
 				])
@@ -159,7 +165,6 @@ editorCore.dropdowns.projects = {
 					}
 
 					if(!match){
-						alert("Creating Project");
 						core.brands.projects.create(core.localData.currentBrand, inputVal);
 					}
 					else {
@@ -190,5 +195,17 @@ editorCore.dropdowns.projects = {
 	purge: function(){
 		projectDropdownBody.purge();
 		projectDropdownInputCont.purge();
+	},
+
+	copyBaseFilesToProject: function(_projectName){
+		var _brandName = core.localData.currentBrand;
+		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
+		var pathToBaseFiles = core.localData.pathToBaseFiles;
+
+		core.getFiles(pathToBaseFiles, function(files){
+
+		})
+
+
 	}
 };

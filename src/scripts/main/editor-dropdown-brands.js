@@ -26,13 +26,24 @@ editorCore.dropdowns.brands = {
 
 	select: function(_brandName){
 		var self = this;
-		self.close();
-		el("#brandNameText").purge().text(_brandName);
-		core.brands.select(_brandName);
+		core.brands.exists(_brandName, function(exists){
+				if(exists){
+					el("#brandNameText").purge().text(_brandName);
+					core.brands.select(_brandName);
+					// activate projects dropdown
+					editorCore.dropdowns.projects.activate();
+					editorCore.dropdowns.files.deactivate();
+					self.close();
+				} else {
+					self.close();
+					core.localData.rmFromRecentBrands(_brandName, function(){
+						alert("Brand not found. Brand removed from recent brands.");
+					})
+				}
+				
+		});
 		
-		// activate projects dropdown
-		editorCore.dropdowns.projects.activate();
-		editorCore.dropdowns.files.deactivate();
+		
 	},
 
 	toggle: function(){
@@ -54,6 +65,9 @@ editorCore.dropdowns.brands = {
 		setTimeout(function(){
 			brandsDropdown.rmClass("hide");
 			brandName.addClass("dropdown-active");
+
+			brandsDropdown.el(".arrow")[0].rmClass("hide");
+			
 		},0);
 
 	},
@@ -65,26 +79,28 @@ editorCore.dropdowns.brands = {
 			brandsDropdown.addClass("hide");
 			self.search.activated = false;
 			brandName.rmClass("dropdown-active");
+			brandsDropdown.el(".arrow")[0].addClass("hide");
 			setTimeout(next, 200);
 		})
 		.then(function(next){
 			editorCore.dropdowns.brands.search.newBrandBtn.remove();
 			self.purge();
+
 			next();
 		})
 		.then(function(){
 			self.refill();
+			brandsDropdown.el(".arrow")[0].addClass("hide");
 		})
 		.run();
 	},
 
 	populate: function(){
 		brandName.append(
-
 			el("+div").addClass(["dropdown", "hide"]).append(
 
 				el.join([
-					el("+div").addClass("arrow"),
+					el("+div").addClass(["arrow", "hide"]),
 
 					el("+div").addClass("dropdownBody").append(
 
@@ -105,6 +121,7 @@ editorCore.dropdowns.brands = {
 		);
 
 		window.brandsDropdown = brandName.el(".dropdown")[0];
+
 		// then enable dropdown
 		
 	},
