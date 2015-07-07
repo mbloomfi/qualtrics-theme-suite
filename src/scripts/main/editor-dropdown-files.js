@@ -65,6 +65,7 @@ editorCore.dropdowns.files = {
 		var self = this;
 		self.purge();
 		console.log("==populating")
+		el("#fileNameText").purge().text("Files");
 		core.brands.projects.files.list(_projectName, function(files){
 			console.log("files",files);
 			filesDropdownBody.append(
@@ -83,6 +84,9 @@ editorCore.dropdowns.files = {
 				}
 					
 			}
+			el(".file-item").on("click", function(){
+				editorCore.dropdowns.files.select(this.dataset.filename);
+			})
 		});
 	},
 
@@ -127,8 +131,11 @@ editorCore.dropdowns.files = {
 		// add file-items container
 		// add the add new container
 	},
-	select: function(_projectName){
-
+	select: function(_fileName){
+		console.log("selecting:",_fileName);
+		el("#fileNameText").purge().text(_fileName);
+		editorCore.dropdowns.files.close();
+		core.updateEditor(_fileName);
 	},
 	purge: function() {
 		filesDropdownBody.purge();

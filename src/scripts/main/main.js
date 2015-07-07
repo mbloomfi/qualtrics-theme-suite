@@ -3,7 +3,7 @@ var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
 var appRoot = Global.appRoot;
-var fs = require("fs");
+var fs = require("fs-extra");
 var json = require("jsonfile");
 var escape = require("escape-html");
 var mkdirp = require("mkdirp");
@@ -71,7 +71,7 @@ function codemirrorInit() {
 		codemirrorContainer.el("textarea").attr("tabindex", "-1");
 	}, 0);
 	
-	var myCodeMirror = CodeMirror(codemirrorContainer, {
+	window.myCodeMirror = CodeMirror(codemirrorContainer, {
 		value: "body { \n\tbackground: red;\n}",
 		mode: "css",
 		theme: "monokai",

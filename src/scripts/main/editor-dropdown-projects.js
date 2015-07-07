@@ -165,7 +165,15 @@ editorCore.dropdowns.projects = {
 					}
 
 					if(!match){
-						core.brands.projects.create(core.localData.currentBrand, inputVal);
+						core.brands.projects.create(core.localData.currentBrand, inputVal, function(){
+							editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
+								console.log("select:", inputVal);
+								editorCore.dropdowns.projects.select(inputVal);
+
+							});
+							
+						});
+
 					}
 					else {
 						alert("Project Name Already Exists");
@@ -197,15 +205,21 @@ editorCore.dropdowns.projects = {
 		projectDropdownInputCont.purge();
 	},
 
-	copyBaseFilesToProject: function(_projectName){
+	copyBaseFilesToProject: function(_projectName, _callback){
 		var _brandName = core.localData.currentBrand;
 		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
 		var pathToBaseFiles = core.localData.pathToBaseFiles;
 
 		core.getFiles(pathToBaseFiles, function(files){
-
+			console.log("these are the files:",files)
+			for(var i = 0, ii = files.length; i < ii; i++){
+				fs.copySync(pathToBaseFiles+"/"+files[i], pathToProject+"/"+files[i])
+			}
+			_callback();
 		})
 
 
-	}
+	},
+
+	updateTextEditor: function(){}
 };

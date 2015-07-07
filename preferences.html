@@ -723,7 +723,7 @@
 	
 				},
 	
-				create: function(_brandName, _projectName){
+				create: function(_brandName, _projectName, _callback){
 					var self = this;
 					// create folder with brands name
 					baton(function(next){
@@ -742,7 +742,8 @@
 					})
 					.then(function(next){
 						editorCore.dropdowns.projects.close();
-						editorCore.dropdowns.projects.select(_projectName);
+						
+						if(_callback!==undefined) _callback();
 						// self.infoFile.create(_brandName);
 					})
 					.run();
@@ -897,8 +898,22 @@
 				// currentBrand.projects = projectsList // ADD this
 				if(_callback!==undefined) _callback(fileList);
 			});
+		},
+	
+		updateEditor: function(pathToFile) {
+	
+			var extension = path.extname(pathToFile);
+			var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
+			if(compatibleExtensions.indexOf(extension) !== -1){
+				console.log("extension:", extension);
+			}
 		}
 	};
+	
+	
+	
+	
+	
 	
 	
 	

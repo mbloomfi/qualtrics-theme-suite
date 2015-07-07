@@ -243,7 +243,7 @@ var core = Global.coreMethods = {
 
 			},
 
-			create: function(_brandName, _projectName){
+			create: function(_brandName, _projectName, _callback){
 				var self = this;
 				// create folder with brands name
 				baton(function(next){
@@ -262,7 +262,8 @@ var core = Global.coreMethods = {
 				})
 				.then(function(next){
 					editorCore.dropdowns.projects.close();
-					editorCore.dropdowns.projects.select(_projectName);
+					
+					if(_callback!==undefined) _callback();
 					// self.infoFile.create(_brandName);
 				})
 				.run();
@@ -417,8 +418,22 @@ var core = Global.coreMethods = {
 			// currentBrand.projects = projectsList // ADD this
 			if(_callback!==undefined) _callback(fileList);
 		});
+	},
+
+	updateEditor: function(pathToFile) {
+
+		var extension = path.extname(pathToFile);
+		var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
+		if(compatibleExtensions.indexOf(extension) !== -1){
+			console.log("extension:", extension);
+		}
 	}
 };
+
+
+
+
+
 
 
 
