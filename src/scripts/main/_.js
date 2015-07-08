@@ -13932,6 +13932,8 @@ var core = Global.coreMethods = {
 
 		currentFile: null,
 
+		pathToCurrentFile: null,
+
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 
@@ -14088,6 +14090,16 @@ var core = Global.coreMethods = {
 
 			core.localData.currentFile = _fileName;
 
+
+
+			core.localData.pathToCurrentFile = core.brands.getPathToBrands()+"/"+
+
+				core.localData.currentBrand+"/"+
+
+				core.localData.currentProject+"/"+
+
+				core.localData.currentFile; ;
+
 		}
 
 	},
@@ -14162,17 +14174,9 @@ var core = Global.coreMethods = {
 
 
 
-			var pathToFile = core.brands.getPathToBrands()+"/"
-
-				+core.localData.currentBrand +"/"
-
-				+core.localData.currentProject +"/"
-
-				+core.localData.currentFile; 
 
 
-
-			fs.readFile(pathToFile, "utf-8", function(err, data){
+			fs.readFile(core.localData.pathToCurrentFile, "utf-8", function(err, data){
 
 				if(err){ console.log("ERR",err);}
 
@@ -14186,8 +14190,6 @@ var core = Global.coreMethods = {
 
 			});
 
-console.log("====");
-
 			// console.log("brand:", core.localData.currentBrand);
 
 			// console.log("project:", core.localData.currentProject);
@@ -14199,6 +14201,32 @@ console.log("====");
 			// console.log("====");
 
 		}
+
+	},
+
+
+
+	saveEditorFile: function(){
+
+		if(core.localData.pathToCurrentFile !== null){
+
+			fs.writeFile(core.localData.pathToCurrentFile, myCodeMirror.getValue(), function(err){
+
+				if(err){ console.log("ERR",err);}
+
+				else {
+
+					// console.log("file Contents", data);
+
+					console.log("saved code!");
+
+				}
+
+			});
+
+		}
+
+			
 
 	}
 

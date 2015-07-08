@@ -795,6 +795,7 @@
 			currentBrand: null,
 			currentProject: null,
 			currentFile: null,
+			pathToCurrentFile: null,
 			pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 	
 			updateUserSettings: function(_callback){ // should only be run on app init
@@ -873,6 +874,11 @@
 	
 			setCurrentFile: function(_fileName){
 				core.localData.currentFile = _fileName;
+	
+				core.localData.pathToCurrentFile = core.brands.getPathToBrands()+"/"+
+					core.localData.currentBrand+"/"+
+					core.localData.currentProject+"/"+
+					core.localData.currentFile; ;
 			}
 		},
 	
@@ -910,25 +916,33 @@
 					myCodeMirror.setOption("mode", extMap[ext]);
 				}	
 	
-				var pathToFile = core.brands.getPathToBrands()+"/"
-					+core.localData.currentBrand +"/"
-					+core.localData.currentProject +"/"
-					+core.localData.currentFile; 
 	
-				fs.readFile(pathToFile, "utf-8", function(err, data){
+				fs.readFile(core.localData.pathToCurrentFile, "utf-8", function(err, data){
 					if(err){ console.log("ERR",err);}
 					else {
 						// console.log("file Contents", data);
 						myCodeMirror.setValue(data);
 					}
 				});
-	console.log("====");
 				// console.log("brand:", core.localData.currentBrand);
 				// console.log("project:", core.localData.currentProject);
 				// console.log("file:", core.localData.currentFile);
 				// console.log("ext:", ext);
 				// console.log("====");
 			}
+		},
+	
+		saveEditorFile: function(){
+			if(core.localData.pathToCurrentFile !== null){
+				fs.writeFile(core.localData.pathToCurrentFile, myCodeMirror.getValue(), function(err){
+					if(err){ console.log("ERR",err);}
+					else {
+						// console.log("file Contents", data);
+						console.log("saved code!");
+					}
+				});
+			}
+				
 		}
 	};
 	
