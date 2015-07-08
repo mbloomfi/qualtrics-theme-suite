@@ -11542,6 +11542,1421 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"), require("../htmlmixed/htmlmixed"), require("../clike/clike"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror", "../htmlmixed/htmlmixed", "../clike/clike"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  function keywords(str) {
+    var obj = {}, words = str.split(" ");
+    for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
+    return obj;
+  }
+
+  // Helper for phpString
+  function matchSequence(list, end, escapes) {
+    if (list.length == 0) return phpString(end);
+    return function (stream, state) {
+      var patterns = list[0];
+      for (var i = 0; i < patterns.length; i++) if (stream.match(patterns[i][0])) {
+        state.tokenize = matchSequence(list.slice(1), end);
+        return patterns[i][1];
+      }
+      state.tokenize = phpString(end, escapes);
+      return "string";
+    };
+  }
+  function phpString(closing, escapes) {
+    return function(stream, state) { return phpString_(stream, state, closing, escapes); };
+  }
+  function phpString_(stream, state, closing, escapes) {
+    // "Complex" syntax
+    if (escapes !== false && stream.match("${", false) || stream.match("{$", false)) {
+      state.tokenize = null;
+      return "string";
+    }
+
+    // Simple syntax
+    if (escapes !== false && stream.match(/^\$[a-zA-Z_][a-zA-Z0-9_]*/)) {
+      // After the variable name there may appear array or object operator.
+      if (stream.match("[", false)) {
+        // Match array operator
+        state.tokenize = matchSequence([
+          [["[", null]],
+          [[/\d[\w\.]*/, "number"],
+           [/\$[a-zA-Z_][a-zA-Z0-9_]*/, "variable-2"],
+           [/[\w\$]+/, "variable"]],
+          [["]", null]]
+        ], closing, escapes);
+      }
+      if (stream.match(/\-\>\w/, false)) {
+        // Match object operator
+        state.tokenize = matchSequence([
+          [["->", null]],
+          [[/[\w]+/, "variable"]]
+        ], closing, escapes);
+      }
+      return "variable-2";
+    }
+
+    var escaped = false;
+    // Normal string
+    while (!stream.eol() &&
+           (escaped || escapes === false ||
+            (!stream.match("{$", false) &&
+             !stream.match(/^(\$[a-zA-Z_][a-zA-Z0-9_]*|\$\{)/, false)))) {
+      if (!escaped && stream.match(closing)) {
+        state.tokenize = null;
+        state.tokStack.pop(); state.tokStack.pop();
+        break;
+      }
+      escaped = stream.next() == "\\" && !escaped;
+    }
+    return "string";
+  }
+
+  var phpKeywords = "abstract and array as break case catch class clone const continue declare default " +
+    "do else elseif enddeclare endfor endforeach endif endswitch endwhile extends final " +
+    "for foreach function global goto if implements interface instanceof namespace " +
+    "new or private protected public static switch throw trait try use var while xor " +
+    "die echo empty exit eval include include_once isset list require require_once return " +
+    "print unset __halt_compiler self static parent yield insteadof finally";
+  var phpAtoms = "true false null TRUE FALSE NULL __CLASS__ __DIR__ __FILE__ __LINE__ __METHOD__ __FUNCTION__ __NAMESPACE__ __TRAIT__";
+  var phpBuiltin = "func_num_args func_get_arg func_get_args strlen strcmp strncmp strcasecmp strncasecmp each error_reporting define defined trigger_error user_error set_error_handler restore_error_handler get_declared_classes get_loaded_extensions extension_loaded get_extension_funcs debug_backtrace constant bin2hex hex2bin sleep usleep time mktime gmmktime strftime gmstrftime strtotime date gmdate getdate localtime checkdate flush wordwrap htmlspecialchars htmlentities html_entity_decode md5 md5_file crc32 getimagesize image_type_to_mime_type phpinfo phpversion phpcredits strnatcmp strnatcasecmp substr_count strspn strcspn strtok strtoupper strtolower strpos strrpos strrev hebrev hebrevc nl2br basename dirname pathinfo stripslashes stripcslashes strstr stristr strrchr str_shuffle str_word_count strcoll substr substr_replace quotemeta ucfirst ucwords strtr addslashes addcslashes rtrim str_replace str_repeat count_chars chunk_split trim ltrim strip_tags similar_text explode implode setlocale localeconv parse_str str_pad chop strchr sprintf printf vprintf vsprintf sscanf fscanf parse_url urlencode urldecode rawurlencode rawurldecode readlink linkinfo link unlink exec system escapeshellcmd escapeshellarg passthru shell_exec proc_open proc_close rand srand getrandmax mt_rand mt_srand mt_getrandmax base64_decode base64_encode abs ceil floor round is_finite is_nan is_infinite bindec hexdec octdec decbin decoct dechex base_convert number_format fmod ip2long long2ip getenv putenv getopt microtime gettimeofday getrusage uniqid quoted_printable_decode set_time_limit get_cfg_var magic_quotes_runtime set_magic_quotes_runtime get_magic_quotes_gpc get_magic_quotes_runtime import_request_variables error_log serialize unserialize memory_get_usage var_dump var_export debug_zval_dump print_r highlight_file show_source highlight_string ini_get ini_get_all ini_set ini_alter ini_restore get_include_path set_include_path restore_include_path setcookie header headers_sent connection_aborted connection_status ignore_user_abort parse_ini_file is_uploaded_file move_uploaded_file intval floatval doubleval strval gettype settype is_null is_resource is_bool is_long is_float is_int is_integer is_double is_real is_numeric is_string is_array is_object is_scalar ereg ereg_replace eregi eregi_replace split spliti join sql_regcase dl pclose popen readfile rewind rmdir umask fclose feof fgetc fgets fgetss fread fopen fpassthru ftruncate fstat fseek ftell fflush fwrite fputs mkdir rename copy tempnam tmpfile file file_get_contents stream_select stream_context_create stream_context_set_params stream_context_set_option stream_context_get_options stream_filter_prepend stream_filter_append fgetcsv flock get_meta_tags stream_set_write_buffer set_file_buffer set_socket_blocking stream_set_blocking socket_set_blocking stream_get_meta_data stream_register_wrapper stream_wrapper_register stream_set_timeout socket_set_timeout socket_get_status realpath fnmatch fsockopen pfsockopen pack unpack get_browser crypt opendir closedir chdir getcwd rewinddir readdir dir glob fileatime filectime filegroup fileinode filemtime fileowner fileperms filesize filetype file_exists is_writable is_writeable is_readable is_executable is_file is_dir is_link stat lstat chown touch clearstatcache mail ob_start ob_flush ob_clean ob_end_flush ob_end_clean ob_get_flush ob_get_clean ob_get_length ob_get_level ob_get_status ob_get_contents ob_implicit_flush ob_list_handlers ksort krsort natsort natcasesort asort arsort sort rsort usort uasort uksort shuffle array_walk count end prev next reset current key min max in_array array_search extract compact array_fill range array_multisort array_push array_pop array_shift array_unshift array_splice array_slice array_merge array_merge_recursive array_keys array_values array_count_values array_reverse array_reduce array_pad array_flip array_change_key_case array_rand array_unique array_intersect array_intersect_assoc array_diff array_diff_assoc array_sum array_filter array_map array_chunk array_key_exists pos sizeof key_exists assert assert_options version_compare ftok str_rot13 aggregate session_name session_module_name session_save_path session_id session_regenerate_id session_decode session_register session_unregister session_is_registered session_encode session_start session_destroy session_unset session_set_save_handler session_cache_limiter session_cache_expire session_set_cookie_params session_get_cookie_params session_write_close preg_match preg_match_all preg_replace preg_replace_callback preg_split preg_quote preg_grep overload ctype_alnum ctype_alpha ctype_cntrl ctype_digit ctype_lower ctype_graph ctype_print ctype_punct ctype_space ctype_upper ctype_xdigit virtual apache_request_headers apache_note apache_lookup_uri apache_child_terminate apache_setenv apache_response_headers apache_get_version getallheaders mysql_connect mysql_pconnect mysql_close mysql_select_db mysql_create_db mysql_drop_db mysql_query mysql_unbuffered_query mysql_db_query mysql_list_dbs mysql_list_tables mysql_list_fields mysql_list_processes mysql_error mysql_errno mysql_affected_rows mysql_insert_id mysql_result mysql_num_rows mysql_num_fields mysql_fetch_row mysql_fetch_array mysql_fetch_assoc mysql_fetch_object mysql_data_seek mysql_fetch_lengths mysql_fetch_field mysql_field_seek mysql_free_result mysql_field_name mysql_field_table mysql_field_len mysql_field_type mysql_field_flags mysql_escape_string mysql_real_escape_string mysql_stat mysql_thread_id mysql_client_encoding mysql_get_client_info mysql_get_host_info mysql_get_proto_info mysql_get_server_info mysql_info mysql mysql_fieldname mysql_fieldtable mysql_fieldlen mysql_fieldtype mysql_fieldflags mysql_selectdb mysql_createdb mysql_dropdb mysql_freeresult mysql_numfields mysql_numrows mysql_listdbs mysql_listtables mysql_listfields mysql_db_name mysql_dbname mysql_tablename mysql_table_name pg_connect pg_pconnect pg_close pg_connection_status pg_connection_busy pg_connection_reset pg_host pg_dbname pg_port pg_tty pg_options pg_ping pg_query pg_send_query pg_cancel_query pg_fetch_result pg_fetch_row pg_fetch_assoc pg_fetch_array pg_fetch_object pg_fetch_all pg_affected_rows pg_get_result pg_result_seek pg_result_status pg_free_result pg_last_oid pg_num_rows pg_num_fields pg_field_name pg_field_num pg_field_size pg_field_type pg_field_prtlen pg_field_is_null pg_get_notify pg_get_pid pg_result_error pg_last_error pg_last_notice pg_put_line pg_end_copy pg_copy_to pg_copy_from pg_trace pg_untrace pg_lo_create pg_lo_unlink pg_lo_open pg_lo_close pg_lo_read pg_lo_write pg_lo_read_all pg_lo_import pg_lo_export pg_lo_seek pg_lo_tell pg_escape_string pg_escape_bytea pg_unescape_bytea pg_client_encoding pg_set_client_encoding pg_meta_data pg_convert pg_insert pg_update pg_delete pg_select pg_exec pg_getlastoid pg_cmdtuples pg_errormessage pg_numrows pg_numfields pg_fieldname pg_fieldsize pg_fieldtype pg_fieldnum pg_fieldprtlen pg_fieldisnull pg_freeresult pg_result pg_loreadall pg_locreate pg_lounlink pg_loopen pg_loclose pg_loread pg_lowrite pg_loimport pg_loexport http_response_code get_declared_traits getimagesizefromstring socket_import_stream stream_set_chunk_size trait_exists header_register_callback class_uses session_status session_register_shutdown echo print global static exit array empty eval isset unset die include require include_once require_once json_decode json_encode json_last_error json_last_error_msg curl_close curl_copy_handle curl_errno curl_error curl_escape curl_exec curl_file_create curl_getinfo curl_init curl_multi_add_handle curl_multi_close curl_multi_exec curl_multi_getcontent curl_multi_info_read curl_multi_init curl_multi_remove_handle curl_multi_select curl_multi_setopt curl_multi_strerror curl_pause curl_reset curl_setopt_array curl_setopt curl_share_close curl_share_init curl_share_setopt curl_strerror curl_unescape curl_version mysqli_affected_rows mysqli_autocommit mysqli_change_user mysqli_character_set_name mysqli_close mysqli_commit mysqli_connect_errno mysqli_connect_error mysqli_connect mysqli_data_seek mysqli_debug mysqli_dump_debug_info mysqli_errno mysqli_error_list mysqli_error mysqli_fetch_all mysqli_fetch_array mysqli_fetch_assoc mysqli_fetch_field_direct mysqli_fetch_field mysqli_fetch_fields mysqli_fetch_lengths mysqli_fetch_object mysqli_fetch_row mysqli_field_count mysqli_field_seek mysqli_field_tell mysqli_free_result mysqli_get_charset mysqli_get_client_info mysqli_get_client_stats mysqli_get_client_version mysqli_get_connection_stats mysqli_get_host_info mysqli_get_proto_info mysqli_get_server_info mysqli_get_server_version mysqli_info mysqli_init mysqli_insert_id mysqli_kill mysqli_more_results mysqli_multi_query mysqli_next_result mysqli_num_fields mysqli_num_rows mysqli_options mysqli_ping mysqli_prepare mysqli_query mysqli_real_connect mysqli_real_escape_string mysqli_real_query mysqli_reap_async_query mysqli_refresh mysqli_rollback mysqli_select_db mysqli_set_charset mysqli_set_local_infile_default mysqli_set_local_infile_handler mysqli_sqlstate mysqli_ssl_set mysqli_stat mysqli_stmt_init mysqli_store_result mysqli_thread_id mysqli_thread_safe mysqli_use_result mysqli_warning_count";
+  CodeMirror.registerHelper("hintWords", "php", [phpKeywords, phpAtoms, phpBuiltin].join(" ").split(" "));
+  CodeMirror.registerHelper("wordChars", "php", /[\w$]/);
+
+  var phpConfig = {
+    name: "clike",
+    helperType: "php",
+    keywords: keywords(phpKeywords),
+    blockKeywords: keywords("catch do else elseif for foreach if switch try while finally"),
+    defKeywords: keywords("class function interface namespace trait"),
+    atoms: keywords(phpAtoms),
+    builtin: keywords(phpBuiltin),
+    multiLineStrings: true,
+    hooks: {
+      "$": function(stream) {
+        stream.eatWhile(/[\w\$_]/);
+        return "variable-2";
+      },
+      "<": function(stream, state) {
+        if (stream.match(/<</)) {
+          var nowDoc = stream.eat("'");
+          stream.eatWhile(/[\w\.]/);
+          var delim = stream.current().slice(3 + (nowDoc ? 1 : 0));
+          if (nowDoc) stream.eat("'");
+          if (delim) {
+            (state.tokStack || (state.tokStack = [])).push(delim, 0);
+            state.tokenize = phpString(delim, nowDoc ? false : true);
+            return "string";
+          }
+        }
+        return false;
+      },
+      "#": function(stream) {
+        while (!stream.eol() && !stream.match("?>", false)) stream.next();
+        return "comment";
+      },
+      "/": function(stream) {
+        if (stream.eat("/")) {
+          while (!stream.eol() && !stream.match("?>", false)) stream.next();
+          return "comment";
+        }
+        return false;
+      },
+      '"': function(_stream, state) {
+        (state.tokStack || (state.tokStack = [])).push('"', 0);
+        state.tokenize = phpString('"');
+        return "string";
+      },
+      "{": function(_stream, state) {
+        if (state.tokStack && state.tokStack.length)
+          state.tokStack[state.tokStack.length - 1]++;
+        return false;
+      },
+      "}": function(_stream, state) {
+        if (state.tokStack && state.tokStack.length > 0 &&
+            !--state.tokStack[state.tokStack.length - 1]) {
+          state.tokenize = phpString(state.tokStack[state.tokStack.length - 2]);
+        }
+        return false;
+      }
+    }
+  };
+
+  CodeMirror.defineMode("php", function(config, parserConfig) {
+    var htmlMode = CodeMirror.getMode(config, "text/html");
+    var phpMode = CodeMirror.getMode(config, phpConfig);
+
+    function dispatch(stream, state) {
+      var isPHP = state.curMode == phpMode;
+      if (stream.sol() && state.pending && state.pending != '"' && state.pending != "'") state.pending = null;
+      if (!isPHP) {
+        if (stream.match(/^<\?\w*/)) {
+          state.curMode = phpMode;
+          state.curState = state.php;
+          return "meta";
+        }
+        if (state.pending == '"' || state.pending == "'") {
+          while (!stream.eol() && stream.next() != state.pending) {}
+          var style = "string";
+        } else if (state.pending && stream.pos < state.pending.end) {
+          stream.pos = state.pending.end;
+          var style = state.pending.style;
+        } else {
+          var style = htmlMode.token(stream, state.curState);
+        }
+        if (state.pending) state.pending = null;
+        var cur = stream.current(), openPHP = cur.search(/<\?/), m;
+        if (openPHP != -1) {
+          if (style == "string" && (m = cur.match(/[\'\"]$/)) && !/\?>/.test(cur)) state.pending = m[0];
+          else state.pending = {end: stream.pos, style: style};
+          stream.backUp(cur.length - openPHP);
+        }
+        return style;
+      } else if (isPHP && state.php.tokenize == null && stream.match("?>")) {
+        state.curMode = htmlMode;
+        state.curState = state.html;
+        return "meta";
+      } else {
+        return phpMode.token(stream, state.curState);
+      }
+    }
+
+    return {
+      startState: function() {
+        var html = CodeMirror.startState(htmlMode), php = CodeMirror.startState(phpMode);
+        return {html: html,
+                php: php,
+                curMode: parserConfig.startOpen ? phpMode : htmlMode,
+                curState: parserConfig.startOpen ? php : html,
+                pending: null};
+      },
+
+      copyState: function(state) {
+        var html = state.html, htmlNew = CodeMirror.copyState(htmlMode, html),
+            php = state.php, phpNew = CodeMirror.copyState(phpMode, php), cur;
+        if (state.curMode == htmlMode) cur = htmlNew;
+        else cur = phpNew;
+        return {html: htmlNew, php: phpNew, curMode: state.curMode, curState: cur,
+                pending: state.pending};
+      },
+
+      token: dispatch,
+
+      indent: function(state, textAfter) {
+        if ((state.curMode != phpMode && /^\s*<\//.test(textAfter)) ||
+            (state.curMode == phpMode && /^\?>/.test(textAfter)))
+          return htmlMode.indent(state.html, textAfter);
+        return state.curMode.indent(state.curState, textAfter);
+      },
+
+      blockCommentStart: "/*",
+      blockCommentEnd: "*/",
+      lineComment: "//",
+
+      innerMode: function(state) { return {state: state.curState, mode: state.curMode}; }
+    };
+  }, "htmlmixed", "clike");
+
+  CodeMirror.defineMIME("application/x-httpd-php", "php");
+  CodeMirror.defineMIME("application/x-httpd-php-open", {name: "php", startOpen: true});
+  CodeMirror.defineMIME("text/x-php", phpConfig);
+});
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode("sass", function(config) {
+  function tokenRegexp(words) {
+    return new RegExp("^" + words.join("|"));
+  }
+
+  var keywords = ["true", "false", "null", "auto"];
+  var keywordsRegexp = new RegExp("^" + keywords.join("|"));
+
+  var operators = ["\\(", "\\)", "=", ">", "<", "==", ">=", "<=", "\\+", "-",
+                   "\\!=", "/", "\\*", "%", "and", "or", "not", ";","\\{","\\}",":"];
+  var opRegexp = tokenRegexp(operators);
+
+  var pseudoElementsRegexp = /^::?[a-zA-Z_][\w\-]*/;
+
+  function urlTokens(stream, state) {
+    var ch = stream.peek();
+
+    if (ch === ")") {
+      stream.next();
+      state.tokenizer = tokenBase;
+      return "operator";
+    } else if (ch === "(") {
+      stream.next();
+      stream.eatSpace();
+
+      return "operator";
+    } else if (ch === "'" || ch === '"') {
+      state.tokenizer = buildStringTokenizer(stream.next());
+      return "string";
+    } else {
+      state.tokenizer = buildStringTokenizer(")", false);
+      return "string";
+    }
+  }
+  function comment(indentation, multiLine) {
+    return function(stream, state) {
+      if (stream.sol() && stream.indentation() <= indentation) {
+        state.tokenizer = tokenBase;
+        return tokenBase(stream, state);
+      }
+
+      if (multiLine && stream.skipTo("*/")) {
+        stream.next();
+        stream.next();
+        state.tokenizer = tokenBase;
+      } else {
+        stream.skipToEnd();
+      }
+
+      return "comment";
+    };
+  }
+
+  function buildStringTokenizer(quote, greedy) {
+    if (greedy == null) { greedy = true; }
+
+    function stringTokenizer(stream, state) {
+      var nextChar = stream.next();
+      var peekChar = stream.peek();
+      var previousChar = stream.string.charAt(stream.pos-2);
+
+      var endingString = ((nextChar !== "\\" && peekChar === quote) || (nextChar === quote && previousChar !== "\\"));
+
+      if (endingString) {
+        if (nextChar !== quote && greedy) { stream.next(); }
+        state.tokenizer = tokenBase;
+        return "string";
+      } else if (nextChar === "#" && peekChar === "{") {
+        state.tokenizer = buildInterpolationTokenizer(stringTokenizer);
+        stream.next();
+        return "operator";
+      } else {
+        return "string";
+      }
+    }
+
+    return stringTokenizer;
+  }
+
+  function buildInterpolationTokenizer(currentTokenizer) {
+    return function(stream, state) {
+      if (stream.peek() === "}") {
+        stream.next();
+        state.tokenizer = currentTokenizer;
+        return "operator";
+      } else {
+        return tokenBase(stream, state);
+      }
+    };
+  }
+
+  function indent(state) {
+    if (state.indentCount == 0) {
+      state.indentCount++;
+      var lastScopeOffset = state.scopes[0].offset;
+      var currentOffset = lastScopeOffset + config.indentUnit;
+      state.scopes.unshift({ offset:currentOffset });
+    }
+  }
+
+  function dedent(state) {
+    if (state.scopes.length == 1) return;
+
+    state.scopes.shift();
+  }
+
+  function tokenBase(stream, state) {
+    var ch = stream.peek();
+
+    // Comment
+    if (stream.match("/*")) {
+      state.tokenizer = comment(stream.indentation(), true);
+      return state.tokenizer(stream, state);
+    }
+    if (stream.match("//")) {
+      state.tokenizer = comment(stream.indentation(), false);
+      return state.tokenizer(stream, state);
+    }
+
+    // Interpolation
+    if (stream.match("#{")) {
+      state.tokenizer = buildInterpolationTokenizer(tokenBase);
+      return "operator";
+    }
+
+    // Strings
+    if (ch === '"' || ch === "'") {
+      stream.next();
+      state.tokenizer = buildStringTokenizer(ch);
+      return "string";
+    }
+
+    if(!state.cursorHalf){// state.cursorHalf === 0
+    // first half i.e. before : for key-value pairs
+    // including selectors
+
+      if (ch === ".") {
+        stream.next();
+        if (stream.match(/^[\w-]+/)) {
+          indent(state);
+          return "atom";
+        } else if (stream.peek() === "#") {
+          indent(state);
+          return "atom";
+        }
+      }
+
+      if (ch === "#") {
+        stream.next();
+        // ID selectors
+        if (stream.match(/^[\w-]+/)) {
+          indent(state);
+          return "atom";
+        }
+        if (stream.peek() === "#") {
+          indent(state);
+          return "atom";
+        }
+      }
+
+      // Variables
+      if (ch === "$") {
+        stream.next();
+        stream.eatWhile(/[\w-]/);
+        return "variable-2";
+      }
+
+      // Numbers
+      if (stream.match(/^-?[0-9\.]+/))
+        return "number";
+
+      // Units
+      if (stream.match(/^(px|em|in)\b/))
+        return "unit";
+
+      if (stream.match(keywordsRegexp))
+        return "keyword";
+
+      if (stream.match(/^url/) && stream.peek() === "(") {
+        state.tokenizer = urlTokens;
+        return "atom";
+      }
+
+      if (ch === "=") {
+        // Match shortcut mixin definition
+        if (stream.match(/^=[\w-]+/)) {
+          indent(state);
+          return "meta";
+        }
+      }
+
+      if (ch === "+") {
+        // Match shortcut mixin definition
+        if (stream.match(/^\+[\w-]+/)){
+          return "variable-3";
+        }
+      }
+
+      if(ch === "@"){
+        if(stream.match(/@extend/)){
+          if(!stream.match(/\s*[\w]/))
+            dedent(state);
+        }
+      }
+
+
+      // Indent Directives
+      if (stream.match(/^@(else if|if|media|else|for|each|while|mixin|function)/)) {
+        indent(state);
+        return "meta";
+      }
+
+      // Other Directives
+      if (ch === "@") {
+        stream.next();
+        stream.eatWhile(/[\w-]/);
+        return "meta";
+      }
+
+      if (stream.eatWhile(/[\w-]/)){
+        if(stream.match(/ *: *[\w-\+\$#!\("']/,false)){
+          return "property";
+        }
+        else if(stream.match(/ *:/,false)){
+          indent(state);
+          state.cursorHalf = 1;
+          return "atom";
+        }
+        else if(stream.match(/ *,/,false)){
+          return "atom";
+        }
+        else{
+          indent(state);
+          return "atom";
+        }
+      }
+
+      if(ch === ":"){
+        if (stream.match(pseudoElementsRegexp)){ // could be a pseudo-element
+          return "keyword";
+        }
+        stream.next();
+        state.cursorHalf=1;
+        return "operator";
+      }
+
+    } // cursorHalf===0 ends here
+    else{
+
+      if (ch === "#") {
+        stream.next();
+        // Hex numbers
+        if (stream.match(/[0-9a-fA-F]{6}|[0-9a-fA-F]{3}/)){
+          if(!stream.peek()){
+            state.cursorHalf = 0;
+          }
+          return "number";
+        }
+      }
+
+      // Numbers
+      if (stream.match(/^-?[0-9\.]+/)){
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "number";
+      }
+
+      // Units
+      if (stream.match(/^(px|em|in)\b/)){
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "unit";
+      }
+
+      if (stream.match(keywordsRegexp)){
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "keyword";
+      }
+
+      if (stream.match(/^url/) && stream.peek() === "(") {
+        state.tokenizer = urlTokens;
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "atom";
+      }
+
+      // Variables
+      if (ch === "$") {
+        stream.next();
+        stream.eatWhile(/[\w-]/);
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "variable-3";
+      }
+
+      // bang character for !important, !default, etc.
+      if (ch === "!") {
+        stream.next();
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return stream.match(/^[\w]+/) ? "keyword": "operator";
+      }
+
+      if (stream.match(opRegexp)){
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "operator";
+      }
+
+      // attributes
+      if (stream.eatWhile(/[\w-]/)) {
+        if(!stream.peek()){
+          state.cursorHalf = 0;
+        }
+        return "attribute";
+      }
+
+      //stream.eatSpace();
+      if(!stream.peek()){
+        state.cursorHalf = 0;
+        return null;
+      }
+
+    } // else ends here
+
+    if (stream.match(opRegexp))
+      return "operator";
+
+    // If we haven't returned by now, we move 1 character
+    // and return an error
+    stream.next();
+    return null;
+  }
+
+  function tokenLexer(stream, state) {
+    if (stream.sol()) state.indentCount = 0;
+    var style = state.tokenizer(stream, state);
+    var current = stream.current();
+
+    if (current === "@return" || current === "}"){
+      dedent(state);
+    }
+
+    if (style !== null) {
+      var startOfToken = stream.pos - current.length;
+
+      var withCurrentIndent = startOfToken + (config.indentUnit * state.indentCount);
+
+      var newScopes = [];
+
+      for (var i = 0; i < state.scopes.length; i++) {
+        var scope = state.scopes[i];
+
+        if (scope.offset <= withCurrentIndent)
+          newScopes.push(scope);
+      }
+
+      state.scopes = newScopes;
+    }
+
+
+    return style;
+  }
+
+  return {
+    startState: function() {
+      return {
+        tokenizer: tokenBase,
+        scopes: [{offset: 0, type: "sass"}],
+        indentCount: 0,
+        cursorHalf: 0,  // cursor half tells us if cursor lies after (1)
+                        // or before (0) colon (well... more or less)
+        definedVars: [],
+        definedMixins: []
+      };
+    },
+    token: function(stream, state) {
+      var style = tokenLexer(stream, state);
+
+      state.lastToken = { style: style, content: stream.current() };
+
+      return style;
+    },
+
+    indent: function(state) {
+      return state.scopes[0].offset;
+    }
+  };
+});
+
+CodeMirror.defineMIME("text/x-sass", "sass");
+
+});
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+// Stylus mode created by Dmitry Kiselyov http://git.io/AaRB
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  CodeMirror.defineMode("stylus", function(config) {
+    var indentUnit = config.indentUnit,
+        tagKeywords = keySet(tagKeywords_),
+        tagVariablesRegexp = /^(a|b|i|s|col|em)$/i,
+        propertyKeywords = keySet(propertyKeywords_),
+        nonStandardPropertyKeywords = keySet(nonStandardPropertyKeywords_),
+        valueKeywords = keySet(valueKeywords_),
+        colorKeywords = keySet(colorKeywords_),
+        documentTypes = keySet(documentTypes_),
+        documentTypesRegexp = wordRegexp(documentTypes_),
+        mediaFeatures = keySet(mediaFeatures_),
+        mediaTypes = keySet(mediaTypes_),
+        fontProperties = keySet(fontProperties_),
+        operatorsRegexp = /^\s*([.]{2,3}|&&|\|\||\*\*|[?!=:]?=|[-+*\/%<>]=?|\?:|\~)/,
+        wordOperatorKeywordsRegexp = wordRegexp(wordOperatorKeywords_),
+        blockKeywords = keySet(blockKeywords_),
+        vendorPrefixesRegexp = new RegExp(/^\-(moz|ms|o|webkit)-/i),
+        commonAtoms = keySet(commonAtoms_),
+        firstWordMatch = "",
+        states = {},
+        ch,
+        style,
+        type,
+        override;
+
+    /**
+     * Tokenizers
+     */
+    function tokenBase(stream, state) {
+      firstWordMatch = stream.string.match(/(^[\w-]+\s*=\s*$)|(^\s*[\w-]+\s*=\s*[\w-])|(^\s*(\.|#|@|\$|\&|\[|\d|\+|::?|\{|\>|~|\/)?\s*[\w-]*([a-z0-9-]|\*|\/\*)(\(|,)?)/);
+      state.context.line.firstWord = firstWordMatch ? firstWordMatch[0].replace(/^\s*/, "") : "";
+      state.context.line.indent = stream.indentation();
+      ch = stream.peek();
+
+      // Line comment
+      if (stream.match("//")) {
+        stream.skipToEnd();
+        return ["comment", "comment"];
+      }
+      // Block comment
+      if (stream.match("/*")) {
+        state.tokenize = tokenCComment;
+        return tokenCComment(stream, state);
+      }
+      // String
+      if (ch == "\"" || ch == "'") {
+        stream.next();
+        state.tokenize = tokenString(ch);
+        return state.tokenize(stream, state);
+      }
+      // Def
+      if (ch == "@") {
+        stream.next();
+        stream.eatWhile(/[\w\\-]/);
+        return ["def", stream.current()];
+      }
+      // ID selector or Hex color
+      if (ch == "#") {
+        stream.next();
+        // Hex color
+        if (stream.match(/^[0-9a-f]{6}|[0-9a-f]{3}/i)) {
+          return ["atom", "atom"];
+        }
+        // ID selector
+        if (stream.match(/^[a-z][\w-]*/i)) {
+          return ["builtin", "hash"];
+        }
+      }
+      // Vendor prefixes
+      if (stream.match(vendorPrefixesRegexp)) {
+        return ["meta", "vendor-prefixes"];
+      }
+      // Numbers
+      if (stream.match(/^-?[0-9]?\.?[0-9]/)) {
+        stream.eatWhile(/[a-z%]/i);
+        return ["number", "unit"];
+      }
+      // !important|optional
+      if (ch == "!") {
+        stream.next();
+        return [stream.match(/^(important|optional)/i) ? "keyword": "operator", "important"];
+      }
+      // Class
+      if (ch == "." && stream.match(/^\.[a-z][\w-]*/i)) {
+        return ["qualifier", "qualifier"];
+      }
+      // url url-prefix domain regexp
+      if (stream.match(documentTypesRegexp)) {
+        if (stream.peek() == "(") state.tokenize = tokenParenthesized;
+        return ["property", "word"];
+      }
+      // Mixins / Functions
+      if (stream.match(/^[a-z][\w-]*\(/i)) {
+        stream.backUp(1);
+        return ["keyword", "mixin"];
+      }
+      // Block mixins
+      if (stream.match(/^(\+|-)[a-z][\w-]*\(/i)) {
+        stream.backUp(1);
+        return ["keyword", "block-mixin"];
+      }
+      // Parent Reference BEM naming
+      if (stream.string.match(/^\s*&/) && stream.match(/^[-_]+[a-z][\w-]*/)) {
+        return ["qualifier", "qualifier"];
+      }
+      // / Root Reference & Parent Reference
+      if (stream.match(/^(\/|&)(-|_|:|\.|#|[a-z])/)) {
+        stream.backUp(1);
+        return ["variable-3", "reference"];
+      }
+      if (stream.match(/^&{1}\s*$/)) {
+        return ["variable-3", "reference"];
+      }
+      // Variable
+      if (ch == "$" && stream.match(/^\$[\w-]+/i)) {
+        return ["variable-2", "variable-name"];
+      }
+      // Word operator
+      if (stream.match(wordOperatorKeywordsRegexp)) {
+        return ["operator", "operator"];
+      }
+      // Word
+      if (stream.match(/^[-_]*[a-z0-9]+[\w-]*/i)) {
+        if (stream.match(/^(\.|\[)[\w-\'\"\]]+/i, false)) {
+          if (!wordIsTag(stream.current())) {
+            stream.match(/[\w-]+/);
+            return ["variable-2", "variable-name"];
+          }
+        }
+        return ["variable-2", "word"];
+      }
+      // Operators
+      if (stream.match(operatorsRegexp)) {
+        return ["operator", stream.current()];
+      }
+      // Delimiters
+      if (/[:;,{}\[\]\(\)]/.test(ch)) {
+        stream.next();
+        return [null, ch];
+      }
+      // Non-detected items
+      stream.next();
+      return [null, null];
+    }
+
+    /**
+     * Token comment
+     */
+    function tokenCComment(stream, state) {
+      var maybeEnd = false, ch;
+      while ((ch = stream.next()) != null) {
+        if (maybeEnd && ch == "/") {
+          state.tokenize = null;
+          break;
+        }
+        maybeEnd = (ch == "*");
+      }
+      return ["comment", "comment"];
+    }
+
+    /**
+     * Token string
+     */
+    function tokenString(quote) {
+      return function(stream, state) {
+        var escaped = false, ch;
+        while ((ch = stream.next()) != null) {
+          if (ch == quote && !escaped) {
+            if (quote == ")") stream.backUp(1);
+            break;
+          }
+          escaped = !escaped && ch == "\\";
+        }
+        if (ch == quote || !escaped && quote != ")") state.tokenize = null;
+        return ["string", "string"];
+      };
+    }
+
+    /**
+     * Token parenthesized
+     */
+    function tokenParenthesized(stream, state) {
+      stream.next(); // Must be "("
+      if (!stream.match(/\s*[\"\')]/, false))
+        state.tokenize = tokenString(")");
+      else
+        state.tokenize = null;
+      return [null, "("];
+    }
+
+    /**
+     * Context management
+     */
+    function Context(type, indent, prev, line) {
+      this.type = type;
+      this.indent = indent;
+      this.prev = prev;
+      this.line = line || {firstWord: "", indent: 0};
+    }
+
+    function pushContext(state, stream, type, indent) {
+      indent = indent >= 0 ? indent : indentUnit;
+      state.context = new Context(type, stream.indentation() + indent, state.context);
+      return type;
+    }
+
+    function popContext(state, currentIndent) {
+      var contextIndent = state.context.indent - indentUnit;
+      currentIndent = currentIndent || false;
+      state.context = state.context.prev;
+      if (currentIndent) state.context.indent = contextIndent;
+      return state.context.type;
+    }
+
+    function pass(type, stream, state) {
+      return states[state.context.type](type, stream, state);
+    }
+
+    function popAndPass(type, stream, state, n) {
+      for (var i = n || 1; i > 0; i--)
+        state.context = state.context.prev;
+      return pass(type, stream, state);
+    }
+
+
+    /**
+     * Parser
+     */
+    function wordIsTag(word) {
+      return word.toLowerCase() in tagKeywords;
+    }
+
+    function wordIsProperty(word) {
+      word = word.toLowerCase();
+      return word in propertyKeywords || word in fontProperties;
+    }
+
+    function wordIsBlock(word) {
+      return word.toLowerCase() in blockKeywords;
+    }
+
+    function wordIsVendorPrefix(word) {
+      return word.toLowerCase().match(vendorPrefixesRegexp);
+    }
+
+    function wordAsValue(word) {
+      var wordLC = word.toLowerCase();
+      var override = "variable-2";
+      if (wordIsTag(word)) override = "tag";
+      else if (wordIsBlock(word)) override = "block-keyword";
+      else if (wordIsProperty(word)) override = "property";
+      else if (wordLC in valueKeywords || wordLC in commonAtoms) override = "atom";
+      else if (wordLC == "return" || wordLC in colorKeywords) override = "keyword";
+
+      // Font family
+      else if (word.match(/^[A-Z]/)) override = "string";
+      return override;
+    }
+
+    function typeIsBlock(type, stream) {
+      return ((endOfLine(stream) && (type == "{" || type == "]" || type == "hash" || type == "qualifier")) || type == "block-mixin");
+    }
+
+    function typeIsInterpolation(type, stream) {
+      return type == "{" && stream.match(/^\s*\$?[\w-]+/i, false);
+    }
+
+    function typeIsPseudo(type, stream) {
+      return type == ":" && stream.match(/^[a-z-]+/, false);
+    }
+
+    function startOfLine(stream) {
+      return stream.sol() || stream.string.match(new RegExp("^\\s*" + escapeRegExp(stream.current())));
+    }
+
+    function endOfLine(stream) {
+      return stream.eol() || stream.match(/^\s*$/, false);
+    }
+
+    function firstWordOfLine(line) {
+      var re = /^\s*[-_]*[a-z0-9]+[\w-]*/i;
+      var result = typeof line == "string" ? line.match(re) : line.string.match(re);
+      return result ? result[0].replace(/^\s*/, "") : "";
+    }
+
+
+    /**
+     * Block
+     */
+    states.block = function(type, stream, state) {
+      if ((type == "comment" && startOfLine(stream)) ||
+          (type == "," && endOfLine(stream)) ||
+          type == "mixin") {
+        return pushContext(state, stream, "block", 0);
+      }
+      if (typeIsInterpolation(type, stream)) {
+        return pushContext(state, stream, "interpolation");
+      }
+      if (endOfLine(stream) && type == "]") {
+        if (!/^\s*(\.|#|:|\[|\*|&)/.test(stream.string) && !wordIsTag(firstWordOfLine(stream))) {
+          return pushContext(state, stream, "block", 0);
+        }
+      }
+      if (typeIsBlock(type, stream, state)) {
+        return pushContext(state, stream, "block");
+      }
+      if (type == "}" && endOfLine(stream)) {
+        return pushContext(state, stream, "block", 0);
+      }
+      if (type == "variable-name") {
+        if ((stream.indentation() == 0 && startOfLine(stream)) || wordIsBlock(firstWordOfLine(stream))) {
+          return pushContext(state, stream, "variableName");
+        }
+        else {
+          return pushContext(state, stream, "variableName", 0);
+        }
+      }
+      if (type == "=") {
+        if (!endOfLine(stream) && !wordIsBlock(firstWordOfLine(stream))) {
+          return pushContext(state, stream, "block", 0);
+        }
+        return pushContext(state, stream, "block");
+      }
+      if (type == "*") {
+        if (endOfLine(stream) || stream.match(/\s*(,|\.|#|\[|:|{)/,false)) {
+          override = "tag";
+          return pushContext(state, stream, "block");
+        }
+      }
+      if (typeIsPseudo(type, stream)) {
+        return pushContext(state, stream, "pseudo");
+      }
+      if (/@(font-face|media|supports|(-moz-)?document)/.test(type)) {
+        return pushContext(state, stream, endOfLine(stream) ? "block" : "atBlock");
+      }
+      if (/@(-(moz|ms|o|webkit)-)?keyframes$/.test(type)) {
+        return pushContext(state, stream, "keyframes");
+      }
+      if (/@extends?/.test(type)) {
+        return pushContext(state, stream, "extend", 0);
+      }
+      if (type && type.charAt(0) == "@") {
+
+        // Property Lookup
+        if (stream.indentation() > 0 && wordIsProperty(stream.current().slice(1))) {
+          override = "variable-2";
+          return "block";
+        }
+        if (/(@import|@require|@charset)/.test(type)) {
+          return pushContext(state, stream, "block", 0);
+        }
+        return pushContext(state, stream, "block");
+      }
+      if (type == "reference" && endOfLine(stream)) {
+        return pushContext(state, stream, "block");
+      }
+      if (type == "(") {
+        return pushContext(state, stream, "parens");
+      }
+
+      if (type == "vendor-prefixes") {
+        return pushContext(state, stream, "vendorPrefixes");
+      }
+      if (type == "word") {
+        var word = stream.current();
+        override = wordAsValue(word);
+
+        if (override == "property") {
+          if (startOfLine(stream)) {
+            return pushContext(state, stream, "block", 0);
+          } else {
+            override = "atom";
+            return "block";
+          }
+        }
+
+        if (override == "tag") {
+
+          // tag is a css value
+          if (/embed|menu|pre|progress|sub|table/.test(word)) {
+            if (wordIsProperty(firstWordOfLine(stream))) {
+              override = "atom";
+              return "block";
+            }
+          }
+
+          // tag is an attribute
+          if (stream.string.match(new RegExp("\\[\\s*" + word + "|" + word +"\\s*\\]"))) {
+            override = "atom";
+            return "block";
+          }
+
+          // tag is a variable
+          if (tagVariablesRegexp.test(word)) {
+            if ((startOfLine(stream) && stream.string.match(/=/)) ||
+                (!startOfLine(stream) &&
+                 !stream.string.match(/^(\s*\.|#|\&|\[|\/|>|\*)/) &&
+                 !wordIsTag(firstWordOfLine(stream)))) {
+              override = "variable-2";
+              if (wordIsBlock(firstWordOfLine(stream)))  return "block";
+              return pushContext(state, stream, "block", 0);
+            }
+          }
+
+          if (endOfLine(stream)) return pushContext(state, stream, "block");
+        }
+        if (override == "block-keyword") {
+          override = "keyword";
+
+          // Postfix conditionals
+          if (stream.current(/(if|unless)/) && !startOfLine(stream)) {
+            return "block";
+          }
+          return pushContext(state, stream, "block");
+        }
+        if (word == "return") return pushContext(state, stream, "block", 0);
+      }
+      return state.context.type;
+    };
+
+
+    /**
+     * Parens
+     */
+    states.parens = function(type, stream, state) {
+      if (type == "(") return pushContext(state, stream, "parens");
+      if (type == ")") {
+        if (state.context.prev.type == "parens") {
+          return popContext(state);
+        }
+        if ((stream.string.match(/^[a-z][\w-]*\(/i) && endOfLine(stream)) ||
+            wordIsBlock(firstWordOfLine(stream)) ||
+            /(\.|#|:|\[|\*|&|>|~|\+|\/)/.test(firstWordOfLine(stream)) ||
+            (!stream.string.match(/^-?[a-z][\w-\.\[\]\'\"]*\s*=/) &&
+             wordIsTag(firstWordOfLine(stream)))) {
+          return pushContext(state, stream, "block");
+        }
+        if (stream.string.match(/^[\$-]?[a-z][\w-\.\[\]\'\"]*\s*=/) ||
+            stream.string.match(/^\s*(\(|\)|[0-9])/) ||
+            stream.string.match(/^\s+[a-z][\w-]*\(/i) ||
+            stream.string.match(/^\s+[\$-]?[a-z]/i)) {
+          return pushContext(state, stream, "block", 0);
+        }
+        if (endOfLine(stream)) return pushContext(state, stream, "block");
+        else return pushContext(state, stream, "block", 0);
+      }
+      if (type && type.charAt(0) == "@" && wordIsProperty(stream.current().slice(1))) {
+        override = "variable-2";
+      }
+      if (type == "word") {
+        var word = stream.current();
+        override = wordAsValue(word);
+        if (override == "tag" && tagVariablesRegexp.test(word)) {
+          override = "variable-2";
+        }
+        if (override == "property" || word == "to") override = "atom";
+      }
+      if (type == "variable-name") {
+        return pushContext(state, stream, "variableName");
+      }
+      if (typeIsPseudo(type, stream)) {
+        return pushContext(state, stream, "pseudo");
+      }
+      return state.context.type;
+    };
+
+
+    /**
+     * Vendor prefixes
+     */
+    states.vendorPrefixes = function(type, stream, state) {
+      if (type == "word") {
+        override = "property";
+        return pushContext(state, stream, "block", 0);
+      }
+      return popContext(state);
+    };
+
+
+    /**
+     * Pseudo
+     */
+    states.pseudo = function(type, stream, state) {
+      if (!wordIsProperty(firstWordOfLine(stream.string))) {
+        stream.match(/^[a-z-]+/);
+        override = "variable-3";
+        if (endOfLine(stream)) return pushContext(state, stream, "block");
+        return popContext(state);
+      }
+      return popAndPass(type, stream, state);
+    };
+
+
+    /**
+     * atBlock
+     */
+    states.atBlock = function(type, stream, state) {
+      if (type == "(") return pushContext(state, stream, "atBlock_parens");
+      if (typeIsBlock(type, stream, state)) {
+        return pushContext(state, stream, "block");
+      }
+      if (typeIsInterpolation(type, stream)) {
+        return pushContext(state, stream, "interpolation");
+      }
+      if (type == "word") {
+        var word = stream.current().toLowerCase();
+        if (/^(only|not|and|or)$/.test(word))
+          override = "keyword";
+        else if (documentTypes.hasOwnProperty(word))
+          override = "tag";
+        else if (mediaTypes.hasOwnProperty(word))
+          override = "attribute";
+        else if (mediaFeatures.hasOwnProperty(word))
+          override = "property";
+        else if (nonStandardPropertyKeywords.hasOwnProperty(word))
+          override = "string-2";
+        else override = wordAsValue(stream.current());
+        if (override == "tag" && endOfLine(stream)) {
+          return pushContext(state, stream, "block");
+        }
+      }
+      if (type == "operator" && /^(not|and|or)$/.test(stream.current())) {
+        override = "keyword";
+      }
+      return state.context.type;
+    };
+
+    states.atBlock_parens = function(type, stream, state) {
+      if (type == "{" || type == "}") return state.context.type;
+      if (type == ")") {
+        if (endOfLine(stream)) return pushContext(state, stream, "block");
+        else return pushContext(state, stream, "atBlock");
+      }
+      if (type == "word") {
+        var word = stream.current().toLowerCase();
+        override = wordAsValue(word);
+        if (/^(max|min)/.test(word)) override = "property";
+        if (override == "tag") {
+          tagVariablesRegexp.test(word) ? override = "variable-2" : override = "atom";
+        }
+        return state.context.type;
+      }
+      return states.atBlock(type, stream, state);
+    };
+
+
+    /**
+     * Keyframes
+     */
+    states.keyframes = function(type, stream, state) {
+      if (stream.indentation() == "0" && ((type == "}" && startOfLine(stream)) || type == "]" || type == "hash"
+                                          || type == "qualifier" || wordIsTag(stream.current()))) {
+        return popAndPass(type, stream, state);
+      }
+      if (type == "{") return pushContext(state, stream, "keyframes");
+      if (type == "}") {
+        if (startOfLine(stream)) return popContext(state, true);
+        else return pushContext(state, stream, "keyframes");
+      }
+      if (type == "unit" && /^[0-9]+\%$/.test(stream.current())) {
+        return pushContext(state, stream, "keyframes");
+      }
+      if (type == "word") {
+        override = wordAsValue(stream.current());
+        if (override == "block-keyword") {
+          override = "keyword";
+          return pushContext(state, stream, "keyframes");
+        }
+      }
+      if (/@(font-face|media|supports|(-moz-)?document)/.test(type)) {
+        return pushContext(state, stream, endOfLine(stream) ? "block" : "atBlock");
+      }
+      if (type == "mixin") {
+        return pushContext(state, stream, "block", 0);
+      }
+      return state.context.type;
+    };
+
+
+    /**
+     * Interpolation
+     */
+    states.interpolation = function(type, stream, state) {
+      if (type == "{") popContext(state) && pushContext(state, stream, "block");
+      if (type == "}") {
+        if (stream.string.match(/^\s*(\.|#|:|\[|\*|&|>|~|\+|\/)/i) ||
+            (stream.string.match(/^\s*[a-z]/i) && wordIsTag(firstWordOfLine(stream)))) {
+          return pushContext(state, stream, "block");
+        }
+        if (!stream.string.match(/^(\{|\s*\&)/) ||
+            stream.match(/\s*[\w-]/,false)) {
+          return pushContext(state, stream, "block", 0);
+        }
+        return pushContext(state, stream, "block");
+      }
+      if (type == "variable-name") {
+        return pushContext(state, stream, "variableName", 0);
+      }
+      if (type == "word") {
+        override = wordAsValue(stream.current());
+        if (override == "tag") override = "atom";
+      }
+      return state.context.type;
+    };
+
+
+    /**
+     * Extend/s
+     */
+    states.extend = function(type, stream, state) {
+      if (type == "[" || type == "=") return "extend";
+      if (type == "]") return popContext(state);
+      if (type == "word") {
+        override = wordAsValue(stream.current());
+        return "extend";
+      }
+      return popContext(state);
+    };
+
+
+    /**
+     * Variable name
+     */
+    states.variableName = function(type, stream, state) {
+      if (type == "string" || type == "[" || type == "]" || stream.current().match(/^(\.|\$)/)) {
+        if (stream.current().match(/^\.[\w-]+/i)) override = "variable-2";
+        if (endOfLine(stream)) return popContext(state);
+        return "variableName";
+      }
+      return popAndPass(type, stream, state);
+    };
+
+
+    return {
+      startState: function(base) {
+        return {
+          tokenize: null,
+          state: "block",
+          context: new Context("block", base || 0, null)
+        };
+      },
+      token: function(stream, state) {
+        if (!state.tokenize && stream.eatSpace()) return null;
+        style = (state.tokenize || tokenBase)(stream, state);
+        if (style && typeof style == "object") {
+          type = style[1];
+          style = style[0];
+        }
+        override = style;
+        state.state = states[state.state](type, stream, state);
+        return override;
+      },
+      indent: function(state, textAfter, line) {
+
+        var cx = state.context,
+            ch = textAfter && textAfter.charAt(0),
+            indent = cx.indent,
+            lineFirstWord = firstWordOfLine(textAfter),
+            lineIndent = line.length - line.replace(/^\s*/, "").length,
+            prevLineFirstWord = state.context.prev ? state.context.prev.line.firstWord : "",
+            prevLineIndent = state.context.prev ? state.context.prev.line.indent : lineIndent;
+
+        if (cx.prev &&
+            (ch == "}" && (cx.type == "block" || cx.type == "atBlock" || cx.type == "keyframes") ||
+             ch == ")" && (cx.type == "parens" || cx.type == "atBlock_parens") ||
+             ch == "{" && (cx.type == "at"))) {
+          indent = cx.indent - indentUnit;
+          cx = cx.prev;
+        } else if (!(/(\})/.test(ch))) {
+          if (/@|\$|\d/.test(ch) ||
+              /^\{/.test(textAfter) ||
+/^\s*\/(\/|\*)/.test(textAfter) ||
+              /^\s*\/\*/.test(prevLineFirstWord) ||
+              /^\s*[\w-\.\[\]\'\"]+\s*(\?|:|\+)?=/i.test(textAfter) ||
+/^(\+|-)?[a-z][\w-]*\(/i.test(textAfter) ||
+/^return/.test(textAfter) ||
+              wordIsBlock(lineFirstWord)) {
+            indent = lineIndent;
+          } else if (/(\.|#|:|\[|\*|&|>|~|\+|\/)/.test(ch) || wordIsTag(lineFirstWord)) {
+            if (/\,\s*$/.test(prevLineFirstWord)) {
+              indent = prevLineIndent;
+            } else if (/^\s+/.test(line) && (/(\.|#|:|\[|\*|&|>|~|\+|\/)/.test(prevLineFirstWord) || wordIsTag(prevLineFirstWord))) {
+              indent = lineIndent <= prevLineIndent ? prevLineIndent : prevLineIndent + indentUnit;
+            } else {
+              indent = lineIndent;
+            }
+          } else if (!/,\s*$/.test(line) && (wordIsVendorPrefix(lineFirstWord) || wordIsProperty(lineFirstWord))) {
+            if (wordIsBlock(prevLineFirstWord)) {
+              indent = lineIndent <= prevLineIndent ? prevLineIndent : prevLineIndent + indentUnit;
+            } else if (/^\{/.test(prevLineFirstWord)) {
+              indent = lineIndent <= prevLineIndent ? lineIndent : prevLineIndent + indentUnit;
+            } else if (wordIsVendorPrefix(prevLineFirstWord) || wordIsProperty(prevLineFirstWord)) {
+              indent = lineIndent >= prevLineIndent ? prevLineIndent : lineIndent;
+            } else if (/^(\.|#|:|\[|\*|&|@|\+|\-|>|~|\/)/.test(prevLineFirstWord) ||
+                      /=\s*$/.test(prevLineFirstWord) ||
+                      wordIsTag(prevLineFirstWord) ||
+                      /^\$[\w-\.\[\]\'\"]/.test(prevLineFirstWord)) {
+              indent = prevLineIndent + indentUnit;
+            } else {
+              indent = lineIndent;
+            }
+          }
+        }
+        return indent;
+      },
+      electricChars: "}",
+      lineComment: "//",
+      fold: "indent"
+    };
+  });
+
+  // developer.mozilla.org/en-US/docs/Web/HTML/Element
+  var tagKeywords_ = ["a","abbr","address","area","article","aside","audio", "b", "base","bdi", "bdo","bgsound","blockquote","body","br","button","canvas","caption","cite", "code","col","colgroup","data","datalist","dd","del","details","dfn","div", "dl","dt","em","embed","fieldset","figcaption","figure","footer","form","h1", "h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe", "img","input","ins","kbd","keygen","label","legend","li","link","main","map", "mark","marquee","menu","menuitem","meta","meter","nav","nobr","noframes", "noscript","object","ol","optgroup","option","output","p","param","pre", "progress","q","rp","rt","ruby","s","samp","script","section","select", "small","source","span","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","tr","track", "u","ul","var","video"];
+
+  // github.com/codemirror/CodeMirror/blob/master/mode/css/css.js
+  var documentTypes_ = ["domain", "regexp", "url", "url-prefix"];
+  var mediaTypes_ = ["all","aural","braille","handheld","print","projection","screen","tty","tv","embossed"];
+  var mediaFeatures_ = ["width","min-width","max-width","height","min-height","max-height","device-width","min-device-width","max-device-width","device-height","min-device-height","max-device-height","aspect-ratio","min-aspect-ratio","max-aspect-ratio","device-aspect-ratio","min-device-aspect-ratio","max-device-aspect-ratio","color","min-color","max-color","color-index","min-color-index","max-color-index","monochrome","min-monochrome","max-monochrome","resolution","min-resolution","max-resolution","scan","grid"];
+  var propertyKeywords_ = ["align-content","align-items","align-self","alignment-adjust","alignment-baseline","anchor-point","animation","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-timing-function","appearance","azimuth","backface-visibility","background","background-attachment","background-clip","background-color","background-image","background-origin","background-position","background-repeat","background-size","baseline-shift","binding","bleed","bookmark-label","bookmark-level","bookmark-state","bookmark-target","border","border-bottom","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-color","border-image","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-left","border-left-color","border-left-style","border-left-width","border-radius","border-right","border-right-color","border-right-style","border-right-width","border-spacing","border-style","border-top","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","border-width","bottom","box-decoration-break","box-shadow","box-sizing","break-after","break-before","break-inside","caption-side","clear","clip","color","color-profile","column-count","column-fill","column-gap","column-rule","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","columns","content","counter-increment","counter-reset","crop","cue","cue-after","cue-before","cursor","direction","display","dominant-baseline","drop-initial-after-adjust","drop-initial-after-align","drop-initial-before-adjust","drop-initial-before-align","drop-initial-size","drop-initial-value","elevation","empty-cells","fit","fit-position","flex","flex-basis","flex-direction","flex-flow","flex-grow","flex-shrink","flex-wrap","float","float-offset","flow-from","flow-into","font","font-feature-settings","font-family","font-kerning","font-language-override","font-size","font-size-adjust","font-stretch","font-style","font-synthesis","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-ligatures","font-variant-numeric","font-variant-position","font-weight","grid","grid-area","grid-auto-columns","grid-auto-flow","grid-auto-position","grid-auto-rows","grid-column","grid-column-end","grid-column-start","grid-row","grid-row-end","grid-row-start","grid-template","grid-template-areas","grid-template-columns","grid-template-rows","hanging-punctuation","height","hyphens","icon","image-orientation","image-rendering","image-resolution","inline-box-align","justify-content","left","letter-spacing","line-break","line-height","line-stacking","line-stacking-ruby","line-stacking-shift","line-stacking-strategy","list-style","list-style-image","list-style-position","list-style-type","margin","margin-bottom","margin-left","margin-right","margin-top","marker-offset","marks","marquee-direction","marquee-loop","marquee-play-count","marquee-speed","marquee-style","max-height","max-width","min-height","min-width","move-to","nav-down","nav-index","nav-left","nav-right","nav-up","object-fit","object-position","opacity","order","orphans","outline","outline-color","outline-offset","outline-style","outline-width","overflow","overflow-style","overflow-wrap","overflow-x","overflow-y","padding","padding-bottom","padding-left","padding-right","padding-top","page","page-break-after","page-break-before","page-break-inside","page-policy","pause","pause-after","pause-before","perspective","perspective-origin","pitch","pitch-range","play-during","position","presentation-level","punctuation-trim","quotes","region-break-after","region-break-before","region-break-inside","region-fragment","rendering-intent","resize","rest","rest-after","rest-before","richness","right","rotation","rotation-point","ruby-align","ruby-overhang","ruby-position","ruby-span","shape-image-threshold","shape-inside","shape-margin","shape-outside","size","speak","speak-as","speak-header","speak-numeral","speak-punctuation","speech-rate","stress","string-set","tab-size","table-layout","target","target-name","target-new","target-position","text-align","text-align-last","text-decoration","text-decoration-color","text-decoration-line","text-decoration-skip","text-decoration-style","text-emphasis","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-height","text-indent","text-justify","text-outline","text-overflow","text-shadow","text-size-adjust","text-space-collapse","text-transform","text-underline-position","text-wrap","top","transform","transform-origin","transform-style","transition","transition-delay","transition-duration","transition-property","transition-timing-function","unicode-bidi","vertical-align","visibility","voice-balance","voice-duration","voice-family","voice-pitch","voice-range","voice-rate","voice-stress","voice-volume","volume","white-space","widows","width","word-break","word-spacing","word-wrap","z-index","clip-path","clip-rule","mask","enable-background","filter","flood-color","flood-opacity","lighting-color","stop-color","stop-opacity","pointer-events","color-interpolation","color-interpolation-filters","color-rendering","fill","fill-opacity","fill-rule","image-rendering","marker","marker-end","marker-mid","marker-start","shape-rendering","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","text-rendering","baseline-shift","dominant-baseline","glyph-orientation-horizontal","glyph-orientation-vertical","text-anchor","writing-mode","font-smoothing","osx-font-smoothing"];
+  var nonStandardPropertyKeywords_ = ["scrollbar-arrow-color","scrollbar-base-color","scrollbar-dark-shadow-color","scrollbar-face-color","scrollbar-highlight-color","scrollbar-shadow-color","scrollbar-3d-light-color","scrollbar-track-color","shape-inside","searchfield-cancel-button","searchfield-decoration","searchfield-results-button","searchfield-results-decoration","zoom"];
+  var fontProperties_ = ["font-family","src","unicode-range","font-variant","font-feature-settings","font-stretch","font-weight","font-style"];
+  var colorKeywords_ = ["aliceblue","antiquewhite","aqua","aquamarine","azure","beige","bisque","black","blanchedalmond","blue","blueviolet","brown","burlywood","cadetblue","chartreuse","chocolate","coral","cornflowerblue","cornsilk","crimson","cyan","darkblue","darkcyan","darkgoldenrod","darkgray","darkgreen","darkkhaki","darkmagenta","darkolivegreen","darkorange","darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkturquoise","darkviolet","deeppink","deepskyblue","dimgray","dodgerblue","firebrick","floralwhite","forestgreen","fuchsia","gainsboro","ghostwhite","gold","goldenrod","gray","grey","green","greenyellow","honeydew","hotpink","indianred","indigo","ivory","khaki","lavender","lavenderblush","lawngreen","lemonchiffon","lightblue","lightcoral","lightcyan","lightgoldenrodyellow","lightgray","lightgreen","lightpink","lightsalmon","lightseagreen","lightskyblue","lightslategray","lightsteelblue","lightyellow","lime","limegreen","linen","magenta","maroon","mediumaquamarine","mediumblue","mediumorchid","mediumpurple","mediumseagreen","mediumslateblue","mediumspringgreen","mediumturquoise","mediumvioletred","midnightblue","mintcream","mistyrose","moccasin","navajowhite","navy","oldlace","olive","olivedrab","orange","orangered","orchid","palegoldenrod","palegreen","paleturquoise","palevioletred","papayawhip","peachpuff","peru","pink","plum","powderblue","purple","rebeccapurple","red","rosybrown","royalblue","saddlebrown","salmon","sandybrown","seagreen","seashell","sienna","silver","skyblue","slateblue","slategray","snow","springgreen","steelblue","tan","teal","thistle","tomato","turquoise","violet","wheat","white","whitesmoke","yellow","yellowgreen"];
+  var valueKeywords_ = ["above","absolute","activeborder","additive","activecaption","afar","after-white-space","ahead","alias","all","all-scroll","alphabetic","alternate","always","amharic","amharic-abegede","antialiased","appworkspace","arabic-indic","armenian","asterisks","attr","auto","avoid","avoid-column","avoid-page","avoid-region","background","backwards","baseline","below","bidi-override","binary","bengali","blink","block","block-axis","bold","bolder","border","border-box","both","bottom","break","break-all","break-word","bullets","button","button-bevel","buttonface","buttonhighlight","buttonshadow","buttontext","calc","cambodian","capitalize","caps-lock-indicator","caption","captiontext","caret","cell","center","checkbox","circle","cjk-decimal","cjk-earthly-branch","cjk-heavenly-stem","cjk-ideographic","clear","clip","close-quote","col-resize","collapse","column","compact","condensed","contain","content","content-box","context-menu","continuous","copy","counter","counters","cover","crop","cross","crosshair","currentcolor","cursive","cyclic","dashed","decimal","decimal-leading-zero","default","default-button","destination-atop","destination-in","destination-out","destination-over","devanagari","disc","discard","disclosure-closed","disclosure-open","document","dot-dash","dot-dot-dash","dotted","double","down","e-resize","ease","ease-in","ease-in-out","ease-out","element","ellipse","ellipsis","embed","end","ethiopic","ethiopic-abegede","ethiopic-abegede-am-et","ethiopic-abegede-gez","ethiopic-abegede-ti-er","ethiopic-abegede-ti-et","ethiopic-halehame-aa-er","ethiopic-halehame-aa-et","ethiopic-halehame-am-et","ethiopic-halehame-gez","ethiopic-halehame-om-et","ethiopic-halehame-sid-et","ethiopic-halehame-so-et","ethiopic-halehame-ti-er","ethiopic-halehame-ti-et","ethiopic-halehame-tig","ethiopic-numeric","ew-resize","expanded","extends","extra-condensed","extra-expanded","fantasy","fast","fill","fixed","flat","flex","footnotes","forwards","from","geometricPrecision","georgian","graytext","groove","gujarati","gurmukhi","hand","hangul","hangul-consonant","hebrew","help","hidden","hide","higher","highlight","highlighttext","hiragana","hiragana-iroha","horizontal","hsl","hsla","icon","ignore","inactiveborder","inactivecaption","inactivecaptiontext","infinite","infobackground","infotext","inherit","initial","inline","inline-axis","inline-block","inline-flex","inline-table","inset","inside","intrinsic","invert","italic","japanese-formal","japanese-informal","justify","kannada","katakana","katakana-iroha","keep-all","khmer","korean-hangul-formal","korean-hanja-formal","korean-hanja-informal","landscape","lao","large","larger","left","level","lighter","line-through","linear","linear-gradient","lines","list-item","listbox","listitem","local","logical","loud","lower","lower-alpha","lower-armenian","lower-greek","lower-hexadecimal","lower-latin","lower-norwegian","lower-roman","lowercase","ltr","malayalam","match","matrix","matrix3d","media-controls-background","media-current-time-display","media-fullscreen-button","media-mute-button","media-play-button","media-return-to-realtime-button","media-rewind-button","media-seek-back-button","media-seek-forward-button","media-slider","media-sliderthumb","media-time-remaining-display","media-volume-slider","media-volume-slider-container","media-volume-sliderthumb","medium","menu","menulist","menulist-button","menulist-text","menulist-textfield","menutext","message-box","middle","min-intrinsic","mix","mongolian","monospace","move","multiple","myanmar","n-resize","narrower","ne-resize","nesw-resize","no-close-quote","no-drop","no-open-quote","no-repeat","none","normal","not-allowed","nowrap","ns-resize","numbers","numeric","nw-resize","nwse-resize","oblique","octal","open-quote","optimizeLegibility","optimizeSpeed","oriya","oromo","outset","outside","outside-shape","overlay","overline","padding","padding-box","painted","page","paused","persian","perspective","plus-darker","plus-lighter","pointer","polygon","portrait","pre","pre-line","pre-wrap","preserve-3d","progress","push-button","radial-gradient","radio","read-only","read-write","read-write-plaintext-only","rectangle","region","relative","repeat","repeating-linear-gradient","repeating-radial-gradient","repeat-x","repeat-y","reset","reverse","rgb","rgba","ridge","right","rotate","rotate3d","rotateX","rotateY","rotateZ","round","row-resize","rtl","run-in","running","s-resize","sans-serif","scale","scale3d","scaleX","scaleY","scaleZ","scroll","scrollbar","se-resize","searchfield","searchfield-cancel-button","searchfield-decoration","searchfield-results-button","searchfield-results-decoration","semi-condensed","semi-expanded","separate","serif","show","sidama","simp-chinese-formal","simp-chinese-informal","single","skew","skewX","skewY","skip-white-space","slide","slider-horizontal","slider-vertical","sliderthumb-horizontal","sliderthumb-vertical","slow","small","small-caps","small-caption","smaller","solid","somali","source-atop","source-in","source-out","source-over","space","spell-out","square","square-button","start","static","status-bar","stretch","stroke","sub","subpixel-antialiased","super","sw-resize","symbolic","symbols","table","table-caption","table-cell","table-column","table-column-group","table-footer-group","table-header-group","table-row","table-row-group","tamil","telugu","text","text-bottom","text-top","textarea","textfield","thai","thick","thin","threeddarkshadow","threedface","threedhighlight","threedlightshadow","threedshadow","tibetan","tigre","tigrinya-er","tigrinya-er-abegede","tigrinya-et","tigrinya-et-abegede","to","top","trad-chinese-formal","trad-chinese-informal","translate","translate3d","translateX","translateY","translateZ","transparent","ultra-condensed","ultra-expanded","underline","up","upper-alpha","upper-armenian","upper-greek","upper-hexadecimal","upper-latin","upper-norwegian","upper-roman","uppercase","urdu","url","var","vertical","vertical-text","visible","visibleFill","visiblePainted","visibleStroke","visual","w-resize","wait","wave","wider","window","windowframe","windowtext","words","x-large","x-small","xor","xx-large","xx-small","bicubic","optimizespeed","grayscale"];
+
+  var wordOperatorKeywords_ = ["in","and","or","not","is not","is a","is","isnt","defined","if unless"],
+      blockKeywords_ = ["for","if","else","unless", "from", "to"],
+      commonAtoms_ = ["null","true","false","href","title","type","not-allowed","readonly","disabled"],
+      commonDef_ = ["@font-face", "@keyframes", "@media", "@viewport", "@page", "@host", "@supports", "@block", "@css"];
+
+  var hintWords = tagKeywords_.concat(documentTypes_,mediaTypes_,mediaFeatures_,
+                                      propertyKeywords_,nonStandardPropertyKeywords_,
+                                      colorKeywords_,valueKeywords_,fontProperties_,
+                                      wordOperatorKeywords_,blockKeywords_,
+                                      commonAtoms_,commonDef_);
+
+  function wordRegexp(words) {
+    words = words.sort(function(a,b){return b > a;});
+    return new RegExp("^((" + words.join(")|(") + "))\\b");
+  }
+
+  function keySet(array) {
+    var keys = {};
+    for (var i = 0; i < array.length; ++i) keys[array[i]] = true;
+    return keys;
+  }
+
+  function escapeRegExp(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+
+  CodeMirror.registerHelper("hintWords", "stylus", hintWords);
+  CodeMirror.defineMIME("text/x-styl", "stylus");
+});
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
     mod(require("../../lib/codemirror"));
   else if (typeof define == "function" && define.amd) // AMD
     define(["../../lib/codemirror"], mod);
@@ -12014,6 +13429,8 @@ var core = Global.coreMethods = {
 			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 
 				if(!_err){ 
+
+					console.log("user settings file: ",_data);
 
 					if(typeof _successCallback === "function") _successCallback(_data);
 
@@ -12707,31 +14124,79 @@ var core = Global.coreMethods = {
 
 
 
-	updateEditor: function(pathToFile) {
+	updateEditor: function() {
 
 
 
-		var extension = path.extname(pathToFile);
-
-		var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
+		var ext = path.extname(core.localData.currentFile);
 
 		
 
-		if(compatibleExtensions.indexOf(extension) !== -1){
+		var extMap = {
 
-			console.log("");console.log("====");
+			".html": "htmlmixed",
 
-			console.log("brand:", core.localData.currentBrand);
+			".css": "css",
 
-			console.log("project:", core.localData.currentProject);
+			".scss": "sass",
 
-			console.log("file:", core.localData.currentFile);
+			".styl": "stylus",
 
-			console.log("extension:", extension);
+			".js": "javascript",
 
-			console.log("====");
+			".qtheme": "json",
+
+			".json": "json"
+
+		}
 
 
+
+		if(extMap.hasOwnProperty(ext)){
+
+			if(myCodeMirror.getOption("mode") !== extMap[ext]){
+
+				myCodeMirror.setOption("mode", extMap[ext]);
+
+			}	
+
+
+
+			var pathToFile = core.brands.getPathToBrands()+"/"
+
+				+core.localData.currentBrand +"/"
+
+				+core.localData.currentProject +"/"
+
+				+core.localData.currentFile; 
+
+
+
+			fs.readFile(pathToFile, "utf-8", function(err, data){
+
+				if(err){ console.log("ERR",err);}
+
+				else {
+
+					// console.log("file Contents", data);
+
+					myCodeMirror.setValue(data);
+
+				}
+
+			});
+
+console.log("====");
+
+			// console.log("brand:", core.localData.currentBrand);
+
+			// console.log("project:", core.localData.currentProject);
+
+			// console.log("file:", core.localData.currentFile);
+
+			// console.log("ext:", ext);
+
+			// console.log("====");
 
 		}
 
@@ -13938,7 +15403,7 @@ editorCore.dropdowns.files = {
 				el("+div").addClass("header").text("Files")
 			)
 			for(var i = 0, ii = files.length; i < ii; i ++){
-				if(files[i].indexOf("StyleSheet") !== -1){
+				if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
 					filesDropdownBody.append(
 						el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
 					)
@@ -14002,7 +15467,7 @@ editorCore.dropdowns.files = {
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
 		core.localData.setCurrentFile(_fileName);
-		core.updateEditor(_fileName);
+		core.updateEditor();
 	},
 	purge: function() {
 		filesDropdownBody.purge();

@@ -64,6 +64,7 @@ var core = Global.coreMethods = {
 		read: function(_successCallback){
 			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
+					console.log("user settings file: ",_data);
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
@@ -410,19 +411,43 @@ var core = Global.coreMethods = {
 		});
 	},
 
-	updateEditor: function(pathToFile) {
+	updateEditor: function() {
 
-		var extension = path.extname(pathToFile);
-		var compatibleExtensions = [".html", ".css", ".scss", ".styl", ".js", ".qtheme", ".json"];
+		var ext = path.extname(core.localData.currentFile);
 		
-		if(compatibleExtensions.indexOf(extension) !== -1){
-			console.log("");console.log("====");
-			console.log("brand:", core.localData.currentBrand);
-			console.log("project:", core.localData.currentProject);
-			console.log("file:", core.localData.currentFile);
-			console.log("extension:", extension);
-			console.log("====");
+		var extMap = {
+			".html": "htmlmixed",
+			".css": "css",
+			".scss": "sass",
+			".styl": "stylus",
+			".js": "javascript",
+			".qtheme": "json",
+			".json": "json"
+		}
 
+		if(extMap.hasOwnProperty(ext)){
+			if(myCodeMirror.getOption("mode") !== extMap[ext]){
+				myCodeMirror.setOption("mode", extMap[ext]);
+			}	
+
+			var pathToFile = core.brands.getPathToBrands()+"/"
+				+core.localData.currentBrand +"/"
+				+core.localData.currentProject +"/"
+				+core.localData.currentFile; 
+
+			fs.readFile(pathToFile, "utf-8", function(err, data){
+				if(err){ console.log("ERR",err);}
+				else {
+					// console.log("file Contents", data);
+					myCodeMirror.setValue(data);
+				}
+			});
+console.log("====");
+			// console.log("brand:", core.localData.currentBrand);
+			// console.log("project:", core.localData.currentProject);
+			// console.log("file:", core.localData.currentFile);
+			// console.log("ext:", ext);
+			// console.log("====");
 		}
 	}
 };

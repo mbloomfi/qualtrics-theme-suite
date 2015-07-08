@@ -72,7 +72,7 @@ editorCore.dropdowns.files = {
 				el("+div").addClass("header").text("Files")
 			)
 			for(var i = 0, ii = files.length; i < ii; i ++){
-				if(files[i].indexOf("StyleSheet") !== -1){
+				if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
 					filesDropdownBody.append(
 						el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
 					)
@@ -136,7 +136,7 @@ editorCore.dropdowns.files = {
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
 		core.localData.setCurrentFile(_fileName);
-		core.updateEditor(_fileName);
+		core.updateEditor();
 	},
 	purge: function() {
 		filesDropdownBody.purge();
