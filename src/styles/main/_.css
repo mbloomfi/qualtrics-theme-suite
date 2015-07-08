@@ -605,10 +605,26 @@ section#editor section#sectionInner div#editorBar div#editorBarInner {
 section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow {
   color: inherit;
   display: inline-block;
+  position: relative;
   margin: 0 4px;
   height: 100%;
   float: left;
   opacity: 1;
+  -webkit-transition: opacity 0.3s ease;
+          transition: opacity 0.3s ease;
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow img {
+  height: 50%;
+  width: auto;
+  position: relative;
+  float: left;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow.inactive {
+  opacity: 0.4;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
   height: 100%;
@@ -621,8 +637,8 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
   letter-spacing: 0.25px;
   background-color: rgba(255,255,255,0);
   cursor: pointer;
-  -webkit-transition: background-color 0.3s ease;
-          transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease, color 0.3s ease;
+          transition: background-color 0.3s ease, color 0.3s ease;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn:hover {
   background-color: rgba(255,255,255,0.2);
@@ -635,6 +651,9 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.ina
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive:hover {
   background-color: rgba(255,255,255,0);
+}
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn .dirty {
+  color: #df4848;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown {
   overflow: hidden;
@@ -1017,6 +1036,24 @@ section#editor section#sectionInner #codemirror-wrapper {
     height: 96.25%;
     top: 3.75%;
   }
+}
+section#editor section#sectionInner #codemirror-wrapper #codeMirror-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 100;
+  -webkit-transition: opacity 0.2s ease;
+          transition: opacity 0.2s ease;
+}
+section#editor section#sectionInner #codemirror-wrapper #codeMirror-cover.hide {
+  opacity: 0;
+}
+section#editor section#sectionInner #codemirror-wrapper #codeMirror-cover.remove {
+  height: 0;
+  width: 0;
 }
 section#editor.hide {
   left: -100%;

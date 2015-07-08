@@ -49,6 +49,7 @@ editorCore.dropdowns.files = {
 		var self = this;
 		if(self.active === false) {
 			fileName.rmClass("inactive");
+			el("#files_arrow").rmClass("inactive");
 			// console.log("getting files for:", _projectName);
 			self.active = true;
 		}
@@ -57,6 +58,7 @@ editorCore.dropdowns.files = {
 		var self = this;
 		if(self.active === true) {
 			fileName.addClass("inactive");
+			el("#files_arrow").addClass("inactive");
 			self.active = false;
 		}
 	},
@@ -64,10 +66,10 @@ editorCore.dropdowns.files = {
 	populate: function(_projectName){
 		var self = this;
 		self.purge();
-		console.log("==populating")
+		// console.log("==populating")
 		el("#fileNameText").purge().text("Files");
 		core.brands.projects.files.list(_projectName, function(files){
-			console.log("files",files);
+			// console.log("files",files);
 			filesDropdownBody.append(
 				el("+div").addClass("header").text("Files")
 			)
@@ -132,14 +134,27 @@ editorCore.dropdowns.files = {
 		// add the add new container
 	},
 	select: function(_fileName){
-		console.log("selecting:",_fileName);
+		// console.log("selecting:",_fileName);
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
+		core.codeMirror.activate();
 		core.localData.setCurrentFile(_fileName);
 		core.updateEditor();
 	},
 	purge: function() {
 		filesDropdownBody.purge();
-	}
+	},
+
+	setDirty: function(){
+		el("#fileNameText").purge().append(
+			el("+span").addClass("dirty").text("*")
+		).text(core.localData.currentFile.name);
+		core.localData.currentFile.dirty = true;
+	},
+
+	setClean: function(){
+		el("#fileNameText").purge().text(core.localData.currentFile.name);
+		core.localData.currentFile.dirty = false;
+	},
 
 };

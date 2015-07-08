@@ -39,7 +39,7 @@ var core = Global.coreMethods = {
 		read: function(_successCallback){
 			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
-					console.log("user settings file: ",_data);
+					// console.log("user settings file: ",_data);
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
@@ -120,7 +120,7 @@ var core = Global.coreMethods = {
 			ext: ".qtheme",
 			create: function(_brandName){
 
-				console.log("creating info file for:", _brandName);
+				// console.log("creating info file for:", _brandName);
 			},
 			update: function(_brandName, _key, _value){
 
@@ -197,7 +197,7 @@ var core = Global.coreMethods = {
 			list: function(_brandName, _callback){
 				
 				baton(function(next){
-					console.log("brandName:", _brandName);
+					// console.log("brandName:", _brandName);
 					core.brands.exists(_brandName, next);
 				})
 				.then(function(next, exists){
@@ -251,6 +251,11 @@ var core = Global.coreMethods = {
 			},
 
 			files: {
+				current: {
+					path: null,
+					dirty: false
+				},
+
 				list: function(_projectName, _callback){
 
 					baton(function(next){
@@ -289,8 +294,15 @@ var core = Global.coreMethods = {
 		userSettings: null,
 		currentBrand: null,
 		currentProject: null,
-		currentFile: null,
-		pathToCurrentFile: null,
+		currentFile:{
+			name: null,
+			path: null,
+			dirty: null,
+			clear: function(){
+				var self = this;
+				self.name = self.path = self.dirty = null;
+			}
+		},
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 		updateUserSettings: function(_callback){ // should only be run on app init
@@ -368,12 +380,12 @@ var core = Global.coreMethods = {
 		},
 
 		setCurrentFile: function(_fileName){
-			core.localData.currentFile = _fileName;
+			core.localData.currentFile.name = _fileName;
 
-			core.localData.pathToCurrentFile = core.brands.getPathToBrands()+"/"+
+			core.localData.currentFile.path = core.brands.getPathToBrands()+"/"+
 				core.localData.currentBrand+"/"+
 				core.localData.currentProject+"/"+
-				core.localData.currentFile; ;
+				core.localData.currentFile.name; ;
 		}
 	},
 
@@ -394,7 +406,7 @@ var core = Global.coreMethods = {
 
 	updateEditor: function() {
 
-		var ext = path.extname(core.localData.currentFile);
+		var ext = path.extname(core.localData.currentFile.name);
 		
 		var extMap = {
 			".html": "htmlmixed",
@@ -412,7 +424,7 @@ var core = Global.coreMethods = {
 			}	
 
 
-			fs.readFile(core.localData.pathToCurrentFile, "utf-8", function(err, data){
+			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
 				if(err){ console.log("ERR",err);}
 				else {
 					// console.log("file Contents", data);
@@ -427,17 +439,87 @@ var core = Global.coreMethods = {
 		}
 	},
 
-	saveEditorFile: function(){
-		if(core.localData.pathToCurrentFile !== null){
-			fs.writeFile(core.localData.pathToCurrentFile, myCodeMirror.getValue(), function(err){
-				if(err){ console.log("ERR",err);}
-				else {
-					// console.log("file Contents", data);
-					console.log("saved code!");
-				}
-			});
-		}
+	prompt: function(_dialogue, _confirm, _cancel, _confirmCallback){
+
+
+	},
+
+
+	codeMirror: {
+		active: false,
+		activate: function(){
+			if(this.active === false){
+
+				var codeMirrorCover = el("#codeMirror-cover");
+				codeMirrorCover.addClass("hide");
+				setTimeout(function(){
+					codeMirrorCover.addClass("remove");
+				},200);
+
+				this.active = true;
+				console.log("activating");
+
+			}
+		},
+		deactivate: function(){
+			if(this.active === true){
+
+				var codeMirrorCover = el("#codeMirror-cover");
+				codeMirrorCover.rmClass("remove");
+				setTimeout(function(){
+					codeMirrorCover.rmClass("hide");
+				},0);
+
+				
+
+				this.active = false;
+				console.log("deactivating");
+				core.localData.currentFile.clear();
+			}
+		},
+
+
+
+		detectChanges: function(){
+			var self = this;
 			
+
+			myCodeMirror.on("change", function(){
+				if(core.localData.currentFile.name !== null){
+
+					if(core.localData.currentFile.dirty === null){
+						core.localData.currentFile.dirty = false;
+					} else if(core.localData.currentFile.dirty !== true) {
+						core.localData.currentFile.dirty = true;
+						editorCore.dropdowns.files.setDirty();
+						console.log("change");
+					}
+					
+					
+				}
+				
+				
+			})
+		},
+
+		saveEditorFile: function(){
+			if(core.localData.currentFile.path !== null){
+				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
+					if(err){ console.log("ERR",err);}
+					else {
+						// console.log("file Contents", data);
+						editorCore.dropdowns.files.setClean();
+						console.log("saved code!");
+					}
+				});
+			}
+				
+		},
+
+		isDirty: function(){
+			return (core.localData.currentFile.dirty === true) ? true : false;
+		}
+
 	}
 };
 

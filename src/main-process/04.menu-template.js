@@ -79,6 +79,20 @@ var menuTemplate = [
       {
         label: 'Duplicate Project'
       },
+       {
+        type: "separator"
+      },
+      {
+        label: 'File',
+        enabled: false
+      },
+      {
+        label: 'Save File',
+        accelerator: 'Command+S',
+        click: function(){
+          mainWindow.webContents.executeJavaScript("core.codeMirror.saveEditorFile()");
+        }
+      },
       {
         type: 'separator'
       },

@@ -3,7 +3,7 @@ editorCore.dropdowns.projects = {
 	status: "closed",
 
 	select: function(_projectName){
-		console.log("selecting", _projectName);
+		// console.log("selecting", _projectName);
 		var self = this;
 		self.close();
 		el("#projectNameText").purge().text(_projectName);
@@ -14,6 +14,7 @@ editorCore.dropdowns.projects = {
 		editorCore.dropdowns.files.activate(_projectName);
 		editorCore.dropdowns.files.populate(_projectName);
 
+		core.codeMirror.deactivate();
 
 	},
 
@@ -49,6 +50,7 @@ editorCore.dropdowns.projects = {
 		var currentBrand = core.localData.currentBrand;
 		self.reset();
 		projectName.rmClass("inactive");
+		el("#projects_arrow").rmClass("inactive");
 		// remove inactive class
 	},
 
@@ -114,7 +116,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	noProjects: function(){
-		console.log("no projects");
+		// console.log("no projects");
 		projectDropdownBody.append(
 			el("+div").addClass("no-projects").text("(no projects)")
 		)
@@ -158,7 +160,7 @@ editorCore.dropdowns.projects = {
 			}
 
 			function newProject(inputVal, projects){
-					console.log("submit", inputVal);
+					// console.log("submit", inputVal);
 					var match = false;
 					for(var i = 0, ii = projects.length; i < ii; i++){
 						if( projects[i].toUpperCase() === inputVal.toUpperCase() ) match = true;
@@ -167,7 +169,7 @@ editorCore.dropdowns.projects = {
 					if(!match){
 						core.brands.projects.create(core.localData.currentBrand, inputVal, function(){
 							editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
-								console.log("select:", inputVal);
+								// console.log("select:", inputVal);
 								editorCore.dropdowns.projects.select(inputVal);
 
 							});
@@ -178,7 +180,7 @@ editorCore.dropdowns.projects = {
 					else {
 						alert("Project Name Already Exists");
 					}
-					console.log("arr", projects);
+					// console.log("arr", projects);
 			}
 
 			newProjectInput.on("keyup", function(e){
@@ -205,13 +207,15 @@ editorCore.dropdowns.projects = {
 		projectDropdownInputCont.purge();
 	},
 
+
+
 	copyBaseFilesToProject: function(_projectName, _callback){
 		var _brandName = core.localData.currentBrand;
 		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
 		var pathToBaseFiles = core.localData.pathToBaseFiles;
 
 		core.getFiles(pathToBaseFiles, function(files){
-			console.log("these are the files:",files)
+			// console.log("these are the files:",files)
 			for(var i = 0, ii = files.length; i < ii; i++){
 				fs.copySync(pathToBaseFiles+"/"+files[i], pathToProject+"/"+files[i])
 			}

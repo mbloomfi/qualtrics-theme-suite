@@ -26,22 +26,53 @@ editorCore.dropdowns.brands = {
 
 	select: function(_brandName){
 		var self = this;
-		core.brands.exists(_brandName, function(exists){
-				if(exists){
-					el("#brandNameText").purge().text(_brandName);
-					core.brands.select(_brandName);
-					// activate projects dropdown
-					editorCore.dropdowns.projects.activate();
-					editorCore.dropdowns.files.deactivate();
-					self.close();
-				} else {
-					self.close();
-					core.localData.rmFromRecentBrands(_brandName, function(){
-						alert("Brand not found. Brand removed from recent brands.");
-					})
+
+		function selectBrand(){
+
+			core.brands.exists(_brandName, function(exists){
+					if(exists){
+						el("#brandNameText").purge().text(_brandName);
+						core.brands.select(_brandName);
+						// activate projects dropdown
+						editorCore.dropdowns.projects.activate();
+						editorCore.dropdowns.files.deactivate();
+						core.codeMirror.deactivate();
+						self.close();
+					} else {
+						self.close();
+						core.localData.rmFromRecentBrands(_brandName, function(){
+							alert("Brand not found. Brand removed from recent brands.");
+						})
+					}	
+			});
+
+		}
+
+			if(core.codeMirror.isDirty()) {
+
+						Prompter.prompt({
+							message: "Current File Not Saved.",
+							mainBtn: {
+								text: "Cancel",
+								onClick: function(){
+									Prompter.hide();
+								}
+							},
+							btn2: {
+								text: "Continue Anyway",
+								onClick: function(){
+									Prompter.hide();
+									selectBrand();
+								}
+							},
+							btn3: null,
+						}) ;
+
+				}	else {
+					selectBrand();
 				}
-				
-		});
+
+		
 		
 		
 	},

@@ -124,9 +124,13 @@ el.on("load", function(){
 		editorCore.dropdowns.projects.init();
 
 		editorCore.dropdowns.files.prepare();
+
+
 		// editorCore.dropdowns.files.init();
 
 		codemirrorInit();
+
+		core.codeMirror.detectChanges();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 	})

@@ -77,10 +77,27 @@ section#editor {
 				span.arrow {
 					color inherit
 					display inline-block
+					position relative
 					margin 0 4px
 					height 100%
 					float left
 					opacity 1
+					// background purple
+					transition opacity .3s ease
+					
+					img {
+						height 50%
+						width auto
+						// background lime
+						position relative
+						float left
+						top 50%
+						transform translateY(-50%)
+					}
+					
+					&.inactive {
+						opacity 0.4
+					}
 					
 				}
 				
@@ -133,7 +150,7 @@ section#editor {
 					
 					background-color rgba(255,255,255,0)
 					cursor pointer
-					transition background-color .3s ease
+					transition background-color .3s ease, color .3s ease
 					&:hover {
 						background-color rgba(255,255,255,.2)
 					}
@@ -146,6 +163,10 @@ section#editor {
 						&:hover {
 							background-color rgba(255,255,255,0)
 						}
+					}
+					
+					.dirty {
+						color $primaryColor
 					}
 					
 					div.dropdown {
@@ -598,6 +619,23 @@ section#editor {
 			@media screen and (min-height:1200px){
 				height ($codemirrorHeight + ($heightChange * 0.5))%
 				top ($editorBarHeight - ($heightChange * 0.5))%
+			}
+			#codeMirror-cover {
+				position absolute
+				top 0
+				left 0
+				width 100%
+				height 100%
+				background-color rgba(0,0,0,.4)
+				z-index 100
+				transition opacity .2s ease
+				&.hide {
+					opacity 0
+				}
+				&.remove {
+					height 0
+					width 0
+				}
 			}
 		}
 		

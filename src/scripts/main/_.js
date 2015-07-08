@@ -13430,7 +13430,7 @@ var core = Global.coreMethods = {
 
 				if(!_err){ 
 
-					console.log("user settings file: ",_data);
+					// console.log("user settings file: ",_data);
 
 					if(typeof _successCallback === "function") _successCallback(_data);
 
@@ -13592,7 +13592,7 @@ var core = Global.coreMethods = {
 
 
 
-				console.log("creating info file for:", _brandName);
+				// console.log("creating info file for:", _brandName);
 
 			},
 
@@ -13746,7 +13746,7 @@ var core = Global.coreMethods = {
 
 				baton(function(next){
 
-					console.log("brandName:", _brandName);
+					// console.log("brandName:", _brandName);
 
 					core.brands.exists(_brandName, next);
 
@@ -13854,6 +13854,16 @@ var core = Global.coreMethods = {
 
 			files: {
 
+				current: {
+
+					path: null,
+
+					dirty: false
+
+				},
+
+
+
 				list: function(_projectName, _callback){
 
 
@@ -13930,9 +13940,23 @@ var core = Global.coreMethods = {
 
 		currentProject: null,
 
-		currentFile: null,
+		currentFile:{
 
-		pathToCurrentFile: null,
+			name: null,
+
+			path: null,
+
+			dirty: null,
+
+			clear: function(){
+
+				var self = this;
+
+				self.name = self.path = self.dirty = null;
+
+			}
+
+		},
 
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
@@ -14088,17 +14112,17 @@ var core = Global.coreMethods = {
 
 		setCurrentFile: function(_fileName){
 
-			core.localData.currentFile = _fileName;
+			core.localData.currentFile.name = _fileName;
 
 
 
-			core.localData.pathToCurrentFile = core.brands.getPathToBrands()+"/"+
+			core.localData.currentFile.path = core.brands.getPathToBrands()+"/"+
 
 				core.localData.currentBrand+"/"+
 
 				core.localData.currentProject+"/"+
 
-				core.localData.currentFile; ;
+				core.localData.currentFile.name; ;
 
 		}
 
@@ -14140,7 +14164,7 @@ var core = Global.coreMethods = {
 
 
 
-		var ext = path.extname(core.localData.currentFile);
+		var ext = path.extname(core.localData.currentFile.name);
 
 		
 
@@ -14176,7 +14200,7 @@ var core = Global.coreMethods = {
 
 
 
-			fs.readFile(core.localData.pathToCurrentFile, "utf-8", function(err, data){
+			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
 
 				if(err){ console.log("ERR",err);}
 
@@ -14206,27 +14230,167 @@ var core = Global.coreMethods = {
 
 
 
-	saveEditorFile: function(){
+	prompt: function(_dialogue, _confirm, _cancel, _confirmCallback){
 
-		if(core.localData.pathToCurrentFile !== null){
 
-			fs.writeFile(core.localData.pathToCurrentFile, myCodeMirror.getValue(), function(err){
 
-				if(err){ console.log("ERR",err);}
 
-				else {
 
-					// console.log("file Contents", data);
+	},
 
-					console.log("saved code!");
+
+
+
+
+	codeMirror: {
+
+		active: false,
+
+		activate: function(){
+
+			if(this.active === false){
+
+
+
+				var codeMirrorCover = el("#codeMirror-cover");
+
+				codeMirrorCover.addClass("hide");
+
+				setTimeout(function(){
+
+					codeMirrorCover.addClass("remove");
+
+				},200);
+
+
+
+				this.active = true;
+
+				console.log("activating");
+
+
+
+			}
+
+		},
+
+		deactivate: function(){
+
+			if(this.active === true){
+
+
+
+				var codeMirrorCover = el("#codeMirror-cover");
+
+				codeMirrorCover.rmClass("remove");
+
+				setTimeout(function(){
+
+					codeMirrorCover.rmClass("hide");
+
+				},0);
+
+
+
+				
+
+
+
+				this.active = false;
+
+				console.log("deactivating");
+
+				core.localData.currentFile.clear();
+
+			}
+
+		},
+
+
+
+
+
+
+
+		detectChanges: function(){
+
+			var self = this;
+
+			
+
+
+
+			myCodeMirror.on("change", function(){
+
+				if(core.localData.currentFile.name !== null){
+
+
+
+					if(core.localData.currentFile.dirty === null){
+
+						core.localData.currentFile.dirty = false;
+
+					} else if(core.localData.currentFile.dirty !== true) {
+
+						core.localData.currentFile.dirty = true;
+
+						editorCore.dropdowns.files.setDirty();
+
+						console.log("change");
+
+					}
+
+					
+
+					
 
 				}
 
-			});
+				
+
+				
+
+			})
+
+		},
+
+
+
+		saveEditorFile: function(){
+
+			if(core.localData.currentFile.path !== null){
+
+				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
+
+					if(err){ console.log("ERR",err);}
+
+					else {
+
+						// console.log("file Contents", data);
+
+						editorCore.dropdowns.files.setClean();
+
+						console.log("saved code!");
+
+					}
+
+				});
+
+			}
+
+				
+
+		},
+
+
+
+		isDirty: function(){
+
+			return (core.localData.currentFile.dirty === true) ? true : false;
 
 		}
 
-			
+
 
 	}
 
@@ -14404,37 +14568,99 @@ editorCore.dropdowns.brands = {
 
 		var self = this;
 
-		core.brands.exists(_brandName, function(exists){
 
-				if(exists){
 
-					el("#brandNameText").purge().text(_brandName);
+		function selectBrand(){
 
-					core.brands.select(_brandName);
 
-					// activate projects dropdown
 
-					editorCore.dropdowns.projects.activate();
+			core.brands.exists(_brandName, function(exists){
 
-					editorCore.dropdowns.files.deactivate();
+					if(exists){
 
-					self.close();
+						el("#brandNameText").purge().text(_brandName);
 
-				} else {
+						core.brands.select(_brandName);
 
-					self.close();
+						// activate projects dropdown
 
-					core.localData.rmFromRecentBrands(_brandName, function(){
+						editorCore.dropdowns.projects.activate();
 
-						alert("Brand not found. Brand removed from recent brands.");
+						editorCore.dropdowns.files.deactivate();
 
-					})
+						core.codeMirror.deactivate();
+
+						self.close();
+
+					} else {
+
+						self.close();
+
+						core.localData.rmFromRecentBrands(_brandName, function(){
+
+							alert("Brand not found. Brand removed from recent brands.");
+
+						})
+
+					}	
+
+			});
+
+
+
+		}
+
+
+
+			if(core.codeMirror.isDirty()) {
+
+
+
+						Prompter.prompt({
+
+							message: "Current File Not Saved.",
+
+							mainBtn: {
+
+								text: "Cancel",
+
+								onClick: function(){
+
+									Prompter.hide();
+
+								}
+
+							},
+
+							btn2: {
+
+								text: "Continue Anyway",
+
+								onClick: function(){
+
+									Prompter.hide();
+
+									selectBrand();
+
+								}
+
+							},
+
+							btn3: null,
+
+						}) ;
+
+
+
+				}	else {
+
+					selectBrand();
 
 				}
 
-				
 
-		});
+
+		
 
 		
 
@@ -15135,7 +15361,7 @@ editorCore.dropdowns.projects = {
 	status: "closed",
 
 	select: function(_projectName){
-		console.log("selecting", _projectName);
+		// console.log("selecting", _projectName);
 		var self = this;
 		self.close();
 		el("#projectNameText").purge().text(_projectName);
@@ -15146,6 +15372,7 @@ editorCore.dropdowns.projects = {
 		editorCore.dropdowns.files.activate(_projectName);
 		editorCore.dropdowns.files.populate(_projectName);
 
+		core.codeMirror.deactivate();
 
 	},
 
@@ -15181,6 +15408,7 @@ editorCore.dropdowns.projects = {
 		var currentBrand = core.localData.currentBrand;
 		self.reset();
 		projectName.rmClass("inactive");
+		el("#projects_arrow").rmClass("inactive");
 		// remove inactive class
 	},
 
@@ -15246,7 +15474,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	noProjects: function(){
-		console.log("no projects");
+		// console.log("no projects");
 		projectDropdownBody.append(
 			el("+div").addClass("no-projects").text("(no projects)")
 		)
@@ -15290,7 +15518,7 @@ editorCore.dropdowns.projects = {
 			}
 
 			function newProject(inputVal, projects){
-					console.log("submit", inputVal);
+					// console.log("submit", inputVal);
 					var match = false;
 					for(var i = 0, ii = projects.length; i < ii; i++){
 						if( projects[i].toUpperCase() === inputVal.toUpperCase() ) match = true;
@@ -15299,7 +15527,7 @@ editorCore.dropdowns.projects = {
 					if(!match){
 						core.brands.projects.create(core.localData.currentBrand, inputVal, function(){
 							editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
-								console.log("select:", inputVal);
+								// console.log("select:", inputVal);
 								editorCore.dropdowns.projects.select(inputVal);
 
 							});
@@ -15310,7 +15538,7 @@ editorCore.dropdowns.projects = {
 					else {
 						alert("Project Name Already Exists");
 					}
-					console.log("arr", projects);
+					// console.log("arr", projects);
 			}
 
 			newProjectInput.on("keyup", function(e){
@@ -15337,13 +15565,15 @@ editorCore.dropdowns.projects = {
 		projectDropdownInputCont.purge();
 	},
 
+
+
 	copyBaseFilesToProject: function(_projectName, _callback){
 		var _brandName = core.localData.currentBrand;
 		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
 		var pathToBaseFiles = core.localData.pathToBaseFiles;
 
 		core.getFiles(pathToBaseFiles, function(files){
-			console.log("these are the files:",files)
+			// console.log("these are the files:",files)
 			for(var i = 0, ii = files.length; i < ii; i++){
 				fs.copySync(pathToBaseFiles+"/"+files[i], pathToProject+"/"+files[i])
 			}
@@ -15407,6 +15637,7 @@ editorCore.dropdowns.files = {
 		var self = this;
 		if(self.active === false) {
 			fileName.rmClass("inactive");
+			el("#files_arrow").rmClass("inactive");
 			// console.log("getting files for:", _projectName);
 			self.active = true;
 		}
@@ -15415,6 +15646,7 @@ editorCore.dropdowns.files = {
 		var self = this;
 		if(self.active === true) {
 			fileName.addClass("inactive");
+			el("#files_arrow").addClass("inactive");
 			self.active = false;
 		}
 	},
@@ -15422,10 +15654,10 @@ editorCore.dropdowns.files = {
 	populate: function(_projectName){
 		var self = this;
 		self.purge();
-		console.log("==populating")
+		// console.log("==populating")
 		el("#fileNameText").purge().text("Files");
 		core.brands.projects.files.list(_projectName, function(files){
-			console.log("files",files);
+			// console.log("files",files);
 			filesDropdownBody.append(
 				el("+div").addClass("header").text("Files")
 			)
@@ -15490,15 +15722,28 @@ editorCore.dropdowns.files = {
 		// add the add new container
 	},
 	select: function(_fileName){
-		console.log("selecting:",_fileName);
+		// console.log("selecting:",_fileName);
 		el("#fileNameText").purge().text(_fileName);
 		editorCore.dropdowns.files.close();
+		core.codeMirror.activate();
 		core.localData.setCurrentFile(_fileName);
 		core.updateEditor();
 	},
 	purge: function() {
 		filesDropdownBody.purge();
-	}
+	},
+
+	setDirty: function(){
+		el("#fileNameText").purge().append(
+			el("+span").addClass("dirty").text("*")
+		).text(core.localData.currentFile.name);
+		core.localData.currentFile.dirty = true;
+	},
+
+	setClean: function(){
+		el("#fileNameText").purge().text(core.localData.currentFile.name);
+		core.localData.currentFile.dirty = false;
+	},
 
 };
 
@@ -15639,9 +15884,13 @@ el.on("load", function(){
 		editorCore.dropdowns.projects.init();
 
 		editorCore.dropdowns.files.prepare();
+
+
 		// editorCore.dropdowns.files.init();
 
 		codemirrorInit();
+
+		core.codeMirror.detectChanges();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 	})
