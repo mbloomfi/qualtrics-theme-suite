@@ -14277,7 +14277,6 @@ function codemirrorInit() {
 	}, 0);
 	
 	window.myCodeMirror = CodeMirror(codemirrorContainer, {
-		value: "body { \n\tbackground: red;\n}",
 		mode: "css",
 		theme: "monokai",
 		tabSize: 2,
