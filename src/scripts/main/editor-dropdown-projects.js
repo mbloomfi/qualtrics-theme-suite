@@ -22,7 +22,7 @@ editorCore.dropdowns.projects = {
 			
 
 
-		if(!myCodeMirror.isClean() && core.localData.currentProject !== _projectName) {
+		if(!myCodeMirror.isClean() && core.localData.currentProject.name !== _projectName) {
 
 				Prompter.prompt({
 					message: "Current File Not Saved.",
@@ -42,7 +42,7 @@ editorCore.dropdowns.projects = {
 					btn3: null,
 				}) ;
 
-		}	else if(core.localData.currentProject !== _projectName){
+		}	else if(core.localData.currentProject.name !== _projectName){
 			selectProject();
 		} else {
 			self.close();

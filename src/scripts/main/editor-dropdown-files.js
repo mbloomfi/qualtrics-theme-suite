@@ -71,8 +71,8 @@ editorCore.dropdowns.files = {
 	populate: function(_callback){
 		var self = this;
 		// self.purge();
-		el("#fileNameText").purge().text("Files");
-		core.brands.projects.files.list(core.localData.currentProject, function(files){
+		// el("#fileNameText").purge().text("Files");
+		core.brands.projects.files.list(function(files){
 			// console.log("files",files);
 			filesDropdownBody.append(
 				el("+div").addClass("header").text("Files")

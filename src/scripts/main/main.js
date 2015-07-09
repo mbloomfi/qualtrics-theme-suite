@@ -8,6 +8,9 @@ var json = require("jsonfile");
 var escape = require("escape-html");
 var mkdirp = require("mkdirp");
 var path = require("path");
+var gulp = require("gulp");
+var rename = require("gulp-rename");
+var replace = require("gulp-replace");
 
 
 //= include ../app-core-methods.js

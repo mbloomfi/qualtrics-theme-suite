@@ -190,7 +190,13 @@ var core = Global.coreMethods = {
 		projects: {
 
 			setCurrentProject: function(_projectName){
-				core.localData.currentProject = _projectName;
+				core.localData.currentProject.name = _projectName;
+
+				core.localData.currentProject.path = 
+					core.brands.getPathToBrands()+"/"+
+					core.localData.currentBrand+"/"+
+					core.localData.currentProject.name;
+
 			},
 
 			/*Runs a callback, passing it an array of the names of the projects*/
@@ -256,14 +262,9 @@ var core = Global.coreMethods = {
 					dirty: false
 				},
 
-				list: function(_projectName, _callback){
-
-					baton(function(next){
-						// console.log("brandName:", _brandName);
-						var pathToProject = core.brands.getPathToBrands() + "/" + core.localData.currentBrand + "/" + _projectName + "/";
-						next(pathToProject);
-					})
-					.then(function(next, path){
+				list: function(_callback){
+						var path = core.localData.currentProject.path;
+						console.log("path to projects:", path);
 						var fileList = [];
 						fs.readdir(path, function(_err, _files){
 							if(_err) console.log("error listing projects");
@@ -274,8 +275,6 @@ var core = Global.coreMethods = {
 							// currentBrand.projects = projectsList // ADD this
 							if(_callback!==undefined) _callback(fileList);
 						});
-					})
-					.run();
 
 				}
 			}
@@ -293,7 +292,10 @@ var core = Global.coreMethods = {
 		brandList: null,
 		userSettings: null,
 		currentBrand: null,
-		currentProject: null,
+		currentProject: {
+			name: null,
+			path: null
+		},
 		currentFile:{
 			name: null,
 			path: null,
@@ -383,10 +385,8 @@ var core = Global.coreMethods = {
 		setCurrentFile: function(_fileName){
 			core.localData.currentFile.name = _fileName;
 
-			core.localData.currentFile.path = core.brands.getPathToBrands()+"/"+
-				core.localData.currentBrand+"/"+
-				core.localData.currentProject+"/"+
-				core.localData.currentFile.name; ;
+			core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
+
 		}
 	},
 
@@ -503,6 +503,8 @@ var core = Global.coreMethods = {
 				} else {
 					if(!myCodeMirror.isClean()){
 						editorCore.dropdowns.files.setDirty();
+					} else {
+						editorCore.dropdowns.files.setClean();
 					}
 				}
 			})
@@ -513,11 +515,54 @@ var core = Global.coreMethods = {
 	preview: {
 		isReady: false,
 		map: {
-			"{~ProgressBar~}":"<div id='p-bar'></div>",
-			"{~Header~}":"<div id='header'></div>",
-			"{~Question~}":"<div id='Questions'></div>",
-			"{~Buttons~}":"<div id='Buttons'></div>",
-			"{~Footer~}":"<div id='Footer'></div>",
+
+			"{~ProgressBar~}": '<div role="widget"><table class="ProgressBarContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"><tbody><tr><td>0%</td><td><div class="ProgressBarFillContainer" id="ProgressBarFillContainer"><div class="ProgressBarFill" style="width: 18%"></div></div></td><td>100%</td></tr></tbody></table></div>',
+
+			"{~Header~}":"Header Text Area",
+
+			// "{~Question~}": function(){
+
+			// },
+			"{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
+
+
+			"{~Buttons~}": '<input id="PreviousButton" type="button" value="<<" name=""><input id="NextButton" onkeypress="if(!this.disabled){Qualtrics.SurveyEngine.navEnter(arguments[0],this, "NextButton"); };  " onclick="Qualtrics.SurveyEngine.navClick(event, "NextButton")" title=" >> " type="submit" name="NextButton" value=" >> ">',
+
+			"{~Footer~}":"",
+
+		},
+		update: function(){
+			// to run, use:  core.preview.update();
+
+			var self = this;
+			fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
+				if(_errHtml){ console.log("ERR",_errHtml);}
+				else {
+
+					// fs.readFile(core.localData.currentProject.path+"/StyleSheet.css", "utf-8", function(_errCss, _css){
+					// 	if(_errCss){ console.log("ERR",_errCss);}
+					// 	else {
+					
+							gulp.src("local/previewTemplate.html")
+							.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
+							.pipe(replace("{~SKIN.HTML~}", _html))
+							.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
+							.pipe(replace("{~Header~}", self.map["{~Header~}"]))
+							.pipe(replace("{~Question~}", self.map["{~Question~}"] ))
+							.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
+							.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
+							.pipe(rename("currentPreview.html"))
+							.pipe(gulp.dest("local/"));
+
+							preview.reload();
+
+					// 	}
+					// });
+
+				}
+			});
+
+			
 		}
 
 	}
