@@ -130,9 +130,14 @@ el.on("load", function(){
 
 		codemirrorInit();
 
-		core.codeMirror.detectChanges();
+		core.codeMirror.dirtyWatch();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
+
+		preview.addEventListener("dom-ready", function(){
+			core.preview.isReady = true;
+		  preview.src = "local/currentPreview.html";
+		});
 	})
 	.run();
 });

@@ -323,6 +323,7 @@ var core = Global.coreMethods = {
 			name: null,
 			path: null,
 			dirty: null,
+			isNew: true,
 			clear: function(){
 				var self = this;
 				self.name = self.path = self.dirty = null;
@@ -454,6 +455,7 @@ var core = Global.coreMethods = {
 				else {
 					// console.log("file Contents", data);
 					myCodeMirror.setValue(data);
+					myCodeMirror.markClean();
 				}
 			});
 			// console.log("brand:", core.localData.currentBrand);
@@ -495,7 +497,6 @@ var core = Global.coreMethods = {
 					codeMirrorCover.rmClass("hide");
 				},0);
 
-				
 
 				this.active = false;
 				console.log("deactivating");
@@ -504,29 +505,6 @@ var core = Global.coreMethods = {
 		},
 
 
-
-		detectChanges: function(){
-			var self = this;
-			
-
-			myCodeMirror.on("change", function(){
-				if(core.localData.currentFile.name !== null){
-
-					if(core.localData.currentFile.dirty === null){
-						core.localData.currentFile.dirty = false;
-					} else if(core.localData.currentFile.dirty !== true) {
-						core.localData.currentFile.dirty = true;
-						editorCore.dropdowns.files.setDirty();
-						console.log("change");
-					}
-					
-					
-				}
-				
-				
-			})
-		},
-
 		saveEditorFile: function(){
 			if(core.localData.currentFile.path !== null){
 				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
@@ -534,6 +512,7 @@ var core = Global.coreMethods = {
 					else {
 						// console.log("file Contents", data);
 						editorCore.dropdowns.files.setClean();
+						myCodeMirror.markClean();
 						console.log("saved code!");
 					}
 				});
@@ -541,8 +520,29 @@ var core = Global.coreMethods = {
 				
 		},
 
-		isDirty: function(){
-			return (core.localData.currentFile.dirty === true) ? true : false;
+
+		dirtyWatch: function(){
+			myCodeMirror.on("change", function(){
+				if(core.localData.currentFile.isNew === true){
+					core.localData.currentFile.isNew = false;
+				} else {
+					if(!myCodeMirror.isClean()){
+						editorCore.dropdowns.files.setDirty();
+					}
+				}
+			})
+		}
+
+	},
+
+	preview: {
+		isReady: false,
+		map: {
+			"{~ProgressBar~}":"<div id='p-bar'></div>",
+			"{~Header~}":"<div id='header'></div>",
+			"{~Question~}":"<div id='Questions'></div>",
+			"{~Buttons~}":"<div id='Buttons'></div>",
+			"{~Footer~}":"<div id='Footer'></div>",
 		}
 
 	}

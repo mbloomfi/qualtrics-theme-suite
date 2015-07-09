@@ -3,18 +3,50 @@ editorCore.dropdowns.projects = {
 	status: "closed",
 
 	select: function(_projectName){
-		// console.log("selecting", _projectName);
 		var self = this;
-		self.close();
-		el("#projectNameText").purge().text(_projectName);
+		// console.log("selecting", _projectName);
+		function selectProject(){
+			self.close();
+			el("#projectNameText").purge().text(_projectName);
+			// Add this functionality
+			// core.brands.projects.select(_projectName);
+			core.brands.projects.setCurrentProject(_projectName);
+			editorCore.dropdowns.files.activate(_projectName);
+			// editorCore.dropdowns.files.populate(_projectName);
 
-		// Add this functionality
-		// core.brands.projects.select(_projectName);
-		core.brands.projects.setCurrentProject(_projectName);
-		editorCore.dropdowns.files.activate(_projectName);
-		editorCore.dropdowns.files.populate(_projectName);
+			core.codeMirror.deactivate();
+			myCodeMirror.markClean();
+			editorCore.dropdowns.files.reset();
+		}
+		
+			
 
-		core.codeMirror.deactivate();
+
+		if(!myCodeMirror.isClean() && core.localData.currentProject !== _projectName) {
+
+				Prompter.prompt({
+					message: "Current File Not Saved.",
+					mainBtn: {
+						text: "Cancel",
+						onClick: function(){
+							Prompter.hide();
+						}
+					},
+					btn2: {
+						text: "Continue Anyway",
+						onClick: function(){
+							Prompter.hide();
+							selectProject();
+						}
+					},
+					btn3: null,
+				}) ;
+
+		}	else if(core.localData.currentProject !== _projectName){
+			selectProject();
+		} else {
+			self.close();
+		}
 
 	},
 

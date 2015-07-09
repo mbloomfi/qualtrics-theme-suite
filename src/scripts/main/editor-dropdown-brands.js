@@ -37,9 +37,12 @@ editorCore.dropdowns.brands = {
 						editorCore.dropdowns.projects.activate();
 						editorCore.dropdowns.files.deactivate();
 						core.codeMirror.deactivate();
+						myCodeMirror.markClean();
+						editorCore.dropdowns.files.reset();
 						self.close();
 					} else {
 						self.close();
+						// refresh last open file
 						core.localData.rmFromRecentBrands(_brandName, function(){
 							alert("Brand not found. Brand removed from recent brands.");
 						})
@@ -48,7 +51,7 @@ editorCore.dropdowns.brands = {
 
 		}
 
-			if(core.codeMirror.isDirty()) {
+			if(!myCodeMirror.isClean()) {
 
 						Prompter.prompt({
 							message: "Current File Not Saved.",
