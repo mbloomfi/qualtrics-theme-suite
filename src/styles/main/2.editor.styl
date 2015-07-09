@@ -34,7 +34,7 @@ section#editor {
 	color white
 	background-color rgb(36,36,36)
 	// border-right 4px solid $primaryColor
-	border-right 6px solid rgb(90,90,90)
+	border-right 2px solid $primaryColor
 	box-sizing border-box
 	overflow-x scroll
 	overflow-y hidden
@@ -394,22 +394,26 @@ section#editor {
 
 							&.projects {
 								overflow-x visible
+								overflow-y scroll
+								padding-bottom 40px
+								// height 200px
 								
 								
 								
 								.project-item {
 									display block
 									width 100%
+									font-size 17px
 									text-align left
 									background-color rgba(0,0,0,0)
-									padding 4px 5px
+									padding 5px 5px
 									color $item-color
 									cursor pointer
 									transition background-color .3s ease, color .3s ease, padding .25s ease
 									&:hover, &:focus {
 										color $item-color-hover
 										background-color rgba(0,0,0,.3)
-										padding 4px 5px 4px 8px
+										padding 5px 5px 5px 8px
 									}
 								}
 								
@@ -509,9 +513,10 @@ section#editor {
 							text-indent 5px
 							z-index 1001
 							height 40px
-							background-color transparent
+							box-sizing border-box
+							background-color $dropdown-menus-color
 							color white
-							border-top 1px solid alpha($primaryColor, .9)
+							border 1px solid alpha($primaryColor, .9)
 							
 							&::-webkit-input-placeholder {
 								color rgb(210,210,210)

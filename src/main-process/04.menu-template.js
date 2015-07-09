@@ -308,7 +308,7 @@ var menuTemplate = [
             }
           },
           {
-            label: "Editor 80% | Preview 20%",
+            label: "Editor 75% | Preview 25%",
             type: "checkbox",
             checked: false,
             click: function(){
@@ -316,11 +316,27 @@ var menuTemplate = [
             }
           },
           {
-            label: "Editor 90% | Preview 10%",
+            label: "Editor 80% | Preview 20%",
             type: "checkbox",
             checked: false,
             click: function(){
               setEditorPreviewRatio(8);
+            }
+          },
+          {
+            label: "Editor 85% | Preview 15%",
+            type: "checkbox",
+            checked: false,
+            click: function(){
+              setEditorPreviewRatio(9);
+            }
+          },
+          {
+            label: "Editor 90% | Preview 10%",
+            type: "checkbox",
+            checked: false,
+            click: function(){
+              setEditorPreviewRatio(10);
             }
           },
           {
@@ -339,7 +355,7 @@ var menuTemplate = [
             accelerator: "Alt+Command+Right",
             click: function(){ 
               var i = global.sharedObject.menuStatus.currentEditorPreviewRatio;
-              if(i < 8){ setEditorPreviewRatio(i+1); }
+              if(i < 10){ setEditorPreviewRatio(i+1); }
             }
           },
           {
@@ -361,8 +377,8 @@ var menuTemplate = [
             click: function(){ 
               var i = global.sharedObject.menuStatus.currentEditorPreviewRatio;
 
-              if  (i === 7) { setEditorPreviewRatio(i+1); }
-              else if (i<7) { setEditorPreviewRatio(i+2); }
+              if  (i === 9) { setEditorPreviewRatio(i+1); }
+              else if (i<9) { setEditorPreviewRatio(i+2); }
             }
           }
 

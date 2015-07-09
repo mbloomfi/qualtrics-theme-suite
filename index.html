@@ -559,7 +559,7 @@
 			  width: 40%;
 			  color: #fff;
 			  background-color: #242424;
-			  border-right: 6px solid #5a5a5a;
+			  border-right: 2px solid #df4848;
 			  box-sizing: border-box;
 			  overflow-x: scroll;
 			  overflow-y: hidden;
@@ -852,13 +852,16 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects {
 			  overflow-x: visible;
+			  overflow-y: scroll;
+			  padding-bottom: 40px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item {
 			  display: block;
 			  width: 100%;
+			  font-size: 17px;
 			  text-align: left;
 			  background-color: rgba(0,0,0,0);
-			  padding: 4px 5px;
+			  padding: 5px 5px;
 			  color: #ebebeb;
 			  cursor: pointer;
 			  -webkit-transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
@@ -868,7 +871,7 @@
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:focus {
 			  color: #fff;
 			  background-color: rgba(0,0,0,0.3);
-			  padding: 4px 5px 4px 8px;
+			  padding: 5px 5px 5px 8px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .no-projects {
 			  color: rgba(255,255,255,0.9);
@@ -936,9 +939,10 @@
 			  text-indent: 5px;
 			  z-index: 1001;
 			  height: 40px;
-			  background-color: transparent;
+			  box-sizing: border-box;
+			  background-color: rgba(40,40,40,0.95);
 			  color: #fff;
-			  border-top: 1px solid rgba(223,72,72,0.9);
+			  border: 1px solid rgba(223,72,72,0.9);
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
 			  color: #d2d2d2;
@@ -15692,8 +15696,10 @@
 					else if(_index === 4){ editorWidth = "50%"; previewWidth = "50%"; }
 					else if(_index === 5){ editorWidth = "60%"; previewWidth = "40%"; }
 					else if(_index === 6){ editorWidth = "70%"; previewWidth = "30%"; }
-					else if(_index === 7){ editorWidth = "80%"; previewWidth = "20%"; }
-					else if(_index === 8){ editorWidth = "90%"; previewWidth = "10%"; }
+					else if(_index === 7){ editorWidth = "75%"; previewWidth = "25%"; }
+					else if(_index === 8){ editorWidth = "80%"; previewWidth = "20%"; }
+					else if(_index === 9){ editorWidth = "85%"; previewWidth = "15%"; }
+					else if(_index === 10){ editorWidth = "90%"; previewWidth = "10%"; }
 			
 					el("#editor_preview_ratio").purge() // purge the style tag
 						.text( // add text to the style tag

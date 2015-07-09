@@ -553,7 +553,7 @@ section#editor {
   width: 40%;
   color: #fff;
   background-color: #242424;
-  border-right: 6px solid #5a5a5a;
+  border-right: 2px solid #df4848;
   box-sizing: border-box;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -846,13 +846,16 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects {
   overflow-x: visible;
+  overflow-y: scroll;
+  padding-bottom: 40px;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item {
   display: block;
   width: 100%;
+  font-size: 17px;
   text-align: left;
   background-color: rgba(0,0,0,0);
-  padding: 4px 5px;
+  padding: 5px 5px;
   color: #ebebeb;
   cursor: pointer;
   -webkit-transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
@@ -862,7 +865,7 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:focus {
   color: #fff;
   background-color: rgba(0,0,0,0.3);
-  padding: 4px 5px 4px 8px;
+  padding: 5px 5px 5px 8px;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .no-projects {
   color: rgba(255,255,255,0.9);
@@ -930,9 +933,10 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   text-indent: 5px;
   z-index: 1001;
   height: 40px;
-  background-color: transparent;
+  box-sizing: border-box;
+  background-color: rgba(40,40,40,0.95);
   color: #fff;
-  border-top: 1px solid rgba(223,72,72,0.9);
+  border: 1px solid rgba(223,72,72,0.9);
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
   color: #d2d2d2;

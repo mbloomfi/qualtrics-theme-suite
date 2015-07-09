@@ -58,8 +58,10 @@ var editorPreviewBar = {
 		else if(_index === 4){ editorWidth = "50%"; previewWidth = "50%"; }
 		else if(_index === 5){ editorWidth = "60%"; previewWidth = "40%"; }
 		else if(_index === 6){ editorWidth = "70%"; previewWidth = "30%"; }
-		else if(_index === 7){ editorWidth = "80%"; previewWidth = "20%"; }
-		else if(_index === 8){ editorWidth = "90%"; previewWidth = "10%"; }
+		else if(_index === 7){ editorWidth = "75%"; previewWidth = "25%"; }
+		else if(_index === 8){ editorWidth = "80%"; previewWidth = "20%"; }
+		else if(_index === 9){ editorWidth = "85%"; previewWidth = "15%"; }
+		else if(_index === 10){ editorWidth = "90%"; previewWidth = "10%"; }
 
 		el("#editor_preview_ratio").purge() // purge the style tag
 			.text( // add text to the style tag
