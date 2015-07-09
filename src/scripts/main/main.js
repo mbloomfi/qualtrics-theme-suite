@@ -8,9 +8,15 @@ var json = require("jsonfile");
 var escape = require("escape-html");
 var mkdirp = require("mkdirp");
 var path = require("path");
+
 var gulp = require("gulp");
 var rename = require("gulp-rename");
 var replace = require("gulp-replace");
+var replace = require("gulp-replace");
+var sass = require("gulp-sass");
+var minifyCss = require('gulp-minify-css');
+// var stylus = require("gulp-stylus");
+var autoprefixer = require("gulp-autoprefixer");
 
 
 //= include ../app-core-methods.js
@@ -134,12 +140,16 @@ el.on("load", function(){
 		codemirrorInit();
 
 		core.codeMirror.dirtyWatch();
+
+		core.preview.init();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
 
 		preview.addEventListener("dom-ready", function(){
-			core.preview.isReady = true;
-		  preview.src = "local/currentPreview.html";
+			// preview.reload();
+			console.log("dom ready!!");
+			// core.preview.init();
+		  // preview.src = "local/currentPreview.html";
 		});
 	})
 	.run();

@@ -13,18 +13,18 @@
 // BASIC CONDITIONALS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $layout-style: "Minimal"; // "Minimal" , "Photo" , "Color" 
-$background-image: url(bg.jpg);
+$background-image: url(https://unsplash.imgix.net/photo-1423683249427-8ca22bd873e0?q=75&fm=jpg&s=5e57c661d0f772ce269188a6f5325708);
 $interchangeable-logo: "False"; // "True", "False"
-$logo-image: url(logo.jpg);
-$logo-image-width: 254.2px;
-$logo-image-height: 70px;
-$logo-image-position: Left; // "Left", "Center", "Right"
-$primary-color: #01acb3;  
-$header-position: ""; // "Full-width Header" , "Contained"
-$survey-overlay-filter: ""; // "Dark Filter" , "Light Filter"
+$logo-image: url(https://1.qualtrics.com/ControlPanel/Graphic.php?IM=IM_2bhfHDfPSY1pbut);
+$logo-image-width: 285px;
+$logo-image-height: 80px;
+$logo-image-position: "Left"; // "Left", "Center", "Right"
+$primary-color: #c32432;  
+$header-position: "Contained"; // "Full-width Header" , "Contained"
+$survey-overlay-filter: "Light Filter"; // "Dark Filter" , "Light Filter"
 $label-style-options: "Flat"; // "Flat" , "3D" , "Radio Buttons"
-$progress-bar-style: ""; // "Minimal" , "Thick" , "Rounded"
-$framework-version: "2015"; // "2014" , "2015" This variable is necessary to allow old variables to work on the newest framework.
+$progress-bar-style: "Minimal"; // "Minimal" , "Thick" , "Rounded"
+$framework-version: "2015"; // This variable is necessary to allow old variables to work on the newest framework.
 
 //LAYOUT
 	$no-logo: T;
@@ -583,7 +583,7 @@ $framework-version: "2015"; // "2014" , "2015" This variable is necessary to all
 	// background-color: purple;
 }
 .Skin #LogoContainer{
- // 	background-image:url("logo.right.png");
+ 	// 	background-image:url("logo.right.png");
 	// background-size:contain;
 	// background-position:center right;
 	// background-repeat:no-repeat;
@@ -639,7 +639,7 @@ $framework-version: "2015"; // "2014" , "2015" This variable is necessary to all
 		margin:0px auto 10px;
 	 }
 	.Skin #Logo {
-		height:$logo-image-height*.6;
+		height:$logo-image-height*.8;
 		background-position:$logo-image-position center;
 	 }
 	.Skin #Header {

@@ -65,6 +65,7 @@ gulp.task("mainScripts", function(){
 		//include
 		"src/scripts/libs/*.js",
 		"src/scripts/libs/codemirror/codemirror.js",
+		"src/scripts/libs/codemirror/modes/*",
 		"src/scripts/libs/codemirror/**",
 		"src/scripts/main/main.js"
 		//exclude

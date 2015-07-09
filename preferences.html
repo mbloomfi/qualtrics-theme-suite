@@ -806,6 +806,7 @@
 				path: null,
 				dirty: null,
 				isNew: true,
+				watch: null,
 				clear: function(){
 					var self = this;
 					self.name = self.path = self.dirty = null;
@@ -993,6 +994,9 @@
 							// console.log("file Contents", data);
 							editorCore.dropdowns.files.setClean();
 							myCodeMirror.markClean();
+							if(core.localData.currentFile.name === "StyleSheet.scss"){
+								core.preview.compileSass();
+							}
 							console.log("saved code!");
 						}
 					});
@@ -1019,6 +1023,9 @@
 	
 		preview: {
 			isReady: false,
+			skinFileWatcher: null,
+			sassFileWatcher: null,
+			cssFileWatcher: null,
 			map: {
 	
 				"{~ProgressBar~}": '<div role="widget"><table class="ProgressBarContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"><tbody><tr><td>0%</td><td><div class="ProgressBarFillContainer" id="ProgressBarFillContainer"><div class="ProgressBarFill" style="width: 18%"></div></div></td><td>100%</td></tr></tbody></table></div>',
@@ -1031,11 +1038,106 @@
 				"{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
 	
 	
+	
+	
 				"{~Buttons~}": '<input id="PreviousButton" type="button" value="<<" name=""><input id="NextButton" onkeypress="if(!this.disabled){Qualtrics.SurveyEngine.navEnter(arguments[0],this, "NextButton"); };  " onclick="Qualtrics.SurveyEngine.navClick(event, "NextButton")" title=" >> " type="submit" name="NextButton" value=" >> ">',
 	
 				"{~Footer~}":"",
 	
 			},
+	
+			init: function(){
+				this.hide();
+			},
+	
+			hidden: true,
+	
+			show: function(){
+				if(core.localData.currentProject.name !== null && this.hidden !== false){
+					console.log("showing preview file; hidden:", false);
+					preview.src = "local/currentPreview.html";
+					this.hidden = false;
+	
+				} else {
+					console.log("cant show file");
+				}
+			},
+	
+			hide: function(){
+				preview.src = "local/no-preview.html";
+				console.log("hidden:", true);
+				this.hidden = true;
+			},
+	
+			compileSass: function(){
+				console.log("compiling sass")
+				return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
+					.pipe(sass())
+					.pipe(autoprefixer())
+					.pipe(minifyCss())
+					.pipe(gulp.dest(core.localData.currentProject.path+"/"));
+			},
+	
+			clearWatchers: function(){
+				var self = this;
+				if(self.sassFileWatcher !== null){
+					self.sassFileWatcher.close();
+					self.sassFileWatcher = null;
+					console.log("stopped watching 1")
+				}
+				if(self.cssFileWatcher !== null){
+					self.cssFileWatcher.close();
+					self.cssFileWatcher = null;
+					console.log("stopped watching 2")
+				}
+				if(self.skinFileWatcher !== null){
+					self.skinFileWatcher.close();
+					self.skinFileWatcher = null;
+					console.log("stopped watching 3")
+				}
+			},
+	
+			setWatchers: function(){
+				var self = this;
+				self.watchSassFile();
+				self.watchCssFile();
+				self.watchSkinFile();
+			},
+	
+			watchSassFile: function(){
+				// var self = this;
+				// console.log("self.sassFileWatcher",self.sassFileWatcher)
+				// var path = core.localData.currentProject.path+"/StyleSheet.scss";
+				// self.sassFileWatcher = fs.watch(path, function(evt, _fileName){
+				// 	console.log("init sass 1");
+				// 	console.log("evt:",evt, _fileName)
+				// 	self.compileSass();
+				// });
+				// console.log("watching 1")
+			},
+	
+			watchCssFile: function(){
+				var self = this;
+				var path = core.localData.currentProject.path+"/StyleSheet.css";
+				self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
+					self.update();
+					console.log("reloading 2");
+					preview.reload();
+				});
+				console.log("watching 2")
+			},
+	
+			watchSkinFile: function(){
+				var self = this;
+				var path = core.localData.currentProject.path+"/Skin.html";
+				self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
+					self.update();
+					console.log("reloading 3")
+					preview.reload();
+				});
+				console.log("watching 3")
+			},
+	
 			update: function(){
 				// to run, use:  core.preview.update();
 	
@@ -1043,26 +1145,19 @@
 				fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 					if(_errHtml){ console.log("ERR",_errHtml);}
 					else {
+								
+						gulp.src("local/previewTemplate.html")
+						.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
+						.pipe(replace("{~SKIN.HTML~}", _html))
+						.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
+						.pipe(replace("{~Header~}", self.map["{~Header~}"]))
+						.pipe(replace("{~Question~}", self.map["{~Question~}"] ))
+						.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
+						.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
+						.pipe(rename("currentPreview.html"))
+						.pipe(gulp.dest("local/"));
 	
-						// fs.readFile(core.localData.currentProject.path+"/StyleSheet.css", "utf-8", function(_errCss, _css){
-						// 	if(_errCss){ console.log("ERR",_errCss);}
-						// 	else {
-						
-								gulp.src("local/previewTemplate.html")
-								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
-								.pipe(replace("{~SKIN.HTML~}", _html))
-								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
-								.pipe(replace("{~Header~}", self.map["{~Header~}"]))
-								.pipe(replace("{~Question~}", self.map["{~Question~}"] ))
-								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
-								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
-								.pipe(rename("currentPreview.html"))
-								.pipe(gulp.dest("local/"));
-	
-								preview.reload();
-	
-						// 	}
-						// });
+						console.log("updated preview");
 	
 					}
 				});

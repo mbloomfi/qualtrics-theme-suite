@@ -17,6 +17,10 @@ editorCore.dropdowns.projects = {
 			core.codeMirror.deactivate();
 			myCodeMirror.markClean();
 			editorCore.dropdowns.files.reset();
+			core.preview.setWatchers();
+
+			core.preview.show();
+			core.preview.update();
 		}
 		
 			

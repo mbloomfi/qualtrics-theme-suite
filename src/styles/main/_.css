@@ -553,7 +553,7 @@ section#editor {
   width: 40%;
   color: #fff;
   background-color: #242424;
-  border-right: 7px solid #df4848;
+  border-right: 6px solid #5a5a5a;
   box-sizing: border-box;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -1072,6 +1072,7 @@ webview#preview {
   width: 60%;
   -webkit-transition: right 0.5s ease;
           transition: right 0.5s ease;
+  box-sizing: border-box;
 }
 webview#preview.hide {
   right: -100%;

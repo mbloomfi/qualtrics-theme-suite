@@ -141,6 +141,7 @@ editorCore.dropdowns.files = {
 		}).run();
 	},
 	reset: function(){
+		core.preview.clearWatchers();
 		el("#fileNameText").purge().text("Files");
 	},
 	select: function(_fileName){
@@ -153,7 +154,10 @@ editorCore.dropdowns.files = {
 			core.codeMirror.activate();
 			core.localData.setCurrentFile(_fileName);
 			core.localData.currentFile.isNew = true;
+
 			core.updateEditor();
+
+			core.preview.update();
 		}
 
 			
