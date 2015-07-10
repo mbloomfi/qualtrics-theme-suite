@@ -632,7 +632,8 @@
 			section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow.inactive {
 			  opacity: 0.4;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn {
+			  display: block;
 			  height: 100%;
 			  float: left;
 			  font-size: 1.25em;
@@ -646,22 +647,22 @@
 			  -webkit-transition: background-color 0.3s ease, color 0.3s ease;
 			          transition: background-color 0.3s ease, color 0.3s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn:hover {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn:hover {
 			  background-color: rgba(255,255,255,0.2);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.dropdown-active {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn.dropdown-active {
 			  background-color: rgba(223,72,72,0.85);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn.inactive {
 			  color: rgba(255,255,255,0.3);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn.inactive:hover {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn.inactive:hover {
 			  background-color: rgba(255,255,255,0);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn .dirty {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn .dirty {
 			  color: #df4848;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown {
 			  overflow: hidden;
 			  height: 316px;
 			  width: 200px;
@@ -673,7 +674,7 @@
 			  -webkit-transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
 			          transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .arrow {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .arrow {
 			  display: block;
 			  width: 0;
 			  height: 0;
@@ -688,12 +689,12 @@
 			  -webkit-transition: opacity 0.2s ease 0.1s;
 			          transition: opacity 0.2s ease 0.1s;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .arrow.hide {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .arrow.hide {
 			  opacity: 0;
 			  -webkit-transition: opacity 0.1s ease 0s;
 			          transition: opacity 0.1s ease 0s;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody {
 			  height: 300px;
 			  width: 100%;
 			  background-color: rgba(40,40,40,0.95);
@@ -705,7 +706,7 @@
 			  z-index: 999;
 			  border-radius: 1px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody .header {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody .header {
 			  font-size: 18px;
 			  padding: 5px 0 0;
 			  border-left: 0.5px solid rgba(255,255,255,0.05);
@@ -715,16 +716,16 @@
 			  letter-spacing: 0.25px;
 			  text-indent: 5px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody .no-recent {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody .no-recent {
 			  padding: 5px;
 			  font-size: 17px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody div#searchBrandsContainer {
 			  padding: 0;
 			  height: 40px;
 			  border-bottom: 1px solid rgba(223,72,72,0.9);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands {
 			  display: block;
 			  width: 100%;
 			  background-color: rgba(255,255,255,0);
@@ -738,22 +739,22 @@
 			  -webkit-transition: color 0.15s ease;
 			          transition: color 0.15s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
 			  color: #e1e1e1;
 			  -webkit-transition: color 0.15s ease;
 			          transition: color 0.15s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands:focus::-webkit-input-placeholder {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody div#searchBrandsContainer input#searchBrands:focus::-webkit-input-placeholder {
 			  color: #787878;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont {
 			  height: 259px;
 			  overflow-y: scroll;
 			  position: relative;
 			  -webkit-transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
 			          transition: border-top 0.15s ease, border-bottom 0.15s ease, height 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .brand-item {
 			  display: block;
 			  width: 100%;
 			  text-align: left;
@@ -764,13 +765,13 @@
 			  -webkit-transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			          transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item:hover,
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .brand-item:focus {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .brand-item:hover,
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .brand-item:focus {
 			  color: #fff;
 			  background-color: rgba(0,0,0,0.3);
 			  padding: 4px 5px 4px 8px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont .noResults {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont .noResults {
 			  color: rgba(255,255,255,0.9);
 			  font-size: 19px;
 			  position: absolute;
@@ -779,7 +780,7 @@
 			  text-align: center;
 			  width: 100%;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand {
 			  background-color: #323232;
 			  position: absolute;
 			  bottom: 20px;
@@ -793,41 +794,41 @@
 			  -webkit-transition: background-color 0.15s ease;
 			          transition: background-color 0.15s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand:hover {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand:hover {
 			  background-color: #3c3c3c;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div {
 			  font-size: 17px;
 			  line-height: 18px;
 			  color: #fff;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname] {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname] {
 			  font-size: 22px;
 			  line-height: 22px;
 			  color: #fff;
 			  letter-spacing: 1px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname].long {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand div[data-brandname].long {
 			  font-size: 18px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.medium div[data-brandname] {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.medium div[data-brandname] {
 			  font-size: 19px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large {
 			  width: 94%;
 			  left: 3%;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large div[data-brandname] {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont .noResultsCont #noResult-createBrand.large div[data-brandname] {
 			  font-size: 17px;
 			  letter-spacing: 0.8px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.showBottomBtn {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont.showBottomBtn {
 			  height: 226px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody #brandsListCont.no-results {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody #brandsListCont.no-results {
 			  height: 207px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand {
 			  position: relative;
 			  height: 30px;
 			  width: 100%;
@@ -839,23 +840,23 @@
 			  -webkit-transition: background-color 0.15s ease, color 0.15s ease, height 0.2s ease;
 			          transition: background-color 0.15s ease, color 0.15s ease, height 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand:hover {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand:hover {
 			  background-color: #df4848;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.disabled {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand.disabled {
 			  background-color: rgba(90,90,90,0.9);
 			  color: rgba(150,150,150,0.8);
 			  cursor: not-allowed;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody button#createBrand.no-results {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand.no-results {
 			  height: 50px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects {
 			  overflow-x: visible;
 			  overflow-y: scroll;
 			  padding-bottom: 40px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects .project-item {
 			  display: block;
 			  width: 100%;
 			  font-size: 17px;
@@ -867,13 +868,16 @@
 			  -webkit-transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			          transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:hover,
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .project-item:focus {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects .project-item:hover,
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects .project-item:focus {
 			  color: #fff;
 			  background-color: rgba(0,0,0,0.3);
 			  padding: 5px 5px 5px 8px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.projects .no-projects {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects .project-item.current {
+			  background-color: rgba(223,72,72,0.8);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects .no-projects {
 			  color: rgba(255,255,255,0.9);
 			  font-size: 19px;
 			  position: absolute;
@@ -882,11 +886,11 @@
 			  text-align: center;
 			  width: 100%;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files {
 			  overflow-y: scroll;
 			  overflow-x: hidden;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item {
 			  font-size: 16px;
 			  font-weight: 300;
 			  width: 190px;
@@ -900,40 +904,40 @@
 			  -webkit-transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			          transition: background-color 0.3s ease, color 0.3s ease, padding 0.25s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item:hover,
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item:focus {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item:hover,
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item:focus {
 			  color: #fff;
 			  background-color: rgba(0,0,0,0.3);
 			  padding: 7px 5px 7px 8px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.current {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.current {
 			  background-color: rgba(223,72,72,0.8);
 			  font-size: 17px;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.bold {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.bold {
 			  font-size: 17px;
 			  font-weight: 600;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide {
 			  height: 0;
 			  width: 0;
 			  top: 110%;
 			  opacity: 0.5;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands {
 			  color: rgba(255,255,255,0);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide .dropdownBody div#searchBrandsContainer input#searchBrands::-webkit-input-placeholder {
 			  color: #e6e6e6;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #recentBrands {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide .dropdownBody #recentBrands {
 			  border-top: 1px solid rgba(255,255,255,0);
 			  border-bottom: 1px solid rgba(255,255,255,0);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown.hide .dropdownBody #newBrand {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide .dropdownBody #newBrand {
 			  color: rgba(255,255,255,0);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput {
 			  position: absolute;
 			  bottom: 0;
 			  left: 0;
@@ -948,13 +952,13 @@
 			  color: #fff;
 			  border: 1px solid rgba(223,72,72,0.8);
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput::-webkit-input-placeholder {
 			  color: #d2d2d2;
 			  text-indent: 5px;
 			  -webkit-transition: color 0.15s ease;
 			          transition: color 0.15s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput + #newProject-btn {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput + #newProject-btn {
 			  height: 18px;
 			  width: 18px;
 			  position: absolute;
@@ -963,7 +967,7 @@
 			  z-index: 1001;
 			  cursor: pointer;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput + #newProject-btn .vertical-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput + #newProject-btn .vertical-bar {
 			  position: absolute;
 			  top: 0;
 			  left: 50%;
@@ -976,7 +980,7 @@
 			  -webkit-transition: background-color 0.2s ease;
 			          transition: background-color 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput + #newProject-btn .horizontal-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput + #newProject-btn .horizontal-bar {
 			  position: absolute;
 			  top: 50%;
 			  left: 0;
@@ -989,16 +993,16 @@
 			  -webkit-transition: background-color 0.2s ease;
 			          transition: background-color 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput + #newProject-btn:hover .vertical-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput + #newProject-btn:hover .vertical-bar {
 			  background-color: #dcdcdc;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput + #newProject-btn:hover .horizontal-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput + #newProject-btn:hover .horizontal-bar {
 			  background-color: #dcdcdc;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput:focus::-webkit-input-placeholder {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput:focus::-webkit-input-placeholder {
 			  color: #787878;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput:focus + #newProject-btn .vertical-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput:focus + #newProject-btn .vertical-bar {
 			  position: absolute;
 			  top: 0;
 			  left: 50%;
@@ -1011,7 +1015,7 @@
 			  -webkit-transition: background-color 0.2s ease;
 			          transition: background-color 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput:focus + #newProject-btn .horizontal-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput:focus + #newProject-btn .horizontal-bar {
 			  position: absolute;
 			  top: 50%;
 			  left: 0;
@@ -1024,10 +1028,10 @@
 			  -webkit-transition: background-color 0.2s ease;
 			          transition: background-color 0.2s ease;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput:focus + #newProject-btn:hover .vertical-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput:focus + #newProject-btn:hover .vertical-bar {
 			  background-color: #fff;
 			}
-			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput:focus + #newProject-btn:hover .horizontal-bar {
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput:focus + #newProject-btn:hover .horizontal-bar {
 			  background-color: #fff;
 			}
 			section#editor section#sectionInner #codemirror-wrapper {
@@ -1084,13 +1088,54 @@
 			  right: 0;
 			  height: 100%;
 			  width: 60%;
-			  -webkit-transition: right 0.5s ease;
-			          transition: right 0.5s ease;
 			  box-sizing: border-box;
 			  border-left: 2px solid #df4848;
+			  opacity: 1;
+			  -webkit-transition: right 0.5s ease, opacity 0.3s ease;
+			          transition: right 0.5s ease, opacity 0.3s ease;
 			}
 			webview#preview.hide {
 			  right: -100%;
+			}
+			webview#preview + #previewLoader {
+			  background: #f00;
+			  position: absolute;
+			  top: 50%;
+			  right: 30%;
+			  z-index: 10000;
+			  height: 50px;
+			  width: 50px;
+			  opacity: 1;
+			  -webkit-transform: translate(50%, -50%);
+			      -ms-transform: translate(50%, -50%);
+			          transform: translate(50%, -50%);
+			  -webkit-transition: opacity 0.25s ease;
+			          transition: opacity 0.25s ease;
+			  -webkit-animation: loading 0.5s ease 0s infinite alternate;
+			          animation: loading 0.5s ease 0s infinite alternate;
+			}
+			webview#preview + #previewLoader:before {
+			  content: "Loading";
+			  display: inline-block;
+			  position: absolute;
+			  top: 110%;
+			  left: 50%;
+			  font-size: 25px;
+			  -webkit-transform: translateX(-50%);
+			      -ms-transform: translateX(-50%);
+			          transform: translateX(-50%);
+			  width: 100px;
+			  text-align: center;
+			  background: #0f0;
+			}
+			webview#preview.loading-fadeout {
+			  opacity: 0;
+			}
+			webview#preview.loading-fadeout + #previewLoader {
+			  background: #df4848;
+			  opacity: 1;
+			  -webkit-animation: loading 0.5s ease 0s infinite alternate;
+			          animation: loading 0.5s ease 0s infinite alternate;
 			}
 			section#Prompter {
 			  position: fixed;
@@ -1166,6 +1211,30 @@
 			div.overlay.visible {
 			  opacity: 1;
 			}
+			@-webkit-keyframes loading {
+			  from {
+			    border-radius: 0;
+			    height: 50px;
+			    width: 50px;
+			  }
+			  to {
+			    border-radius: 50%;
+			    height: 150px;
+			    width: 150px;
+			  }
+			}
+			@keyframes loading {
+			  from {
+			    border-radius: 0;
+			    height: 50px;
+			    width: 50px;
+			  }
+			  to {
+			    border-radius: 50%;
+			    height: 150px;
+			    width: 150px;
+			  }
+			}
 			
 
 		</style>
@@ -1181,7 +1250,7 @@
 						<span id="projects_arrow" class="arrow inactive"><img src="local/images/arrow_right.svg"></span>
 						<div id="projectName" class="btn inactive"><span id="projectNameText">Projects</span></div>
 						<span id="files_arrow"  class="arrow inactive"><img src="local/images/arrow_right.svg"></span>
-						<div id="fileName" class="btn inactive"><span id="fileNameText">Files</span></div>
+						<form id="fileName" class="btn inactive"><span id="fileNameText">Files</span></form>
 					</div>
 				</div>
 		
@@ -1190,7 +1259,8 @@
 			</section>
 		</section>
 
-		<webview src="#" id="preview" class="hide">preview</webview>
+		<webview src="#" id="preview" class="hide" plugins>preview</webview>
+		<div id="previewLoader"></div>
 
 		<section id="Prompter"></section>
 
@@ -14446,7 +14516,9 @@
 			
 			
 			
-							list: function(_callback){
+							/*Returns array of file names at current project path path*/
+			
+							list: function(_callback){ 
 			
 									var path = core.localData.currentProject.path;
 			
@@ -14536,17 +14608,31 @@
 			
 					},
 			
+					currentPreviewQuestionsFile: {
+			
+						name: null,
+			
+						path: null
+			
+					},
+			
 					pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 			
 			
 			
 					updateUserSettings: function(_callback){ // should only be run on app init
 			
+						var self = this;
+			
 						core.userSettingsFile.read(function(_data){
 			
-							if(core.localData.userSettings === null || core.localData.userSettings !== _data){
+							if(self.userSettings === null || core.localData.userSettings !== _data){
 			
-								core.localData.userSettings = _data;
+								self.userSettings = _data;
+			
+			
+			
+								self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 			
 			
 			
@@ -14697,6 +14783,18 @@
 						core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
 			
 			
+			
+					},
+			
+			
+			
+					setCurrentPreviewQuestionsFile: function(_fileName){
+			
+						var path = Global.appRoot+"/local/preview-files";
+			
+						this.currentPreviewQuestionsFile.name = _fileName;
+			
+						this.currentPreviewQuestionsFile.path = path+"/"+_fileName;
 			
 					}
 			
@@ -14982,7 +15080,7 @@
 			
 						// },
 			
-						"{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
+						// "{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
 			
 			
 			
@@ -15045,6 +15143,34 @@
 						console.log("hidden:", true);
 			
 						this.hidden = true;
+			
+					},
+			
+			
+			
+					mode: {
+			
+						preview: function(){
+			
+			
+			
+						},
+			
+						blank: function(){
+			
+							core.preview.hide();
+			
+						},
+			
+						releaseManager: function(){
+			
+							preview.src = "http://sun.qprod.net/releasemanager/";
+			
+							core.preview.hidden = false;
+			
+							
+			
+						}	
 			
 					},
 			
@@ -15206,33 +15332,45 @@
 			
 							else {
 			
+			
+			
+								fs.readFile(core.localData.currentPreviewQuestionsFile.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
+			
+									if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
+			
+									else {
+			
+										console.log("preview questions",_previewQuestions)
+			
 										
 			
-								gulp.src("local/previewTemplate.html")
+										gulp.src("local/previewTemplate.html")
 			
-								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
+										.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
 			
-								.pipe(replace("{~SKIN.HTML~}", _html))
+										.pipe(replace("{~SKIN.HTML~}", _html))
 			
-								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
+										.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
 			
-								.pipe(replace("{~Header~}", self.map["{~Header~}"]))
+										.pipe(replace("{~Header~}", self.map["{~Header~}"]))
 			
-								.pipe(replace("{~Question~}", self.map["{~Question~}"] ))
+										.pipe(replace("{~Question~}", _previewQuestions ))
 			
-								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
+										.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
 			
-								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
+										.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
 			
-								.pipe(rename("currentPreview.html"))
+										.pipe(rename("currentPreview.html"))
 			
-								.pipe(gulp.dest("local/"));
-			
-			
-			
-								console.log("updated preview");
+										.pipe(gulp.dest("local/"));
 			
 			
+			
+										console.log("updated preview");
+			
+									}
+			
+								});
 			
 							}
 			
@@ -15308,7 +15446,8 @@
 					el("#editor_preview_ratio").purge() // purge the style tag
 						.text( // add text to the style tag
 							"section#editor{ width:"+editorWidth+"; } "+
-							"webview#preview{ width:"+previewWidth+"; }"
+							"webview#preview{ width:"+previewWidth+"; }"+
+							"webview#preview + #previewLoader{ right:"+parseInt(previewWidth)/2+"%; }"
 						);
 				}
 			};
@@ -16208,12 +16347,6 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 				}
 			
 			
@@ -16251,9 +16384,12 @@
 						core.preview.update();
 						core.preview.show();
 			
-							
+						editorCore.dropdowns.files.autoSelectStyleSheet();
 			
-						if(reload){ // if you switch projects, you will need to load the new CSS into the preview
+						/* if you switch projects, 
+						you will need to load the 
+						new CSS into the preview */
+						if(reload){ 
 							setTimeout(function(){
 								core.preview.compileSass();
 							},0);
@@ -16263,7 +16399,10 @@
 						
 			
 			
-					if(!myCodeMirror.isClean() && core.localData.currentProject.name !== _projectName) {
+					if ( 
+						!myCodeMirror.isClean() && 
+						core.localData.currentProject.name !== _projectName 
+					) {
 			
 							Prompter.prompt({
 								message: "Current File Not Saved.",
@@ -16296,8 +16435,13 @@
 					var self = this;
 			
 					projectName.on("click", function(evt){
-						if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
-						if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+						
+						if(editorCore.dropdowns.brands.status === "opened") 
+							editorCore.dropdowns.brands.close();
+						
+						if(editorCore.dropdowns.files.status === "opened") 
+							editorCore.dropdowns.files.close();
+						
 						if(!this.hasClass("inactive")){
 							self.toggle();
 							evt.stopPropagation();
@@ -16420,9 +16564,11 @@
 								el("+div").addClass("header").text("Projects")
 							)
 							for(var i = 0, ii = projects.length; i < ii; i++){
-								projectDropdownBody.append(
-									el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i])
-								)
+								var projectItem = el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i]);
+								if(projects[i] === core.localData.currentProject.name){
+									projectItem.addClass("current");
+								}
+								projectDropdownBody.append(projectItem);
 							}
 			
 							// Add click listeners to each result
@@ -16571,6 +16717,20 @@
 					}
 				},
 			
+				autoSelectStyleSheet: function(){
+					var self = this;
+					// self.purge();
+					// el("#fileNameText").purge().text("Files");
+					core.brands.projects.files.list(function(files){
+						var StyleSheet;
+						if(files.indexOf("StyleSheet.scss") !== -1) StyleSheet = "StyleSheet.scss";
+						else if(files.indexOf("StyleSheet.styl") !== -1) StyleSheet = "StyleSheet.styl";
+						else StyleSheet = null;
+			
+						self.select(StyleSheet);
+					});
+				},
+			
 				populate: function(_callback){
 					var self = this;
 					// self.purge();
@@ -16607,11 +16767,13 @@
 					// console.log("current status:", this.status);
 					if(this.status === "opened") {
 						this.close();
+						console.log("11 closing files 11");
 					}
 					else if(this.status === "closed") {
 						this.open();
 					}
 				},
+			
 				open: function(){
 					// console.log("opening files");
 					var self = this;
@@ -16624,9 +16786,15 @@
 					// projectName.addClass("dropdown-active");
 					
 				},
+			
 				close: function(){
-					// console.log("closing files");
+					console.log("!!closing files!!");
 					var self = this;
+					
+					console.log("status,",self.status)
+					//if already closed, return
+					if(self.status === "closed") return;
+			
 					self.status = "closed";
 					baton(function(next){
 						filesDropdown.addClass("hide");
@@ -16643,13 +16811,17 @@
 						self.purge();
 					}).run();
 				},
+			
 				reset: function(){
 					core.preview.clearWatchers();
 					el("#fileNameText").purge().text("Files");
 				},
+			
 				select: function(_fileName){
 					var self = this;
-					// console.log("selecting:",_fileName);
+			
+					// if filename is null, return
+					if(_fileName === null) return;
 			
 					function selectFile() {
 						el("#fileNameText").purge().text(_fileName);
@@ -16708,7 +16880,15 @@
 					core.localData.currentFile.dirty = false;
 				},
 			
+				addFileDragListener: function(){
+			
+				}
+			
 			};
+			
+			
+			
+			
 			
 			
 			
@@ -16859,10 +17039,36 @@
 					core.preview.init();
 					//un-hide page // show editor and webview
 					el.join( [editor, preview] ).rmClass("hide");
+					
+			
+					preview.addEventListener("did-start-loading", function(){
+						// preview.reload();
+						preview.addClass("loading-fadeout");
+						if(preview.src === "http://sun.qprod.net/releasemanager/") {
+							console.log("release manager redirecting!!");
+						}
+						
+			
+			
+						// core.preview.init();
+					  // preview.src = "local/currentPreview.html";
+					});
 			
 					preview.addEventListener("dom-ready", function(){
 						// preview.reload();
+			
 						console.log("dom ready!!");
+						if(preview.src === "http://sun.qprod.net/releasemanager/") {
+			
+							preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
+						}
+			
+						setTimeout(function(){
+							preview.rmClass("loading-fadeout");
+						},50);
+			
+			
+			
 						// core.preview.init();
 					  // preview.src = "local/currentPreview.html";
 					});

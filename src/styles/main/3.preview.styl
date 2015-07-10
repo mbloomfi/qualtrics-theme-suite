@@ -5,12 +5,61 @@ webview#preview {
 	right 0
 	height 100%
 	width ($previewWidth)%
-	transition right .5s ease
 	box-sizing border-box
 	border-left 2px solid $primaryColor
+	opacity 1
+	transition right .5s ease, opacity .3s ease
 	
 	&.hide {
 		right -100%
 	}
-	
+	& + #previewLoader {
+		background red
+		// background alpha($primaryColor, 0)
+		position absolute
+		top 50%
+		right ($previewWidth/2)%
+		z-index 10000
+		height 50px
+		width 50px
+		opacity 1
+		// opacity 0
+		transform translate(50%, -50%)
+		transition opacity .25s ease
+		&:before {
+			content "Loading"
+			display inline-block
+			position absolute
+			top 110%
+			left 50%
+			font-size 25px
+			transform translateX(-50%)
+			width 100px
+			text-align center
+			background lime
+			
+		}
+	}
+	&.loading-fadeout {
+		opacity 0
+		
+		& + #previewLoader {
+			background $primaryColor
+			opacity 1
+			animation: loading 0.5s ease 0s infinite alternate;
+		}
+
+	}
+}
+@keyframes loading {
+	from {
+		border-radius 0
+		height 50px
+		width 50px
+	}
+	to {
+		border-radius 50%
+		height 150px
+		width 150px
+	}
 }

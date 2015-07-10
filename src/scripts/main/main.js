@@ -66,7 +66,8 @@ var editorPreviewBar = {
 		el("#editor_preview_ratio").purge() // purge the style tag
 			.text( // add text to the style tag
 				"section#editor{ width:"+editorWidth+"; } "+
-				"webview#preview{ width:"+previewWidth+"; }"
+				"webview#preview{ width:"+previewWidth+"; }"+
+				"webview#preview + #previewLoader{ right:"+parseInt(previewWidth)/2+"%; }"
 			);
 	}
 };
@@ -147,10 +148,36 @@ el.on("load", function(){
 		core.preview.init();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
+		
+
+		preview.addEventListener("did-start-loading", function(){
+			// preview.reload();
+			preview.addClass("loading-fadeout");
+			if(preview.src === "http://sun.qprod.net/releasemanager/") {
+				console.log("release manager redirecting!!");
+			}
+			
+
+
+			// core.preview.init();
+		  // preview.src = "local/currentPreview.html";
+		});
 
 		preview.addEventListener("dom-ready", function(){
 			// preview.reload();
+
 			console.log("dom ready!!");
+			if(preview.src === "http://sun.qprod.net/releasemanager/") {
+
+				preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
+			}
+
+			setTimeout(function(){
+				preview.rmClass("loading-fadeout");
+			},50);
+
+
+
 			// core.preview.init();
 		  // preview.src = "local/currentPreview.html";
 		});

@@ -153,14 +153,24 @@ panel.buildPanel = function(_newPanel) {
 		);
 		//Default Preview File
 		currentPanel.append( 
-			el("+label").text("Default Preview File").append( 
+			el("+label").addClass("extraMarginBottom").text("Default Preview File").append( 
 				el("+div").addClass("select_cont").append(
 					el("+select#default-preview-file").attr("name", "default-preview-file")
 				)
 			)
 		);
+		
+		// currentPanel.append( el("+br") );
+
 		//Manage Preview Files
-		currentPanel.append( el("+button").text("Manage Preview Files") );
+		currentPanel.append( 
+			el("+button#managePreviewFiles").addClass("btn").text("Manage Preview Files") 
+		);
+
+		//Manage Base Files
+		currentPanel.append( 
+			el("+button#manageBaseFiles").addClass("btn").text("Manage Base Files") 
+		);
 		return currentPanel;
 	} 
 

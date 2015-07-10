@@ -17,6 +17,7 @@
     "gulp-util": "^3.0.6"
   },
   "dependencies": {
+    "dropzone": "^4.0.1",
     "escape-html": "^1.0.2",
     "fs-extra": "^0.21.0",
     "gulp": "^3.9.0",

@@ -29,9 +29,12 @@ editorCore.dropdowns.projects = {
 			core.preview.update();
 			core.preview.show();
 
-				
+			editorCore.dropdowns.files.autoSelectStyleSheet();
 
-			if(reload){ // if you switch projects, you will need to load the new CSS into the preview
+			/* if you switch projects, 
+			you will need to load the 
+			new CSS into the preview */
+			if(reload){ 
 				setTimeout(function(){
 					core.preview.compileSass();
 				},0);
@@ -41,7 +44,10 @@ editorCore.dropdowns.projects = {
 			
 
 
-		if(!myCodeMirror.isClean() && core.localData.currentProject.name !== _projectName) {
+		if ( 
+			!myCodeMirror.isClean() && 
+			core.localData.currentProject.name !== _projectName 
+		) {
 
 				Prompter.prompt({
 					message: "Current File Not Saved.",
@@ -74,8 +80,13 @@ editorCore.dropdowns.projects = {
 		var self = this;
 
 		projectName.on("click", function(evt){
-			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
-			if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+			
+			if(editorCore.dropdowns.brands.status === "opened") 
+				editorCore.dropdowns.brands.close();
+			
+			if(editorCore.dropdowns.files.status === "opened") 
+				editorCore.dropdowns.files.close();
+			
 			if(!this.hasClass("inactive")){
 				self.toggle();
 				evt.stopPropagation();
@@ -198,9 +209,11 @@ editorCore.dropdowns.projects = {
 					el("+div").addClass("header").text("Projects")
 				)
 				for(var i = 0, ii = projects.length; i < ii; i++){
-					projectDropdownBody.append(
-						el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i])
-					)
+					var projectItem = el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i]);
+					if(projects[i] === core.localData.currentProject.name){
+						projectItem.addClass("current");
+					}
+					projectDropdownBody.append(projectItem);
 				}
 
 				// Add click listeners to each result

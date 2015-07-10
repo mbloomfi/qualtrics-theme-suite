@@ -89,6 +89,27 @@ html.white,
 body.white {
   background-color: #fff;
 }
+html,
+body,
+p,
+h1,
+h2,
+input,
+select,
+textarea,
+label,
+a {
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  font-size: 100%;
+  text-decoration: none;
+  color: #464646;
+  text-decoration: none;
+  font-weight: normal;
+  font-family: "Source Sans Pro", "Helvetica Neue";
+}
 svg.logo {
   height: 80px;
   width: auto;
@@ -240,6 +261,9 @@ section#panel form label:after {
   display: block;
   clear: both;
 }
+section#panel form label.extraMarginBottom {
+  margin-bottom: 35px;
+}
 section#panel form h2 {
   margin: 0 0 5px;
 }
@@ -301,6 +325,7 @@ section#panel form button {
   padding: 5px 10px;
   cursor: pointer;
   display: block;
+  margin: 0 0 15px;
 }
 section#panel form button:hover {
   background-color: #5a5a5a;
@@ -317,7 +342,6 @@ section#panel form div.select_cont select {
   width: 100%;
   margin: 0 0 20px;
   text-indent: 2px;
-  background-color: #fff;
   background: transparent;
 }
 section#panel form div.select_cont.inline-block {

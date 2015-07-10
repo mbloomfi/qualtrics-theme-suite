@@ -1,3 +1,6 @@
+app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
+app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
+
 // MAIN RENDERER
 var mainWindow = null;
 

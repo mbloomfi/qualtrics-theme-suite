@@ -418,9 +418,6 @@ editorCore.dropdowns.brands = {
 		}
 
 
-
-
-
 	}
 
 };

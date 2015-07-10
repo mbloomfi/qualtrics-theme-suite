@@ -140,7 +140,7 @@ var menuTemplate = [
       {
         label: 'Duplicate Project'
       },
-       {
+      {
         type: "separator"
       },
       {
@@ -165,13 +165,21 @@ var menuTemplate = [
         label: 'Edit/Preview',
         type: "checkbox",
         checked: true,
-        accelerator: 'Shift+Command+E'
+        accelerator: 'Shift+Command+E',
+        click: function(){
+          appMenu.items[1].submenu.items[10].checked = false;
+          mainWindow.webContents.executeJavaScript("core.preview.mode.blank()");
+        }
       },
       {
         label: 'Upload (Release Manager)',
         type: "checkbox",
         checked: false,
-        accelerator: 'Shift+Command+U'
+        accelerator: 'Shift+Command+U',
+        click: function(){
+          appMenu.items[1].submenu.items[9].checked = false;
+          mainWindow.webContents.executeJavaScript("core.preview.mode.releaseManager()");
+        }
       }
     ]
   },
@@ -242,6 +250,7 @@ var menuTemplate = [
       {
         label: 'Preview File',
         submenu: [
+          // These should be read from the user settings
           {
             label: "v4 Vertical",
             type: "checkbox",
@@ -480,6 +489,9 @@ var menuTemplate = [
 ];
 
 var appMenu = Menu.buildFromTemplate(menuTemplate);
+
+app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
+app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
 
 // MAIN RENDERER
 var mainWindow = null;

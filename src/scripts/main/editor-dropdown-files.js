@@ -68,6 +68,20 @@ editorCore.dropdowns.files = {
 		}
 	},
 
+	autoSelectStyleSheet: function(){
+		var self = this;
+		// self.purge();
+		// el("#fileNameText").purge().text("Files");
+		core.brands.projects.files.list(function(files){
+			var StyleSheet;
+			if(files.indexOf("StyleSheet.scss") !== -1) StyleSheet = "StyleSheet.scss";
+			else if(files.indexOf("StyleSheet.styl") !== -1) StyleSheet = "StyleSheet.styl";
+			else StyleSheet = null;
+
+			self.select(StyleSheet);
+		});
+	},
+
 	populate: function(_callback){
 		var self = this;
 		// self.purge();
@@ -104,11 +118,13 @@ editorCore.dropdowns.files = {
 		// console.log("current status:", this.status);
 		if(this.status === "opened") {
 			this.close();
+			console.log("11 closing files 11");
 		}
 		else if(this.status === "closed") {
 			this.open();
 		}
 	},
+
 	open: function(){
 		// console.log("opening files");
 		var self = this;
@@ -121,9 +137,15 @@ editorCore.dropdowns.files = {
 		// projectName.addClass("dropdown-active");
 		
 	},
+
 	close: function(){
-		// console.log("closing files");
+		console.log("!!closing files!!");
 		var self = this;
+		
+		console.log("status,",self.status)
+		//if already closed, return
+		if(self.status === "closed") return;
+
 		self.status = "closed";
 		baton(function(next){
 			filesDropdown.addClass("hide");
@@ -140,13 +162,17 @@ editorCore.dropdowns.files = {
 			self.purge();
 		}).run();
 	},
+
 	reset: function(){
 		core.preview.clearWatchers();
 		el("#fileNameText").purge().text("Files");
 	},
+
 	select: function(_fileName){
 		var self = this;
-		// console.log("selecting:",_fileName);
+
+		// if filename is null, return
+		if(_fileName === null) return;
 
 		function selectFile() {
 			el("#fileNameText").purge().text(_fileName);
@@ -205,4 +231,11 @@ editorCore.dropdowns.files = {
 		core.localData.currentFile.dirty = false;
 	},
 
+	addFileDragListener: function(){
+
+	}
+
 };
+
+
+

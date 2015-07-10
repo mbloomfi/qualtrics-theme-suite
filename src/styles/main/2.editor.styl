@@ -138,7 +138,8 @@ section#editor {
 				// }
 				
 				// DROPDOWN MENUS
-				div.btn {
+				.btn {
+					display block
 					height 100%
 					float left
 					font-size 1.25em
@@ -415,6 +416,9 @@ section#editor {
 										background-color rgba(0,0,0,.3)
 										padding 5px 5px 5px 8px
 									}
+									&.current {
+										background-color alpha($primaryColor, .8)
+									}
 								}
 								
 								.no-projects {
@@ -426,6 +430,8 @@ section#editor {
 									text-align center
 									width 100%
 								}
+								
+								
 								
 
 							}

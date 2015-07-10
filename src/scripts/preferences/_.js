@@ -292,7 +292,8 @@ var core = Global.coreMethods = {
 					dirty: false
 				},
 
-				list: function(_callback){
+				/*Returns array of file names at current project path path*/
+				list: function(_callback){ 
 						var path = core.localData.currentProject.path;
 						console.log("path to projects:", path);
 						var fileList = [];
@@ -337,12 +338,19 @@ var core = Global.coreMethods = {
 				self.name = self.path = self.dirty = null;
 			}
 		},
+		currentPreviewQuestionsFile: {
+			name: null,
+			path: null
+		},
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 		updateUserSettings: function(_callback){ // should only be run on app init
+			var self = this;
 			core.userSettingsFile.read(function(_data){
-				if(core.localData.userSettings === null || core.localData.userSettings !== _data){
-					core.localData.userSettings = _data;
+				if(self.userSettings === null || core.localData.userSettings !== _data){
+					self.userSettings = _data;
+
+					self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 
 					if(_callback) _callback();
 				}
@@ -418,6 +426,12 @@ var core = Global.coreMethods = {
 
 			core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
 
+		},
+
+		setCurrentPreviewQuestionsFile: function(_fileName){
+			var path = Global.appRoot+"/local/preview-files";
+			this.currentPreviewQuestionsFile.name = _fileName;
+			this.currentPreviewQuestionsFile.path = path+"/"+_fileName;
 		}
 	},
 
@@ -560,7 +574,7 @@ var core = Global.coreMethods = {
 			// "{~Question~}": function(){
 
 			// },
-			"{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
+			// "{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
 
 
 
@@ -592,6 +606,20 @@ var core = Global.coreMethods = {
 			preview.src = "local/no-preview.html";
 			console.log("hidden:", true);
 			this.hidden = true;
+		},
+
+		mode: {
+			preview: function(){
+
+			},
+			blank: function(){
+				core.preview.hide();
+			},
+			releaseManager: function(){
+				preview.src = "http://sun.qprod.net/releasemanager/";
+				core.preview.hidden = false;
+				
+			}	
 		},
 
 		compileSass: function(){
@@ -672,20 +700,26 @@ var core = Global.coreMethods = {
 			fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 				if(_errHtml){ console.log("ERR",_errHtml);}
 				else {
+
+					fs.readFile(core.localData.currentPreviewQuestionsFile.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
+						if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
+						else {
+							console.log("preview questions",_previewQuestions)
 							
-					gulp.src("local/previewTemplate.html")
-					.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
-					.pipe(replace("{~SKIN.HTML~}", _html))
-					.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
-					.pipe(replace("{~Header~}", self.map["{~Header~}"]))
-					.pipe(replace("{~Question~}", self.map["{~Question~}"] ))
-					.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
-					.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
-					.pipe(rename("currentPreview.html"))
-					.pipe(gulp.dest("local/"));
+							gulp.src("local/previewTemplate.html")
+							.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
+							.pipe(replace("{~SKIN.HTML~}", _html))
+							.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
+							.pipe(replace("{~Header~}", self.map["{~Header~}"]))
+							.pipe(replace("{~Question~}", _previewQuestions ))
+							.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
+							.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
+							.pipe(rename("currentPreview.html"))
+							.pipe(gulp.dest("local/"));
 
-					console.log("updated preview");
-
+							console.log("updated preview");
+						}
+					});
 				}
 			});
 
@@ -842,14 +876,24 @@ panel.buildPanel = function(_newPanel) {
 		);
 		//Default Preview File
 		currentPanel.append( 
-			el("+label").text("Default Preview File").append( 
+			el("+label").addClass("extraMarginBottom").text("Default Preview File").append( 
 				el("+div").addClass("select_cont").append(
 					el("+select#default-preview-file").attr("name", "default-preview-file")
 				)
 			)
 		);
+		
+		// currentPanel.append( el("+br") );
+
 		//Manage Preview Files
-		currentPanel.append( el("+button").text("Manage Preview Files") );
+		currentPanel.append( 
+			el("+button#managePreviewFiles").addClass("btn").text("Manage Preview Files") 
+		);
+
+		//Manage Base Files
+		currentPanel.append( 
+			el("+button#manageBaseFiles").addClass("btn").text("Manage Base Files") 
+		);
 		return currentPanel;
 	} 
 
