@@ -8,6 +8,12 @@ editorCore.dropdowns.projects = {
 		function selectProject(){
 			self.close();
 			el("#projectNameText").purge().text(_projectName);
+
+			var reload = false;
+			if(core.localData.currentProject.name !== null){
+				reload = true;
+			}
+
 			// Add this functionality
 			// core.brands.projects.select(_projectName);
 			core.brands.projects.setCurrentProject(_projectName);
@@ -19,8 +25,17 @@ editorCore.dropdowns.projects = {
 			editorCore.dropdowns.files.reset();
 			core.preview.setWatchers();
 
-			core.preview.show();
+			
 			core.preview.update();
+			core.preview.show();
+
+				
+
+			if(reload){
+				setTimeout(function(){
+					core.preview.compileSass();
+				},0);
+			}
 		}
 		
 			

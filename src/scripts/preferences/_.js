@@ -217,10 +217,15 @@ var core = Global.coreMethods = {
 			setCurrentProject: function(_projectName){
 				core.localData.currentProject.name = _projectName;
 
-				core.localData.currentProject.path = 
-					core.brands.getPathToBrands()+"/"+
-					core.localData.currentBrand+"/"+
-					core.localData.currentProject.name;
+
+				core.localData.currentProject.path = (_projectName !== null)
+				?
+				(core.brands.getPathToBrands()+"/"+
+				core.localData.currentBrand+"/"+
+				core.localData.currentProject.name)
+				:
+				null
+				;
 
 			},
 
@@ -438,8 +443,8 @@ var core = Global.coreMethods = {
 		var extMap = {
 			".html": "htmlmixed",
 			".css": "css",
-			".scss": "sass",
-			".styl": "stylus",
+			".scss": "text/x-scss",
+			".styl": "text/x-styl",
 			".js": "javascript",
 			".qtheme": "json",
 			".json": "json"
@@ -579,7 +584,7 @@ var core = Global.coreMethods = {
 				this.hidden = false;
 
 			} else {
-				console.log("cant show file");
+				console.log("cant show file or file is already showing");
 			}
 		},
 
@@ -639,23 +644,25 @@ var core = Global.coreMethods = {
 		watchCssFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/StyleSheet.css";
+			console.log("watching 2");
 			self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
 				console.log("reloading 2");
 				preview.reload();
 			});
-			console.log("watching 2")
+			
 		},
 
 		watchSkinFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/Skin.html";
+			console.log("watching 3")
 			self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
 				console.log("reloading 3")
 				preview.reload();
 			});
-			console.log("watching 3")
+			
 		},
 
 		update: function(){

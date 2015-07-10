@@ -100,6 +100,7 @@ function codemirrorInit() {
 //= include ./Prompter.js
 
 
+
 // INIT app
 el.on("load", function(){
 	//add global reference to editor and preview
