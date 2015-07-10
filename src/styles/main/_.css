@@ -1092,21 +1092,19 @@ webview#preview.hide {
   right: -100%;
 }
 webview#preview + #previewLoader {
-  background: #f00;
+  background: rgba(223,72,72,0);
   position: absolute;
   top: 50%;
   right: 30%;
   z-index: 10000;
-  height: 50px;
-  width: 50px;
-  opacity: 1;
+  height: 25px;
+  width: 25px;
+  opacity: 0;
   -webkit-transform: translate(50%, -50%);
       -ms-transform: translate(50%, -50%);
           transform: translate(50%, -50%);
   -webkit-transition: opacity 0.25s ease;
           transition: opacity 0.25s ease;
-  -webkit-animation: loading 0.5s ease 0s infinite alternate;
-          animation: loading 0.5s ease 0s infinite alternate;
 }
 webview#preview + #previewLoader:before {
   content: "Loading";
@@ -1120,7 +1118,6 @@ webview#preview + #previewLoader:before {
           transform: translateX(-50%);
   width: 100px;
   text-align: center;
-  background: #0f0;
 }
 webview#preview.loading-fadeout {
   opacity: 0;
@@ -1208,24 +1205,24 @@ div.overlay.visible {
 @-webkit-keyframes loading {
   from {
     border-radius: 0;
-    height: 50px;
-    width: 50px;
+    height: 25px;
+    width: 25px;
   }
   to {
     border-radius: 50%;
-    height: 150px;
-    width: 150px;
+    height: 50px;
+    width: 50px;
   }
 }
 @keyframes loading {
   from {
     border-radius: 0;
-    height: 50px;
-    width: 50px;
+    height: 25px;
+    width: 25px;
   }
   to {
     border-radius: 50%;
-    height: 150px;
-    width: 150px;
+    height: 50px;
+    width: 50px;
   }
 }
