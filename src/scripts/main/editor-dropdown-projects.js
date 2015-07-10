@@ -31,7 +31,7 @@ editorCore.dropdowns.projects = {
 
 				
 
-			if(reload){
+			if(reload){ // if you switch projects, you will need to load the new CSS into the preview
 				setTimeout(function(){
 					core.preview.compileSass();
 				},0);

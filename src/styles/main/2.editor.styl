@@ -451,10 +451,15 @@ section#editor {
 										background-color rgba(0,0,0,.3)
 										padding 7px 5px 7px 8px
 									}
+									&.current {
+										background-color alpha($primaryColor, .8)
+										font-size 17px
+									}
 									&.bold {
 										font-size 17px
 										font-weight 600
 									}
+									
 								}
 							}
 							
@@ -516,7 +521,7 @@ section#editor {
 							box-sizing border-box
 							background-color $dropdown-menus-color
 							color white
-							border 1px solid alpha($primaryColor, .9)
+							border 1px solid alpha($primaryColor, .8)
 							
 							&::-webkit-input-placeholder {
 								color rgb(210,210,210)

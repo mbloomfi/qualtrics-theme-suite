@@ -79,16 +79,16 @@ editorCore.dropdowns.files = {
 			);
 
 			for(var i = 0, ii = files.length; i < ii; i ++){
+				var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
+
+				if(files[i] === core.localData.currentFile.name){
+					_file.addClass("current");
+				}
 				if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
-					filesDropdownBody.append(
-						el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
-					)
+					_file.addClass("bold");
 				}
-				else {
-					filesDropdownBody.append(
-						el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i])
-					)
-				}
+
+				filesDropdownBody.append(_file);
 					
 			}
 

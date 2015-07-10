@@ -906,6 +906,10 @@
 			  background-color: rgba(0,0,0,0.3);
 			  padding: 7px 5px 7px 8px;
 			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.current {
+			  background-color: rgba(223,72,72,0.8);
+			  font-size: 17px;
+			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.bold {
 			  font-size: 17px;
 			  font-weight: 600;
@@ -942,7 +946,7 @@
 			  box-sizing: border-box;
 			  background-color: rgba(40,40,40,0.95);
 			  color: #fff;
-			  border: 1px solid rgba(223,72,72,0.9);
+			  border: 1px solid rgba(223,72,72,0.8);
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
 			  color: #d2d2d2;
@@ -16249,7 +16253,7 @@
 			
 							
 			
-						if(reload){
+						if(reload){ // if you switch projects, you will need to load the new CSS into the preview
 							setTimeout(function(){
 								core.preview.compileSass();
 							},0);
@@ -16578,16 +16582,16 @@
 						);
 			
 						for(var i = 0, ii = files.length; i < ii; i ++){
+							var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
+			
+							if(files[i] === core.localData.currentFile.name){
+								_file.addClass("current");
+							}
 							if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
-								filesDropdownBody.append(
-									el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
-								)
+								_file.addClass("bold");
 							}
-							else {
-								filesDropdownBody.append(
-									el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i])
-								)
-							}
+			
+							filesDropdownBody.append(_file);
 								
 						}
 			

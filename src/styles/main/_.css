@@ -900,6 +900,10 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   background-color: rgba(0,0,0,0.3);
   padding: 7px 5px 7px 8px;
 }
+section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.current {
+  background-color: rgba(223,72,72,0.8);
+  font-size: 17px;
+}
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown .dropdownBody.files .file-item.bold {
   font-size: 17px;
   font-weight: 600;
@@ -936,7 +940,7 @@ section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div
   box-sizing: border-box;
   background-color: rgba(40,40,40,0.95);
   color: #fff;
-  border: 1px solid rgba(223,72,72,0.9);
+  border: 1px solid rgba(223,72,72,0.8);
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner div.btn div.dropdown #newProjectInput::-webkit-input-placeholder {
   color: #d2d2d2;

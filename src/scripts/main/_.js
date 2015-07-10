@@ -15056,7 +15056,7 @@ editorCore.dropdowns.projects = {
 
 				
 
-			if(reload){
+			if(reload){ // if you switch projects, you will need to load the new CSS into the preview
 				setTimeout(function(){
 					core.preview.compileSass();
 				},0);
@@ -15385,16 +15385,16 @@ editorCore.dropdowns.files = {
 			);
 
 			for(var i = 0, ii = files.length; i < ii; i ++){
+				var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
+
+				if(files[i] === core.localData.currentFile.name){
+					_file.addClass("current");
+				}
 				if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
-					filesDropdownBody.append(
-						el("+div").addClass(["file-item", "bold"]).attr("data-filename", files[i]).text(files[i])
-					)
+					_file.addClass("bold");
 				}
-				else {
-					filesDropdownBody.append(
-						el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i])
-					)
-				}
+
+				filesDropdownBody.append(_file);
 					
 			}
 
