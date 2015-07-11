@@ -22,6 +22,95 @@ $item-color-hover = rgb(255,255,255)
 	font-weight 400
 	letter-spacing .25px
 	text-indent 5px
+	
+	.icon_cont {
+		height 22px
+		// background alpha(lime, .5)
+		// outline 1px solid orange
+		position absolute
+		top 10px
+		right 10px
+		width 55px
+		
+		.icon {
+			display inline-block
+			position absolute
+			height 100%
+			// background purpl
+			padding 2px 5px
+			cursor pointer
+			background-color rgba(255,255,255,0)
+			border-radius 1.5px
+			box-shadow 0 2px 6px rgba(0,0,0,0)
+			transition background-color .3s ease, box-shadow .3s ease
+			svg {
+				width auto
+				height 100%
+				display block
+				// background alpha(lime, .5)
+					path {
+						transition fill .3s ease
+					}
+			}
+			
+			&#renameFile {
+				left 0
+				svg {
+					
+					path {
+						fill rgb(230,230,230)
+					}
+				}
+				&:hover {
+					background-color rgba(255,255,255,.4)
+					svg {
+						path {
+							fill rgb(30,30,30)
+						}
+					}
+				}
+				&.active {
+					background-color rgba(255,255,255,.9)
+					box-shadow 0 2px 6px rgba(0,0,0,.25)
+					svg {
+						path {
+							fill rgb(70,70,70)
+						}
+					}
+				}
+			}
+
+			&#deleteFile {
+				right 0
+				svg {
+					
+					path {
+						fill $primaryColor
+					}
+				}
+				&:hover {
+					background-color alpha($primaryColor, .4)
+					
+					svg {
+						path {
+							fill rgb(220,220,220)
+						}
+					}
+				}
+				&.active {
+					background-color alpha($primaryColor, .85)
+					box-shadow 0 2px 6px rgba(0,0,0,.25)
+					svg {
+						path {
+							fill rgb(250,250,250)
+						}
+					}
+				}
+			}
+			
+			
+		}
+	}
 }
 
 
@@ -110,41 +199,6 @@ section#editor {
 					}
 					
 				}
-				
-				// div#brandName{
-				// 	height 100%
-				// 	float left
-				// 	font-size 1.25em
-				// 	padding 0 10px
-				// 	margin 0 10px
-				// 	max-width 250px
-				// 	// overflow hidden
-				// 	position relative
-				// }	
-
-				// div#projectName {
-				// 	height 100%
-				// 	float left
-				// 	font-size 1.25em
-				// 	padding 0 10px
-				// 	margin 0 10px
-				// 	max-width 250px
-				// 	// overflow hidden
-				// 	position relative
-				// 	// background-color purple
-				// }
-				
-				// div#fileName {
-				// 	height 100%
-				// 	float left
-				// 	font-size 1.25em
-				// 	padding 0 10px
-				// 	margin 0 10px
-				// 	max-width 250px
-				// 	// overflow hidden
-				// 	position relative
-				// 	// background-color purple
-				// }
 				
 				// DROPDOWN MENUS
 				.btn {
@@ -454,7 +508,8 @@ section#editor {
 								.file-item {
 									font-size 16px
 									font-weight 300
-									width 190px
+									display block
+									width 200px
 									overflow-x scroll
 									line-height 17px
 									cursor pointer
@@ -475,6 +530,26 @@ section#editor {
 									&.bold {
 										font-size 17px
 										font-weight 600
+									}
+									&.deleteFile {
+										background-color rgba(0,0,0,0)
+										&:hover, &:focus {
+											outline 1px solid $negative-red
+											background rgb(30, 30, 30)
+											color white
+											cursor url('local/images/delete-cursor.svg'), auto
+										}
+										
+									}
+									
+									&.renameFile {
+										background-color rgba(0,0,0,0)
+										&:hover, &:focus {
+											background rgb(230,230,230)
+											color rgb(60,60,60)
+											cursor url('local/images/pencil-cursor.svg'), auto
+										}
+										
 									}
 									
 								}
