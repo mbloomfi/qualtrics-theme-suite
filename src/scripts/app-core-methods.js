@@ -435,8 +435,8 @@ var core = Global.coreMethods = {
 			".scss": "text/x-scss",
 			".styl": "text/x-styl",
 			".js": "javascript",
-			".qtheme": "json",
-			".json": "json",
+			".qtheme": "application/json",
+			".json": "application/json",
 			".md": "markdown",
 		}
 
@@ -444,23 +444,19 @@ var core = Global.coreMethods = {
 			if(myCodeMirror.getOption("mode") !== extMap[ext]){
 				myCodeMirror.setOption("mode", extMap[ext]);
 			}	
-
-
-			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
-				if(err){ console.log("ERR",err);}
-				else {
-					
-					myCodeMirror.setValue(data);
-					myCodeMirror.markClean();
-				}
-			});
-
 		}
 		else {
-			myCodeMirror.setOption("mode", "markdown");
-			myCodeMirror.setValue("Cannot Read File Type: "+ext);
-			myCodeMirror.markClean();
+			myCodeMirror.setOption("mode", "");
 		}
+
+		fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
+			if(err){ console.log("ERR",err);}
+			else {
+				myCodeMirror.setValue(data);
+				myCodeMirror.markClean();
+			}
+		});
+
 	},
 
 	prompt: function(_dialogue, _confirm, _cancel, _confirmCallback){

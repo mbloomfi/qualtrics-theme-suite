@@ -14,7 +14,7 @@ editorCore.dropdowns.files = {
 				el.join([
 					el("+div").addClass(["arrow", "hide"]),
 
-					el("+div").addClass(["dropdownBody", "files"]).text("files here")
+					el("+div").addClass(["dropdownBody", "files"])
 				])
 
 			)
@@ -93,17 +93,19 @@ editorCore.dropdowns.files = {
 			);
 
 			for(var i = 0, ii = files.length; i < ii; i ++){
-				var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
+				// if file is not a Dot file (e.g. ".DS_Store")
+				if(files[i].charAt(0) !== "."){
+					var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
 
-				if(files[i] === core.localData.currentFile.name){
-					_file.addClass("current");
-				}
-				if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
-					_file.addClass("bold");
-				}
+					if(files[i] === core.localData.currentFile.name){
+						_file.addClass("current");
+					}
+					if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
+						_file.addClass("bold");
+					}
 
-				filesDropdownBody.append(_file);
-					
+					filesDropdownBody.append(_file);
+				}
 			}
 
 			_callback();
@@ -288,6 +290,9 @@ editorCore.dropdowns.files = {
 			//check if file(s) of folder
 
 			console.log(files);
+
+			var filesTotal = files.length;
+			var filesCopied = 0;
 			
 
 			for(var i = 0, ii = files.length; i<ii; i++){
@@ -296,6 +301,10 @@ editorCore.dropdowns.files = {
 					fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
 						if(err) return console.log("ERR copying:",_file.name, err);
 						console.log("copied:", _file.name);
+						filesCopied++;
+						if(filesCopied === filesTotal){
+							console.log("All Files Copied");
+						}
 					});
 				})(files[i]);
 				

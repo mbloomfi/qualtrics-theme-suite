@@ -67,7 +67,7 @@ var editorPreviewBar = {
 			.text( // add text to the style tag
 				"section#editor{ width:"+editorWidth+"; } "+
 				"webview#preview{ width:"+previewWidth+"; }"+
-				"webview#preview + #previewLoader{ right:"+parseInt(previewWidth)/2+"%; }"
+				"webview#preview + #previewLoader{ width:"+previewWidth+"; }"
 			);
 	}
 };

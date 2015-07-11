@@ -1107,41 +1107,91 @@
 			  right: -100%;
 			}
 			webview#preview + #previewLoader {
-			  background: rgba(223,72,72,0);
+			  background: #fff;
 			  position: absolute;
-			  top: 50%;
-			  right: 30%;
+			  top: 0;
+			  right: -100%;
 			  z-index: 10000;
-			  height: 25px;
-			  width: 25px;
+			  height: 100%;
+			  width: 60%;
 			  opacity: 0;
-			  -webkit-transform: translate(50%, -50%);
-			      -ms-transform: translate(50%, -50%);
-			          transform: translate(50%, -50%);
 			  -webkit-transition: opacity 0.25s ease;
 			          transition: opacity 0.25s ease;
 			}
-			webview#preview + #previewLoader:before {
-			  content: "Loading";
-			  display: inline-block;
+			webview#preview + #previewLoader #logo {
+			  height: 90px;
+			  width: auto;
 			  position: absolute;
-			  top: 110%;
-			  left: 50%;
-			  font-size: 25px;
-			  -webkit-transform: translateX(-50%);
-			      -ms-transform: translateX(-50%);
-			          transform: translateX(-50%);
-			  width: 100px;
-			  text-align: center;
+			  top: -2px;
+			  left: 5%;
 			}
-			webview#preview.loading-fadeout {
-			  opacity: 0;
+			webview#preview + #previewLoader #logo #QUALTRICS-LOGO {
+			  fill: #b4b4b4;
+			}
+			webview#preview + #previewLoader h1 {
+			  font-family: 'Source Sans Pro';
+			  display: inline-block;
+			  text-align: center;
+			  font-weight: 800;
+			  color: #b4b4b4;
+			  font-size: 40px;
+			  position: absolute;
+			  top: 48%;
+			  left: 50%;
+			  padding: 0;
+			  margin: 0;
+			  -webkit-transform: translate(-50%, -50%);
+			      -ms-transform: translate(-50%, -50%);
+			          transform: translate(-50%, -50%);
+			}
+			webview#preview + #previewLoader h1 div {
+			  position: absolute;
+			  bottom: 5px;
+			  left: 110%;
+			  width: 50px;
+			  height: 30px;
+			}
+			webview#preview + #previewLoader h1 div span {
+			  position: absolute;
+			  bottom: 0;
+			  height: 40px;
+			  width: 40px;
+			  background-color: #b4b4b4;
+			  display: block;
+			  border-radius: 50%;
+			  -webkit-transform: translate(-50%, 25%) scale(0.25);
+			      -ms-transform: translate(-50%, 25%) scale(0.25);
+			          transform: translate(-50%, 25%) scale(0.25);
+			}
+			webview#preview + #previewLoader h1 div span.circle1 {
+			  left: 0;
+			}
+			webview#preview + #previewLoader h1 div span.circle2 {
+			  left: 50%;
+			}
+			webview#preview + #previewLoader h1 div span.circle3 {
+			  left: 100%;
 			}
 			webview#preview.loading-fadeout + #previewLoader {
-			  background: #df4848;
 			  opacity: 1;
-			  -webkit-animation: loading 0.5s ease 0s infinite alternate;
-			          animation: loading 0.5s ease 0s infinite alternate;
+			  right: 0;
+			}
+			webview#preview.loading-fadeout + #previewLoader #logo #QUALTRICS-LOGO {
+			  fill: #b4b4b4;
+			  -webkit-animation: q-loading 1.75s ease 0s infinite;
+			          animation: q-loading 1.75s ease 0s infinite;
+			}
+			webview#preview.loading-fadeout + #previewLoader h1 div span.circle1 {
+			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
+			          animation: circle-loading 1.5s ease 0s infinite;
+			}
+			webview#preview.loading-fadeout + #previewLoader h1 div span.circle2 {
+			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
+			          animation: circle-loading 1.5s ease 0s infinite;
+			}
+			webview#preview.loading-fadeout + #previewLoader h1 div span.circle3 {
+			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
+			          animation: circle-loading 1.5s ease 0s infinite;
 			}
 			section#Prompter {
 			  position: fixed;
@@ -1217,28 +1267,60 @@
 			div.overlay.visible {
 			  opacity: 1;
 			}
-			@-webkit-keyframes loading {
-			  from {
-			    border-radius: 0;
-			    height: 25px;
-			    width: 25px;
+			@-webkit-keyframes q-loading {
+			  0% {
+			    fill: #b4b4b4;
 			  }
-			  to {
-			    border-radius: 50%;
-			    height: 50px;
-			    width: 50px;
+			  50% {
+			    fill: rgba(223,72,72,0.8);
+			  }
+			  100% {
+			    fill: #b4b4b4;
 			  }
 			}
-			@keyframes loading {
-			  from {
-			    border-radius: 0;
-			    height: 25px;
-			    width: 25px;
+			@keyframes q-loading {
+			  0% {
+			    fill: #b4b4b4;
 			  }
-			  to {
-			    border-radius: 50%;
-			    height: 50px;
-			    width: 50px;
+			  50% {
+			    fill: rgba(223,72,72,0.8);
+			  }
+			  100% {
+			    fill: #b4b4b4;
+			  }
+			}
+			@-webkit-keyframes circle-loading {
+			  0% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.25);
+			            transform: translate(-50%, 25%) scale(0.25);
+			    background-color: #b4b4b4;
+			  }
+			  50% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.4);
+			            transform: translate(-50%, 25%) scale(0.4);
+			    background-color: rgba(223,72,72,0.8);
+			  }
+			  100% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.25);
+			            transform: translate(-50%, 25%) scale(0.25);
+			    background-color: #b4b4b4;
+			  }
+			}
+			@keyframes circle-loading {
+			  0% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.25);
+			            transform: translate(-50%, 25%) scale(0.25);
+			    background-color: #b4b4b4;
+			  }
+			  50% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.4);
+			            transform: translate(-50%, 25%) scale(0.4);
+			    background-color: rgba(223,72,72,0.8);
+			  }
+			  100% {
+			    -webkit-transform: translate(-50%, 25%) scale(0.25);
+			            transform: translate(-50%, 25%) scale(0.25);
+			    background-color: #b4b4b4;
 			  }
 			}
 			
@@ -1266,7 +1348,17 @@
 		</section>
 
 		<webview src="#" id="preview" class="hide" plugins>preview</webview>
-		<div id="previewLoader"></div>
+		
+		<section id="previewLoader">
+			<?xml version="1.0" standalone="no"?>
+			<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+			<svg id="logo" class="logo hide" width="100%" height="100%" viewBox="0 0 126 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+				<path id="QUALTRICS-LOGO" d="M37.9173,74.0432c6.68848,7.68458 14.6885,11.6327 22.3897,11.5751c4.95345,-0.0370611 9.73569,-1.1885 14.1609,-3.46098c-5.19244,-13.0908 -10.8007,-25.3777 -23.872,-25.0034c-14.299,0.409384 -14.9891,12.3154 -12.6785,16.8893ZM91.9689,82.6168c8.95474,13.2447 17.0121,23.8614 31.322,15.7607c0.770884,1.17637 1.56866,2.03767 2.3827,3.81007c-31.4887,21.409 -40.8065,5.72587 -48.3271,-12.7698c-5.38387,1.62777 -11.0441,2.46135 -16.8531,2.41178c-38.2982,-0.326807 -70.2451,-39.0309 -57.2274,-91.3621c0,0 12.7673,-0.0503319 20.2662,-7.81597e-14c-4.03189,27.9679 0.0501284,49.5572 7.82732,63.9869c1.20683,-5.03507 5.66846,-13.712 19.2363,-13.6796c16.4375,0.0392013 26.6013,10.8233 34.9112,22.4071c11.2196,-13.3616 17.395,-37.5431 13.0168,-72.7144c5.49535,-0.00530837 20.2633,-2.34479e-13 20.2633,-2.34479e-13c9.15318,37.0042 -4.33444,67.575 -26.8182,82.1494Z"/>
+			</svg>
+		
+			<h1>Loading<div class="circles_cont"><span class="circle1"></span><span class="circle2"></span><span class="circle3"></span></div></h1>
+		
+		</section>
 
 		<section id="Prompter"></section>
 
@@ -15640,9 +15732,9 @@
 			
 						".js": "javascript",
 			
-						".qtheme": "json",
+						".qtheme": "application/json",
 			
-						".json": "json",
+						".json": "application/json",
 			
 						".md": "markdown",
 			
@@ -15658,39 +15750,31 @@
 			
 						}	
 			
-			
-			
-			
-			
-						fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
-			
-							if(err){ console.log("ERR",err);}
-			
-							else {
-			
-								
-			
-								myCodeMirror.setValue(data);
-			
-								myCodeMirror.markClean();
-			
-							}
-			
-						});
-			
-			
-			
 					}
 			
 					else {
 			
-						myCodeMirror.setOption("mode", "markdown");
-			
-						myCodeMirror.setValue("Cannot Read File Type: "+ext);
-			
-						myCodeMirror.markClean();
+						myCodeMirror.setOption("mode", "");
 			
 					}
+			
+			
+			
+					fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
+			
+						if(err){ console.log("ERR",err);}
+			
+						else {
+			
+							myCodeMirror.setValue(data);
+			
+							myCodeMirror.markClean();
+			
+						}
+			
+					});
+			
+			
 			
 				},
 			
@@ -16235,7 +16319,7 @@
 						.text( // add text to the style tag
 							"section#editor{ width:"+editorWidth+"; } "+
 							"webview#preview{ width:"+previewWidth+"; }"+
-							"webview#preview + #previewLoader{ right:"+parseInt(previewWidth)/2+"%; }"
+							"webview#preview + #previewLoader{ width:"+previewWidth+"; }"
 						);
 				}
 			};
@@ -17451,7 +17535,7 @@
 							el.join([
 								el("+div").addClass(["arrow", "hide"]),
 			
-								el("+div").addClass(["dropdownBody", "files"]).text("files here")
+								el("+div").addClass(["dropdownBody", "files"])
 							])
 			
 						)
@@ -17530,17 +17614,19 @@
 						);
 			
 						for(var i = 0, ii = files.length; i < ii; i ++){
-							var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
+							// if file is not a Dot file (e.g. ".DS_Store")
+							if(files[i].charAt(0) !== "."){
+								var _file = el("+div").addClass("file-item").attr("data-filename", files[i]).text(files[i]);
 			
-							if(files[i] === core.localData.currentFile.name){
-								_file.addClass("current");
-							}
-							if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
-								_file.addClass("bold");
-							}
+								if(files[i] === core.localData.currentFile.name){
+									_file.addClass("current");
+								}
+								if(files[i].indexOf("StyleSheet.scss") !== -1 || files[i].indexOf("StyleSheet.styl") !== -1){
+									_file.addClass("bold");
+								}
 			
-							filesDropdownBody.append(_file);
-								
+								filesDropdownBody.append(_file);
+							}
 						}
 			
 						_callback();
@@ -17725,6 +17811,9 @@
 						//check if file(s) of folder
 			
 						console.log(files);
+			
+						var filesTotal = files.length;
+						var filesCopied = 0;
 						
 			
 						for(var i = 0, ii = files.length; i<ii; i++){
@@ -17733,6 +17822,10 @@
 								fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
 									if(err) return console.log("ERR copying:",_file.name, err);
 									console.log("copied:", _file.name);
+									filesCopied++;
+									if(filesCopied === filesTotal){
+										console.log("All Files Copied");
+									}
 								});
 							})(files[i]);
 							
