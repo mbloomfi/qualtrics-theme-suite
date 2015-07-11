@@ -291,15 +291,13 @@ editorCore.dropdowns.files = {
 			
 
 			for(var i = 0, ii = files.length; i<ii; i++){
-				// filePaths.push(files[i].path);
-				
 					
-					(function(_file){
-						fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
-							if(err) return console.log("ERR copying:",_file.name, err);
-							console.log("copied:", _file.name);
-						});
-					})(files[i]);
+				(function(_file){
+					fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
+						if(err) return console.log("ERR copying:",_file.name, err);
+						console.log("copied:", _file.name);
+					});
+				})(files[i]);
 				
 			}
 
