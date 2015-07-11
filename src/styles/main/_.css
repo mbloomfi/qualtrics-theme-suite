@@ -574,6 +574,7 @@ section#editor section#sectionInner div#editorBar {
   height: 5%;
   color: inherit;
   position: relative;
+  box-sizing: border-box;
   top: 0;
   left: 0;
   z-index: 10;
@@ -581,6 +582,9 @@ section#editor section#sectionInner div#editorBar {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  border: 3px dashed rgba(39,176,75,0);
+  -webkit-transition: background-color 0.3s ease, border 0.3s ease;
+          transition: background-color 0.3s ease, border 0.3s ease;
 }
 @media screen and (max-height: 600px) {
   section#editor section#sectionInner div#editorBar {
@@ -591,6 +595,11 @@ section#editor section#sectionInner div#editorBar {
   section#editor section#sectionInner div#editorBar {
     height: 3.75%;
   }
+}
+section#editor section#sectionInner div#editorBar.file_drag {
+  cursor: pointer !important;
+  background: #176a2d;
+  border: 3px dashed #2abc50;
 }
 section#editor section#sectionInner div#editorBar div#editorBarInner {
   height: 30px;

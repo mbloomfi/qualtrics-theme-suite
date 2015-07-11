@@ -137,9 +137,7 @@ el.on("load", function(){
 		editorCore.dropdowns.projects.init();
 
 		editorCore.dropdowns.files.prepare();
-
-
-		// editorCore.dropdowns.files.init();
+		editorCore.dropdowns.files.addFileDragListener();
 
 		codemirrorInit();
 

@@ -54,10 +54,13 @@ section#editor {
 			height ($editorBarHeight)%
 			color inherit
 			position relative
+			box-sizing border-box
 			top 0
 			left 0
 			z-index 10
 			user-select none
+			border 3px dashed alpha($affirmative-green, 0)
+			transition background-color .3s ease, border .3s ease
 
 			@media screen and (max-height:600px) {
 				height ($editorBarHeight + $heightChange)%
@@ -65,6 +68,12 @@ section#editor {
 			
 			@media screen and (min-height:1200px) {
 				height ($editorBarHeight - ($heightChange * 0.5))%
+			}
+
+			&.file_drag {
+				cursor pointer !important
+				background darken($affirmative-green, 40%)
+				border 3px dashed lighten($affirmative-green, 5%)
 			}
 			
 			div#editorBarInner {
@@ -166,6 +175,8 @@ section#editor {
 							background-color rgba(255,255,255,0)
 						}
 					}
+					
+					
 					
 					.dirty {
 						color $primaryColor

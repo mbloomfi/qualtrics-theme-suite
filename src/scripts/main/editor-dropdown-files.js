@@ -232,6 +232,84 @@ editorCore.dropdowns.files = {
 	},
 
 	addFileDragListener: function(){
+		var dragCounter = 0;
+		var editorBar = el("#editorBar");
+
+
+
+		editorBar.on("dragenter", function(evt){
+			if(core.localData.currentProject.name !== null){
+				dragCounter++;
+				// if not dragging file(s), do nothing
+				if(evt.dataTransfer.files.length > 0){
+					evt.preventDefault();
+					editorBar.addClass("file_drag");
+				}
+			}
+			
+		});
+
+		editorBar.on("dragleave", function(evt){
+			if(core.localData.currentProject.name !== null){
+				dragCounter--;
+				console.log("DRAG LEAVE???");
+				if(dragCounter === 0) editorBar.rmClass("file_drag");
+			}
+			
+		});
+
+		editorBar.on("dragover", function(evt){
+			if(core.localData.currentProject.name !== null){
+
+				// if not dragging file(s), do nothing
+				if(evt.dataTransfer.files.length > 0) evt.preventDefault();
+
+			}
+			
+		});
+
+		
+
+		editorBar.on("drop", function(evt){
+			if(core.localData.currentProject.name !== null){
+				// if not dragging file(s), do nothing
+				if(evt.dataTransfer.files.length > 0){
+					evt.preventDefault();
+					editorBar.rmClass("file_drag");
+					dragCounter = 0;
+					copyFiles(evt.dataTransfer.files);
+				}
+			}
+			
+		});
+
+
+		function copyFiles(files){
+			//check if file(s) of folder
+
+			console.log(files);
+			
+
+			for(var i = 0, ii = files.length; i<ii; i++){
+				// filePaths.push(files[i].path);
+				
+					
+					(function(_file){
+						fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
+							if(err) return console.log("ERR copying:",_file.name, err);
+							console.log("copied:", _file.name);
+						});
+					})(files[i]);
+				
+			}
+
+			
+			
+
+
+		}
+
+
 
 	}
 

@@ -295,7 +295,7 @@ var core = Global.coreMethods = {
 				/*Returns array of file names at current project path path*/
 				list: function(_callback){ 
 						var path = core.localData.currentProject.path;
-						console.log("path to projects:", path);
+						// console.log("path to projects:", path);
 						var fileList = [];
 						fs.readdir(path, function(_err, _files){
 							if(_err) console.log("error listing projects");
@@ -461,10 +461,11 @@ var core = Global.coreMethods = {
 			".styl": "text/x-styl",
 			".js": "javascript",
 			".qtheme": "json",
-			".json": "json"
+			".json": "json",
+			".md": "markdown",
 		}
 
-		if(extMap.hasOwnProperty(ext)){
+		if(extMap.hasOwnProperty(ext.toLowerCase())){
 			if(myCodeMirror.getOption("mode") !== extMap[ext]){
 				myCodeMirror.setOption("mode", extMap[ext]);
 			}	
@@ -483,6 +484,11 @@ var core = Global.coreMethods = {
 			// console.log("file:", core.localData.currentFile);
 			// console.log("ext:", ext);
 			// console.log("====");
+		}
+		else {
+			myCodeMirror.setOption("mode", "markdown");
+			myCodeMirror.setValue("Cannot Read File Type: "+ext);
+			myCodeMirror.markClean();
 		}
 	},
 
@@ -504,7 +510,7 @@ var core = Global.coreMethods = {
 				},200);
 
 				this.active = true;
-				console.log("activating");
+				// console.log("activating");
 
 			}
 		},
@@ -519,7 +525,7 @@ var core = Global.coreMethods = {
 
 
 				this.active = false;
-				console.log("deactivating");
+				// console.log("deactivating");
 				core.localData.currentFile.clear();
 			}
 		},
@@ -536,7 +542,7 @@ var core = Global.coreMethods = {
 						if(core.localData.currentFile.name === "StyleSheet.scss"){
 							core.preview.compileSass();
 						}
-						console.log("saved code!");
+						// console.log("saved code!");
 					}
 				});
 			}
@@ -593,18 +599,18 @@ var core = Global.coreMethods = {
 
 		show: function(){
 			if(core.localData.currentProject.name !== null && this.hidden !== false){
-				console.log("showing preview file; hidden:", false);
+				// console.log("showing preview file; hidden:", false);
 				preview.src = "local/currentPreview.html";
 				this.hidden = false;
 
 			} else {
-				console.log("cant show file or file is already showing");
+				// console.log("cant show file or file is already showing");
 			}
 		},
 
 		hide: function(){
 			preview.src = "local/no-preview.html";
-			console.log("hidden:", true);
+			// console.log("hidden:", true);
 			this.hidden = true;
 		},
 
@@ -623,7 +629,7 @@ var core = Global.coreMethods = {
 		},
 
 		compileSass: function(){
-			console.log("compiling sass")
+			// console.log("compiling sass")
 			return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
 				.pipe(sass())
 				.pipe(autoprefixer())
@@ -636,17 +642,17 @@ var core = Global.coreMethods = {
 			if(self.sassFileWatcher !== null){
 				self.sassFileWatcher.close();
 				self.sassFileWatcher = null;
-				console.log("stopped watching 1")
+				// console.log("stopped watching 1")
 			}
 			if(self.cssFileWatcher !== null){
 				self.cssFileWatcher.close();
 				self.cssFileWatcher = null;
-				console.log("stopped watching 2")
+				// console.log("stopped watching 2")
 			}
 			if(self.skinFileWatcher !== null){
 				self.skinFileWatcher.close();
 				self.skinFileWatcher = null;
-				console.log("stopped watching 3")
+				// console.log("stopped watching 3")
 			}
 		},
 
@@ -672,10 +678,10 @@ var core = Global.coreMethods = {
 		watchCssFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/StyleSheet.css";
-			console.log("watching 2");
+			// console.log("watching 2");
 			self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
-				console.log("reloading 2");
+				// console.log("reloading 2");
 				preview.reload();
 			});
 			
@@ -684,10 +690,10 @@ var core = Global.coreMethods = {
 		watchSkinFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/Skin.html";
-			console.log("watching 3")
+			// console.log("watching 3")
 			self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
-				console.log("reloading 3")
+				// console.log("reloading 3")
 				preview.reload();
 			});
 			
@@ -704,7 +710,7 @@ var core = Global.coreMethods = {
 					fs.readFile(core.localData.currentPreviewQuestionsFile.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 						if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
 						else {
-							console.log("preview questions",_previewQuestions)
+							// console.log("preview questions",_previewQuestions)
 							
 							gulp.src("local/previewTemplate.html")
 							.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
@@ -717,7 +723,7 @@ var core = Global.coreMethods = {
 							.pipe(rename("currentPreview.html"))
 							.pipe(gulp.dest("local/"));
 
-							console.log("updated preview");
+							// console.log("updated preview");
 						}
 					});
 				}
