@@ -13575,7 +13575,7 @@ var core = Global.coreMethods = {
 
 				if(!_err){ 
 
-					// console.log("user settings file: ",_data);
+					
 
 					if(typeof _successCallback === "function") _successCallback(_data);
 
@@ -13665,7 +13665,7 @@ var core = Global.coreMethods = {
 
 		select: function(_brandName){
 
-			// console.log("core has it under control:", _brandName);
+			
 
 			// add brand to recent brands, current brand
 
@@ -13737,7 +13737,7 @@ var core = Global.coreMethods = {
 
 
 
-				// console.log("creating info file for:", _brandName);
+				
 
 			},
 
@@ -13913,7 +13913,7 @@ var core = Global.coreMethods = {
 
 				baton(function(next){
 
-					// console.log("brandName:", _brandName);
+					
 
 					core.brands.exists(_brandName, next);
 
@@ -13959,7 +13959,7 @@ var core = Global.coreMethods = {
 
 				
 
-				// console.log("pathToBrand",pathToBrand);
+				
 
 
 
@@ -14037,7 +14037,7 @@ var core = Global.coreMethods = {
 
 						var path = core.localData.currentProject.path;
 
-						// console.log("path to projects:", path);
+						
 
 						var fileList = [];
 
@@ -14395,7 +14395,7 @@ var core = Global.coreMethods = {
 
 				else {
 
-					// console.log("file Contents", data);
+					
 
 					myCodeMirror.setValue(data);
 
@@ -14405,15 +14405,7 @@ var core = Global.coreMethods = {
 
 			});
 
-			// console.log("brand:", core.localData.currentBrand);
 
-			// console.log("project:", core.localData.currentProject);
-
-			// console.log("file:", core.localData.currentFile);
-
-			// console.log("ext:", ext);
-
-			// console.log("====");
 
 		}
 
@@ -14467,7 +14459,7 @@ var core = Global.coreMethods = {
 
 				this.active = true;
 
-				// console.log("activating");
+				
 
 
 
@@ -14497,7 +14489,7 @@ var core = Global.coreMethods = {
 
 				this.active = false;
 
-				// console.log("deactivating");
+				
 
 				core.localData.currentFile.clear();
 
@@ -14519,7 +14511,7 @@ var core = Global.coreMethods = {
 
 					else {
 
-						// console.log("file Contents", data);
+						
 
 						editorCore.dropdowns.files.setClean();
 
@@ -14531,7 +14523,7 @@ var core = Global.coreMethods = {
 
 						}
 
-						// console.log("saved code!");
+						
 
 					}
 
@@ -14601,10 +14593,6 @@ var core = Global.coreMethods = {
 
 
 
-			// "{~Question~}": function(){
-
-
-
 			// },
 
 			// "{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
@@ -14645,7 +14633,7 @@ var core = Global.coreMethods = {
 
 			if(core.localData.currentProject.name !== null && this.hidden !== false){
 
-				// console.log("showing preview file; hidden:", false);
+				
 
 				preview.src = "local/currentPreview.html";
 
@@ -14655,7 +14643,7 @@ var core = Global.coreMethods = {
 
 			} else {
 
-				// console.log("cant show file or file is already showing");
+				
 
 			}
 
@@ -14667,7 +14655,7 @@ var core = Global.coreMethods = {
 
 			preview.src = "local/no-preview.html";
 
-			// console.log("hidden:", true);
+			
 
 			this.hidden = true;
 
@@ -14705,7 +14693,7 @@ var core = Global.coreMethods = {
 
 		compileSass: function(){
 
-			// console.log("compiling sass")
+			
 
 			return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
 
@@ -14731,7 +14719,7 @@ var core = Global.coreMethods = {
 
 				self.sassFileWatcher = null;
 
-				// console.log("stopped watching 1")
+				
 
 			}
 
@@ -14741,7 +14729,7 @@ var core = Global.coreMethods = {
 
 				self.cssFileWatcher = null;
 
-				// console.log("stopped watching 2")
+				
 
 			}
 
@@ -14751,7 +14739,7 @@ var core = Global.coreMethods = {
 
 				self.skinFileWatcher = null;
 
-				// console.log("stopped watching 3")
+				
 
 			}
 
@@ -14777,7 +14765,7 @@ var core = Global.coreMethods = {
 
 			// var self = this;
 
-			// console.log("self.sassFileWatcher",self.sassFileWatcher)
+			
 
 			// var path = core.localData.currentProject.path+"/StyleSheet.scss";
 
@@ -14791,7 +14779,7 @@ var core = Global.coreMethods = {
 
 			// });
 
-			// console.log("watching 1")
+			
 
 		},
 
@@ -14803,13 +14791,13 @@ var core = Global.coreMethods = {
 
 			var path = core.localData.currentProject.path+"/StyleSheet.css";
 
-			// console.log("watching 2");
+			
 
 			self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 
 				self.update();
 
-				// console.log("reloading 2");
+				
 
 				preview.reload();
 
@@ -14827,13 +14815,13 @@ var core = Global.coreMethods = {
 
 			var path = core.localData.currentProject.path+"/Skin.html";
 
-			// console.log("watching 3")
+			
 
 			self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 
 				self.update();
 
-				// console.log("reloading 3")
+				
 
 				preview.reload();
 
@@ -14867,7 +14855,7 @@ var core = Global.coreMethods = {
 
 						else {
 
-							// console.log("preview questions",_previewQuestions)
+							
 
 							
 
@@ -14893,7 +14881,7 @@ var core = Global.coreMethods = {
 
 
 
-							// console.log("updated preview");
+							
 
 						}
 

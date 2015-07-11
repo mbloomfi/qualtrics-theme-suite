@@ -39,7 +39,7 @@ var core = Global.coreMethods = {
 		read: function(_successCallback){
 			json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
-					// console.log("user settings file: ",_data);
+					
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
@@ -84,7 +84,7 @@ var core = Global.coreMethods = {
 		},
 
 		select: function(_brandName){
-			// console.log("core has it under control:", _brandName);
+			
 			// add brand to recent brands, current brand
 			core.brands.setCurrentBrand(_brandName);
 			core.brands.projects.setCurrentProject(null);
@@ -120,7 +120,7 @@ var core = Global.coreMethods = {
 			ext: ".qtheme",
 			create: function(_brandName){
 
-				// console.log("creating info file for:", _brandName);
+				
 			},
 			update: function(_brandName, _key, _value){
 
@@ -208,7 +208,7 @@ var core = Global.coreMethods = {
 			list: function(_brandName, _callback){
 				
 				baton(function(next){
-					// console.log("brandName:", _brandName);
+					
 					core.brands.exists(_brandName, next);
 				})
 				.then(function(next, exists){
@@ -231,7 +231,7 @@ var core = Global.coreMethods = {
 				}).run();
 				
 				
-				// console.log("pathToBrand",pathToBrand);
+				
 
 			},
 
@@ -270,7 +270,7 @@ var core = Global.coreMethods = {
 				/*Returns array of file names at current project path path*/
 				list: function(_callback){ 
 						var path = core.localData.currentProject.path;
-						// console.log("path to projects:", path);
+						
 						var fileList = [];
 						fs.readdir(path, function(_err, _files){
 							if(_err) console.log("error listing projects");
@@ -449,16 +449,12 @@ var core = Global.coreMethods = {
 			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
 				if(err){ console.log("ERR",err);}
 				else {
-					// console.log("file Contents", data);
+					
 					myCodeMirror.setValue(data);
 					myCodeMirror.markClean();
 				}
 			});
-			// console.log("brand:", core.localData.currentBrand);
-			// console.log("project:", core.localData.currentProject);
-			// console.log("file:", core.localData.currentFile);
-			// console.log("ext:", ext);
-			// console.log("====");
+
 		}
 		else {
 			myCodeMirror.setOption("mode", "markdown");
@@ -485,7 +481,7 @@ var core = Global.coreMethods = {
 				},200);
 
 				this.active = true;
-				// console.log("activating");
+				
 
 			}
 		},
@@ -500,7 +496,7 @@ var core = Global.coreMethods = {
 
 
 				this.active = false;
-				// console.log("deactivating");
+				
 				core.localData.currentFile.clear();
 			}
 		},
@@ -511,13 +507,13 @@ var core = Global.coreMethods = {
 				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
 					if(err){ console.log("ERR",err);}
 					else {
-						// console.log("file Contents", data);
+						
 						editorCore.dropdowns.files.setClean();
 						myCodeMirror.markClean();
 						if(core.localData.currentFile.name === "StyleSheet.scss"){
 							core.preview.compileSass();
 						}
-						// console.log("saved code!");
+						
 					}
 				});
 			}
@@ -552,8 +548,6 @@ var core = Global.coreMethods = {
 
 			"{~Header~}":"Header Text Area",
 
-			// "{~Question~}": function(){
-
 			// },
 			// "{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
 
@@ -574,18 +568,18 @@ var core = Global.coreMethods = {
 
 		show: function(){
 			if(core.localData.currentProject.name !== null && this.hidden !== false){
-				// console.log("showing preview file; hidden:", false);
+				
 				preview.src = "local/currentPreview.html";
 				this.hidden = false;
 
 			} else {
-				// console.log("cant show file or file is already showing");
+				
 			}
 		},
 
 		hide: function(){
 			preview.src = "local/no-preview.html";
-			// console.log("hidden:", true);
+			
 			this.hidden = true;
 		},
 
@@ -604,7 +598,7 @@ var core = Global.coreMethods = {
 		},
 
 		compileSass: function(){
-			// console.log("compiling sass")
+			
 			return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
 				.pipe(sass())
 				.pipe(autoprefixer())
@@ -617,17 +611,17 @@ var core = Global.coreMethods = {
 			if(self.sassFileWatcher !== null){
 				self.sassFileWatcher.close();
 				self.sassFileWatcher = null;
-				// console.log("stopped watching 1")
+				
 			}
 			if(self.cssFileWatcher !== null){
 				self.cssFileWatcher.close();
 				self.cssFileWatcher = null;
-				// console.log("stopped watching 2")
+				
 			}
 			if(self.skinFileWatcher !== null){
 				self.skinFileWatcher.close();
 				self.skinFileWatcher = null;
-				// console.log("stopped watching 3")
+				
 			}
 		},
 
@@ -640,23 +634,23 @@ var core = Global.coreMethods = {
 
 		watchSassFile: function(){
 			// var self = this;
-			// console.log("self.sassFileWatcher",self.sassFileWatcher)
+			
 			// var path = core.localData.currentProject.path+"/StyleSheet.scss";
 			// self.sassFileWatcher = fs.watch(path, function(evt, _fileName){
 			// 	console.log("init sass 1");
 			// 	console.log("evt:",evt, _fileName)
 			// 	self.compileSass();
 			// });
-			// console.log("watching 1")
+			
 		},
 
 		watchCssFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/StyleSheet.css";
-			// console.log("watching 2");
+			
 			self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
-				// console.log("reloading 2");
+				
 				preview.reload();
 			});
 			
@@ -665,10 +659,10 @@ var core = Global.coreMethods = {
 		watchSkinFile: function(){
 			var self = this;
 			var path = core.localData.currentProject.path+"/Skin.html";
-			// console.log("watching 3")
+			
 			self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 				self.update();
-				// console.log("reloading 3")
+				
 				preview.reload();
 			});
 			
@@ -685,7 +679,7 @@ var core = Global.coreMethods = {
 					fs.readFile(core.localData.currentPreviewQuestionsFile.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 						if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
 						else {
-							// console.log("preview questions",_previewQuestions)
+							
 							
 							gulp.src("local/previewTemplate.html")
 							.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
@@ -698,7 +692,7 @@ var core = Global.coreMethods = {
 							.pipe(rename("currentPreview.html"))
 							.pipe(gulp.dest("local/"));
 
-							// console.log("updated preview");
+							
 						}
 					});
 				}
