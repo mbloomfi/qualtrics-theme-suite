@@ -170,7 +170,7 @@ var menuTemplate = [
         accelerator: 'Shift+Command+E',
         click: function(){
           appMenu.items[1].submenu.items[10].checked = false;
-          mainWindow.webContents.executeJavaScript("core.preview.mode.blank()");
+          mainWindow.webContents.executeJavaScript("core.mode.edit_preview()");
         }
       },
       {
@@ -180,7 +180,7 @@ var menuTemplate = [
         accelerator: 'Shift+Command+U',
         click: function(){
           appMenu.items[1].submenu.items[9].checked = false;
-          mainWindow.webContents.executeJavaScript("core.preview.mode.releaseManager()");
+          mainWindow.webContents.executeJavaScript("core.mode.releaseManager()");
         }
       }
     ]
@@ -321,6 +321,7 @@ var menuTemplate = [
         click: function(){
           var self = appMenu.items[4].submenu.items[3];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.mode.regular();");
         }
       },
       {
@@ -352,7 +353,8 @@ var menuTemplate = [
         click: function(){
           var self = appMenu.items[4].submenu.items[6];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
-          mainWindow.webContents.executeJavaScript("core.preview.thumbnail.init()");
+
+          mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail();");
         }
       }
     ]

@@ -16150,6 +16150,56 @@
 			
 			
 			
+					// sub-modes within the core edit/preview mode
+			
+					mode: {
+			
+						currentMode: "regular",
+			
+						regular: function(){
+			
+							console.log("switching to edit/preview => regular mode");
+			
+							if(this.currentMode === "thumbnail"){
+			
+								console.log("deactivating edit/preview => thumbnail mode");
+			
+								core.preview.thumbnail.deactivate();
+			
+							}
+			
+							core.preview.init();	
+			
+							this.currentMode = "regular";
+			
+			
+			
+						},
+			
+						
+			
+						thumbnail: function(){
+			
+							core.preview.thumbnail.init();
+			
+							this.currentMode = "thumbnail";
+			
+						},
+			
+			
+			
+						blank: function(){
+			
+							core.preview.hide();
+			
+						},
+			
+						
+			
+					},
+			
+			
+			
 					map: {
 			
 			
@@ -16176,7 +16226,21 @@
 			
 					init: function(){
 			
-						this.hide();
+						console.log("init edit_preview => regular mode")
+			
+						if(core.localData.currentProject.name !== null){
+			
+							preview.src = "local/currentPreview.html";
+			
+							this.hidden = false;
+			
+			
+			
+						} else {
+			
+							this.hide();
+			
+						}
 			
 					},
 			
@@ -16188,7 +16252,7 @@
 			
 					show: function(){
 			
-						if(core.localData.currentProject.name !== null && this.hidden !== false){
+						if(core.localData.currentProject.name !== null){
 			
 							
 			
@@ -16200,7 +16264,7 @@
 			
 						} else {
 			
-							
+							this.hide();
 			
 						}
 			
@@ -16218,31 +16282,7 @@
 			
 			
 			
-					mode: {
-			
-						preview: function(){
-			
-			
-			
-						},
-			
-						blank: function(){
-			
-							core.preview.hide();
-			
-						},
-			
-						releaseManager: function(){
-			
-							preview.src = "http://sun.qprod.net/releasemanager/";
-			
-							core.preview.hidden = false;
-			
-							
-			
-						}	
-			
-					},
+					
 			
 			
 			
@@ -16434,10 +16474,6 @@
 			
 										.pipe(gulp.dest("local/"));
 			
-			
-			
-										
-			
 									}
 			
 								});
@@ -16447,8 +16483,6 @@
 						});
 			
 					},
-			
-			
 			
 			
 			
@@ -16494,10 +16528,6 @@
 			
 								});
 			
-			
-			
-								core.codeMirror.deactivate();
-			
 								editorCore.deactivate();
 			
 							}
@@ -16508,9 +16538,43 @@
 			
 			
 			
+						deactivate: function(){
+			
+							console.log("(2) deactivating edit/preview => thumbnail mode");
+			
+							el("#thumbBox").rm();
+			
+							el("#thumbInterface").rm();
+			
+							console.log("finished deactivating edit/preview => thumbnail mode");
+			
+							editorCore.activate();
+			
+							this.active = false;
+			
+			
+			
+							this.box.mode = null;
+			
+							this.box.ratio.multiplier = 4;
+			
+							this.box.x = this.box.y = this.box.w = this.box.h = null;
+			
+							this.box.prevClientX = this.box.prevClientY = null;
+			
+			
+			
+							this.interface.mode = null;
+			
+			
+			
+						},
+			
+			
+			
 						box: {
 			
-							mode: "hidden", //resize, move, idle
+							mode: null, //resize, move, idle
 			
 			
 			
@@ -16608,7 +16672,7 @@
 			
 			
 			
-								if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+								if(self.mode === null && core.localData.currentProject.name !== null){
 			
 									console.log("creating box");
 			
@@ -16724,15 +16788,7 @@
 			
 						interface: {
 			
-							mode: "hidden", //resize, move, idle
-			
-							x: null,
-			
-							y: null,
-			
-							w: null,
-			
-							h: null,
+							mode: null, //resize, move, idle
 			
 			
 			
@@ -16800,7 +16856,7 @@
 			
 			
 			
-								if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+								if(self.mode === null && core.localData.currentProject.name !== null){
 			
 									console.log("creating box");
 			
@@ -17009,6 +17065,42 @@
 			
 			
 				},
+			
+			
+			
+			
+			
+				/*
+			
+				core project modes (edit/preview, release manager, ??)
+			
+				*/
+			
+				mode: {
+			
+					currentMode: "edit/preview",
+			
+					releaseManager: function(){
+			
+						preview.src = "http://sun.qprod.net/releasemanager/";
+			
+						core.preview.hidden = false;
+			
+						this.currentMode  = "releaseManager";
+			
+					},
+			
+					edit_preview: function(){
+			
+						console.log("switching to edit/preview mode");
+			
+						core.preview.mode.regular();
+			
+						this.currentMode  = "edit/preview";
+			
+					}
+			
+				}
 			
 			};
 			

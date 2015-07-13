@@ -539,6 +539,31 @@ var core = Global.coreMethods = {
 		sassFileWatcher: null,
 		cssFileWatcher: null,
 
+		// sub-modes within the core edit/preview mode
+		mode: {
+			currentMode: "regular",
+			regular: function(){
+				console.log("switching to edit/preview => regular mode");
+				if(this.currentMode === "thumbnail"){
+					console.log("deactivating edit/preview => thumbnail mode");
+					core.preview.thumbnail.deactivate();
+				}
+				core.preview.init();	
+				this.currentMode = "regular";
+
+			},
+			
+			thumbnail: function(){
+				core.preview.thumbnail.init();
+				this.currentMode = "thumbnail";
+			},
+
+			blank: function(){
+				core.preview.hide();
+			},
+			
+		},
+
 		map: {
 
 			"{~ProgressBar~}": '<div role="widget"><table class="ProgressBarContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"><tbody><tr><td>0%</td><td><div class="ProgressBarFillContainer" id="ProgressBarFillContainer"><div class="ProgressBarFill" style="width: 18%"></div></div></td><td>100%</td></tr></tbody></table></div>',
@@ -552,19 +577,26 @@ var core = Global.coreMethods = {
 		},
 
 		init: function(){
-			this.hide();
+			console.log("init edit_preview => regular mode")
+			if(core.localData.currentProject.name !== null){
+				preview.src = "local/currentPreview.html";
+				this.hidden = false;
+
+			} else {
+				this.hide();
+			}
 		},
 
 		hidden: true,
 
 		show: function(){
-			if(core.localData.currentProject.name !== null && this.hidden !== false){
+			if(core.localData.currentProject.name !== null){
 				
 				preview.src = "local/currentPreview.html";
 				this.hidden = false;
 
 			} else {
-				
+				this.hide();
 			}
 		},
 
@@ -573,19 +605,7 @@ var core = Global.coreMethods = {
 			this.hidden = true;
 		},
 
-		mode: {
-			preview: function(){
-
-			},
-			blank: function(){
-				core.preview.hide();
-			},
-			releaseManager: function(){
-				preview.src = "http://sun.qprod.net/releasemanager/";
-				core.preview.hidden = false;
-				
-			}	
-		},
+		
 
 		compileSass: function(){
 			
@@ -681,14 +701,11 @@ var core = Global.coreMethods = {
 							.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
 							.pipe(rename("currentPreview.html"))
 							.pipe(gulp.dest("local/"));
-
-							
 						}
 					});
 				}
 			});
 		},
-
 
 		screenshot: {
 
@@ -711,15 +728,30 @@ var core = Global.coreMethods = {
 					self.interface.create(function(_interface){
 						self.interface.init(_interface);
 					});
-
-					core.codeMirror.deactivate();
 					editorCore.deactivate();
 				}
 
 			},
 
+			deactivate: function(){
+				console.log("(2) deactivating edit/preview => thumbnail mode");
+				el("#thumbBox").rm();
+				el("#thumbInterface").rm();
+				console.log("finished deactivating edit/preview => thumbnail mode");
+				editorCore.activate();
+				this.active = false;
+
+				this.box.mode = null;
+				this.box.ratio.multiplier = 4;
+				this.box.x = this.box.y = this.box.w = this.box.h = null;
+				this.box.prevClientX = this.box.prevClientY = null;
+
+				this.interface.mode = null;
+
+			},
+
 			box: {
-				mode: "hidden", //resize, move, idle
+				mode: null, //resize, move, idle
 
 				getWidth: function(){
 					return parseInt(el("#thumbBox").style.width);
@@ -768,7 +800,7 @@ var core = Global.coreMethods = {
 				create: function(_callback){
 					var self = this;
 
-					if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+					if(self.mode === null && core.localData.currentProject.name !== null){
 						console.log("creating box");
 						var box = el("+div#thumbBox").attr("data-mode", "idle").attr("draggable", "false");
 						if(typeof _callback === "function")_callback(box);
@@ -826,11 +858,7 @@ var core = Global.coreMethods = {
 			},
 
 			interface: {
-				mode: "hidden", //resize, move, idle
-				x: null,
-				y: null,
-				w: null,
-				h: null,
+				mode: null, //resize, move, idle
 
 				init: function(_interface){
 					var self = this;
@@ -864,7 +892,7 @@ var core = Global.coreMethods = {
 				create: function(_callback){ // comes before init
 					var self = this;
 
-					if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+					if(self.mode === null && core.localData.currentProject.name !== null){
 						console.log("creating box");
 						var box = el("+div#thumbInterface").append(
 							el.join([
@@ -969,6 +997,24 @@ var core = Global.coreMethods = {
 
 
 	},
+
+
+	/*
+	core project modes (edit/preview, release manager, ??)
+	*/
+	mode: {
+		currentMode: "edit/preview",
+		releaseManager: function(){
+			preview.src = "http://sun.qprod.net/releasemanager/";
+			core.preview.hidden = false;
+			this.currentMode  = "releaseManager";
+		},
+		edit_preview: function(){
+			console.log("switching to edit/preview mode");
+			core.preview.mode.regular();
+			this.currentMode  = "edit/preview";
+		}
+	}
 };
 
 
