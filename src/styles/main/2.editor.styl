@@ -13,105 +13,7 @@ $item-color-hover = rgb(255,255,255)
 // $brandsListCont-bottomBtn-height = 227px
 
 
-.header {
-	font-size 19px
-	padding 5px 0 0
-	border-left 0.5px solid rgba(255,255,255, .05)
-	border-right 0.5px solid rgba(255,255,255, .05)
-	color rgb(160,160,160)
-	font-weight 400
-	letter-spacing .25px
-	text-indent 5px
-	
-	.icon_cont {
-		height 22px
-		// background alpha(lime, .5)
-		// outline 1px solid orange
-		position absolute
-		top 10px
-		right 10px
-		width 55px
-		
-		.icon {
-			display inline-block
-			position absolute
-			height 100%
-			// background purpl
-			padding 2px 5px
-			cursor pointer
-			background-color rgba(255,255,255,0)
-			border-radius 1.5px
-			box-shadow 0 2px 6px rgba(0,0,0,0)
-			transition background-color .3s ease, box-shadow .3s ease
-			svg {
-				width auto
-				height 100%
-				display block
-				// background alpha(lime, .5)
-					path {
-						transition fill .3s ease
-					}
-			}
-			
-			&#renameFile {
-				left 0
-				svg {
-					
-					path {
-						fill rgb(230,230,230)
-					}
-				}
-				&:hover {
-					background-color rgba(255,255,255,.4)
-					svg {
-						path {
-							fill rgb(30,30,30)
-						}
-					}
-				}
-				&.active {
-					background-color rgba(255,255,255,.9)
-					box-shadow 0 2px 6px rgba(0,0,0,.25)
-					svg {
-						path {
-							fill rgb(70,70,70)
-						}
-					}
-				}
-			}
 
-			&#deleteFile {
-				right 0
-				svg {
-					
-					path {
-						fill $primaryColor
-					}
-				}
-				&:hover {
-					background-color alpha($primaryColor, .4)
-					
-					svg {
-						path {
-							fill rgb(220,220,220)
-						}
-					}
-				}
-				&.active {
-					background-color alpha($primaryColor, .85)
-					box-shadow 0 2px 6px rgba(0,0,0,.25)
-					svg {
-						path {
-							fill rgb(250,250,250)
-						}
-					}
-				}
-			}
-			
-			
-		}
-	}
-}
 
 
 section#editor {
@@ -128,6 +30,21 @@ section#editor {
 	overflow-x scroll
 	overflow-y hidden
 	transition left .5s ease
+	
+	&.inactive {
+		pointer-events none
+		&:before {
+			content ""
+			height 100%
+			width 100%
+			display block
+			position absolute
+			top 0
+			left 0
+			background rgba(0,0,0,.5)
+			z-index 1000
+		}
+	}
 	
 	section#sectionInner {
 		min-width 500px
@@ -249,7 +166,105 @@ section#editor {
 						
 						transition height .2s ease, width .2s ease, top .2s ease, opacity .2s ease
 						
-						
+						.header {
+							font-size 19px
+							padding 5px 0 0
+							border-left 0.5px solid rgba(255,255,255, .05)
+							border-right 0.5px solid rgba(255,255,255, .05)
+							color rgb(160,160,160)
+							font-weight 400
+							letter-spacing .25px
+							text-indent 5px
+							
+							.icon_cont {
+								height 22px
+								// background alpha(lime, .5)
+								// outline 1px solid orange
+								position absolute
+								top 10px
+								right 10px
+								width 55px
+								
+								.icon {
+									display inline-block
+									position absolute
+									height 100%
+									// background purpl
+									padding 2px 5px
+									cursor pointer
+									background-color rgba(255,255,255,0)
+									border-radius 1.5px
+									box-shadow 0 2px 6px rgba(0,0,0,0)
+									transition background-color .3s ease, box-shadow .3s ease
+									svg {
+										width auto
+										height 100%
+										display block
+										// background alpha(lime, .5)
+											path {
+												transition fill .3s ease
+											}
+									}
+									
+									&#renameFile {
+										left 0
+										svg {
+											
+											path {
+												fill rgb(230,230,230)
+											}
+										}
+										&:hover {
+											background-color rgba(255,255,255,.4)
+											svg {
+												path {
+													fill rgb(30,30,30)
+												}
+											}
+										}
+										&.active {
+											background-color rgba(255,255,255,.9)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													fill rgb(70,70,70)
+												}
+											}
+										}
+									}
+
+									&#deleteFile {
+										right 0
+										svg {
+											
+											path {
+												fill $primaryColor
+											}
+										}
+										&:hover {
+											background-color alpha($primaryColor, .4)
+											
+											svg {
+												path {
+													fill rgb(220,220,220)
+												}
+											}
+										}
+										&.active {
+											background-color alpha($primaryColor, .85)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													fill rgb(250,250,250)
+												}
+											}
+										}
+									}
+									
+									
+								}
+							}
+						}
 						
 						.arrow {
 							display block

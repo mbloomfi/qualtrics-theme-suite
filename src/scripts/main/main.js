@@ -8,6 +8,7 @@ var path = require("path");
 
 // == Vendor ==
 var fs = require("fs-extra");
+var lwip = require("lwip");
 var gulp = require("gulp");
 var rename = require("gulp-rename");
 var replace = require("gulp-replace");

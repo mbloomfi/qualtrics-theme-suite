@@ -689,6 +689,7 @@ var core = Global.coreMethods = {
 			});
 		},
 
+
 		screenshot: {
 
 		},
@@ -698,36 +699,78 @@ var core = Global.coreMethods = {
 			active: false,
 
 			init: function(){
-
 				var self = this;
-				self.active = true;
-				
-				self.box.create(function(_box){
-						self.box.init(_box);
-				});
 
-				self.interface.create(function(_interface){
-					self.interface.init(_interface);
-				});
+				if(core.localData.currentProject.name !== null) {
+					self.active = true;
+					
+					self.box.create(function(_box){
+							self.box.init(_box);
+					});
 
-				core.codeMirror.deactivate();
-				
-				
+					self.interface.create(function(_interface){
+						self.interface.init(_interface);
+					});
+
+					core.codeMirror.deactivate();
+					editorCore.deactivate();
+				}
 
 			},
 
 			box: {
 				mode: "hidden", //resize, move, idle
+
+				getWidth: function(){
+					return parseInt(el("#thumbBox").style.width);
+				},
+				getHeight: function(){
+					return parseInt(el("#thumbBox").style.height);
+				},
+				getX: function(){
+					return parseInt(el("#thumbBox").style.left);
+				},
+				getY: function(){
+					return parseInt(el("#thumbBox").style.top);
+				},
+
+				ratio: {
+					height: 65,
+					width: 110,
+					multiplier: 4,
+					increment: function(){
+						if(this.multiplier < 15){
+							this.multiplier += 0.5;
+							this.calibrate();
+						}
+					},
+					decrement: function(){
+						if(this.multiplier > 1){
+							this.multiplier -= 0.5;
+							this.calibrate();
+						}
+					},
+					calibrate: function(){
+						var self = this;
+						console.log("==",el("#thumbBox").style.width);
+						el("#thumbBox").style.width = (self.width * self.multiplier)+"px";
+						el("#thumbBox").style.height = (self.height * self.multiplier)+"px";
+					}
+				},
+
 				x: null,
 				y: null,
 				w: null,
 				h: null,
+				prevClientX: null,
+				prevClientY: null,
+				
 				create: function(_callback){
 					var self = this;
 
 					if(self.mode === "hidden" && core.localData.currentProject.name !== null){
 						console.log("creating box");
-						var box = el("+div#thumbBox").attr("data-mode", "idle");
+						var box = el("+div#thumbBox").attr("data-mode", "idle").attr("draggable", "false");
 						if(typeof _callback === "function")_callback(box);
 						self.mode = "idle";
 					}
@@ -735,12 +778,46 @@ var core = Global.coreMethods = {
 				},
 				init: function(box){
 					var self = this;
+
+					self.mode = "idle";
 					console.log("starting thumb viewer:", box);
-					box.style.width = "400px";
-					box.style.height = "200px";
-					
-					box.style.top = "200px";
-					box.style.left = "200px";
+					box.style.width = (self.ratio.width*4)+"px";
+					box.style.height = (self.ratio.height*4)+"px";
+					box.style.top = "3px";
+					box.style.left = "3px";
+
+					var counter = 0;
+
+					box.on("mousedown", function(evt){
+						this.addClass("grabbing");
+						self.mode = "move";
+						console.log("mousedown:",evt);
+						self.prevClientX = evt.clientX; 
+						self.prevClientY = evt.clientY; 
+					});
+
+					box.on("mousemove", function(evt){
+						if(self.mode === "move"){
+							this.style.left = (parseInt(this.style.left) + (evt.clientX - self.prevClientX))+"px";
+							this.style.top = (parseInt(this.style.top)+(evt.clientY - self.prevClientY))+"px";
+							self.prevClientX = evt.clientX; 
+							self.prevClientY = evt.clientY; 
+						}
+					});
+
+					box.on("mouseup", function(){
+						this.rmClass("grabbing");
+						self.mode = "idle";
+						self.prevClientX = null; 
+						self.prevClientY = null; 
+					});
+
+					box.on("mouseout", function(){
+						box.rmClass("grabbing");
+						self.mode = "idle";
+						self.prevClientX = null; 
+						self.prevClientY = null; 
+					});
 
 					el("#body").append(box);
 
@@ -754,68 +831,144 @@ var core = Global.coreMethods = {
 				y: null,
 				w: null,
 				h: null,
-				create: function(_callback){
+
+				init: function(_interface){
+					var self = this;
+					console.log("starting interface:", _interface);
+					el("#body").append(_interface);
+
+					el(".decrease-thumb-size")[0].onclick = function(){
+						core.preview.thumbnail.box.ratio.decrement();
+					}
+
+					el(".increase-thumb-size")[0].onclick = function(){
+						core.preview.thumbnail.box.ratio.increment();
+					}
+
+					el("#thumbCamera").onclick = function(){
+						core.preview.thumbnail.capture();
+					}
+
+					el("#thumbCamera").onmouseover = function(){
+						el("#thumbBox").addClass("screenshot-in-progress");
+					}
+
+					el("#thumbCamera").onmouseout = function(){
+						el("#thumbBox").rmClass("screenshot-in-progress");
+					}
+
+					
+
+				},
+
+				create: function(_callback){ // comes before init
 					var self = this;
 
 					if(self.mode === "hidden" && core.localData.currentProject.name !== null){
 						console.log("creating box");
 						var box = el("+div#thumbInterface").append(
 							el.join([
-								el("+div").addClass("sizeControls").append(
+								el("+section").append(
 									el.join([
 										el("+div").addClass("interface-header").text("Thumnail Size"),
-										el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+"),
-										el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–")
+										el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
+										el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
 									])
 								),
-								el("+div").addClass("sizeControls").append(
+								el("+section").append(
 									el.join([
-										el("+div").addClass("interface-header").text("Take Screenshot")
+										el("+div").addClass("interface-header").text("Capture"),
+										el("+a#thumbCamera").addClass("interface-camera").attr("href","#").append(
+											el("+img").addClass("interface-camera").attr("src","local/images/camera.svg")
+										)
 									])
 								)
 							])
 						);
-						if(typeof _callback === "function")_callback(box);
 						self.mode = "idle";
+						
+						if(typeof _callback === "function")_callback(box);
+						
 					}
-
 				},
-				init: function(_interface){
-					var self = this;
-					console.log("starting interface:", _interface);
-					el("#body").append(_interface);
 
-				},
+				
 				remove: function(){},
 			},
-		},
 
-		testScreenShot: function(){
-			Global.mainWindow.capturePage(function(_img){
-				var pngImgBuff = _img.toPng();
+			capture: function(){
+				var self = this;
+				//hide #thumbBox before the screenshot
+				
 
-				// lwip.open(pngImgBuff, 'png', function(err, img){
-				// 	if(err) return console.log("ERR1:",err);
-				// 	console.log("saving screenshot");
-				// 	img.writeFile(core.localData.currentProject.path+"/Thumb.gif", "gif", function(){
-				// 		if(err) return console.log("ERR2:",err);
-				// 		console.log("saved screenshot!");
-				// 	});
-				// })
+				setTimeout(function(){
+					Global.mainWindow.capturePage({
+						x: self.box.getX(), 
+						y: self.box.getY(), 
+						width: self.box.getWidth(), 
+						height: self.box.getHeight()
+					},function(_img){
+						var pngImgBuff = _img.toPng();
 
-				fs.writeFile(core.localData.currentProject.path+"/Thumb.png",pngImgBuff, function(err){
-					if(err) return console.log("ERR:",err);
-					console.log("saved screenshot");
-					fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
-						if(err) return console.log("ERR:",err);
-						console.log("converted screenshot");
-					});
-				})
-				// console.log("img",_img.toPng());
-			})
+						lwip.open(pngImgBuff, 'png', function(err, _image){
+							_image.resize(self.box.ratio.width, self.box.ratio.height, function(){
+								_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
+									if(err) return console.log("ERR:",err);
+								});
+								// fs.writeFile(core.localData.currentProject.path+"/Thumb.png", _image, function(err){
+								// 	if(err) return console.log("ERR:",err);
+								// 	fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
+								// 		if(err) return console.log("ERR:",err);
+								// 	}); // end renameFile
+								// }); // end writeFile
+
+							});
+					  });
+
+
+								
+					}); // end capturePage
+				}, 5); // end setTimeout
+
+
+				core.flash(function(){
+					el("#thumbBox").rmClass("screenshot-in-progress");
+				}); // end flash
+					
+			}
+
+
 		}
 
-	}
+	},
+
+	flash: function(pinnacleCallback){
+		var flash = el("+div").attr("style", "height:100%; width:100%; background:white; position:absolute; top:0; left:0; z-index:1000000; opacity:0; transition:opacity .1s ease;");
+		el("#body").append(flash);
+
+
+		var flashBaton = baton(function(next){
+			flash.style.opacity = 1;
+			setTimeout(next, 100);
+		})
+
+		.then(function(next){
+			flash.style.transition = "opacity .4s ease";
+			setTimeout(function(){ flash.style.opacity = 0; } ,0);
+			if(typeof pinnacleCallback === "function") pinnacleCallback();
+			setTimeout(next, 500);
+		})
+
+		.then(function(){
+			flash.rm();
+		})
+
+		flashBaton.run();
+
+		
+
+
+	},
 };
 
 

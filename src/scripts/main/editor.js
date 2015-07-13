@@ -9,10 +9,10 @@ var editorCore = {
 	// ----------------------------
 	active: true,
 	deactivate: function(){
-		
+		editor.addClass("inactive");
 	},
 	activate: function(){
-
+		editor.rmClass("inactive");
 	},
 
 	// ----------------------------

@@ -17,7 +17,7 @@ app.on("ready", function(){
 	mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
 		width: 1800, 
 		height: 1000,
-		"min-height": 400,
+		"min-height": 500,
 		"min-width": 200
 	});
 	mainWindow.loadUrl("file://"+__dirname+"/index.html");

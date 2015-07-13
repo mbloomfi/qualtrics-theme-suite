@@ -522,7 +522,7 @@
 			  background: #fff;
 			  width: 100%;
 			  height: 100%;
-			  min-height: 600px;
+			  min-height: 500px;
 			  position: relative;
 			  overflow: hidden;
 			}
@@ -541,82 +541,6 @@
 			div.dimmer.show {
 			  opacity: 1;
 			}
-			.header {
-			  font-size: 19px;
-			  padding: 5px 0 0;
-			  border-left: 0.5px solid rgba(255,255,255,0.05);
-			  border-right: 0.5px solid rgba(255,255,255,0.05);
-			  color: #a0a0a0;
-			  font-weight: 400;
-			  letter-spacing: 0.25px;
-			  text-indent: 5px;
-			}
-			.header .icon_cont {
-			  height: 22px;
-			  position: absolute;
-			  top: 10px;
-			  right: 10px;
-			  width: 55px;
-			}
-			.header .icon_cont .icon {
-			  display: inline-block;
-			  position: absolute;
-			  height: 100%;
-			  padding: 2px 5px;
-			  cursor: pointer;
-			  background-color: rgba(255,255,255,0);
-			  border-radius: 1.5px;
-			  box-shadow: 0 2px 6px rgba(0,0,0,0);
-			  -webkit-transition: background-color 0.3s ease, box-shadow 0.3s ease;
-			          transition: background-color 0.3s ease, box-shadow 0.3s ease;
-			}
-			.header .icon_cont .icon svg {
-			  width: auto;
-			  height: 100%;
-			  display: block;
-			}
-			.header .icon_cont .icon svg path {
-			  -webkit-transition: fill 0.3s ease;
-			          transition: fill 0.3s ease;
-			}
-			.header .icon_cont .icon#renameFile {
-			  left: 0;
-			}
-			.header .icon_cont .icon#renameFile svg path {
-			  fill: #e6e6e6;
-			}
-			.header .icon_cont .icon#renameFile:hover {
-			  background-color: rgba(255,255,255,0.4);
-			}
-			.header .icon_cont .icon#renameFile:hover svg path {
-			  fill: #1e1e1e;
-			}
-			.header .icon_cont .icon#renameFile.active {
-			  background-color: rgba(255,255,255,0.9);
-			  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-			}
-			.header .icon_cont .icon#renameFile.active svg path {
-			  fill: #464646;
-			}
-			.header .icon_cont .icon#deleteFile {
-			  right: 0;
-			}
-			.header .icon_cont .icon#deleteFile svg path {
-			  fill: #df4848;
-			}
-			.header .icon_cont .icon#deleteFile:hover {
-			  background-color: rgba(223,72,72,0.4);
-			}
-			.header .icon_cont .icon#deleteFile:hover svg path {
-			  fill: #dcdcdc;
-			}
-			.header .icon_cont .icon#deleteFile.active {
-			  background-color: rgba(223,72,72,0.85);
-			  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-			}
-			.header .icon_cont .icon#deleteFile.active svg path {
-			  fill: #fafafa;
-			}
 			section#editor {
 			  position: fixed;
 			  top: 0;
@@ -631,6 +555,20 @@
 			  overflow-y: hidden;
 			  -webkit-transition: left 0.5s ease;
 			          transition: left 0.5s ease;
+			}
+			section#editor.inactive {
+			  pointer-events: none;
+			}
+			section#editor.inactive:before {
+			  content: "";
+			  height: 100%;
+			  width: 100%;
+			  display: block;
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  background: rgba(0,0,0,0.5);
+			  z-index: 1000;
 			}
 			section#editor section#sectionInner {
 			  min-width: 500px;
@@ -748,6 +686,82 @@
 			  opacity: 1;
 			  -webkit-transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
 			          transition: height 0.2s ease, width 0.2s ease, top 0.2s ease, opacity 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header {
+			  font-size: 19px;
+			  padding: 5px 0 0;
+			  border-left: 0.5px solid rgba(255,255,255,0.05);
+			  border-right: 0.5px solid rgba(255,255,255,0.05);
+			  color: #a0a0a0;
+			  font-weight: 400;
+			  letter-spacing: 0.25px;
+			  text-indent: 5px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont {
+			  height: 22px;
+			  position: absolute;
+			  top: 10px;
+			  right: 10px;
+			  width: 55px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon {
+			  display: inline-block;
+			  position: absolute;
+			  height: 100%;
+			  padding: 2px 5px;
+			  cursor: pointer;
+			  background-color: rgba(255,255,255,0);
+			  border-radius: 1.5px;
+			  box-shadow: 0 2px 6px rgba(0,0,0,0);
+			  -webkit-transition: background-color 0.3s ease, box-shadow 0.3s ease;
+			          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon svg {
+			  width: auto;
+			  height: 100%;
+			  display: block;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon svg path {
+			  -webkit-transition: fill 0.3s ease;
+			          transition: fill 0.3s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile {
+			  left: 0;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile svg path {
+			  fill: #e6e6e6;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile:hover {
+			  background-color: rgba(255,255,255,0.4);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile:hover svg path {
+			  fill: #1e1e1e;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile.active {
+			  background-color: rgba(255,255,255,0.9);
+			  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#renameFile.active svg path {
+			  fill: #464646;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile {
+			  right: 0;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile svg path {
+			  fill: #df4848;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile:hover {
+			  background-color: rgba(223,72,72,0.4);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile:hover svg path {
+			  fill: #dcdcdc;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile.active {
+			  background-color: rgba(223,72,72,0.85);
+			  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .header .icon_cont .icon#deleteFile.active svg path {
+			  fill: #fafafa;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .arrow {
 			  display: block;
@@ -1281,9 +1295,28 @@
 			}
 			#thumbBox {
 			  position: absolute;
-			  background-color: rgba(55,95,245,0.05);
+			  background-color: rgba(55,95,245,0);
 			  outline: 3px solid #375ff5;
 			  z-index: 100000;
+			  cursor: -webkit-grab;
+			  cursor: grab;
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			}
+			#thumbBox:hover {
+			  -webkit-transition: background-color 0.3s ease;
+			          transition: background-color 0.3s ease;
+			  background-color: rgba(55,95,245,0.25);
+			}
+			#thumbBox.grabbing {
+			  cursor: -webkit-grabbing;
+			  cursor: grabbing;
+			  background-color: rgba(55,95,245,0.125);
+			}
+			#thumbBox.screenshot-in-progress {
+			  -webkit-transition: background-color 0 ease;
+			          transition: background-color 0 ease;
+			  background-color: rgba(55,95,245,0);
 			}
 			#thumbInterface {
 			  position: absolute;
@@ -1291,41 +1324,78 @@
 			  z-index: 100000;
 			  bottom: 0;
 			  left: 0;
-			  height: 250px;
+			  height: 200px;
 			  width: 150px;
 			  color: #fff;
 			  padding: 10px;
+			  border-top-right-radius: 2.5px;
+			  border: 1px solid rgba(0,0,0,0.55);
 			  box-shadow: 0 0 25px 2px rgba(0,0,0,0.55);
 			}
-			#thumbInterface .sizeControls {
-			  color: #fff;
-			}
-			#thumbInterface .sizeControls .interface-header {
+			#thumbInterface .interface-header {
 			  font-size: 20px;
 			  text-align: center;
 			  margin: 0 0 5px;
 			}
-			#thumbInterface .sizeControls .thumbSizeBtn.increase-thumb-size {
+			#thumbInterface section {
+			  color: #fff;
 			  text-align: center;
-			  width: 35px;
-			  height: 35px;
-			  line-height: 35px;
-			  margin: 10px auto;
-			  font-size: 30px;
-			  border: 2px solid #fff;
-			  border-radius: 50%;
-			  background-color: rgba(0,0,0,0.1);
 			}
-			#thumbInterface .sizeControls .thumbSizeBtn.decrease-thumb-size {
+			#thumbInterface section .thumbSizeBtn {
+			  display: inline-block;
 			  text-align: center;
 			  width: 35px;
 			  height: 35px;
 			  line-height: 35px;
-			  margin: 0 auto 20px;
+			  margin: 5px 10px 30px;
 			  font-size: 30px;
 			  border: 2px solid #fff;
 			  border-radius: 50%;
 			  background-color: rgba(0,0,0,0.1);
+			  cursor: pointer;
+			  -webkit-user-select: none;
+			     -moz-user-select: none;
+			      -ms-user-select: none;
+			          user-select: none;
+			}
+			#thumbInterface section .thumbSizeBtn:hover {
+			  background-color: rgba(0,0,0,0.2);
+			}
+			#thumbInterface section a.interface-camera {
+			  height: 35px;
+			  width: auto;
+			  display: inline-block;
+			  padding: 10px;
+			  border-radius: 2px;
+			  -webkit-user-select: none;
+			     -moz-user-select: none;
+			      -ms-user-select: none;
+			          user-select: none;
+			  box-shadow: 0 0 0 0 rgba(0,0,0,0), 0 0 0 0 rgba(0,0,0,0);
+			  -webkit-transition: background-color 0.3s ease, box-shadow 0.3s ease;
+			          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+			}
+			#thumbInterface section a.interface-camera img {
+			  height: 100%;
+			  width: auto;
+			  opacity: 1;
+			  -webkit-user-select: none;
+			     -moz-user-select: none;
+			      -ms-user-select: none;
+			          user-select: none;
+			  pointer-events: none;
+			  -webkit-transition: opacity 0.3s ease;
+			          transition: opacity 0.3s ease;
+			}
+			#thumbInterface section a.interface-camera:hover {
+			  box-shadow: 0 5px 5px -5px rgba(0,0,0,0), 0 2px 5px 1px rgba(0,0,0,0.25);
+			}
+			#thumbInterface section a.interface-camera:active {
+			  background-color: rgba(0,0,0,0.25);
+			  box-shadow: inset 0 8px 9px -6px rgba(0,0,0,0.35), inset 0 -5px 4px -5px rgba(200,200,200,0.2);
+			}
+			#thumbInterface section a.interface-camera:active img {
+			  opacity: 0.95;
 			}
 			section#Prompter {
 			  position: fixed;
@@ -14982,6 +15052,7 @@
 			
 			// == Vendor ==
 			var fs = require("fs-extra");
+			var lwip = require("lwip");
 			var gulp = require("gulp");
 			var rename = require("gulp-rename");
 			var replace = require("gulp-replace");
@@ -16377,6 +16448,8 @@
 			
 			
 			
+			
+			
 					screenshot: {
 			
 			
@@ -16395,35 +16468,37 @@
 			
 						init: function(){
 			
-			
-			
 							var self = this;
 			
-							self.active = true;
-			
-							
-			
-							self.box.create(function(_box){
-			
-									self.box.init(_box);
-			
-							});
 			
 			
+							if(core.localData.currentProject.name !== null) {
 			
-							self.interface.create(function(_interface){
+								self.active = true;
 			
-								self.interface.init(_interface);
+								
 			
-							});
+								self.box.create(function(_box){
+			
+										self.box.init(_box);
+			
+								});
 			
 			
 			
-							core.codeMirror.deactivate();
+								self.interface.create(function(_interface){
 			
-							
+									self.interface.init(_interface);
 			
-							
+								});
+			
+			
+			
+								core.codeMirror.deactivate();
+			
+								editorCore.deactivate();
+			
+							}
 			
 			
 			
@@ -16435,6 +16510,82 @@
 			
 							mode: "hidden", //resize, move, idle
 			
+			
+			
+							getWidth: function(){
+			
+								return parseInt(el("#thumbBox").style.width);
+			
+							},
+			
+							getHeight: function(){
+			
+								return parseInt(el("#thumbBox").style.height);
+			
+							},
+			
+							getX: function(){
+			
+								return parseInt(el("#thumbBox").style.left);
+			
+							},
+			
+							getY: function(){
+			
+								return parseInt(el("#thumbBox").style.top);
+			
+							},
+			
+			
+			
+							ratio: {
+			
+								height: 65,
+			
+								width: 110,
+			
+								multiplier: 4,
+			
+								increment: function(){
+			
+									if(this.multiplier < 15){
+			
+										this.multiplier += 0.5;
+			
+										this.calibrate();
+			
+									}
+			
+								},
+			
+								decrement: function(){
+			
+									if(this.multiplier > 1){
+			
+										this.multiplier -= 0.5;
+			
+										this.calibrate();
+			
+									}
+			
+								},
+			
+								calibrate: function(){
+			
+									var self = this;
+			
+									console.log("==",el("#thumbBox").style.width);
+			
+									el("#thumbBox").style.width = (self.width * self.multiplier)+"px";
+			
+									el("#thumbBox").style.height = (self.height * self.multiplier)+"px";
+			
+								}
+			
+							},
+			
+			
+			
 							x: null,
 			
 							y: null,
@@ -16442,6 +16593,12 @@
 							w: null,
 			
 							h: null,
+			
+							prevClientX: null,
+			
+							prevClientY: null,
+			
+							
 			
 							create: function(_callback){
 			
@@ -16453,7 +16610,7 @@
 			
 									console.log("creating box");
 			
-									var box = el("+div#thumbBox").attr("data-mode", "idle");
+									var box = el("+div#thumbBox").attr("data-mode", "idle").attr("draggable", "false");
 			
 									if(typeof _callback === "function")_callback(box);
 			
@@ -16469,17 +16626,85 @@
 			
 								var self = this;
 			
+			
+			
+								self.mode = "idle";
+			
 								console.log("starting thumb viewer:", box);
 			
-								box.style.width = "400px";
+								box.style.width = (self.ratio.width*4)+"px";
 			
-								box.style.height = "200px";
+								box.style.height = (self.ratio.height*4)+"px";
 			
-								
+								box.style.top = "3px";
 			
-								box.style.top = "200px";
+								box.style.left = "3px";
 			
-								box.style.left = "200px";
+			
+			
+								var counter = 0;
+			
+			
+			
+								box.on("mousedown", function(evt){
+			
+									this.addClass("grabbing");
+			
+									self.mode = "move";
+			
+									console.log("mousedown:",evt);
+			
+									self.prevClientX = evt.clientX; 
+			
+									self.prevClientY = evt.clientY; 
+			
+								});
+			
+			
+			
+								box.on("mousemove", function(evt){
+			
+									if(self.mode === "move"){
+			
+										this.style.left = (parseInt(this.style.left) + (evt.clientX - self.prevClientX))+"px";
+			
+										this.style.top = (parseInt(this.style.top)+(evt.clientY - self.prevClientY))+"px";
+			
+										self.prevClientX = evt.clientX; 
+			
+										self.prevClientY = evt.clientY; 
+			
+									}
+			
+								});
+			
+			
+			
+								box.on("mouseup", function(){
+			
+									this.rmClass("grabbing");
+			
+									self.mode = "idle";
+			
+									self.prevClientX = null; 
+			
+									self.prevClientY = null; 
+			
+								});
+			
+			
+			
+								box.on("mouseout", function(){
+			
+									box.rmClass("grabbing");
+			
+									self.mode = "idle";
+			
+									self.prevClientX = null; 
+			
+									self.prevClientY = null; 
+			
+								});
 			
 			
 			
@@ -16507,7 +16732,67 @@
 			
 							h: null,
 			
-							create: function(_callback){
+			
+			
+							init: function(_interface){
+			
+								var self = this;
+			
+								console.log("starting interface:", _interface);
+			
+								el("#body").append(_interface);
+			
+			
+			
+								el(".decrease-thumb-size")[0].onclick = function(){
+			
+									core.preview.thumbnail.box.ratio.decrement();
+			
+								}
+			
+			
+			
+								el(".increase-thumb-size")[0].onclick = function(){
+			
+									core.preview.thumbnail.box.ratio.increment();
+			
+								}
+			
+			
+			
+								el("#thumbCamera").onclick = function(){
+			
+									core.preview.thumbnail.capture();
+			
+								}
+			
+			
+			
+								el("#thumbCamera").onmouseover = function(){
+			
+									el("#thumbBox").addClass("screenshot-in-progress");
+			
+								}
+			
+			
+			
+								el("#thumbCamera").onmouseout = function(){
+			
+									el("#thumbBox").rmClass("screenshot-in-progress");
+			
+								}
+			
+			
+			
+								
+			
+			
+			
+							},
+			
+			
+			
+							create: function(_callback){ // comes before init
 			
 								var self = this;
 			
@@ -16521,25 +16806,31 @@
 			
 										el.join([
 			
-											el("+div").addClass("sizeControls").append(
+											el("+section").append(
 			
 												el.join([
 			
 													el("+div").addClass("interface-header").text("Thumnail Size"),
 			
-													el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+"),
+													el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
 			
-													el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–")
+													el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
 			
 												])
 			
 											),
 			
-											el("+div").addClass("sizeControls").append(
+											el("+section").append(
 			
 												el.join([
 			
-													el("+div").addClass("interface-header").text("Take Screenshot")
+													el("+div").addClass("interface-header").text("Capture"),
+			
+													el("+a#thumbCamera").addClass("interface-camera").attr("href","#").append(
+			
+														el("+img").addClass("interface-camera").attr("src","local/images/camera.svg")
+			
+													)
 			
 												])
 			
@@ -16549,87 +16840,173 @@
 			
 									);
 			
+									self.mode = "idle";
+			
+									
+			
 									if(typeof _callback === "function")_callback(box);
 			
-									self.mode = "idle";
+									
 			
 								}
 			
-			
-			
 							},
 			
-							init: function(_interface){
-			
-								var self = this;
-			
-								console.log("starting interface:", _interface);
-			
-								el("#body").append(_interface);
 			
 			
-			
-							},
+							
 			
 							remove: function(){},
 			
 						},
 			
-					},
+			
+			
+						capture: function(){
+			
+							var self = this;
+			
+							//hide #thumbBox before the screenshot
+			
+							
 			
 			
 			
-					testScreenShot: function(){
+							setTimeout(function(){
 			
-						Global.mainWindow.capturePage(function(_img){
+								Global.mainWindow.capturePage({
 			
-							var pngImgBuff = _img.toPng();
+									x: self.box.getX(), 
 			
+									y: self.box.getY(), 
 			
+									width: self.box.getWidth(), 
 			
-							// lwip.open(pngImgBuff, 'png', function(err, img){
+									height: self.box.getHeight()
 			
-							// 	if(err) return console.log("ERR1:",err);
+								},function(_img){
 			
-							// 	console.log("saving screenshot");
-			
-							// 	img.writeFile(core.localData.currentProject.path+"/Thumb.gif", "gif", function(){
-			
-							// 		if(err) return console.log("ERR2:",err);
-			
-							// 		console.log("saved screenshot!");
-			
-							// 	});
-			
-							// })
+									var pngImgBuff = _img.toPng();
 			
 			
 			
-							fs.writeFile(core.localData.currentProject.path+"/Thumb.png",pngImgBuff, function(err){
+									lwip.open(pngImgBuff, 'png', function(err, _image){
 			
-								if(err) return console.log("ERR:",err);
+										_image.resize(self.box.ratio.width, self.box.ratio.height, function(){
 			
-								console.log("saved screenshot");
+											_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
 			
-								fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
+												if(err) return console.log("ERR:",err);
 			
-									if(err) return console.log("ERR:",err);
+											});
 			
-									console.log("converted screenshot");
+											// fs.writeFile(core.localData.currentProject.path+"/Thumb.png", _image, function(err){
 			
-								});
+											// 	if(err) return console.log("ERR:",err);
 			
-							})
+											// 	fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
 			
-							// console.log("img",_img.toPng());
+											// 		if(err) return console.log("ERR:",err);
 			
-						})
+											// 	}); // end renameFile
+			
+											// }); // end writeFile
+			
+			
+			
+										});
+			
+								  });
+			
+			
+			
+			
+			
+											
+			
+								}); // end capturePage
+			
+							}, 5); // end setTimeout
+			
+			
+			
+			
+			
+							core.flash(function(){
+			
+								el("#thumbBox").rmClass("screenshot-in-progress");
+			
+							}); // end flash
+			
+								
+			
+						}
+			
+			
+			
+			
 			
 					}
 			
 			
 			
-				}
+				},
+			
+			
+			
+				flash: function(pinnacleCallback){
+			
+					var flash = el("+div").attr("style", "height:100%; width:100%; background:white; position:absolute; top:0; left:0; z-index:1000000; opacity:0; transition:opacity .1s ease;");
+			
+					el("#body").append(flash);
+			
+			
+			
+			
+			
+					var flashBaton = baton(function(next){
+			
+						flash.style.opacity = 1;
+			
+						setTimeout(next, 100);
+			
+					})
+			
+			
+			
+					.then(function(next){
+			
+						flash.style.transition = "opacity .4s ease";
+			
+						setTimeout(function(){ flash.style.opacity = 0; } ,0);
+			
+						if(typeof pinnacleCallback === "function") pinnacleCallback();
+			
+						setTimeout(next, 500);
+			
+					})
+			
+			
+			
+					.then(function(){
+			
+						flash.rm();
+			
+					})
+			
+			
+			
+					flashBaton.run();
+			
+			
+			
+					
+			
+			
+			
+			
+			
+				},
 			
 			};
 			
@@ -16730,10 +17107,10 @@
 				// ----------------------------
 				active: true,
 				deactivate: function(){
-					
+					editor.addClass("inactive");
 				},
 				activate: function(){
-			
+					editor.rmClass("inactive");
 				},
 			
 				// ----------------------------
