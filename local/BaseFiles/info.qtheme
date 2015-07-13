@@ -5,5 +5,6 @@
 		"author": "",
 		"date": ""
 	},
-	"version": ""
+	"version": "V4",
+	"variables":"numberOfQuestions=-1 legacySQ=0 AnyDeviceSupport=1 CSS=BaseStylesV4.css Transitions=Slide,Fade,Flip,Barrel DefaultTransition=Fade"
 }

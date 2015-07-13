@@ -523,7 +523,7 @@ section#editor {
 							&.files {
 								overflow-y scroll
 								overflow-x hidden
-								
+								user-select text
 								.file-item {
 									font-size 16px
 									font-weight 300
@@ -535,6 +535,7 @@ section#editor {
 									text-align left
 									background-color rgba(0,0,0,0)
 									padding 7px 5px
+									user-select text
 									color $item-color
 									transition background-color .3s ease, color .3s ease, padding .25s ease
 									&:hover, &:focus {
