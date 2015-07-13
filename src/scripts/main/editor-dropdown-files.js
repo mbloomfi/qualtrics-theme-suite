@@ -302,8 +302,9 @@ editorCore.dropdowns.files = {
 		editorBar.on("dragover", function(evt){
 			if(core.localData.currentProject.name !== null){
 
-				// if not dragging file(s), do nothing
-				if(evt.dataTransfer.files.length > 0) evt.preventDefault();
+				// if(evt.dataTransfer.files.length > 0) evt.preventDefault();
+				evt.preventDefault();
+
 
 			}
 			
@@ -320,10 +321,37 @@ editorCore.dropdowns.files = {
 					dragCounter = 0;
 					copyFiles(evt.dataTransfer.files);
 				}
+				else if(typeof evt.dataTransfer.getData('URL') === "string"){
+					evt.preventDefault();
+					editorBar.rmClass("file_drag");
+					dragCounter = 0;
+					downloadFile(evt.dataTransfer.getData('URL'))
+				}
 			}
 			
 		});
 
+
+		function downloadFile(url) {
+			var extension;
+			
+		  var request = https.get(url, function(response) {
+
+		  	if(response.headers["content-type"] === "image/jpeg") extension = ".jpg";
+		  	else if(response.headers["content-type"] === "image/png") extension = ".png";
+		  	else if(response.headers["content-type"] === "image/gif") extension = ".gif";
+		  	else extension = ".txt";
+
+		  	var dest = core.localData.currentProject.path+"/"+((new Date * (Math.random()+1)).toString(36).substring(0,8))+extension;
+			  var file = fs.createWriteStream(dest);
+
+		  	// console.log("res",response)
+		    response.pipe(file);
+		    file.on('finish', function() {
+		      file.close();
+		    });
+		  });
+		}
 
 		function copyFiles(files){
 			//check if file(s) of folder

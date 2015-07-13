@@ -5,6 +5,7 @@ var ipc = require("ipc");
 
 // == Node Natives ==
 var path = require("path");
+var https = require('https');
 
 // == Vendor ==
 var fs = require("fs-extra");

@@ -932,6 +932,9 @@
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand:hover {
 			  background-color: #df4848;
 			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand:focus {
+			  background-color: #e15151;
+			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody button#createBrand.disabled {
 			  background-color: rgba(90,90,90,0.9);
 			  color: rgba(150,150,150,0.8);
@@ -15051,6 +15054,7 @@
 			
 			// == Node Natives ==
 			var path = require("path");
+			var https = require('https');
 			
 			// == Vendor ==
 			var fs = require("fs-extra");
@@ -18681,8 +18685,9 @@
 					editorBar.on("dragover", function(evt){
 						if(core.localData.currentProject.name !== null){
 			
-							// if not dragging file(s), do nothing
-							if(evt.dataTransfer.files.length > 0) evt.preventDefault();
+							// if(evt.dataTransfer.files.length > 0) evt.preventDefault();
+							evt.preventDefault();
+			
 			
 						}
 						
@@ -18699,10 +18704,37 @@
 								dragCounter = 0;
 								copyFiles(evt.dataTransfer.files);
 							}
+							else if(typeof evt.dataTransfer.getData('URL') === "string"){
+								evt.preventDefault();
+								editorBar.rmClass("file_drag");
+								dragCounter = 0;
+								downloadFile(evt.dataTransfer.getData('URL'))
+							}
 						}
 						
 					});
 			
+			
+					function downloadFile(url) {
+						var extension;
+						
+					  var request = https.get(url, function(response) {
+			
+					  	if(response.headers["content-type"] === "image/jpeg") extension = ".jpg";
+					  	else if(response.headers["content-type"] === "image/png") extension = ".png";
+					  	else if(response.headers["content-type"] === "image/gif") extension = ".gif";
+					  	else extension = ".txt";
+			
+					  	var dest = core.localData.currentProject.path+"/"+((new Date * (Math.random()+1)).toString(36).substring(0,8))+extension;
+						  var file = fs.createWriteStream(dest);
+			
+					  	// console.log("res",response)
+					    response.pipe(file);
+					    file.on('finish', function() {
+					      file.close();
+					    });
+					  });
+					}
 			
 					function copyFiles(files){
 						//check if file(s) of folder
