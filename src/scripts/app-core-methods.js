@@ -543,9 +543,9 @@ var core = Global.coreMethods = {
 		mode: {
 			currentMode: "regular",
 			regular: function(){
-				console.log("switching to edit/preview => regular mode");
+				// console.log("switching to edit/preview => regular mode");
 				if(this.currentMode === "thumbnail"){
-					console.log("deactivating edit/preview => thumbnail mode");
+					// console.log("deactivating edit/preview => thumbnail mode");
 					core.preview.thumbnail.deactivate();
 				}
 				core.preview.init();	
@@ -568,7 +568,7 @@ var core = Global.coreMethods = {
 
 			"{~ProgressBar~}": '<div role="widget"><table class="ProgressBarContainer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"><tbody><tr><td>0%</td><td><div class="ProgressBarFillContainer" id="ProgressBarFillContainer"><div class="ProgressBarFill" style="width: 18%"></div></div></td><td>100%</td></tr></tbody></table></div>',
 
-			"{~Header~}":"Header Text Area",
+			"{~Header~}":"",
 
 			"{~Buttons~}": '<input id="PreviousButton" type="button" value="<<" name=""><input id="NextButton" onkeypress="if(!this.disabled){Qualtrics.SurveyEngine.navEnter(arguments[0],this, "NextButton"); };  " onclick="Qualtrics.SurveyEngine.navClick(event, "NextButton")" title=" >> " type="submit" name="NextButton" value=" >> ">',
 
@@ -577,7 +577,7 @@ var core = Global.coreMethods = {
 		},
 
 		init: function(){
-			console.log("init edit_preview => regular mode")
+			// console.log("init edit_preview => regular mode")
 			if(core.localData.currentProject.name !== null){
 				preview.src = "local/currentPreview.html";
 				this.hidden = false;
@@ -608,12 +608,13 @@ var core = Global.coreMethods = {
 		
 
 		compileSass: function(){
-			
 			return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
-				.pipe(sass())
+				.pipe(sass()).on('error', function(e){alert("Sass Error!\nLine: "+e.line+"\n\""+e.message+"\"");})
 				.pipe(autoprefixer())
 				.pipe(minifyCss())
 				.pipe(gulp.dest(core.localData.currentProject.path+"/"));
+				
+				// return stream;
 		},
 
 		clearWatchers: function(){
@@ -734,10 +735,10 @@ var core = Global.coreMethods = {
 			},
 
 			deactivate: function(){
-				console.log("(2) deactivating edit/preview => thumbnail mode");
+				// console.log("(2) deactivating edit/preview => thumbnail mode");
 				el("#thumbBox").rm();
 				el("#thumbInterface").rm();
-				console.log("finished deactivating edit/preview => thumbnail mode");
+				// console.log("finished deactivating edit/preview => thumbnail mode");
 				editorCore.activate();
 				this.active = false;
 
@@ -767,6 +768,8 @@ var core = Global.coreMethods = {
 				},
 
 				ratio: {
+					/*This is where the thumbnail size is set
+					*/
 					height: 65,
 					width: 110,
 					multiplier: 4,
@@ -784,7 +787,7 @@ var core = Global.coreMethods = {
 					},
 					calibrate: function(){
 						var self = this;
-						console.log("==",el("#thumbBox").style.width);
+						// console.log("==",el("#thumbBox").style.width);
 						el("#thumbBox").style.width = (self.width * self.multiplier)+"px";
 						el("#thumbBox").style.height = (self.height * self.multiplier)+"px";
 					}
@@ -801,7 +804,7 @@ var core = Global.coreMethods = {
 					var self = this;
 
 					if(self.mode === null && core.localData.currentProject.name !== null){
-						console.log("creating box");
+						// console.log("creating box");
 						var box = el("+div#thumbBox").attr("data-mode", "idle").attr("draggable", "false");
 						if(typeof _callback === "function")_callback(box);
 						self.mode = "idle";
@@ -812,7 +815,7 @@ var core = Global.coreMethods = {
 					var self = this;
 
 					self.mode = "idle";
-					console.log("starting thumb viewer:", box);
+					// console.log("starting thumb viewer:", box);
 					box.style.width = (self.ratio.width*4)+"px";
 					box.style.height = (self.ratio.height*4)+"px";
 					box.style.top = "3px";
@@ -823,7 +826,7 @@ var core = Global.coreMethods = {
 					box.on("mousedown", function(evt){
 						this.addClass("grabbing");
 						self.mode = "move";
-						console.log("mousedown:",evt);
+						// console.log("mousedown:",evt);
 						self.prevClientX = evt.clientX; 
 						self.prevClientY = evt.clientY; 
 					});
@@ -862,7 +865,7 @@ var core = Global.coreMethods = {
 
 				init: function(_interface){
 					var self = this;
-					console.log("starting interface:", _interface);
+					// console.log("starting interface:", _interface);
 					el("#body").append(_interface);
 
 					el(".decrease-thumb-size")[0].onclick = function(){
@@ -893,7 +896,7 @@ var core = Global.coreMethods = {
 					var self = this;
 
 					if(self.mode === null && core.localData.currentProject.name !== null){
-						console.log("creating box");
+						// console.log("creating box");
 						var box = el("+div#thumbInterface").append(
 							el.join([
 								el("+section").append(
@@ -938,30 +941,22 @@ var core = Global.coreMethods = {
 					},function(_img){
 						var pngImgBuff = _img.toPng();
 
+						core.flash(function(){
+							el("#thumbBox").rmClass("screenshot-in-progress");
+						});
+
 						lwip.open(pngImgBuff, 'png', function(err, _image){
 							_image.resize(self.box.ratio.width, self.box.ratio.height, function(){
 								_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
 									if(err) return console.log("ERR:",err);
 								});
-								// fs.writeFile(core.localData.currentProject.path+"/Thumb.png", _image, function(err){
-								// 	if(err) return console.log("ERR:",err);
-								// 	fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
-								// 		if(err) return console.log("ERR:",err);
-								// 	}); // end renameFile
-								// }); // end writeFile
-
 							});
 					  });
+					});
+				}, 5);
 
 
-								
-					}); // end capturePage
-				}, 5); // end setTimeout
-
-
-				core.flash(function(){
-					el("#thumbBox").rmClass("screenshot-in-progress");
-				}); // end flash
+				
 					
 			}
 
@@ -1010,7 +1005,7 @@ var core = Global.coreMethods = {
 			this.currentMode  = "releaseManager";
 		},
 		edit_preview: function(){
-			console.log("switching to edit/preview mode");
+			// console.log("switching to edit/preview mode");
 			core.preview.mode.regular();
 			this.currentMode  = "edit/preview";
 		}

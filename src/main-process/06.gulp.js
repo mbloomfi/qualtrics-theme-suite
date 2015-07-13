@@ -1,7 +1,5 @@
 //GULP
 function runGulp(){
-
-
 }
 
 function runGulp_Dev(){ // will not be called for production

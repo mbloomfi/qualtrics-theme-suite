@@ -56,9 +56,9 @@ editorCore.dropdowns.files = {
 	},
 	deactivate: function(_projectName){
 		var self = this;
-		console.log("check1");
+		// console.log("check1");
 		if(self.active === true) {
-			console.log("check2");
+			// console.log("check2");
 			fileName.addClass("inactive");
 			el("#files_arrow").addClass("inactive");
 			self.active = false;
@@ -144,7 +144,7 @@ editorCore.dropdowns.files = {
 						el(".file-item").rmClass(icon.id);
 					}
 					else {
-						console.log("self.id", self.id);
+						// console.log("self.id", self.id);
 						icon.addClass("active");
 						el(".file-item").addClass(self.id);
 					}
@@ -159,7 +159,7 @@ editorCore.dropdowns.files = {
 		// console.log("current status:", this.status);
 		if(this.status === "opened") {
 			this.close();
-			console.log("11 closing files 11");
+			// console.log("11 closing files 11");
 		}
 		else if(this.status === "closed") {
 			this.open();
@@ -180,10 +180,10 @@ editorCore.dropdowns.files = {
 	},
 
 	close: function(){
-		console.log("!!closing files!!");
+		// console.log("!!closing files!!");
 		var self = this;
 		
-		console.log("status,",self.status)
+		// console.log("status,",self.status)
 		//if already closed, return
 		if(self.status === "closed") return;
 
@@ -293,7 +293,7 @@ editorCore.dropdowns.files = {
 		editorBar.on("dragleave", function(evt){
 			if(core.localData.currentProject.name !== null){
 				dragCounter--;
-				console.log("DRAG LEAVE???");
+				// console.log("DRAG LEAVE???");
 				if(dragCounter === 0) editorBar.rmClass("file_drag");
 			}
 			
@@ -328,7 +328,7 @@ editorCore.dropdowns.files = {
 		function copyFiles(files){
 			//check if file(s) of folder
 
-			console.log(files);
+			// console.log(files);
 
 			var filesTotal = files.length;
 			var filesCopied = 0;
@@ -339,10 +339,10 @@ editorCore.dropdowns.files = {
 				(function(_file){
 					fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
 						if(err) return console.log("ERR copying:",_file.name, err);
-						console.log("copied:", _file.name);
+						// console.log("copied:", _file.name);
 						filesCopied++;
 						if(filesCopied === filesTotal){
-							console.log("All Files Copied");
+							// console.log("All Files Copied");
 						}
 					});
 				})(files[i]);

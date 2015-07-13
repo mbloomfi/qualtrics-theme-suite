@@ -567,11 +567,11 @@
 			  position: absolute;
 			  top: 0;
 			  left: 0;
-			  background: rgba(0,0,0,0.5);
+			  background: rgba(0,0,0,0.7);
 			  z-index: 1000;
 			}
 			section#editor section#sectionInner {
-			  min-width: 500px;
+			  min-width: 600px;
 			  max-height: 100%;
 			  min-height: 100%;
 			  height: 100%;
@@ -580,7 +580,7 @@
 			section#editor section#sectionInner div#editorBar {
 			  background-color: #373737;
 			  width: 100%;
-			  min-width: 500px;
+			  min-width: 600px;
 			  height: 5%;
 			  color: inherit;
 			  position: relative;
@@ -652,7 +652,7 @@
 			  font-size: 1.25em;
 			  padding: 0 10px;
 			  margin: 0 10px;
-			  max-width: 250px;
+			  max-width: 300px;
 			  position: relative;
 			  letter-spacing: 0.25px;
 			  background-color: rgba(255,255,255,0);
@@ -1282,16 +1282,16 @@
 			          animation: q-loading 1.75s ease 0s infinite;
 			}
 			webview#preview.loading-fadeout + #previewLoader h1 div span.circle1 {
-			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
-			          animation: circle-loading 1.5s ease 0s infinite;
+			  -webkit-animation: circle-loading 0.8s ease 0s infinite;
+			          animation: circle-loading 0.8s ease 0s infinite;
 			}
 			webview#preview.loading-fadeout + #previewLoader h1 div span.circle2 {
-			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
-			          animation: circle-loading 1.5s ease 0s infinite;
+			  -webkit-animation: circle-loading 0.8s ease 0s infinite;
+			          animation: circle-loading 0.8s ease 0s infinite;
 			}
 			webview#preview.loading-fadeout + #previewLoader h1 div span.circle3 {
-			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
-			          animation: circle-loading 1.5s ease 0s infinite;
+			  -webkit-animation: circle-loading 0.8s ease 0s infinite;
+			          animation: circle-loading 0.8s ease 0s infinite;
 			}
 			#thumbBox {
 			  position: absolute;
@@ -16158,11 +16158,11 @@
 			
 						regular: function(){
 			
-							console.log("switching to edit/preview => regular mode");
+							// console.log("switching to edit/preview => regular mode");
 			
 							if(this.currentMode === "thumbnail"){
 			
-								console.log("deactivating edit/preview => thumbnail mode");
+								// console.log("deactivating edit/preview => thumbnail mode");
 			
 								core.preview.thumbnail.deactivate();
 			
@@ -16208,7 +16208,7 @@
 			
 			
 			
-						"{~Header~}":"Header Text Area",
+						"{~Header~}":"",
 			
 			
 			
@@ -16226,7 +16226,7 @@
 			
 					init: function(){
 			
-						console.log("init edit_preview => regular mode")
+						// console.log("init edit_preview => regular mode")
 			
 						if(core.localData.currentProject.name !== null){
 			
@@ -16288,17 +16288,19 @@
 			
 					compileSass: function(){
 			
-						
-			
 						return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
 			
-							.pipe(sass())
+							.pipe(sass()).on('error', function(e){alert("Sass Error!\nLine: "+e.line+"\n\""+e.message+"\"");})
 			
 							.pipe(autoprefixer())
 			
 							.pipe(minifyCss())
 			
 							.pipe(gulp.dest(core.localData.currentProject.path+"/"));
+			
+							
+			
+							// return stream;
 			
 					},
 			
@@ -16540,13 +16542,13 @@
 			
 						deactivate: function(){
 			
-							console.log("(2) deactivating edit/preview => thumbnail mode");
+							// console.log("(2) deactivating edit/preview => thumbnail mode");
 			
 							el("#thumbBox").rm();
 			
 							el("#thumbInterface").rm();
 			
-							console.log("finished deactivating edit/preview => thumbnail mode");
+							// console.log("finished deactivating edit/preview => thumbnail mode");
 			
 							editorCore.activate();
 			
@@ -16606,6 +16608,10 @@
 			
 							ratio: {
 			
+								/*This is where the thumbnail size is set
+			
+								*/
+			
 								height: 65,
 			
 								width: 110,
@@ -16640,7 +16646,7 @@
 			
 									var self = this;
 			
-									console.log("==",el("#thumbBox").style.width);
+									// console.log("==",el("#thumbBox").style.width);
 			
 									el("#thumbBox").style.width = (self.width * self.multiplier)+"px";
 			
@@ -16674,7 +16680,7 @@
 			
 								if(self.mode === null && core.localData.currentProject.name !== null){
 			
-									console.log("creating box");
+									// console.log("creating box");
 			
 									var box = el("+div#thumbBox").attr("data-mode", "idle").attr("draggable", "false");
 			
@@ -16696,7 +16702,7 @@
 			
 								self.mode = "idle";
 			
-								console.log("starting thumb viewer:", box);
+								// console.log("starting thumb viewer:", box);
 			
 								box.style.width = (self.ratio.width*4)+"px";
 			
@@ -16718,7 +16724,7 @@
 			
 									self.mode = "move";
 			
-									console.log("mousedown:",evt);
+									// console.log("mousedown:",evt);
 			
 									self.prevClientX = evt.clientX; 
 			
@@ -16796,7 +16802,7 @@
 			
 								var self = this;
 			
-								console.log("starting interface:", _interface);
+								// console.log("starting interface:", _interface);
 			
 								el("#body").append(_interface);
 			
@@ -16858,7 +16864,7 @@
 			
 								if(self.mode === null && core.localData.currentProject.name !== null){
 			
-									console.log("creating box");
+									// console.log("creating box");
 			
 									var box = el("+div#thumbInterface").append(
 			
@@ -16948,6 +16954,14 @@
 			
 			
 			
+									core.flash(function(){
+			
+										el("#thumbBox").rmClass("screenshot-in-progress");
+			
+									});
+			
+			
+			
 									lwip.open(pngImgBuff, 'png', function(err, _image){
 			
 										_image.resize(self.box.ratio.width, self.box.ratio.height, function(){
@@ -16958,43 +16972,19 @@
 			
 											});
 			
-											// fs.writeFile(core.localData.currentProject.path+"/Thumb.png", _image, function(err){
-			
-											// 	if(err) return console.log("ERR:",err);
-			
-											// 	fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
-			
-											// 		if(err) return console.log("ERR:",err);
-			
-											// 	}); // end renameFile
-			
-											// }); // end writeFile
-			
-			
-			
 										});
 			
 								  });
 			
+								});
 			
-			
-			
-			
-											
-			
-								}); // end capturePage
-			
-							}, 5); // end setTimeout
+							}, 5);
 			
 			
 			
 			
 			
-							core.flash(function(){
-			
-								el("#thumbBox").rmClass("screenshot-in-progress");
-			
-							}); // end flash
+							
 			
 								
 			
@@ -17092,7 +17082,7 @@
 			
 					edit_preview: function(){
 			
-						console.log("switching to edit/preview mode");
+						// console.log("switching to edit/preview mode");
 			
 						core.preview.mode.regular();
 			
@@ -18112,6 +18102,9 @@
 						core.codeMirror.deactivate();
 						myCodeMirror.markClean();
 						editorCore.dropdowns.files.reset();
+						
+			
+						core.preview.clearWatchers();
 						core.preview.setWatchers();
 			
 						
@@ -18442,9 +18435,9 @@
 				},
 				deactivate: function(_projectName){
 					var self = this;
-					console.log("check1");
+					// console.log("check1");
 					if(self.active === true) {
-						console.log("check2");
+						// console.log("check2");
 						fileName.addClass("inactive");
 						el("#files_arrow").addClass("inactive");
 						self.active = false;
@@ -18530,7 +18523,7 @@
 									el(".file-item").rmClass(icon.id);
 								}
 								else {
-									console.log("self.id", self.id);
+									// console.log("self.id", self.id);
 									icon.addClass("active");
 									el(".file-item").addClass(self.id);
 								}
@@ -18545,7 +18538,7 @@
 					// console.log("current status:", this.status);
 					if(this.status === "opened") {
 						this.close();
-						console.log("11 closing files 11");
+						// console.log("11 closing files 11");
 					}
 					else if(this.status === "closed") {
 						this.open();
@@ -18566,10 +18559,10 @@
 				},
 			
 				close: function(){
-					console.log("!!closing files!!");
+					// console.log("!!closing files!!");
 					var self = this;
 					
-					console.log("status,",self.status)
+					// console.log("status,",self.status)
 					//if already closed, return
 					if(self.status === "closed") return;
 			
@@ -18679,7 +18672,7 @@
 					editorBar.on("dragleave", function(evt){
 						if(core.localData.currentProject.name !== null){
 							dragCounter--;
-							console.log("DRAG LEAVE???");
+							// console.log("DRAG LEAVE???");
 							if(dragCounter === 0) editorBar.rmClass("file_drag");
 						}
 						
@@ -18714,7 +18707,7 @@
 					function copyFiles(files){
 						//check if file(s) of folder
 			
-						console.log(files);
+						// console.log(files);
 			
 						var filesTotal = files.length;
 						var filesCopied = 0;
@@ -18725,10 +18718,10 @@
 							(function(_file){
 								fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
 									if(err) return console.log("ERR copying:",_file.name, err);
-									console.log("copied:", _file.name);
+									// console.log("copied:", _file.name);
 									filesCopied++;
 									if(filesCopied === filesTotal){
-										console.log("All Files Copied");
+										// console.log("All Files Copied");
 									}
 								});
 							})(files[i]);
@@ -18904,7 +18897,7 @@
 						// preview.reload();
 						preview.addClass("loading-fadeout");
 						if(preview.src === "http://sun.qprod.net/releasemanager/") {
-							console.log("release manager redirecting!!");
+							// console.log("release manager redirecting!!");
 						}
 						
 			
@@ -18916,7 +18909,7 @@
 					preview.addEventListener("dom-ready", function(){
 						// preview.reload();
 			
-						console.log("dom ready!!");
+						// console.log("dom ready!!");
 						if(preview.src === "http://sun.qprod.net/releasemanager/") {
 			
 							preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");

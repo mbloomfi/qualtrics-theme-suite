@@ -157,7 +157,7 @@ el.on("load", function(){
 			// preview.reload();
 			preview.addClass("loading-fadeout");
 			if(preview.src === "http://sun.qprod.net/releasemanager/") {
-				console.log("release manager redirecting!!");
+				// console.log("release manager redirecting!!");
 			}
 			
 
@@ -169,7 +169,7 @@ el.on("load", function(){
 		preview.addEventListener("dom-ready", function(){
 			// preview.reload();
 
-			console.log("dom ready!!");
+			// console.log("dom ready!!");
 			if(preview.src === "http://sun.qprod.net/releasemanager/") {
 
 				preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");

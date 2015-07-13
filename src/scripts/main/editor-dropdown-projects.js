@@ -23,6 +23,9 @@ editorCore.dropdowns.projects = {
 			core.codeMirror.deactivate();
 			myCodeMirror.markClean();
 			editorCore.dropdowns.files.reset();
+			
+
+			core.preview.clearWatchers();
 			core.preview.setWatchers();
 
 			

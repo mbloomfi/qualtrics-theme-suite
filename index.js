@@ -578,8 +578,6 @@ app.on("ready", function(){
 
 //GULP
 function runGulp(){
-
-
 }
 
 function runGulp_Dev(){ // will not be called for production
