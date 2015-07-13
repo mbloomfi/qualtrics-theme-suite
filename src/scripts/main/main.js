@@ -1,14 +1,13 @@
-// == GLOBAL VARS ==
+// == Electron Natives ==
 var remote = require("remote");
 var app = remote.require("app");
-var Global = remote.getGlobal("sharedObject"); //see index.js
-var appRoot = Global.appRoot;
-var fs = require("fs-extra");
-var json = require("jsonfile");
-var escape = require("escape-html");
-var mkdirp = require("mkdirp");
+var ipc = require("ipc");
+
+// == Node Natives ==
 var path = require("path");
 
+// == Vendor ==
+var fs = require("fs-extra");
 var gulp = require("gulp");
 var rename = require("gulp-rename");
 var replace = require("gulp-replace");
@@ -18,8 +17,13 @@ var minifyCss = require('gulp-minify-css');
 // var stylus = require("gulp-stylus");
 var autoprefixer = require("gulp-autoprefixer");
 
+// == Custom ==
+var Global = remote.getGlobal("sharedObject"); //see index.js
+var appRoot = Global.appRoot;
+
 
 //= include ../app-core-methods.js
+
 
 var dimmer = {
 	on: function() {

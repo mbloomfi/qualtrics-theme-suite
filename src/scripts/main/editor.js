@@ -1,8 +1,19 @@
 
 // ----------------------------
-//  Local Temp Data
+//  Editor Core Methods
 // ----------------------------
 var editorCore = {
+
+	// ----------------------------
+	//  Editor State
+	// ----------------------------
+	active: true,
+	deactivate: function(){
+		
+	},
+	activate: function(){
+
+	},
 
 	// ----------------------------
 	//  Dropdowns
@@ -27,9 +38,11 @@ var editorCore = {
 					editorCore.dropdowns.files.close();
 				}
 			});
-		}	
+		}
 
 	}
+
+	
 };
 
 

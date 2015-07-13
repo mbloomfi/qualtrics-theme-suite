@@ -2,13 +2,15 @@ var app = require("app");
 var BrowserWindow = require("browser-window");
 var gulp = require("gulp");
 var Menu = require("menu");
+var ipc = require("ipc");
 global.sharedObject = {
   canQuit: false,
   menuStatus: {
     devToolsOpen: false,
     currentEditorPreviewRatio: 3
   },
-  preferencesWindow: null
+  preferencesWindow: null,
+  mainWindow: null
 };
 
 global.sharedObject.appRoot = __dirname;
@@ -295,23 +297,63 @@ var menuTemplate = [
       },
       {
         label: 'Preview Mode',
-        enabled: false
+        enabled: false,
+        uncheckPreviewModes: function(exception){
+          var previewModes = appMenu.items[4].submenu.items;
+          for(var i = 0, ii = previewModes.length; i < ii; i++){
+            if(previewModes[i].type === "checkbox" && previewModes[i].enabled === true){
+              if(previewModes[i] === exception){
+                previewModes[i].checked = true;
+              } else {
+                previewModes[i].checked = false;
+              }
+              
+            }
+          }
+          appMenu.items[4].submenu.items[2]
+        }
       },
       {
         label: 'Regular',
-        accelerator: 'Command+0'
+        accelerator: 'Command+0',
+        type: "checkbox",
+        checked: true,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[3];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Mobile',
-        accelerator: 'Command+1'
+        accelerator: 'Command+1',
+        type: "checkbox",
+        checked: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[4];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Screenshot',
-        accelerator: 'Command+2'
+        accelerator: 'Command+2',
+        type: "checkbox",
+        checked: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[5];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Thumbnail',
-        accelerator: 'Command+3'
+        accelerator: 'Command+3',
+        type: "checkbox",
+        checked: false,
+        enabled: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[6];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.thumbnail.init()");
+        }
       }
     ]
   },
@@ -494,7 +536,7 @@ app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPl
 app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
 
 // MAIN RENDERER
-var mainWindow = null;
+var mainWindow = global.sharedObject.mainWindow = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -506,7 +548,7 @@ app.on("ready", function(){
 
   Menu.setApplicationMenu(appMenu);
 
-	mainWindow = new BrowserWindow({
+	mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
 		width: 1800, 
 		height: 1000,
 		"min-height": 400,
@@ -552,3 +594,20 @@ function runGulp_Dev(){ // will not be called for production
   gulp.tasks["watch"].fn();
 }
   
+ipc.on('asynchronous-message', function(event, arg) {
+	console.log("arg:", arg);
+	if(arg === "disableThumnailMode") thumbnailMode.disable();
+	if(arg === "enableThumnailMode") thumbnailMode.enable();
+	// event.sender.send('asynchronous-reply', 'pong');
+});
+
+
+var thumbnailMode = {
+	disable: function(){
+		appMenu.items[4].submenu.items[6].enabled = false;
+	},
+
+	enable: function(){
+		appMenu.items[4].submenu.items[6].enabled = true;
+	}
+}

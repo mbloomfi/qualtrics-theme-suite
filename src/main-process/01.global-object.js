@@ -4,7 +4,8 @@ global.sharedObject = {
     devToolsOpen: false,
     currentEditorPreviewRatio: 3
   },
-  preferencesWindow: null
+  preferencesWindow: null,
+  mainWindow: null
 };
 
 global.sharedObject.appRoot = __dirname;

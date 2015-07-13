@@ -39,6 +39,9 @@ editorCore.dropdowns.projects = {
 					core.preview.compileSass();
 				},0);
 			}
+
+			ipc.send('asynchronous-message', 'enableThumnailMode');
+
 		}
 		
 			

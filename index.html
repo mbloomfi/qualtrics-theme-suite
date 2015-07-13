@@ -1279,6 +1279,54 @@
 			  -webkit-animation: circle-loading 1.5s ease 0s infinite;
 			          animation: circle-loading 1.5s ease 0s infinite;
 			}
+			#thumbBox {
+			  position: absolute;
+			  background-color: rgba(55,95,245,0.05);
+			  outline: 3px solid #375ff5;
+			  z-index: 100000;
+			}
+			#thumbInterface {
+			  position: absolute;
+			  background-color: #375ff5;
+			  z-index: 100000;
+			  bottom: 0;
+			  left: 0;
+			  height: 250px;
+			  width: 150px;
+			  color: #fff;
+			  padding: 10px;
+			  box-shadow: 0 0 25px 2px rgba(0,0,0,0.55);
+			}
+			#thumbInterface .sizeControls {
+			  color: #fff;
+			}
+			#thumbInterface .sizeControls .interface-header {
+			  font-size: 20px;
+			  text-align: center;
+			  margin: 0 0 5px;
+			}
+			#thumbInterface .sizeControls .thumbSizeBtn.increase-thumb-size {
+			  text-align: center;
+			  width: 35px;
+			  height: 35px;
+			  line-height: 35px;
+			  margin: 10px auto;
+			  font-size: 30px;
+			  border: 2px solid #fff;
+			  border-radius: 50%;
+			  background-color: rgba(0,0,0,0.1);
+			}
+			#thumbInterface .sizeControls .thumbSizeBtn.decrease-thumb-size {
+			  text-align: center;
+			  width: 35px;
+			  height: 35px;
+			  line-height: 35px;
+			  margin: 0 auto 20px;
+			  font-size: 30px;
+			  border: 2px solid #fff;
+			  border-radius: 50%;
+			  background-color: rgba(0,0,0,0.1);
+			}
 			section#Prompter {
 			  position: fixed;
 			  top: -120px;
@@ -1414,7 +1462,7 @@
 		</style>
 		<style id="editor_preview_ratio"></style>
 	</head>
-	<body>
+	<body id="body">
 		<section id="editor" class="hide">
 			<section id="sectionInner">
 		
@@ -14924,17 +14972,16 @@
 			  CodeMirror.normalizeKeyMap(map);
 			});
 			
-			// == GLOBAL VARS ==
+			// == Electron Natives ==
 			var remote = require("remote");
 			var app = remote.require("app");
-			var Global = remote.getGlobal("sharedObject"); //see index.js
-			var appRoot = Global.appRoot;
-			var fs = require("fs-extra");
-			var json = require("jsonfile");
-			var escape = require("escape-html");
-			var mkdirp = require("mkdirp");
+			var ipc = require("ipc");
+			
+			// == Node Natives ==
 			var path = require("path");
 			
+			// == Vendor ==
+			var fs = require("fs-extra");
 			var gulp = require("gulp");
 			var rename = require("gulp-rename");
 			var replace = require("gulp-replace");
@@ -14943,6 +14990,10 @@
 			var minifyCss = require('gulp-minify-css');
 			// var stylus = require("gulp-stylus");
 			var autoprefixer = require("gulp-autoprefixer");
+			
+			// == Custom ==
+			var Global = remote.getGlobal("sharedObject"); //see index.js
+			var appRoot = Global.appRoot;
 			
 			var core = Global.coreMethods = {
 			
@@ -14960,7 +15011,7 @@
 			
 					read: function (_successCallback){
 			
-						json.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+						fs.readJson(appRoot+"/local/persistent-data.json", function(_err, _data){
 			
 							if(!_err) {
 			
@@ -14988,7 +15039,7 @@
 			
 						//_DATA.x = core.localData.x;
 			
-						json.writeFile(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
+						fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
 			
 							if(err) alert("Error Saving Changes");
 			
@@ -15022,7 +15073,7 @@
 			
 					read: function(_successCallback){
 			
-						json.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+						fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
 			
 							if(!_err){ 
 			
@@ -15066,7 +15117,7 @@
 			
 			
 			
-								json.writeFile(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
+								fs.writeJson(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
 			
 									if(err) alert("Error Saving Changes");
 			
@@ -15150,7 +15201,7 @@
 			
 							} else {
 			
-								mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+								fs.mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
 			
 									if(!err) next();
 			
@@ -15436,7 +15487,7 @@
 			
 								if(exists) {
 			
-									mkdirp(core.brands.getPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+									fs.mkdirp(core.brands.getPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 			
 										if(!err) next();
 			
@@ -16024,6 +16075,8 @@
 			
 					cssFileWatcher: null,
 			
+			
+			
 					map: {
 			
 			
@@ -16033,18 +16086,6 @@
 			
 			
 						"{~Header~}":"Header Text Area",
-			
-			
-			
-						// },
-			
-						// "{~Question~}": '<input type="hidden" name="SE~Context" value="Response"><!-- *************** SKIN QUESTION #0 ************************** --><div class="QuestionOuter MC BorderColor " id="QID5" questionid="QID5" posttag="QID5"><script>try {Qualtrics.SurveyEngine.QuestionInfo["QID5"] = {"QuestionID":"QID5","postTag":"QID5","QuestionText":"If you had to live in a single hotel chain for the rest of your life, which would it be?","QuestionType":"MC","Choices":{"1":{"RecodeValue":1,"VariableName":"Hyatt","Text":"Hyatt","Exclusive":false},"2":{"RecodeValue":2,"VariableName":"Hilton","Text":"Hilton","Exclusive":false},"3":{"RecodeValue":3,"VariableName":"Marriott","Text":"Marriott","Exclusive":false},"4":{"RecodeValue":4,"VariableName":"Sheraton","Text":"Sheraton","Exclusive":false}},"Validation":{"Settings":{"ForceResponse":"OFF","ForceResponseType":"ON","Type":"None"}},"Selector":"SAVR","SubSelector":"TX"};}catch(e){}</scr'+'ipt><!-- Debugging stuff --><div class="Inner SAVR BorderColor"><div class="InnerInner TX BorderColor"><input type="HIDDEN" id="QM~QID5~Displayed" name="QM~QID5~Displayed" value="1"> <input type="HIDDEN" id="QR~QID5~QuestionID" name="QR~QID5~QuestionID" value="QID5"><input type="HIDDEN" id="QR~QID5~DisplayOrder" name="QR~QID5~DisplayOrder" value="1|2|3|4"><input type="HIDDEN" id="QR~QID5~QuestionType" name="QR~QID5~QuestionType" value="MC"><input type="HIDDEN" id="QR~QID5~Selector" name="QR~QID5~Selector" value="SAVR"><input type="HIDDEN" id="QR~QID5~SubSelector" name="QR~QID5~SubSelector" value="TX"><fieldset><h2 class="noStyle"><div class="QuestionText BorderColor">If you had to live in a single hotel chain for the rest of your life, which would it be?</div></h2><div class="QuestionBody"><ul class="ChoiceStructure"><li class="Selection reg"><input choiceid="1" class="radio" type="radio" name="QR~QID5" id="QR~QID5~1" value="QR~QID5~1"><label for="QR~QID5~1" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~1" class="SingleAnswer">Hyatt</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="2" class="radio" type="radio" name="QR~QID5" id="QR~QID5~2" value="QR~QID5~2"><label for="QR~QID5~2" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~2" class="SingleAnswer">Hilton</label></span><div class="clear"></div></li> <li class="Selection reg"><input choiceid="3" class="radio" type="radio" name="QR~QID5" id="QR~QID5~3" value="QR~QID5~3"><label for="QR~QID5~3" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~3" class="SingleAnswer q-checked">Marriott</label></span><div class="clear"></div></li> <li class="Selection alt"><input choiceid="4" class="radio" type="radio" name="QR~QID5" id="QR~QID5~4" value="QR~QID5~4"><label for="QR~QID5~4" class="q-radio"></label><span class="LabelWrapper"><label for="QR~QID5~4" class="SingleAnswer">Sheraton</label></span><div class="clear"></div></li> </ul> <div class="clear zero"> </div><input type="hidden" name="Transformation~QID5" value="YToxOntzOjc6IlFSflFJRDUiO3M6MTY6Int2YWx1ZX09U2VsZWN0ZWQiO30="></div></fieldset></div></div></div><!-- ^^^^^^^^^^^^^^^^^^^^^^ SKIN QUESTION #8 ^^^^^^^^^^^^^^^^^ -->',
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -16097,8 +16138,6 @@
 					hide: function(){
 			
 						preview.src = "local/no-preview.html";
-			
-						
 			
 						this.hidden = true;
 			
@@ -16334,9 +16373,257 @@
 			
 						});
 			
+					},
 			
 			
-						
+			
+					screenshot: {
+			
+			
+			
+					},
+			
+			
+			
+					thumbnail: {
+			
+			
+			
+						active: false,
+			
+			
+			
+						init: function(){
+			
+			
+			
+							var self = this;
+			
+							self.active = true;
+			
+							
+			
+							self.box.create(function(_box){
+			
+									self.box.init(_box);
+			
+							});
+			
+			
+			
+							self.interface.create(function(_interface){
+			
+								self.interface.init(_interface);
+			
+							});
+			
+			
+			
+							core.codeMirror.deactivate();
+			
+							
+			
+							
+			
+			
+			
+						},
+			
+			
+			
+						box: {
+			
+							mode: "hidden", //resize, move, idle
+			
+							x: null,
+			
+							y: null,
+			
+							w: null,
+			
+							h: null,
+			
+							create: function(_callback){
+			
+								var self = this;
+			
+			
+			
+								if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+			
+									console.log("creating box");
+			
+									var box = el("+div#thumbBox").attr("data-mode", "idle");
+			
+									if(typeof _callback === "function")_callback(box);
+			
+									self.mode = "idle";
+			
+								}
+			
+			
+			
+							},
+			
+							init: function(box){
+			
+								var self = this;
+			
+								console.log("starting thumb viewer:", box);
+			
+								box.style.width = "400px";
+			
+								box.style.height = "200px";
+			
+								
+			
+								box.style.top = "200px";
+			
+								box.style.left = "200px";
+			
+			
+			
+								el("#body").append(box);
+			
+			
+			
+							},
+			
+							remove: function(){},
+			
+						},
+			
+			
+			
+						interface: {
+			
+							mode: "hidden", //resize, move, idle
+			
+							x: null,
+			
+							y: null,
+			
+							w: null,
+			
+							h: null,
+			
+							create: function(_callback){
+			
+								var self = this;
+			
+			
+			
+								if(self.mode === "hidden" && core.localData.currentProject.name !== null){
+			
+									console.log("creating box");
+			
+									var box = el("+div#thumbInterface").append(
+			
+										el.join([
+			
+											el("+div").addClass("sizeControls").append(
+			
+												el.join([
+			
+													el("+div").addClass("interface-header").text("Thumnail Size"),
+			
+													el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+"),
+			
+													el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–")
+			
+												])
+			
+											),
+			
+											el("+div").addClass("sizeControls").append(
+			
+												el.join([
+			
+													el("+div").addClass("interface-header").text("Take Screenshot")
+			
+												])
+			
+											)
+			
+										])
+			
+									);
+			
+									if(typeof _callback === "function")_callback(box);
+			
+									self.mode = "idle";
+			
+								}
+			
+			
+			
+							},
+			
+							init: function(_interface){
+			
+								var self = this;
+			
+								console.log("starting interface:", _interface);
+			
+								el("#body").append(_interface);
+			
+			
+			
+							},
+			
+							remove: function(){},
+			
+						},
+			
+					},
+			
+			
+			
+					testScreenShot: function(){
+			
+						Global.mainWindow.capturePage(function(_img){
+			
+							var pngImgBuff = _img.toPng();
+			
+			
+			
+							// lwip.open(pngImgBuff, 'png', function(err, img){
+			
+							// 	if(err) return console.log("ERR1:",err);
+			
+							// 	console.log("saving screenshot");
+			
+							// 	img.writeFile(core.localData.currentProject.path+"/Thumb.gif", "gif", function(){
+			
+							// 		if(err) return console.log("ERR2:",err);
+			
+							// 		console.log("saved screenshot!");
+			
+							// 	});
+			
+							// })
+			
+			
+			
+							fs.writeFile(core.localData.currentProject.path+"/Thumb.png",pngImgBuff, function(err){
+			
+								if(err) return console.log("ERR:",err);
+			
+								console.log("saved screenshot");
+			
+								fs.rename(core.localData.currentProject.path+"/Thumb.png", core.localData.currentProject.path+"/Thumb.gif", function(err){
+			
+									if(err) return console.log("ERR:",err);
+			
+									console.log("converted screenshot");
+			
+								});
+			
+							})
+			
+							// console.log("img",_img.toPng());
+			
+						})
 			
 					}
 			
@@ -16345,6 +16632,7 @@
 				}
 			
 			};
+			
 			
 			
 			
@@ -16433,9 +16721,20 @@
 			}
 			
 			// ----------------------------
-			//  Local Temp Data
+			//  Editor Core Methods
 			// ----------------------------
 			var editorCore = {
+			
+				// ----------------------------
+				//  Editor State
+				// ----------------------------
+				active: true,
+				deactivate: function(){
+					
+				},
+				activate: function(){
+			
+				},
 			
 				// ----------------------------
 				//  Dropdowns
@@ -16460,9 +16759,11 @@
 								editorCore.dropdowns.files.close();
 							}
 						});
-					}	
+					}
 			
 				}
+			
+				
 			};
 			
 			editorCore.dropdowns.brands = {
@@ -16529,6 +16830,8 @@
 			
 						core.brands.exists(_brandName, function(exists){
 			
+							ipc.send('asynchronous-message', 'disableThumnailMode');
+			
 								if(exists){
 			
 									el("#brandNameText").purge().text(_brandName);
@@ -16548,6 +16851,8 @@
 									editorCore.dropdowns.files.reset();
 			
 									core.preview.hide();
+			
+			
 			
 									self.close();
 			
@@ -17352,6 +17657,9 @@
 								core.preview.compileSass();
 							},0);
 						}
+			
+						ipc.send('asynchronous-message', 'enableThumnailMode');
+			
 					}
 					
 						

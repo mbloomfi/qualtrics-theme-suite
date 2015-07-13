@@ -234,23 +234,63 @@ var menuTemplate = [
       },
       {
         label: 'Preview Mode',
-        enabled: false
+        enabled: false,
+        uncheckPreviewModes: function(exception){
+          var previewModes = appMenu.items[4].submenu.items;
+          for(var i = 0, ii = previewModes.length; i < ii; i++){
+            if(previewModes[i].type === "checkbox" && previewModes[i].enabled === true){
+              if(previewModes[i] === exception){
+                previewModes[i].checked = true;
+              } else {
+                previewModes[i].checked = false;
+              }
+              
+            }
+          }
+          appMenu.items[4].submenu.items[2]
+        }
       },
       {
         label: 'Regular',
-        accelerator: 'Command+0'
+        accelerator: 'Command+0',
+        type: "checkbox",
+        checked: true,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[3];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Mobile',
-        accelerator: 'Command+1'
+        accelerator: 'Command+1',
+        type: "checkbox",
+        checked: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[4];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Screenshot',
-        accelerator: 'Command+2'
+        accelerator: 'Command+2',
+        type: "checkbox",
+        checked: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[5];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+        }
       },
       {
         label: 'Thumbnail',
-        accelerator: 'Command+3'
+        accelerator: 'Command+3',
+        type: "checkbox",
+        checked: false,
+        enabled: false,
+        click: function(){
+          var self = appMenu.items[4].submenu.items[6];
+          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.thumbnail.init()");
+        }
       }
     ]
   },
