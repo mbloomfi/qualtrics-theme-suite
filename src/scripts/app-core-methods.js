@@ -508,7 +508,7 @@ var core = Global.coreMethods = {
 						editorCore.dropdowns.files.setClean();
 						myCodeMirror.markClean();
 						if(core.localData.currentFile.name === "StyleSheet.scss"){
-							core.preview.compileSass();
+							core.preview.mode.regular.compileSass();
 						}
 						
 					}

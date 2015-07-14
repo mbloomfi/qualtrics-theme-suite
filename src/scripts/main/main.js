@@ -54,29 +54,39 @@ var dimmer = {
 
 
 var editorPreviewBar = {
+	editorWidth: "40%",
+	previewWidth: "60%",
 	set: function(_index){
-		var editorWidth = null;
-		var previewWidth = null;
+		var self = this;
 
-		if(_index === 0){ editorWidth = "10%"; previewWidth = "90%"; }
-		else if(_index === 1){ editorWidth = "20%"; previewWidth = "80%"; }
-		else if(_index === 2){ editorWidth = "30%"; previewWidth = "70%"; }
-		else if(_index === 3){ editorWidth = "40%"; previewWidth = "60%"; }
-		else if(_index === 4){ editorWidth = "50%"; previewWidth = "50%"; }
-		else if(_index === 5){ editorWidth = "60%"; previewWidth = "40%"; }
-		else if(_index === 6){ editorWidth = "70%"; previewWidth = "30%"; }
-		else if(_index === 7){ editorWidth = "75%"; previewWidth = "25%"; }
-		else if(_index === 8){ editorWidth = "80%"; previewWidth = "20%"; }
-		else if(_index === 9){ editorWidth = "85%"; previewWidth = "15%"; }
-		else if(_index === 10){ editorWidth = "90%"; previewWidth = "10%"; }
+		if(_index === 0){ self.editorWidth = "10%"; self.previewWidth = "90%"; }
+		else if(_index === 1){ self.editorWidth = "20%"; self.previewWidth = "80%"; }
+		else if(_index === 2){ self.editorWidth = "30%"; self.previewWidth = "70%"; }
+		else if(_index === 3){ self.editorWidth = "40%"; self.previewWidth = "60%"; }
+		else if(_index === 4){ self.editorWidth = "50%"; self.previewWidth = "50%"; }
+		else if(_index === 5){ self.editorWidth = "60%"; self.previewWidth = "40%"; }
+		else if(_index === 6){ self.editorWidth = "70%"; self.previewWidth = "30%"; }
+		else if(_index === 7){ self.editorWidth = "75%"; self.previewWidth = "25%"; }
+		else if(_index === 8){ self.editorWidth = "80%"; self.previewWidth = "20%"; }
+		else if(_index === 9){ self.editorWidth = "85%"; self.previewWidth = "15%"; }
+		else if(_index === 10){ self.editorWidth = "90%"; self.previewWidth = "10%"; }
 
 		el("#editor_preview_ratio").purge() // purge the style tag
 			.text( // add text to the style tag
-				"section#editor{ width:"+editorWidth+"; } "+
-				"webview#preview{ width:"+previewWidth+"; }"+
-				"webview#preview + #previewLoader{ width:"+previewWidth+"; }"
+				"section#editor{ width:"+self.editorWidth+"; } "+
+				"webview#preview{ width:"+self.previewWidth+"; }"+
+				"webview#preview + #previewLoader{ width:"+self.previewWidth+"; }"
 			);
+
+		if(core.preview.mode.screenshot.active){
+			core.preview.mode.screenshot.box.update();
+		} else {
+			console.log("not active")
+		}
 	}
+
+
+
 };
 
 

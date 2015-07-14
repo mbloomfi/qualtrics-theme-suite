@@ -14,7 +14,7 @@ editorCore.dropdowns.files = {
 				el.join([
 					el("+div").addClass(["arrow", "hide"]),
 
-					el("+div").addClass(["dropdownBody", "files"])
+					el("+div#dropdownBody-files").addClass(["dropdownBody", "files"])
 				])
 
 			)
@@ -65,6 +65,7 @@ editorCore.dropdowns.files = {
 			
 			self.purge();
 
+			
 		}
 	},
 
@@ -85,9 +86,11 @@ editorCore.dropdowns.files = {
 	populate: function(_callback){
 		var self = this;
 
+		// DELETE FILES ICON
 		var deleteFileIcon = el("+button#deleteFile").addClass("icon");
 		deleteFileIcon.innerHTML = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 14 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M2.114,2.558c2.6,-2.599 6.821,-2.599 9.421,0c2.599,2.6 2.599,6.821 0,9.421c-2.6,2.599 -6.821,2.599 -9.421,0c-2.599,-2.6 -2.599,-6.821 0,-9.421ZM4.084,3.09l6.919,6.919c1.273,-1.938 1.058,-4.57 -0.646,-6.273c-1.703,-1.704 -4.335,-1.919 -6.273,-0.646ZM9.565,11.447l-6.919,-6.919c-1.273,1.938 -1.058,4.57 0.646,6.273c1.703,1.704 4.335,1.919 6.273,0.646Z"/></svg>';
 
+		// RENAME FILES ICON
 		var renameFileIcon = el("+button#renameFile").addClass("icon");
 		renameFileIcon.innerHTML = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 10 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M2.488,12.633l0,0l-1.971,1.235l0.084,-2.324l0,-0.001l1.887,1.09ZM8.244,2.664l-5.433,9.411l-1.888,-1.09l5.434,-9.411l1.887,1.09ZM8.566,2.106l-1.887,-1.09l0.586,-1.016l1.888,1.09l-0.587,1.016Z"/></svg>';
 
@@ -126,33 +129,100 @@ editorCore.dropdowns.files = {
 
 			_callback();
 
-			el(".file-item").on("click", function(){
-				editorCore.dropdowns.files.select(this.dataset.filename);
-			})
 
-
+			// RENAME/DELETE ICON CLICK
 			var icons = el(".icon").on("click", function(){
 				var self = this;
 
 				icons.each(function(icon){
-					if(self === icon && self.hasClass("active")){ 
-						icon.rmClass("active");
-						el(".file-item").rmClass(self.id);
-					}
-					else if(self !== icon) {
+					el(".file-item").rmClass(icon.id);
+
+					// Deselect Icon
+					if((self === icon && self.hasClass("active")) || self !== icon){ 
 						icon.rmClass("active");
 						el(".file-item").rmClass(icon.id);
+						el("#dropdownBody-files").rmClass(icon.id);
 					}
+					
+					// Select Icon
 					else {
-						// console.log("self.id", self.id);
 						icon.addClass("active");
 						el(".file-item").addClass(self.id);
+						el("#dropdownBody-files").addClass(icon.id);
 					}
 				});
-
 			});
 
+
+			// CLICK ON FILE-ITEM
+			el(".file-item").on("click", function(){
+
+				// IF DELETE
+				if(this.hasClass("deleteFile")){
+					self.deleteFile(this.dataset.filename);
+				}
+
+				// IF RENAME
+				else if(this.hasClass("renameFile")){
+					if(!this.hasClass("renaming")){
+						var currentName = this.dataset.filename;
+						var renameFile_form = el("+form").addClass("renameFile-btn").append(
+							el.join([
+								el("+input").attr("value",this.dataset.filename),
+								el("+button").addClass("renameFile-btn").text("Rename").attr("type", "submit")
+							])
+						);
+						renameFile_form.on("submit", function(e){
+							e.preventDefault();
+							var newFileName = this.el("input")[0].value;
+							self.renameFile(currentName, newFileName);
+						});
+						this.addClass("renaming");
+						this.append(renameFile_form);
+					}
+				}
+
+				// IF NORMAL SELECT
+				else {
+					self.select(this.dataset.filename);
+				}
+			});
+
+
+			
+
 		});
+	},
+
+	deleteFile: function(_fileName){
+		var self = this;
+		var pathToProj = core.localData.currentProject.path+"/";
+		fs.unlink(pathToProj+_fileName, function(err){
+			if(err){ alert("Error Deleting File:\n"+err); }
+			else {
+				el("#editorBar").addClass("deleted_file");
+				setTimeout(function(){
+					el("#editorBar").rmClass("deleted_file");
+				},300);
+			}
+			self.close();
+
+		})
+	},
+
+	renameFile: function(_prevFileName, _newFileName){
+		var self = this;
+		var pathToProj = core.localData.currentProject.path+"/";
+		fs.rename(pathToProj+_prevFileName, pathToProj+_newFileName, function(err){
+			if(err){ alert("Error Renaming File:\n"+err); }
+			else {
+				el("#editorBar").addClass("renamed_file");
+				setTimeout(function(){
+					el("#editorBar").rmClass("renamed_file");
+				},300);
+			}
+			self.close();
+		})
 	},
 
 	toggle: function(){
@@ -200,6 +270,8 @@ editorCore.dropdowns.files = {
 		})
 		.then(function(){
 			// self.refill();
+			el("#dropdownBody-files").rmClass("deleteFile");
+			el("#dropdownBody-files").rmClass("renameFile");
 			self.purge();
 		}).run();
 	},
@@ -272,11 +344,12 @@ editorCore.dropdowns.files = {
 		core.localData.currentFile.dirty = false;
 	},
 
+
+
 	addFileDragListener: function(){
+		var self = this;
 		var dragCounter = 0;
 		var editorBar = el("#editorBar");
-
-
 
 		editorBar.on("dragenter", function(evt){
 			if(core.localData.currentProject.name !== null){
@@ -310,8 +383,6 @@ editorCore.dropdowns.files = {
 			
 		});
 
-		
-
 		editorBar.on("drop", function(evt){
 			if(core.localData.currentProject.name !== null){
 				// if not dragging file(s), do nothing
@@ -325,8 +396,13 @@ editorCore.dropdowns.files = {
 					evt.preventDefault();
 					editorBar.rmClass("file_drag");
 					dragCounter = 0;
-					downloadFile(evt.dataTransfer.getData('URL'))
+					downloadFile(evt.dataTransfer.getData('URL'));
+					el("#editorBar").addClass("img_dragged");
+					setTimeout(function(){
+						el("#editorBar").rmClass("img_dragged");
+					},300);
 				}
+				self.close();
 			}
 			
 		});

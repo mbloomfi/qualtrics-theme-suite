@@ -215,7 +215,7 @@ core.preview = {
 							});
 					  });
 					});
-				}, 5);
+				}, 0);
 			},
 
 
@@ -402,7 +402,136 @@ core.preview = {
 			active: false,
 			enable: function(){
 				this.active = true;
+				var box = this.box.create();
+				this.box.init(box);
+
+				var _interface = this.interface.create();
+				this.interface.init(_interface);
 				console.log("enabled screenshot mode");
+
+			},
+			capture: function(){
+				
+				var self = this;
+				
+				setTimeout(function(){
+					console.log("pre-snapshot");
+					var _x = self.box.getX(), 
+						_y = self.box.getY(), 
+						_width = self.box.getWidth(), 
+						_height = self.box.getHeight()
+
+					Global.mainWindow.capturePage({
+						x: _x, 
+						y: _y, 
+						width: _width, 
+						height: _height
+					},function(_img){
+						console.log("pre-flash");
+						var pngImgBuff = _img.toPng();
+						console.log("pre-flash 2");
+						core.flash(function(){
+							// el("#thumbBox").rmClass("screenshot-in-progress");
+						});
+						console.log("mid-snapshot");
+						fs.outputFile(core.localData.currentProject.path+"/assets/screenshot-"+Date.now()+".png", pngImgBuff, function(err){
+							if(err) return console.log("ERR:",err);
+							console.log("post-snapshot");
+						});
+
+					});
+				}, 0);
+			},
+			box: {
+				getX: function(){
+					var windowWidth = Global.mainWindow.getContentSize()[0];
+					console.log("getting x")
+					return (windowWidth * (0.01 * (parseInt(editorPreviewBar.editorWidth))));
+				},
+				getY: function(){
+					console.log("getting y")
+					return (0);
+				},
+				getWidth: function(){
+					var windowWidth = Global.mainWindow.getContentSize()[0];
+					console.log("getting w")
+					return (windowWidth * (0.01 * (parseInt(editorPreviewBar.previewWidth))));
+				},
+				getHeight: function(){
+					console.log("getting h")
+					return Global.mainWindow.getContentSize()[1];;
+				},
+				dimensions: {
+					width:null,
+					height:null
+				},
+				location: {
+					x:null,
+					y:null
+				},
+
+				create: function(){
+					var box = el("+div#screenshotBox").attr("draggable", "false");
+					box.style.height = "100%";
+					box.style.width = editorPreviewBar.previewWidth;
+					box.style.top = "0";
+					box.style.right = "0";
+					return box;
+				},
+
+				init: function(box){
+					el("#body").append(box);
+				},
+
+				update: function(){
+					console.log("resizing");
+					el("#screenshotBox").style.width = editorPreviewBar.previewWidth;
+				}
+
+			},
+
+
+			interface: {
+				create: function(_callback){ // comes before init
+					var self = this;
+
+					// if(self.mode === null && core.localData.currentProject.name !== null){
+						// console.log("creating box");
+						var _interface = el("+div#screenshotInterface").append(
+							el("+section").append(
+								el.join([
+									el("+div").addClass("interface-header").text("Capture"),
+									el("+a#screenshotCamera").addClass("interface-camera").attr("href","#").append(
+										el("+img").addClass("interface-camera").attr("src","local/images/camera.svg")
+									)
+								])
+							)
+						);
+						
+						return _interface;
+						
+					// }
+				},
+
+				init: function(_interface){
+					var self = this;
+
+					el("#body").append(_interface);
+
+					el("#screenshotCamera").onclick = function(){
+						core.preview.mode.screenshot.capture();
+					}
+
+					// el("#thumbCamera").onmouseover = function(){
+					// 	el("#thumbBox").addClass("screenshot-in-progress");
+					// }
+
+					// el("#thumbCamera").onmouseout = function(){
+					// 	el("#thumbBox").rmClass("screenshot-in-progress");
+					// }
+
+				}
+				
 			}
 		},
 

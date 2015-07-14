@@ -25,7 +25,8 @@ section#editor {
 	color white
 	background-color rgb(36,36,36)
 	// border-right 4px solid $primaryColor
-	border-right 2px solid $primaryColor
+	// border-right 4px solid $primaryColor
+	border-right 4px solid rgb(30,30,30)
 	box-sizing border-box
 	overflow-x scroll
 	overflow-y hidden
@@ -78,8 +79,20 @@ section#editor {
 
 			&.file_drag {
 				cursor pointer !important
-				background darken($affirmative-green, 40%)
+				background-color darken($affirmative-green, 40%)
 				border 3px dashed lighten($affirmative-green, 5%)
+			}
+			
+			&.img_dragged {
+				background-color darken($affirmative-green, 10%)
+			}
+			
+			&.deleted_file {
+				background-color darken($negative-red, 5%)
+			}
+			
+			&.renamed_file {
+				background-color rgb(200,200,200)
 			}
 			
 			div#editorBarInner {
@@ -300,6 +313,8 @@ section#editor {
 							box-sizing border-box
 							z-index 999
 							border-radius 1px
+							
+							
 							
 							.header {
 								font-size 18px
@@ -553,6 +568,7 @@ section#editor {
 									}
 									&.deleteFile {
 										background-color rgba(0,0,0,0)
+										cursor url('local/images/delete-cursor.svg'), auto
 										&:hover, &:focus {
 											outline 1px solid $negative-red
 											background rgb(30, 30, 30)
@@ -564,16 +580,70 @@ section#editor {
 									
 									&.renameFile {
 										background-color rgba(0,0,0,0)
+										cursor url('local/images/pencil-cursor.svg'), auto
 										&:hover, &:focus {
 											background rgb(230,230,230)
 											color rgb(60,60,60)
 											cursor url('local/images/pencil-cursor.svg'), auto
 										}
 										
+										&.renaming {
+											cursor default
+											background rgb(230,230,230)
+											color rgb(60,60,60)
+											border-top 1px solid rgb(210,210,210)
+											border-bottom 1px solid rgb(210,210,210)
+											input {
+												outline 1px solid rgb(120,120,120)
+												width 185px
+												font-size 16px
+												text-indent 2px
+												margin 4px 0 8px
+												display block
+											}
+											
+											button {
+												outline 1px solid rgb(50,50,50)
+												text-indent 2px
+												margin 0 5px 2px 0
+												background-color rgb(60,60,60)
+												padding 2px 5px
+												color white
+												float right
+												cursor pointer
+												transition background-color .3s ease
+												&:hover {
+													background-color rgb(90,90,90)
+												}
+												
+											}
+											&:before {
+												content ""
+												display block
+												clear both
+											}
+
+										}
+										
 									}
 									
+
+									
 								}
+								
+								&#dropdownBody-files {
+									&.deleteFile {
+										cursor url('local/images/delete-cursor.svg'), auto
+										
+									}
+									&.renameFile {
+										cursor url('local/images/pencil-cursor.svg'), auto
+									}	
+								}
+								
 							}
+							
+								
 							
 							// PROJECTS DROPDOWN BODY
 							//
