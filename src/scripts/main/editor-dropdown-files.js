@@ -205,7 +205,7 @@ editorCore.dropdowns.files = {
 	},
 
 	reset: function(){
-		core.preview.clearWatchers();
+		core.preview.mode.regular.clearWatchers();
 		el("#fileNameText").purge().text("Files");
 	},
 
@@ -216,6 +216,7 @@ editorCore.dropdowns.files = {
 		if(_fileName === null) return;
 
 		function selectFile() {
+			console.log("Selecting File: ", _fileName);
 			el("#fileNameText").purge().text(_fileName);
 			editorCore.dropdowns.files.close();
 			core.codeMirror.activate();
@@ -223,8 +224,7 @@ editorCore.dropdowns.files = {
 			core.localData.currentFile.isNew = true;
 
 			core.updateEditor();
-
-			core.preview.update();
+			core.preview.mode.regular.update();
 		}
 
 			

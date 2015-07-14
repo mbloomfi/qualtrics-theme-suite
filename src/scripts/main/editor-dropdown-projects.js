@@ -9,11 +9,6 @@ editorCore.dropdowns.projects = {
 			self.close();
 			el("#projectNameText").purge().text(_projectName);
 
-			var reload = false;
-			if(core.localData.currentProject.name !== null){
-				reload = true;
-			}
-
 			// Add this functionality
 			// core.brands.projects.select(_projectName);
 			core.brands.projects.setCurrentProject(_projectName);
@@ -25,25 +20,21 @@ editorCore.dropdowns.projects = {
 			editorCore.dropdowns.files.reset();
 			
 
-			core.preview.clearWatchers();
-			core.preview.setWatchers();
+			core.preview.mode.regular.clearWatchers();
+			core.preview.mode.regular.setWatchers();
 
-			
-			core.preview.update();
-			core.preview.show();
+			core.preview.mode.regular.update();
+			core.preview.mode.regular.enable();
 
 			editorCore.dropdowns.files.autoSelectStyleSheet();
 
-			/* if you switch projects, 
-			you will need to load the 
-			new CSS into the preview */
-			if(reload){ 
-				setTimeout(function(){
-					core.preview.compileSass();
-				},0);
-			}
+			setTimeout(function(){
+				core.preview.mode.regular.compileSass();
+			},0);
 
-			ipc.send('asynchronous-message', 'enableThumnailMode');
+
+			// these allow the menu items in the preview dropdown to become selectable
+			ipc.send('asynchronous-message', 'enablePreviewModes');
 
 		}
 		

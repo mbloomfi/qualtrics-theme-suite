@@ -318,10 +318,11 @@ var menuTemplate = [
         accelerator: 'Command+0',
         type: "checkbox",
         checked: true,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[3];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
-          mainWindow.webContents.executeJavaScript("core.preview.mode.regular();");
+          mainWindow.webContents.executeJavaScript("core.preview.mode.regular.enable();");
         }
       },
       {
@@ -329,6 +330,7 @@ var menuTemplate = [
         accelerator: 'Command+1',
         type: "checkbox",
         checked: false,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[4];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
@@ -339,9 +341,11 @@ var menuTemplate = [
         accelerator: 'Command+2',
         type: "checkbox",
         checked: false,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[5];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.mode.screenshot.enable();");
         }
       },
       {
@@ -353,8 +357,7 @@ var menuTemplate = [
         click: function(){
           var self = appMenu.items[4].submenu.items[6];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
-
-          mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail();");
+          mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail.enable();");
         }
       }
     ]
@@ -595,19 +598,21 @@ function runGulp_Dev(){ // will not be called for production
 }
   
 ipc.on('asynchronous-message', function(event, arg) {
-	console.log("arg:", arg);
-	if(arg === "disableThumnailMode") thumbnailMode.disable();
-	if(arg === "enableThumnailMode") thumbnailMode.enable();
-	// event.sender.send('asynchronous-reply', 'pong');
+	if(arg === "disablePreviewModes") previewModes.disable();
+	else if(arg === "enablePreviewModes") previewModes.enable();
 });
 
-
-var thumbnailMode = {
-	disable: function(){
-		appMenu.items[4].submenu.items[6].enabled = false;
-	},
-
+var previewModes = {
 	enable: function(){
+		appMenu.items[4].submenu.items[3].enabled = true;
+		appMenu.items[4].submenu.items[4].enabled = true;
+		appMenu.items[4].submenu.items[5].enabled = true;
 		appMenu.items[4].submenu.items[6].enabled = true;
+	},
+	disable: function(){
+		appMenu.items[4].submenu.items[3].enabled = false;
+		appMenu.items[4].submenu.items[4].enabled = false;
+		appMenu.items[4].submenu.items[5].enabled = false;
+		appMenu.items[4].submenu.items[6].enabled = false;
 	}
-}
+};

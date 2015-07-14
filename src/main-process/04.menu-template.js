@@ -255,10 +255,11 @@ var menuTemplate = [
         accelerator: 'Command+0',
         type: "checkbox",
         checked: true,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[3];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
-          mainWindow.webContents.executeJavaScript("core.preview.mode.regular();");
+          mainWindow.webContents.executeJavaScript("core.preview.mode.regular.enable();");
         }
       },
       {
@@ -266,6 +267,7 @@ var menuTemplate = [
         accelerator: 'Command+1',
         type: "checkbox",
         checked: false,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[4];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
@@ -276,9 +278,11 @@ var menuTemplate = [
         accelerator: 'Command+2',
         type: "checkbox",
         checked: false,
+        enabled: false,
         click: function(){
           var self = appMenu.items[4].submenu.items[5];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.mode.screenshot.enable();");
         }
       },
       {
@@ -290,8 +294,7 @@ var menuTemplate = [
         click: function(){
           var self = appMenu.items[4].submenu.items[6];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
-
-          mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail();");
+          mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail.enable();");
         }
       }
     ]

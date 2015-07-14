@@ -144,6 +144,7 @@ gulp.task("watch", function(){
 			"src/scripts/preferences/*.js",
 			"src/scripts/preferences/update-temp-preferences/*.js",
 			"src/scripts/app-core-methods.js",
+			"src/scripts/main/modes/**",
 
 			"src/styles/libs/*",
 			"src/styles/main/*.styl",

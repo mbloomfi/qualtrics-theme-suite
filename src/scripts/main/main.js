@@ -25,6 +25,7 @@ var appRoot = Global.appRoot;
 
 
 //= include ../app-core-methods.js
+//= include ./modes/edit-preview/edit-preview.js
 
 
 var dimmer = {

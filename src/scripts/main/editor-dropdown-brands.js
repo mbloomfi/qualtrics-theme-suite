@@ -30,7 +30,8 @@ editorCore.dropdowns.brands = {
 		function selectBrand(){
 
 			core.brands.exists(_brandName, function(exists){
-				ipc.send('asynchronous-message', 'disableThumnailMode');
+				ipc.send('asynchronous-message', 'disablePreviewModes');
+
 					if(exists){
 						el("#brandNameText").purge().text(_brandName);
 						core.brands.select(_brandName);
@@ -40,7 +41,7 @@ editorCore.dropdowns.brands = {
 						core.codeMirror.deactivate();
 						myCodeMirror.markClean();
 						editorCore.dropdowns.files.reset();
-						core.preview.hide();
+						core.preview.deactivate();
 
 						self.close();
 					} else {
