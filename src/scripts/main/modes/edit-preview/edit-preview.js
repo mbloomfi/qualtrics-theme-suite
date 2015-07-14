@@ -33,6 +33,9 @@ core.preview = {
 					// console.log("deactivating edit/preview => thumbnail mode");
 					core.preview.mode.thumbnail.deactivate();
 				}
+				if(core.preview.mode.currentMode === "screenshot"){
+					core.preview.mode.screenshot.deactivate();
+				}
 
 				if(core.localData.currentProject.name !== null){
 					preview.src = "local/currentPreview.html";
@@ -149,6 +152,12 @@ core.preview = {
 			active: false,
 
 			enable: function(){
+				if(core.preview.mode.currentMode === "thumbnail"){
+					return;
+				}
+				else if(core.preview.mode.currentMode === "screenshot"){
+					core.preview.mode.screenshot.deactivate();
+				}
 				core.preview.mode.thumbnail.init();
 				core.preview.mode.currentMode = "thumbnail";
 			},
@@ -401,14 +410,29 @@ core.preview = {
 		screenshot: {
 			active: false,
 			enable: function(){
+				if(core.preview.mode.currentMode === "thumbnail"){
+					core.preview.mode.thumbnail.deactivate();
+				}
+				else if(core.preview.mode.currentMode === "screenshot"){
+					return;
+				}
 				this.active = true;
+				core.preview.mode.currentMode = "screenshot";
 				var box = this.box.create();
 				this.box.init(box);
 
 				var _interface = this.interface.create();
 				this.interface.init(_interface);
 				console.log("enabled screenshot mode");
+				editorCore.deactivate();
 
+			},
+			deactivate: function(){
+				el("#screenshotBox").rm();
+				el("#screenshotInterface").rm();
+
+				editorCore.activate();
+				this.active = false;
 			},
 			capture: function(){
 				
@@ -417,15 +441,20 @@ core.preview = {
 				setTimeout(function(){
 					console.log("pre-snapshot");
 					var _x = self.box.getX(), 
-						_y = self.box.getY(), 
+						// _y = self.box.getY(), 
 						_width = self.box.getWidth(), 
-						_height = self.box.getHeight()
+						_height = self.box.getHeight();
+
+					console.log("_x: ",_x);
+					// console.log("_y: ",_y);
+					console.log("_width: ",_width);
+					console.log("_height: ",_height);
 
 					Global.mainWindow.capturePage({
-						x: _x, 
-						y: _y, 
-						width: _width, 
-						height: _height
+						x: parseInt(_x)+1, 
+						y: 0, 
+						width: parseInt(_width), 
+						height: parseInt(_height)
 					},function(_img){
 						console.log("pre-flash");
 						var pngImgBuff = _img.toPng();
@@ -434,7 +463,7 @@ core.preview = {
 							// el("#thumbBox").rmClass("screenshot-in-progress");
 						});
 						console.log("mid-snapshot");
-						fs.outputFile(core.localData.currentProject.path+"/assets/screenshot-"+Date.now()+".png", pngImgBuff, function(err){
+						fs.outputFile(core.localData.currentProject.path+"/assets/"+core.localData.currentBrand+"-"+Date.now()+".png", pngImgBuff, function(err){
 							if(err) return console.log("ERR:",err);
 							console.log("post-snapshot");
 						});
