@@ -244,8 +244,7 @@ editorCore.dropdowns.files = {
 			filesDropdown.rmClass("hide");
 			filesDropdown.el(".arrow")[0].rmClass("hide");
 		});
-		// self.refill();
-		// projectName.addClass("dropdown-active");
+		fileName.addClass("dropdown-active");
 		
 	},
 
@@ -261,7 +260,7 @@ editorCore.dropdowns.files = {
 		baton(function(next){
 			filesDropdown.addClass("hide");
 			filesDropdown.el(".arrow")[0].addClass("hide");
-			// projectName.rmClass("dropdown-active");
+			fileName.rmClass("dropdown-active");
 			setTimeout(next, 200);
 		})
 		.then(function(next){

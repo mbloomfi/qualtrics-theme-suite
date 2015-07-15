@@ -28,6 +28,8 @@ editorCore.dropdowns.projects = {
 
 			editorCore.dropdowns.files.autoSelectStyleSheet();
 
+			editorCore.refreshBtn.activate();
+
 			setTimeout(function(){
 				core.preview.mode.regular.compileSass();
 			},0);

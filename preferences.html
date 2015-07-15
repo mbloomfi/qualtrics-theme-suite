@@ -391,7 +391,7 @@
 		}
 		section#Prompter {
 		  position: fixed;
-		  top: -120px;
+		  top: 0;
 		  left: 0;
 		  background: #242424;
 		  color: #fff;
@@ -399,14 +399,18 @@
 		  width: 100%;
 		  border-bottom: 4px solid #df4848;
 		  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
-		  z-index: 10;
-		  -webkit-transition: top 0.5s ease;
-		          transition: top 0.5s ease;
+		  -webkit-transform: translateY(-150%);
+		      -ms-transform: translateY(-150%);
+		          transform: translateY(-150%);
+		  -webkit-transition: -webkit-transform 0.5s ease;
+		          transition: transform 0.5s ease;
 		}
 		section#Prompter.show {
-		  top: 0;
-		  -webkit-transition: top 0.25s ease;
-		          transition: top 0.25s ease;
+		  -webkit-transform: translateY(0%);
+		      -ms-transform: translateY(0%);
+		          transform: translateY(0%);
+		  -webkit-transition: -webkit-transform 0.25s ease;
+		          transition: transform 0.25s ease;
 		}
 		section#Prompter .message {
 		  color: inherit;

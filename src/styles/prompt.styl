@@ -1,6 +1,6 @@
 section#Prompter {
 	position fixed
-	top -120px
+	top 0
 	left 0
 	background rgb(36,36,36)
 	color white
@@ -8,13 +8,13 @@ section#Prompter {
 	width 100%
 	border-bottom 4px solid $primaryColor
 	box-shadow 0 10px 35px rgba(0,0,0,.5)
-	z-index 10
-	transition top .5s ease
+	transform translateY(-150%)
+	transition transform .5s ease
 	
 	
 	&.show {
-		top 0
-		transition top .25s ease
+		transform translateY(0%)
+		transition transform .25s ease
 	}
 	
 	.message {

@@ -535,6 +535,7 @@
 			  background-color: rgba(0,0,0,0.4);
 			  z-index: 1000;
 			  opacity: 0;
+			  box-shadow: inset 0 150px 150px -30px rgba(0,0,0,0.25);
 			  -webkit-transition: opacity 0.5s ease;
 			          transition: opacity 0.5s ease;
 			}
@@ -653,6 +654,43 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner span.arrow.inactive {
 			  opacity: 0.4;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont {
+			  position: absolute;
+			  display: inline-block;
+			  top: 15%;
+			  right: 1%;
+			  width: 30px;
+			  height: 70%;
+			  text-align: right;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn {
+			  height: 100%;
+			  user-selct: none;
+			  -webkit-transform: rotate(0deg);
+			      -ms-transform: rotate(0deg);
+			          transform: rotate(0deg);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn path {
+			  fill: #5a5a5a;
+			  -webkit-transition: fill 0.5s ease;
+			          transition: fill 0.5s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn.active {
+			  cursor: pointer;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn.active path {
+			  fill: #b4b4b4;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn.active:hover path {
+			  fill: #e1e1e1;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner #refreshBtnCont svg#refreshPreviewBtn.active.reloading {
+			  -webkit-transform: rotate(360deg);
+			      -ms-transform: rotate(360deg);
+			          transform: rotate(360deg);
+			  -webkit-transition: -webkit-transform 0.3s ease;
+			          transition: transform 0.3s ease;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn {
 			  display: block;
@@ -1551,7 +1589,7 @@
 			}
 			section#Prompter {
 			  position: fixed;
-			  top: -120px;
+			  top: 0;
 			  left: 0;
 			  background: #242424;
 			  color: #fff;
@@ -1559,14 +1597,18 @@
 			  width: 100%;
 			  border-bottom: 4px solid #df4848;
 			  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
-			  z-index: 10;
-			  -webkit-transition: top 0.5s ease;
-			          transition: top 0.5s ease;
+			  -webkit-transform: translateY(-150%);
+			      -ms-transform: translateY(-150%);
+			          transform: translateY(-150%);
+			  -webkit-transition: -webkit-transform 0.5s ease;
+			          transition: transform 0.5s ease;
 			}
 			section#Prompter.show {
-			  top: 0;
-			  -webkit-transition: top 0.25s ease;
-			          transition: top 0.25s ease;
+			  -webkit-transform: translateY(0%);
+			      -ms-transform: translateY(0%);
+			          transform: translateY(0%);
+			  -webkit-transition: -webkit-transform 0.25s ease;
+			          transition: transform 0.25s ease;
 			}
 			section#Prompter .message {
 			  color: inherit;
@@ -1695,6 +1737,7 @@
 						<div id="projectName" class="btn inactive"><span id="projectNameText">Projects</span></div>
 						<span id="files_arrow"  class="arrow inactive"><img src="local/images/arrow_right.svg"></span>
 						<div id="fileName" class="btn inactive"><span id="fileNameText">Files</span></div>
+						<div id="refreshBtnCont"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg id="refreshPreviewBtn" width="100%" height="100%" viewBox="0 0 32 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M22.607,8.701c-1.741,-1.726 -4.136,-2.793 -6.781,-2.793c-5.318,0 -9.629,4.311 -9.629,9.629c0,5.319 4.311,9.63 9.629,9.63c2.659,0 5.066,-1.078 6.809,-2.821l3.899,3.899c-2.741,2.741 -6.526,4.435 -10.708,4.435c-8.363,0 -15.143,-6.779 -15.143,-15.143c0,-8.363 6.78,-15.143 15.143,-15.143c4.167,0 7.941,1.684 10.679,4.408l3.323,-3.323l1.377,11.857l-11.857,-1.377l3.259,-3.258Z"/></svg></div>
 					</div>
 				</div>
 		
@@ -1702,6 +1745,11 @@
 		
 			</section>
 		</section>
+		
+		
+		
+		
+		
 
 		<webview src="#" id="preview" class="hide" plugins>preview</webview>
 		
@@ -1715,8 +1763,6 @@
 			<h1>Loading<div class="circles_cont"><span class="circle1"></span><span class="circle2"></span><span class="circle3"></span></div></h1>
 		
 		</section>
-
-		<section id="Prompter"></section>
 
 		<script>
 			function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
@@ -16500,7 +16546,7 @@
 							
 							self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 								self.update();
-								preview.reload();
+								self.reload();
 							});
 							
 						},
@@ -16511,9 +16557,25 @@
 							
 							self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 								self.update();
-								preview.reload();
+								self.reload();
 							});
 							
+						},
+			
+						reload: function(){
+			
+							function reloadPreview(){
+								if(this.hasClass("active") && core.localData.currentProject.name !== null){
+									var self = this;
+									this.addClass("reloading");
+									preview.reload();
+									setTimeout(function(){
+										self.rmClass("reloading");
+									}, 300);
+								}
+							}
+							reloadPreview.bind(el("#refreshPreviewBtn"))();
+			
 						},
 			
 						update: function(){
@@ -16839,21 +16901,26 @@
 							
 							setTimeout(function(){
 								console.log("pre-snapshot");
-								var _x = self.box.getX(), 
-									// _y = self.box.getY(), 
-									_width = self.box.getWidth(), 
-									_height = self.box.getHeight();
 			
-								console.log("_x: ",_x);
-								// console.log("_y: ",_y);
-								console.log("_width: ",_width);
-								console.log("_height: ",_height);
+								function getX(){
+									return (window.innerWidth - preview.clientWidth);
+								}
+			
+								function getY(){
+									return 0
+								}
+								function getW(){
+									return preview.clientWidth;
+								}
+								function getH(){
+									return preview.clientHeight;
+								}
 			
 								Global.mainWindow.capturePage({
-									x: parseInt(_x)+1, 
-									y: 0, 
-									width: parseInt(_width), 
-									height: parseInt(_height)
+									x: getX(), 
+									y: getY(), 
+									width: getW(), 
+									height: getH()
 								},function(_img){
 									console.log("pre-flash");
 									var pngImgBuff = _img.toPng();
@@ -16949,14 +17016,6 @@
 								el("#screenshotCamera").onclick = function(){
 									core.preview.mode.screenshot.capture();
 								}
-			
-								// el("#thumbCamera").onmouseover = function(){
-								// 	el("#thumbBox").addClass("screenshot-in-progress");
-								// }
-			
-								// el("#thumbCamera").onmouseout = function(){
-								// 	el("#thumbBox").rmClass("screenshot-in-progress");
-								// }
 			
 							}
 							
@@ -17074,6 +17133,10 @@
 					editor.rmClass("inactive");
 				},
 			
+				init: function(){
+					this.refreshBtn.config();
+				},
+			
 				// ----------------------------
 				//  Dropdowns
 				// ----------------------------
@@ -17099,12 +17162,40 @@
 						});
 					}
 			
+				},
+			
+				refreshBtn: {
+					config: function(){
+						var refreshBtn = el("#refreshPreviewBtn");
+						refreshBtn.on("click", function(){
+							core.preview.mode.regular.reload();
+						});
+			
+					},
+			
+					activate: function(){
+						console.log("activating refreesh btn");
+						el("#refreshPreviewBtn").addClass("active");
+					},
+			
+					deactivate: function(){
+						console.log("deactivating refreesh btn");
+						el("#refreshPreviewBtn").rmClass("active");
+					}
+			
+			
 				}
 			
 				
 			};
 			
+			
+			
 			editorCore.dropdowns.brands = {
+			
+			
+			
+			
 			
 			
 			
@@ -17112,13 +17203,27 @@
 			
 			
 			
+			
+			
+			
+			
 				setGlobalVariables: function(){
+			
+			
 			
 					window.brandSearchInput = el("#searchBrands");
 			
+			
+			
 					window.brandsListCont = el("#brandsListCont");
 			
+			
+			
 				},
+			
+			
+			
+			
 			
 			
 			
@@ -17126,39 +17231,79 @@
 			
 			
 			
+			
+			
+			
+			
 				init: function(){
+			
+			
 			
 						var self = this;
 			
+			
+			
 						brandName.on("click", function(evt){
+			
+			
 			
 							if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
 			
+			
+			
 							if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+			
+			
 			
 							if(!this.hasClass("inactive")){
 			
+			
+			
 								self.toggle();
+			
+			
 			
 								evt.stopPropagation();
 			
+			
+			
 							}
 			
+			
+			
 						});
+			
+			
 			
 						brandsDropdown.on("click", function(evt){
 			
+			
+			
 							evt.stopPropagation();
 			
+			
+			
 						});
+			
+			
 			
 				},
 			
 			
 			
+			
+			
+			
+			
 				select: function(_brandName){
 			
+			
+			
 					var self = this;
+			
+			
+			
+			
 			
 			
 			
@@ -17166,55 +17311,115 @@
 			
 			
 			
+			
+			
+			
+			
 						core.brands.exists(_brandName, function(exists){
+			
+			
 			
 							ipc.send('asynchronous-message', 'disablePreviewModes');
 			
 			
 			
+			
+			
+			
+			
 								if(exists){
+			
+			
 			
 									el("#brandNameText").purge().text(_brandName);
 			
+			
+			
 									core.brands.select(_brandName);
+			
+			
 			
 									// activate projects dropdown
 			
+			
+			
 									editorCore.dropdowns.projects.activate();
+			
+			
 			
 									editorCore.dropdowns.files.deactivate();
 			
+			
+			
 									core.codeMirror.deactivate();
+			
+			
 			
 									myCodeMirror.markClean();
 			
+			
+			
 									editorCore.dropdowns.files.reset();
+			
+			
 			
 									core.preview.deactivate();
 			
 			
 			
+									editorCore.refreshBtn.deactivate();
+			
+			
+			
+			
+			
+			
+			
 									self.close();
+			
+			
 			
 								} else {
 			
+			
+			
 									self.close();
+			
+			
 			
 									// refresh last open file
 			
+			
+			
 									core.localData.rmFromRecentBrands(_brandName, function(){
+			
+			
 			
 										alert("Brand not found. Brand removed from recent brands.");
 			
+			
+			
 									})
 			
+			
+			
 								}	
+			
+			
 			
 						});
 			
 			
 			
+			
+			
+			
+			
 					}
+			
+			
+			
+			
 			
 			
 			
@@ -17222,75 +17427,151 @@
 			
 			
 			
+			
+			
+			
+			
 									Prompter.prompt({
+			
+			
 			
 										message: "Current File Not Saved.",
 			
+			
+			
 										mainBtn: {
+			
+			
 			
 											text: "Cancel",
 			
+			
+			
 											onClick: function(){
+			
+			
 			
 												Prompter.hide();
 			
+			
+			
 											}
 			
+			
+			
 										},
+			
+			
 			
 										btn2: {
 			
+			
+			
 											text: "Continue Anyway",
+			
+			
 			
 											onClick: function(){
 			
+			
+			
 												Prompter.hide();
+			
+			
 			
 												selectBrand();
 			
+			
+			
 											}
+			
+			
 			
 										},
 			
+			
+			
 										btn3: null,
+			
+			
 			
 									}) ;
 			
 			
 			
+			
+			
+			
+			
 							}	else {
 			
+			
+			
 								selectBrand();
+			
+			
 			
 							}
 			
 			
 			
-					
+			
+			
+			
 			
 					
 			
+			
+			
 					
+			
+			
+			
+					
+			
+			
 			
 				},
+			
+			
+			
+			
 			
 			
 			
 				toggle: function(){
 			
+			
+			
 					if(this.status === "opened") {
+			
+			
 			
 						this.close();
 			
+			
+			
 					}
+			
+			
 			
 					else if(this.status === "closed") {
 			
+			
+			
 						this.open();
+			
+			
 			
 					}
 			
+			
+			
 				},
+			
+			
+			
+			
 			
 			
 			
@@ -17298,93 +17579,187 @@
 			
 			
 			
+			
+			
+			
+			
 					var self = this;
+			
+			
 			
 					self.status = "opened";
 			
+			
+			
 					self.search.prepare();
+			
+			
 			
 					self.recent.populate();
 			
 			
 			
+			
+			
+			
+			
 					setTimeout(function(){
 			
+			
+			
 						brandsDropdown.rmClass("hide");
+			
+			
 			
 						brandName.addClass("dropdown-active");
 			
 			
 			
+			
+			
+			
+			
 						brandsDropdown.el(".arrow")[0].rmClass("hide");
 			
+			
+			
 						
+			
+			
 			
 					},0);
 			
 			
 			
+			
+			
+			
+			
 				},
+			
+			
+			
+			
 			
 			
 			
 				close: function(){
 			
+			
+			
 					var self = this;
+			
+			
 			
 					self.status = "closed";
 			
+			
+			
 					baton(function(next){
+			
+			
 			
 						brandsDropdown.addClass("hide");
 			
+			
+			
 						self.search.activated = false;
+			
+			
 			
 						brandName.rmClass("dropdown-active");
 			
+			
+			
 						brandsDropdown.el(".arrow")[0].addClass("hide");
+			
+			
 			
 						setTimeout(next, 200);
 			
+			
+			
 					})
+			
+			
 			
 					.then(function(next){
 			
+			
+			
 						editorCore.dropdowns.brands.search.newBrandBtn.remove();
+			
+			
 			
 						self.purge();
 			
 			
 			
+			
+			
+			
+			
 						next();
 			
+			
+			
 					})
+			
+			
 			
 					.then(function(){
 			
+			
+			
 						self.refill();
+			
+			
 			
 						brandsDropdown.el(".arrow")[0].addClass("hide");
 			
+			
+			
 					})
 			
+			
+			
 					.run();
+			
+			
 			
 				},
 			
 			
 			
+			
+			
+			
+			
 				populate: function(){
 			
+			
+			
 					brandName.append(
+			
+			
 			
 						el("+div").addClass(["dropdown", "hide"]).append(
 			
 			
 			
+			
+			
+			
+			
 							el.join([
 			
+			
+			
 								el("+div").addClass(["arrow", "hide"]),
+			
+			
+			
+			
 			
 			
 			
@@ -17392,27 +17767,55 @@
 			
 			
 			
+			
+			
+			
+			
 									el.join([
+			
+			
 			
 										el("+div#searchBrandsContainer").append(
 			
+			
+			
 											el("+input#searchBrands").attr("placeholder", "Search")
+			
+			
 			
 										),
 			
+			
+			
 										el("+section#brandsListCont").append(
+			
+			
 			
 											el("+div#recentBrands").text("Recent Brands")
 			
+			
+			
 										)
+			
+			
 			
 									])
 			
 			
 			
+			
+			
+			
+			
 								)
 			
+			
+			
 							])
+			
+			
+			
+			
 			
 			
 			
@@ -17420,7 +17823,15 @@
 			
 			
 			
+			
+			
+			
+			
 					);
+			
+			
+			
+			
 			
 			
 			
@@ -17428,21 +17839,43 @@
 			
 			
 			
+			
+			
+			
+			
 					// then enable dropdown
 			
+			
+			
 					
+			
+			
 			
 				},
 			
 			
 			
+			
+			
+			
+			
 				refill: function(){
+			
+			
 			
 					brandsDropdown.append(
 			
+			
+			
 						el.join([
 			
+			
+			
 							el("+div").addClass("arrow"),
+			
+			
+			
+			
 			
 			
 			
@@ -17450,39 +17883,79 @@
 			
 			
 			
+			
+			
+			
+			
 								el.join([
+			
+			
 			
 									el("+div#searchBrandsContainer").append(
 			
+			
+			
 										el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+			
+			
 			
 									),
 			
+			
+			
 									el("+section#brandsListCont").append(
+			
+			
 			
 										el("+div#recentBrands").text("recent brands")
 			
+			
+			
 									)
+			
+			
 			
 								])
 			
 			
 			
+			
+			
+			
+			
 							)
+			
+			
 			
 						])
 			
+			
+			
 					);
 			
+			
+			
 				},
+			
+			
 			
 				
 			
+			
+			
 				purge: function(){
+			
+			
 			
 					brandsDropdown.purge();
 			
+			
+			
 				},
+			
+			
+			
+			
 			
 			
 			
@@ -17490,23 +17963,47 @@
 			
 			
 			
+			
+			
+			
+			
 					maxAmount: 15,
+			
+			
+			
+			
 			
 			
 			
 					populate: function(){
 			
+			
+			
 						var self = this;
+			
+			
 			
 						baton(function(next){
 			
+			
+			
 							editorCore.dropdowns.brands.search.newBrandBtn.remove();
+			
+			
 			
 							core.localData.updateRecentBrands(next);
 			
+			
+			
 						})
 			
+			
+			
 						.then(function(next){
+			
+			
+			
+			
 			
 			
 			
@@ -17514,23 +18011,47 @@
 			
 			
 			
+			
+			
+			
+			
 							var recentBrandsCont = el("+div#recentBrandsCont");
+			
+			
+			
+			
 			
 			
 			
 							// header
 			
+			
+			
 							recentBrandsCont.append(
 			
+			
+			
 								el("+div").addClass("header").text("Recent Brands")
+			
+			
 			
 							)
 			
 			
 			
+			
+			
+			
+			
 							// add each result
 			
+			
+			
 							if(recentBrandsArray.length > 0){
+			
+			
+			
+			
 			
 			
 			
@@ -17538,15 +18059,31 @@
 			
 			
 			
+			
+			
+			
+			
 								for(var i = 0; i < brandLimit; i++){
+			
+			
 			
 									recentBrandsCont.append(
 			
+			
+			
 										el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
+			
+			
 			
 									)
 			
+			
+			
 								}
+			
+			
+			
+			
 			
 			
 			
@@ -17554,11 +18091,25 @@
 			
 			
 			
+			
+			
+			
+			
 							else {
+			
+			
 			
 								recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
 			
+			
+			
 							}
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -17568,9 +18119,17 @@
 			
 			
 			
+			
+			
+			
+			
 							el(".brand-item").on("click", function(){
 			
+			
+			
 								editorCore.dropdowns.brands.select(this.dataset.brandname);
+			
+			
 			
 							});
 			
@@ -17578,11 +18137,25 @@
 			
 			
 			
+			
+			
+			
+			
+			
+			
 						})
+			
+			
 			
 						.run();
 			
+			
+			
 					}
+			
+			
+			
+			
 			
 			
 			
@@ -17592,7 +18165,17 @@
 			
 			
 			
+			
+			
+			
+			
+			
+			
 				search: {
+			
+			
+			
+			
 			
 			
 			
@@ -17600,91 +18183,183 @@
 			
 			
 			
+			
+			
+			
+			
 					prepare:	function() {
+			
+			
 			
 						var self = this;
 			
+			
+			
 						baton(function(next, inputValue){
+			
+			
 			
 							editorCore.dropdowns.brands.setGlobalVariables();
 			
+			
+			
 							next();
+			
+			
 			
 						})
 			
+			
+			
 						.then(function(next){
+			
+			
 			
 							self.prepareInputListener();
 			
+			
+			
 							// SAVE BRANDS TO LOCAL PERSISTENT DATA
+			
+			
 			
 							brandSearchInput.on("focus", function(){
 			
+			
+			
 								core.localData.updateBrandsList();
+			
+			
 			
 							});
 			
 			
 			
+			
+			
+			
+			
 						}).run();
 			
+			
+			
 					},
+			
+			
+			
+			
 			
 			
 			
 					prepareInputListener: function(){
 			
+			
+			
 						var self = this;
+			
+			
 			
 						var timeout = undefined;
 			
 			
 			
+			
+			
+			
+			
 						// Will delay the search for brands for 300ms and 
+			
+			
 			
 						// batch the keystrokes into a single search
 			
 			
 			
+			
+			
+			
+			
 						brandSearchInput.on("keyup", function(){
+			
+			
 			
 							if(timeout != undefined) {
 			
+			
+			
 							 clearTimeout(timeout);
+			
+			
 			
 							}
 			
+			
+			
 							timeout = setTimeout(function() {
+			
+			
 			
 								timeout = undefined;
 			
+			
+			
 								var inputValue = brandSearchInput.value;
+			
+			
 			
 								if(inputValue.length > 0 && inputValue.slice(0,1) !== " "){
 			
+			
+			
 									// BEGIN SEARCHING
+			
+			
 			
 									self.updateResults(inputValue);
 			
+			
+			
 								} else {
+			
+			
 			
 									editorCore.dropdowns.brands.recent.populate();
 			
+			
+			
 								}
+			
+			
 			
 								if(!self.activated){ 
 			
+			
+			
 									self.activated = true;
+			
+			
 			
 								}
 			
+			
+			
 							}, 300);
+			
+			
 			
 						});
 			
 			
 			
+			
+			
+			
+			
 					},
+			
+			
+			
+			
 			
 			
 			
@@ -17692,25 +18367,51 @@
 			
 			
 			
+			
+			
+			
+			
 						var nameSize;
+			
+			
 			
 						if(_brandName.length < 8) nameSize = "small";
 			
+			
+			
 						else if(_brandName.length < 14) nameSize = "medium";
+			
+			
 			
 						else nameSize = "large";
 			
 			
 			
+			
+			
+			
+			
 						var noResultsContainer = el("+div").addClass("noResultsCont").append(
+			
+			
 			
 							el("+div").addClass("noResults").text("(No results)")
 			
+			
+			
 						)
+			
+			
 			
 							
 			
+			
+			
 						brandsListCont.purge().append( noResultsContainer );
+			
+			
+			
+			
 			
 			
 			
@@ -17718,17 +18419,35 @@
 			
 			
 			
+			
+			
+			
+			
 					updateResults: function(criteria){
 			
+			
+			
 						var self = this;
+			
+			
 			
 						var matches = core.localData.filterBrands(criteria);
 			
 			
 			
+			
+			
+			
+			
 						
 			
+			
+			
 						if(matches.length > 0){
+			
+			
+			
+			
 			
 			
 			
@@ -17736,29 +18455,59 @@
 			
 			
 			
+			
+			
+			
+			
 							if(matches.indexOf(criteria) === -1){
 			
+			
+			
 								setTimeout(function(){ // helps with performance
+			
+			
 			
 									editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
 			
+			
+			
 									editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+			
+			
 			
 									editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
 			
+			
+			
 								},0);
+			
+			
 			
 							} else {
 			
+			
+			
 								setTimeout(function(){ // helps with performance
+			
+			
 			
 									editorCore.dropdowns.brands.search.newBrandBtn.disable(criteria);
 			
+			
+			
 									editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+			
+			
 			
 								},0);
 			
+			
+			
 							}
+			
+			
+			
+			
 			
 			
 			
@@ -17766,35 +18515,71 @@
 			
 			
 			
+			
+			
+			
+			
 							// header
+			
+			
 			
 							searchResultsCont.append(
 			
+			
+			
 								el("+div").addClass("header").text("Search Results")
+			
+			
 			
 							)
 			
 			
 			
+			
+			
+			
+			
 							// add each result
+			
+			
 			
 							for(var i = 0, ii = matches.length; i < ii; i++){
 			
+			
+			
 								searchResultsCont.append(
+			
+			
 			
 									el("+button").addClass("brand-item").attr("data-brandname",matches[i]).text(matches[i])
 			
+			
+			
 								)
+			
+			
 			
 							}
 			
 			
 			
+			
+			
+			
+			
 							// if(matches.length > 6){ // add arrow
+			
+			
 			
 								// searchResultsCont.append( el("+div").addClass("arrow-down") )
 			
+			
+			
 							// }
+			
+			
+			
+			
 			
 			
 			
@@ -17802,25 +18587,53 @@
 			
 			
 			
+			
+			
+			
+			
 							// Add click listeners to each result
+			
+			
 			
 							el(".brand-item").on("click", function(){
 			
+			
+			
 								editorCore.dropdowns.brands.select(this.dataset.brandname);
+			
+			
 			
 							});
 			
 			
 			
+			
+			
+			
+			
 							brandsListCont.rmClass("no-results");
+			
+			
 			
 							if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
 			
+			
+			
 									el("#createBrand").rmClass("no-results");
+			
+			
 			
 							} 
 			
+			
+			
 						}
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -17828,31 +18641,63 @@
 			
 						// no results
 			
+			
+			
 						else {
+			
+			
 			
 							self.noResults(criteria);
 			
 			
 			
+			
+			
+			
+			
 							if(!editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+			
+			
 			
 								editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
 			
+			
+			
 							} 
+			
+			
 			
 							if(!editorCore.dropdowns.brands.search.newBrandBtn.enabled) {
 			
+			
+			
 								editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+			
+			
 			
 							}
 			
+			
+			
 							editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+			
+			
 			
 							brandsListCont.addClass("no-results");
 			
+			
+			
 							el("#createBrand").addClass("no-results");
 			
+			
+			
 						}
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -17862,87 +18707,173 @@
 			
 			
 			
+			
+			
+			
+			
 					newBrandBtn: {
+			
+			
 			
 						enabled: false,
 			
+			
+			
 						exists: false,
+			
+			
 			
 						add: function(_brandName){
 			
+			
+			
 							if(!this.exists){
+			
+			
 			
 								var btn = el("+button#createBrand").attr("data-brandname", _brandName).text("Create Brand");
 			
+			
+			
 								brandName.el(".dropdown")[0].el(".dropdownBody")[0].append(btn);
+			
+			
 			
 								brandsListCont.addClass("showBottomBtn");
 			
+			
+			
 								this.exists = true;
+			
+			
 			
 								btn.on("click", function(){
 			
+			
+			
 									if(!btn.hasClass("disabled")) core.brands.create(btn.dataset.brandname, function(){
+			
+			
 			
 										editorCore.dropdowns.brands.select(_brandName);
 			
+			
+			
 									});
+			
+			
 			
 								});
 			
+			
+			
 							}
 			
+			
+			
 						},
+			
+			
 			
 						remove: function(){
 			
+			
+			
 							if(this.exists){
+			
+			
 			
 								el("#createBrand").rm();
 			
+			
+			
 								brandsListCont.rmClass("showBottomBtn");
+			
+			
 			
 								this.exists = false;
 			
+			
+			
 								this.enabled = false;
+			
+			
 			
 							}
 			
+			
+			
 						},
+			
+			
 			
 						enable: function(_brandName){
 			
+			
+			
 							if(!this.enabled){
+			
+			
 			
 								el("#createBrand").rmClass("disabled").attr("data-brandname", _brandName);
 			
+			
+			
 								this.enabled = true;
+			
+			
 			
 							}
 			
+			
+			
 						},
+			
+			
 			
 						disable: function(){
 			
+			
+			
 							if(this.enabled){
+			
+			
 			
 								el("#createBrand").addClass("disabled");
 			
+			
+			
 								this.enabled = false;
 			
+			
+			
 							}
+			
+			
 			
 						},
 			
+			
+			
 						update: function(_brandName){
+			
+			
 			
 							if(this.exists){
 			
+			
+			
 								el("#createBrand").attr("data-brandname", _brandName);
+			
+			
 			
 							}
 			
+			
+			
 						}
+			
+			
 			
 					}
 			
@@ -17950,7 +18881,17 @@
 			
 			
 			
+			
+			
+			
+			
+			
+			
 				}
+			
+			
+			
+			
 			
 			
 			
@@ -17985,6 +18926,8 @@
 						core.preview.mode.regular.enable();
 			
 						editorCore.dropdowns.files.autoSelectStyleSheet();
+			
+						editorCore.refreshBtn.activate();
 			
 						setTimeout(function(){
 							core.preview.mode.regular.compileSass();
@@ -18493,8 +19436,7 @@
 						filesDropdown.rmClass("hide");
 						filesDropdown.el(".arrow")[0].rmClass("hide");
 					});
-					// self.refill();
-					// projectName.addClass("dropdown-active");
+					fileName.addClass("dropdown-active");
 					
 				},
 			
@@ -18510,7 +19452,7 @@
 					baton(function(next){
 						filesDropdown.addClass("hide");
 						filesDropdown.el(".arrow")[0].addClass("hide");
-						// projectName.rmClass("dropdown-active");
+						fileName.rmClass("dropdown-active");
 						setTimeout(next, 200);
 					})
 					.then(function(next){
@@ -18719,7 +19661,7 @@
 			
 			
 			
-			
+			editorCore.init();
 				
 			
 			//= include ./brand-search.js
@@ -18769,9 +19711,14 @@
 			
 			(function(){
 				window.Prompter = {
+					isPrompting: false,
 					prompt: function(_promptObj){
+						if(Prompter.isPrompting) return;
+						Prompter.isPrompting = true;
 						//show Prompter
-						Prompter.container.purge();
+						// Prompter.container.purge();
+			
+						Prompter.container = el("+section#Prompter").attr("style", "position:relative; z-index:10000;");
 			
 						if(_promptObj.message !== null && _promptObj.message !== undefined){
 							Prompter.messageCont = Prompter.container.append( el("+div").addClass("message").text(_promptObj["message"]) );
@@ -18789,23 +19736,25 @@
 							Prompter.container.el(".mainBtn")[0].onclick = _promptObj.mainBtn.onClick;
 						}
 			
+						el("#body").append(Prompter.container);
+			
 						//show Prompter
-						Prompter.container.addClass("show");
-						el("body")[0].append( el("+div").addClass("overlay") )
+						dimmer.on();
+						
+						// el("body")[0].append( el("+div").addClass("overlay") )
 						setTimeout(function(){
-							el(".overlay")[0].addClass("visible");
-						}, 5);
+							Prompter.container.addClass("show");
+						}, 150);
 					},
 			
 					hide: function(){
 						Prompter.container.rmClass("show");
+						dimmer.off();
+						Prompter.isPrompting = false;
 						setTimeout(function(){
-							Prompter.container.purge();
+							Prompter.container.rm();
+			
 						}, 500);
-						var overlay = el(".overlay")[0].rmClass("visible");
-						setTimeout(function(){
-							overlay.rm();
-						}, 300);
 					},
 			
 					setBtn: function(){
@@ -18814,7 +19763,7 @@
 			
 				};
 				
-				Prompter.container = el("#Prompter");
+				
 				
 			})();
 			

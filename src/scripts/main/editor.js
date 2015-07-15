@@ -15,6 +15,10 @@ var editorCore = {
 		editor.rmClass("inactive");
 	},
 
+	init: function(){
+		this.refreshBtn.config();
+	},
+
 	// ----------------------------
 	//  Dropdowns
 	// ----------------------------
@@ -40,15 +44,39 @@ var editorCore = {
 			});
 		}
 
+	},
+
+	refreshBtn: {
+		config: function(){
+			var refreshBtn = el("#refreshPreviewBtn");
+			refreshBtn.on("click", function(){
+				core.preview.mode.regular.reload();
+			});
+
+		},
+
+		activate: function(){
+			console.log("activating refreesh btn");
+			el("#refreshPreviewBtn").addClass("active");
+		},
+
+		deactivate: function(){
+			console.log("deactivating refreesh btn");
+			el("#refreshPreviewBtn").rmClass("active");
+		}
+
+
 	}
 
 	
 };
 
 
+
+
 //= include editor-dropdown-brands.js
 //= include editor-dropdown-projects.js
 //= include editor-dropdown-files.js
 
-
+editorCore.init();
 	

@@ -1,8 +1,13 @@
 (function(){
 	window.Prompter = {
+		isPrompting: false,
 		prompt: function(_promptObj){
+			if(Prompter.isPrompting) return;
+			Prompter.isPrompting = true;
 			//show Prompter
-			Prompter.container.purge();
+			// Prompter.container.purge();
+
+			Prompter.container = el("+section#Prompter").attr("style", "position:relative; z-index:10000;");
 
 			if(_promptObj.message !== null && _promptObj.message !== undefined){
 				Prompter.messageCont = Prompter.container.append( el("+div").addClass("message").text(_promptObj["message"]) );
@@ -20,23 +25,25 @@
 				Prompter.container.el(".mainBtn")[0].onclick = _promptObj.mainBtn.onClick;
 			}
 
+			el("#body").append(Prompter.container);
+
 			//show Prompter
-			Prompter.container.addClass("show");
-			el("body")[0].append( el("+div").addClass("overlay") )
+			dimmer.on();
+			
+			// el("body")[0].append( el("+div").addClass("overlay") )
 			setTimeout(function(){
-				el(".overlay")[0].addClass("visible");
-			}, 5);
+				Prompter.container.addClass("show");
+			}, 150);
 		},
 
 		hide: function(){
 			Prompter.container.rmClass("show");
+			dimmer.off();
+			Prompter.isPrompting = false;
 			setTimeout(function(){
-				Prompter.container.purge();
+				Prompter.container.rm();
+
 			}, 500);
-			var overlay = el(".overlay")[0].rmClass("visible");
-			setTimeout(function(){
-				overlay.rm();
-			}, 300);
 		},
 
 		setBtn: function(){
@@ -45,6 +52,6 @@
 
 	};
 	
-	Prompter.container = el("#Prompter");
+	
 	
 })();

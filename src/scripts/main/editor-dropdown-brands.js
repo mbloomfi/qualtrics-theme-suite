@@ -42,6 +42,7 @@ editorCore.dropdowns.brands = {
 						myCodeMirror.markClean();
 						editorCore.dropdowns.files.reset();
 						core.preview.deactivate();
+						editorCore.refreshBtn.deactivate();
 
 						self.close();
 					} else {

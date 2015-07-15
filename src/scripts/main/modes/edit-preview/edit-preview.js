@@ -101,7 +101,7 @@ core.preview = {
 				
 				self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
 					self.update();
-					preview.reload();
+					self.reload();
 				});
 				
 			},
@@ -112,9 +112,25 @@ core.preview = {
 				
 				self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
 					self.update();
-					preview.reload();
+					self.reload();
 				});
 				
+			},
+
+			reload: function(){
+
+				function reloadPreview(){
+					if(this.hasClass("active") && core.localData.currentProject.name !== null){
+						var self = this;
+						this.addClass("reloading");
+						preview.reload();
+						setTimeout(function(){
+							self.rmClass("reloading");
+						}, 300);
+					}
+				}
+				reloadPreview.bind(el("#refreshPreviewBtn"))();
+
 			},
 
 			update: function(){
@@ -440,21 +456,26 @@ core.preview = {
 				
 				setTimeout(function(){
 					console.log("pre-snapshot");
-					var _x = self.box.getX(), 
-						// _y = self.box.getY(), 
-						_width = self.box.getWidth(), 
-						_height = self.box.getHeight();
 
-					console.log("_x: ",_x);
-					// console.log("_y: ",_y);
-					console.log("_width: ",_width);
-					console.log("_height: ",_height);
+					function getX(){
+						return (window.innerWidth - preview.clientWidth);
+					}
+
+					function getY(){
+						return 0
+					}
+					function getW(){
+						return preview.clientWidth;
+					}
+					function getH(){
+						return preview.clientHeight;
+					}
 
 					Global.mainWindow.capturePage({
-						x: parseInt(_x)+1, 
-						y: 0, 
-						width: parseInt(_width), 
-						height: parseInt(_height)
+						x: getX(), 
+						y: getY(), 
+						width: getW(), 
+						height: getH()
 					},function(_img){
 						console.log("pre-flash");
 						var pngImgBuff = _img.toPng();
@@ -550,14 +571,6 @@ core.preview = {
 					el("#screenshotCamera").onclick = function(){
 						core.preview.mode.screenshot.capture();
 					}
-
-					// el("#thumbCamera").onmouseover = function(){
-					// 	el("#thumbBox").addClass("screenshot-in-progress");
-					// }
-
-					// el("#thumbCamera").onmouseout = function(){
-					// 	el("#thumbBox").rmClass("screenshot-in-progress");
-					// }
 
 				}
 				
