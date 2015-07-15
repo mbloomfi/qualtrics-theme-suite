@@ -245,7 +245,6 @@ editorCore.dropdowns.files = {
 			filesDropdown.el(".arrow")[0].rmClass("hide");
 		});
 		fileName.addClass("dropdown-active");
-		
 	},
 
 	close: function(){
