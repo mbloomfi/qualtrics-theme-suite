@@ -28,7 +28,7 @@ editorCore.dropdowns.brands = {
 		var self = this;
 
 		function selectBrand(){
-
+			console.log("selecting:",_brandName);
 			core.brands.exists(_brandName, function(exists){
 				ipc.send('asynchronous-message', 'disablePreviewModes');
 
@@ -46,6 +46,7 @@ editorCore.dropdowns.brands = {
 
 						self.close();
 					} else {
+						console.log("brand ",_brandName,"does not exists")
 						self.close();
 						// refresh last open file
 						core.localData.rmFromRecentBrands(_brandName, function(){
@@ -382,6 +383,7 @@ editorCore.dropdowns.brands = {
 
 		},
 
+		// ADD BRAND BUTTON
 		newBrandBtn: {
 			enabled: false,
 			exists: false,
@@ -392,9 +394,11 @@ editorCore.dropdowns.brands = {
 					brandsListCont.addClass("showBottomBtn");
 					this.exists = true;
 					btn.on("click", function(){
-						if(!btn.hasClass("disabled")) core.brands.create(btn.dataset.brandname, function(){
-							editorCore.dropdowns.brands.select(_brandName);
-						});
+						if(!btn.hasClass("disabled")) {
+							core.brands.create(btn.dataset.brandname, function(){
+								editorCore.dropdowns.brands.select(btn.dataset.brandname);
+							});
+						}
 					});
 				}
 			},

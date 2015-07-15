@@ -449,13 +449,7 @@ editorCore.dropdowns.files = {
 				
 			}
 
-			
-			
-
-
 		}
-
-
 
 	}
 

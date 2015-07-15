@@ -14,18 +14,17 @@ editorCore.dropdowns.projects = {
 			core.brands.projects.setCurrentProject(_projectName);
 			editorCore.dropdowns.files.activate(_projectName);
 			// editorCore.dropdowns.files.populate(_projectName);
-
+			console.log("selecting project 1");
 			core.codeMirror.deactivate();
 			myCodeMirror.markClean();
 			editorCore.dropdowns.files.reset();
-			
-
+			console.log("selecting project 2");
 			core.preview.mode.regular.clearWatchers();
 			core.preview.mode.regular.setWatchers();
-
+			console.log("selecting project 3");
 			core.preview.mode.regular.update();
 			core.preview.mode.regular.enable();
-
+			console.log("selecting project 4");
 			editorCore.dropdowns.files.autoSelectStyleSheet();
 
 			editorCore.refreshBtn.activate();
@@ -274,7 +273,7 @@ editorCore.dropdowns.projects = {
 
 	copyBaseFilesToProject: function(_projectName, _callback){
 		var _brandName = core.localData.currentBrand;
-		var pathToProject = core.brands.getPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
+		var pathToProject = core.brands.getFullPathToBrands()+"/"+core.localData.currentBrand+"/"+_projectName;
 		var pathToBaseFiles = core.localData.pathToBaseFiles;
 
 		core.getFiles(pathToBaseFiles, function(files){

@@ -101,7 +101,7 @@ var core = Global.coreMethods = {
 				if(exists) {
 					alert("Brand already exists. Nice try though.");
 				} else {
-					fs.mkdirp(core.localData.brands.path+"/"+_brandName, function(err){
+					fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
 						if(!err) next();
 					});
 				}
@@ -152,6 +152,7 @@ var core = Global.coreMethods = {
 			console.log(typeof core.localData.brands.path);
 			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
+					console.error("brand exists error",err)
 					return _callback(false);
 				}
 				else {
@@ -370,10 +371,6 @@ var core = Global.coreMethods = {
 				}
 			});
 			if(_callback) _callback();
-		},
-
-		setPathToBrands: function(_path){
-			core.localData.brands.path = _path;
 		},
 
 

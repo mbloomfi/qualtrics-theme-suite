@@ -99,21 +99,35 @@ core.preview = {
 				var self = this;
 				var path = core.localData.currentProject.path+"/StyleSheet.css";
 				
-				self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
-					self.update();
-					self.reload();
-				});
+				try{
+					self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
+						self.update();
+						self.reload();
+					});
+				}
+				catch(e){
+					self.disable();
+					console.error("error watching CSS File:",e);
+				}
+					
 				
 			},
 
 			watchSkinFile: function(){
 				var self = this;
 				var path = core.localData.currentProject.path+"/Skin.html";
-				
-				self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
-					self.update();
-					self.reload();
-				});
+
+				try {
+					self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
+						self.update();
+						self.reload();
+					});
+				}
+				catch(e){
+					self.disable();
+					console.error("error watching Skin File:",e);
+				}
+					
 				
 			},
 
@@ -123,6 +137,8 @@ core.preview = {
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
 						this.addClass("reloading");
+						core.preview.deactivate();
+						core.preview.init();
 						preview.reload();
 						setTimeout(function(){
 							self.rmClass("reloading");
