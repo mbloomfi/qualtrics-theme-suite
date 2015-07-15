@@ -186,6 +186,7 @@ editorCore.dropdowns.brands = {
 		);
 	},
 	
+
 	purge: function(){
 		brandsDropdown.purge();
 	},
@@ -195,6 +196,7 @@ editorCore.dropdowns.brands = {
 		maxAmount: 15,
 
 		populate: function(){
+			console.log("start populating recent brands:",core.localData.brands.recent);
 			var self = this;
 			baton(function(next){
 				editorCore.dropdowns.brands.search.newBrandBtn.remove();
@@ -202,7 +204,9 @@ editorCore.dropdowns.brands = {
 			})
 			.then(function(next){
 
-				var recentBrandsArray = core.localData.recentBrands;
+				var recentBrandsArray = core.localData.brands.recent;
+
+				console.log("recentBrandsArray::", recentBrandsArray);
 
 				var recentBrandsCont = el("+div#recentBrandsCont");
 

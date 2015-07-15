@@ -5,10 +5,7 @@ var remote = require("remote");
 var app = remote.require("app");
 var Global = remote.getGlobal("sharedObject"); //see index.js
 var appRoot = Global.appRoot;
-var fs = require("fs");
-var json = require("jsonfile");
-var escape = require("escape-html");
-var mkdirp = require("mkdirp");
+var fs = require("fs-extra");
 var path = require("path");
 
 //= include ../app-core-methods.js
@@ -79,6 +76,8 @@ el("#files-option").on("click", function(){
 	navOptions.rmClass("current");
 	this.addClass("current");
 })
+	
+
 el("#snippets-option").on("click", function(){
 	panel.transitionTo.run("snippets");
 	navOptions.rmClass("current");
@@ -110,12 +109,14 @@ panel.transitionTo = baton(function(next, _newPanelName){
 	}, 300);
 
 })
+
 .then(function(next, _newPanel){
 
 	panel.setPanel(next, _newPanel);
 	panel.rmClass("hide");
 
 })
+
 .then(function(next){
 	// console.log("currentPanel:",currentPanel);
 	currentPanel.on("submit", function(evt){
@@ -137,7 +138,9 @@ panel.buildPanel = function(_newPanel) {
 		return currentPanel;
 	} 
 
+
 	else if(_newPanel === "files"){
+		console.log("a1")
 
 		currentPanel = el("+form#filesForm").addClass("files");
 		//Path To Brands
@@ -171,8 +174,36 @@ panel.buildPanel = function(_newPanel) {
 		currentPanel.append( 
 			el("+button#manageBaseFiles").addClass("btn").text("Manage Base Files") 
 		);
+
+		// --------------------------------
+		//	Manage Preview Files Litener
+		// --------------------------------
+		currentPanel.el("#managePreviewFiles").on("click", function(){
+			panel.transitionTo.run("previewFiles");
+		});
+
+		console.log("a2")
+
 		return currentPanel;
 	} 
+
+
+	else if(_newPanel === "previewFiles"){
+		currentPanel = el("+form#previewFilesForm").addClass("files");
+		//Path To Brands
+		currentPanel.append( 
+			el("+label").addClass("previewFilesLabel").append( 
+				el.join([
+					el("+div").text("Preview Question Files"),
+					el("+div#previewFilesCont").addClass("fileListContainer")
+				])
+				 
+			) 
+		);
+
+		return currentPanel;
+	}
+
 
 	else if(_newPanel === "snippets"){
 
@@ -235,7 +266,6 @@ panel.buildPanel = function(_newPanel) {
 // --------------------------------
 panel.setPanel = function(next, _newPanel) {
 	panel.purge().append(_newPanel);
-	checkAndRadio();
 	next();
 }
 
@@ -249,7 +279,7 @@ panel.insertData = function(_panel){
 	} else if(_panel === "files"){
 
 		// add path to Brands folder
-		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.userSettings.files.pathToBrands);
+		var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.brands.path);
 
 		// Populate the preview files and select the default		
 		var defaultPreviewFile = currentPanel.el("#default-preview-file");
@@ -266,20 +296,56 @@ panel.insertData = function(_panel){
 
 
 		currentPanel.el("#path-to-brands").on("blur", function(){
-			if(this.value !== core.localData.userSettings.files.pathToBrands){
-				core.localData.userSettings.files.pathToBrands = this.value;
+			if(this.value !== core.localData.brands.path){
+				core.localData.brands.path = core.localData.userSettings.files.brands.path = this.value;
 			}
 		});
+
 		currentPanel.el("#default-preview-file").on("blur", function(){
 			if(this.options[this.selectedIndex].value !== core.localData.userSettings.files.defaultPreviewFile){
 				core.localData.userSettings.files.defaultPreviewFile = this.options[this.selectedIndex].value;
 			}
 		});
 
+	}
 
-	} else if(_panel === "snippets"){
 
-	} else if(_panel === "preview"){
+	else if(_panel = "previewFiles") {
+
+		var previewFilesCont = currentPanel.el("#previewFilesCont");
+		var path = appRoot+"/local/preview-files"; 
+		var fileList = [];
+		fs.readdir(path, function(_err, _files){
+			if(_err) console.log("error listing preview files");
+			for(var i = 0, ii = _files.length; i < ii; i++){
+				var stats = fs.statSync(path+"/"+_files[i]);
+				if(stats.isFile() && _files[i].charAt(0) !== ".") fileList.push(_files[i]);
+			}
+
+			for(var i = 0, ii = fileList.length; i < ii; i++){
+				previewFilesCont.append(
+					el("+div").addClass("file-item").append(
+						el.join([
+							el("+div").addClass("delete-file"),
+							el("+div").addClass("file-name").text(fileList[i])
+						])
+					)
+				);
+			}
+
+			// loop through files list and populate preview files list container 
+			console.log("preview files list:",fileList);
+		});
+
+	}
+
+
+	else if(_panel === "snippets"){
+
+	} 
+
+
+	else if(_panel === "preview"){
 		currentPanel.el("#"+core.localData.userSettings.preview.refreshPreview).checked = true;
 		currentPanel.el("#thumbnailName").attr("value", core.localData.userSettings.preview.defaultThumbnailName);
 

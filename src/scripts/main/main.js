@@ -131,6 +131,7 @@ el.on("load", function(){
 		core.localData.updateUserSettings(next);
 
 	})
+
 	.then(function(next){
 
 		core.localData.updateBrandsList(next);

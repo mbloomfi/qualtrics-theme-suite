@@ -187,8 +187,6 @@ editorCore.dropdowns.files = {
 					self.select(this.dataset.filename);
 				}
 			});
-
-
 			
 
 		});

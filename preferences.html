@@ -389,6 +389,28 @@
 		section#panel.hide {
 		  opacity: 0;
 		}
+		section#panel .fileListContainer {
+		  background-color: #fff;
+		  border: 2px solid #dcdcdc;
+		  box-sizing: border-box;
+		}
+		section#panel .fileListContainer .file-item {
+		  border-top: 1px solid #f0f0f0;
+		  border-bottom: 1px solid #f0f0f0;
+		  font-size: 16px;
+		}
+		section#panel .fileListContainer .file-item .delete-file {
+		  vertical-align: middle;
+		  width: 20px;
+		  height: 20px;
+		  background-color: #f00;
+		  display: inline-block;
+		}
+		section#panel .fileListContainer .file-item .file-name {
+		  vertical-align: middle;
+		  background-color: #ffa500;
+		  display: inline-block;
+		}
 		section#Prompter {
 		  position: fixed;
 		  top: 0;
@@ -526,10 +548,7 @@
 	var app = remote.require("app");
 	var Global = remote.getGlobal("sharedObject"); //see index.js
 	var appRoot = Global.appRoot;
-	var fs = require("fs");
-	var json = require("jsonfile");
-	var escape = require("escape-html");
-	var mkdirp = require("mkdirp");
+	var fs = require("fs-extra");
 	var path = require("path");
 	var core = Global.coreMethods = {
 	
@@ -551,7 +570,7 @@
 	
 			update: function (_successCallback){
 				var _DATA = {};
-				_DATA.recentBrands = core.localData.recentBrands;
+				_DATA.recentBrands = core.localData.brands.recent;
 				//_DATA.x = core.localData.x;
 				fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
 					if(err) alert("Error Saving Changes");
@@ -612,8 +631,8 @@
 		// ----------------------------
 		brands: {
 	
-			getPathToBrands: function(){
-				return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+			getFullPathToBrands: function(){
+				return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
 			},
 	
 			select: function(_brandName){
@@ -634,7 +653,7 @@
 					if(exists) {
 						alert("Brand already exists. Nice try though.");
 					} else {
-						fs.mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+						fs.mkdirp(core.localData.brands.path+"/"+_brandName, function(err){
 							if(!err) next();
 						});
 					}
@@ -666,11 +685,11 @@
 			*/
 			updateRecentBrands: function(){
 				var brand = core.localData.currentBrand;
-				var i = core.localData.recentBrands.indexOf(brand);
+				var i = core.localData.brands.recent.indexOf(brand);
 				if(i !== -1) {
-					core.localData.recentBrands.splice(i, 1);
+					core.localData.brands.recent.splice(i, 1);
 				}
-				core.localData.recentBrands.unshift(brand);
+				core.localData.brands.recent.unshift(brand);
 				core.persistentDataFile.update();
 			},	
 	
@@ -682,7 +701,8 @@
 	
 			exists: function(_brandName, _callback){
 				var self = this;
-				fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+				console.log(typeof core.localData.brands.path);
+				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 					if(err) {
 						return _callback(false);
 					}
@@ -707,7 +727,8 @@
 				})
 				.then(function(){
 					//check if brand has file
-					fs.stat(self.getPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+					console.log(typeof core.brands.getFullPathToBrands());
+					fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
 						if(err) {
 							return _callback(false);
 						}
@@ -728,7 +749,7 @@
 	
 					core.localData.currentProject.path = (_projectName !== null)
 					?
-					(core.brands.getPathToBrands()+"/"+
+					(core.brands.getFullPathToBrands()+"/"+
 					core.localData.currentBrand+"/"+
 					core.localData.currentProject.name)
 					:
@@ -746,12 +767,13 @@
 					})
 					.then(function(next, exists){
 						if(exists){
-							var pathToBrand = core.brands.getPathToBrands() + "/" + _brandName;
+							var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
 							next(pathToBrand);
 						}
 					})
 					.then(function(next, path){
 						var projectList = [];
+						console.log(typeof path);
 						fs.readdir(path, function(_err, _projects){
 							if(_err) console.log("error listing projects");
 							for(var i = 0, ii = _projects.length; i < ii; i++){
@@ -777,7 +799,8 @@
 					.then(function(next, exists){
 	
 						if(exists) {
-							fs.mkdirp(core.brands.getPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+							console.log(typeof core.brands.getFullPathToBrands());
+							fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 								if(!err) next();
 							});
 						} else {
@@ -827,14 +850,22 @@
 		//  Local Temp Data
 		// ----------------------------
 		localData: {
-			recentBrands: null,
-			brandList: null,
+			brands: {
+				path: null,
+				current: {
+					name: null
+				},
+				list: [],
+				recent: []
+			},
 			userSettings: null,
 			currentBrand: null,
 			currentProject: {
 				name: null,
 				path: null
 			},
+	
+	
 			currentFile:{
 				name: null,
 				path: null,
@@ -846,10 +877,17 @@
 					self.name = self.path = self.dirty = null;
 				}
 			},
-			currentPreviewQuestionsFile: {
-				name: null,
-				path: null
+	
+			previewQuestionFiles: {
+				list: [],
+				current: {
+					name: null,
+					path: null
+				}
+	
+	
 			},
+	
 			pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 	
 			updateUserSettings: function(_callback){ // should only be run on app init
@@ -857,6 +895,9 @@
 				core.userSettingsFile.read(function(_data){
 					if(self.userSettings === null || core.localData.userSettings !== _data){
 						self.userSettings = _data;
+						self.brands.path = self.userSettings.files.brands.path;
+	
+	
 	
 						self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 	
@@ -866,9 +907,39 @@
 				});
 			},
 	
+	
+			updatePreviewFilesList: function(_callback){
+				var path = appRoot+"/local/preview-files";
+	
+	
+				fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+					if(!_err){ 
+						
+						if(typeof _successCallback === "function") _successCallback(_data);
+					}
+					else {
+						console.log("User Settings READ ERROR:", _err);
+					}
+				});
+				if(_callback) _callback();
+			},
+	
+			setPathToBrands: function(_path){
+				core.localData.brands.path = _path;
+			},
+	
+	
+	
 			updateBrandsList: function(_CALLBACK){
-				var pathToBrands = core.brands.getPathToBrands();
+	
+				// var pathToBrands = core.localData.brands.path;
+				var pathToBrands = core.brands.getFullPathToBrands();
+	
 				var brandList = [];
+	
+	
+				console.log(typeof core.localData.brands.path);
+				console.log("path",pathToBrands);
 				fs.readdir(pathToBrands, function(_err, _files){
 					if(_err) console.log("error");
 					for(var i = 0, ii = _files.length; i < ii; i++) {
@@ -881,9 +952,9 @@
 			},
 	
 			rmFromRecentBrands: function(_brandName, _CALLBACK){
-				var brandNameIndex = core.localData.recentBrands.indexOf(_brandName)
+				var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
 				if(brandNameIndex !== -1){
-					core.localData.recentBrands.splice(brandNameIndex, 1);
+					core.localData.brands.recent.splice(brandNameIndex, 1);
 					core.persistentDataFile.update();
 				}
 				_CALLBACK();
@@ -895,9 +966,11 @@
 				brands if its not already there */
 	
 				// if local data is null
-				if(core.localData.recentBrands === null){
+				if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
 					core.persistentDataFile.read(function(_persistent_data){
-						core.localData.recentBrands = _persistent_data.recentBrands;
+						console.log("persistent-data recent brands", _persistent_data.recentBrands)
+						core.localData.brands.recent = _persistent_data.recentBrands;
+						console.log("1a) recentbrands:",core.localData.brands.recent);
 						_CALLBACK();
 					})
 				} 
@@ -905,9 +978,10 @@
 				else {
 	
 					// if current brand is not the most recent brand
-					if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
-						core.localData.recentBrands.unshift(core.localData.currentBrand);
+					if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
+						core.localData.brands.recent.unshift(core.localData.currentBrand);
 						core.persistentDataFile.update(function(){
+							console.log("1b) recentbrands:",core.localData.brands.recent);
 							_CALLBACK();
 						});
 						
@@ -915,6 +989,7 @@
 	
 					// local recent brands is up to date
 					else {
+						console.log("1c) recentbrands:",core.localData.brands.recent);
 						_CALLBACK();
 					}
 				}
@@ -938,8 +1013,8 @@
 	
 			setCurrentPreviewQuestionsFile: function(_fileName){
 				var path = Global.appRoot+"/local/preview-files";
-				this.currentPreviewQuestionsFile.name = _fileName;
-				this.currentPreviewQuestionsFile.path = path+"/"+_fileName;
+				this.previewQuestionFiles.current.name = _fileName;
+				this.previewQuestionFiles.current.path = path+"/"+_fileName;
 			}
 		},
 	
@@ -1188,6 +1263,8 @@
 		navOptions.rmClass("current");
 		this.addClass("current");
 	})
+		
+	
 	el("#snippets-option").on("click", function(){
 		panel.transitionTo.run("snippets");
 		navOptions.rmClass("current");
@@ -1219,12 +1296,14 @@
 		}, 300);
 	
 	})
+	
 	.then(function(next, _newPanel){
 	
 		panel.setPanel(next, _newPanel);
 		panel.rmClass("hide");
 	
 	})
+	
 	.then(function(next){
 		// console.log("currentPanel:",currentPanel);
 		currentPanel.on("submit", function(evt){
@@ -1246,7 +1325,9 @@
 			return currentPanel;
 		} 
 	
+	
 		else if(_newPanel === "files"){
+			console.log("a1")
 	
 			currentPanel = el("+form#filesForm").addClass("files");
 			//Path To Brands
@@ -1280,8 +1361,36 @@
 			currentPanel.append( 
 				el("+button#manageBaseFiles").addClass("btn").text("Manage Base Files") 
 			);
+	
+			// --------------------------------
+			//	Manage Preview Files Litener
+			// --------------------------------
+			currentPanel.el("#managePreviewFiles").on("click", function(){
+				panel.transitionTo.run("previewFiles");
+			});
+	
+			console.log("a2")
+	
 			return currentPanel;
 		} 
+	
+	
+		else if(_newPanel === "previewFiles"){
+			currentPanel = el("+form#previewFilesForm").addClass("files");
+			//Path To Brands
+			currentPanel.append( 
+				el("+label").addClass("previewFilesLabel").append( 
+					el.join([
+						el("+div").text("Preview Question Files"),
+						el("+div#previewFilesCont").addClass("fileListContainer")
+					])
+					 
+				) 
+			);
+	
+			return currentPanel;
+		}
+	
 	
 		else if(_newPanel === "snippets"){
 	
@@ -1344,7 +1453,6 @@
 	// --------------------------------
 	panel.setPanel = function(next, _newPanel) {
 		panel.purge().append(_newPanel);
-		checkAndRadio();
 		next();
 	}
 	
@@ -1358,7 +1466,7 @@
 		} else if(_panel === "files"){
 	
 			// add path to Brands folder
-			var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.userSettings.files.pathToBrands);
+			var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.brands.path);
 	
 			// Populate the preview files and select the default		
 			var defaultPreviewFile = currentPanel.el("#default-preview-file");
@@ -1375,20 +1483,56 @@
 	
 	
 			currentPanel.el("#path-to-brands").on("blur", function(){
-				if(this.value !== core.localData.userSettings.files.pathToBrands){
-					core.localData.userSettings.files.pathToBrands = this.value;
+				if(this.value !== core.localData.brands.path){
+					core.localData.brands.path = core.localData.userSettings.files.brands.path = this.value;
 				}
 			});
+	
 			currentPanel.el("#default-preview-file").on("blur", function(){
 				if(this.options[this.selectedIndex].value !== core.localData.userSettings.files.defaultPreviewFile){
 					core.localData.userSettings.files.defaultPreviewFile = this.options[this.selectedIndex].value;
 				}
 			});
 	
+		}
 	
-		} else if(_panel === "snippets"){
 	
-		} else if(_panel === "preview"){
+		else if(_panel = "previewFiles") {
+	
+			var previewFilesCont = currentPanel.el("#previewFilesCont");
+			var path = appRoot+"/local/preview-files"; 
+			var fileList = [];
+			fs.readdir(path, function(_err, _files){
+				if(_err) console.log("error listing preview files");
+				for(var i = 0, ii = _files.length; i < ii; i++){
+					var stats = fs.statSync(path+"/"+_files[i]);
+					if(stats.isFile() && _files[i].charAt(0) !== ".") fileList.push(_files[i]);
+				}
+	
+				for(var i = 0, ii = fileList.length; i < ii; i++){
+					previewFilesCont.append(
+						el("+div").addClass("file-item").append(
+							el.join([
+								el("+div").addClass("delete-file"),
+								el("+div").addClass("file-name").text(fileList[i])
+							])
+						)
+					);
+				}
+	
+				// loop through files list and populate preview files list container 
+				console.log("preview files list:",fileList);
+			});
+	
+		}
+	
+	
+		else if(_panel === "snippets"){
+	
+		} 
+	
+	
+		else if(_panel === "preview"){
 			currentPanel.el("#"+core.localData.userSettings.preview.refreshPreview).checked = true;
 			currentPanel.el("#thumbnailName").attr("value", core.localData.userSettings.preview.defaultThumbnailName);
 	

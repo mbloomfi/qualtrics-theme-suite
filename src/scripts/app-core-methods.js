@@ -18,7 +18,7 @@ var core = Global.coreMethods = {
 
 		update: function (_successCallback){
 			var _DATA = {};
-			_DATA.recentBrands = core.localData.recentBrands;
+			_DATA.recentBrands = core.localData.brands.recent;
 			//_DATA.x = core.localData.x;
 			fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
 				if(err) alert("Error Saving Changes");
@@ -79,8 +79,8 @@ var core = Global.coreMethods = {
 	// ----------------------------
 	brands: {
 
-		getPathToBrands: function(){
-			return path.normalize(process.env.HOME+"/"+core.localData.userSettings.files.pathToBrands);
+		getFullPathToBrands: function(){
+			return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
 		},
 
 		select: function(_brandName){
@@ -101,7 +101,7 @@ var core = Global.coreMethods = {
 				if(exists) {
 					alert("Brand already exists. Nice try though.");
 				} else {
-					fs.mkdirp(self.getPathToBrands()+"/"+_brandName, function(err){
+					fs.mkdirp(core.localData.brands.path+"/"+_brandName, function(err){
 						if(!err) next();
 					});
 				}
@@ -133,11 +133,11 @@ var core = Global.coreMethods = {
 		*/
 		updateRecentBrands: function(){
 			var brand = core.localData.currentBrand;
-			var i = core.localData.recentBrands.indexOf(brand);
+			var i = core.localData.brands.recent.indexOf(brand);
 			if(i !== -1) {
-				core.localData.recentBrands.splice(i, 1);
+				core.localData.brands.recent.splice(i, 1);
 			}
-			core.localData.recentBrands.unshift(brand);
+			core.localData.brands.recent.unshift(brand);
 			core.persistentDataFile.update();
 		},	
 
@@ -149,7 +149,8 @@ var core = Global.coreMethods = {
 
 		exists: function(_brandName, _callback){
 			var self = this;
-			fs.stat(self.getPathToBrands()+"/"+_brandName, function(err, stats){
+			console.log(typeof core.localData.brands.path);
+			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
 					return _callback(false);
 				}
@@ -174,7 +175,8 @@ var core = Global.coreMethods = {
 			})
 			.then(function(){
 				//check if brand has file
-				fs.stat(self.getPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+				console.log(typeof core.brands.getFullPathToBrands());
+				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
 					if(err) {
 						return _callback(false);
 					}
@@ -195,7 +197,7 @@ var core = Global.coreMethods = {
 
 				core.localData.currentProject.path = (_projectName !== null)
 				?
-				(core.brands.getPathToBrands()+"/"+
+				(core.brands.getFullPathToBrands()+"/"+
 				core.localData.currentBrand+"/"+
 				core.localData.currentProject.name)
 				:
@@ -213,12 +215,13 @@ var core = Global.coreMethods = {
 				})
 				.then(function(next, exists){
 					if(exists){
-						var pathToBrand = core.brands.getPathToBrands() + "/" + _brandName;
+						var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
 						next(pathToBrand);
 					}
 				})
 				.then(function(next, path){
 					var projectList = [];
+					console.log(typeof path);
 					fs.readdir(path, function(_err, _projects){
 						if(_err) console.log("error listing projects");
 						for(var i = 0, ii = _projects.length; i < ii; i++){
@@ -244,7 +247,8 @@ var core = Global.coreMethods = {
 				.then(function(next, exists){
 
 					if(exists) {
-						fs.mkdirp(core.brands.getPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+						console.log(typeof core.brands.getFullPathToBrands());
+						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 							if(!err) next();
 						});
 					} else {
@@ -294,14 +298,22 @@ var core = Global.coreMethods = {
 	//  Local Temp Data
 	// ----------------------------
 	localData: {
-		recentBrands: null,
-		brandList: null,
+		brands: {
+			path: null,
+			current: {
+				name: null
+			},
+			list: [],
+			recent: []
+		},
 		userSettings: null,
 		currentBrand: null,
 		currentProject: {
 			name: null,
 			path: null
 		},
+
+
 		currentFile:{
 			name: null,
 			path: null,
@@ -313,10 +325,17 @@ var core = Global.coreMethods = {
 				self.name = self.path = self.dirty = null;
 			}
 		},
-		currentPreviewQuestionsFile: {
-			name: null,
-			path: null
+
+		previewQuestionFiles: {
+			list: [],
+			current: {
+				name: null,
+				path: null
+			}
+
+
 		},
+
 		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
 
 		updateUserSettings: function(_callback){ // should only be run on app init
@@ -324,6 +343,9 @@ var core = Global.coreMethods = {
 			core.userSettingsFile.read(function(_data){
 				if(self.userSettings === null || core.localData.userSettings !== _data){
 					self.userSettings = _data;
+					self.brands.path = self.userSettings.files.brands.path;
+
+
 
 					self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 
@@ -333,9 +355,39 @@ var core = Global.coreMethods = {
 			});
 		},
 
+
+		updatePreviewFilesList: function(_callback){
+			var path = appRoot+"/local/preview-files";
+
+
+			fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+				if(!_err){ 
+					
+					if(typeof _successCallback === "function") _successCallback(_data);
+				}
+				else {
+					console.log("User Settings READ ERROR:", _err);
+				}
+			});
+			if(_callback) _callback();
+		},
+
+		setPathToBrands: function(_path){
+			core.localData.brands.path = _path;
+		},
+
+
+
 		updateBrandsList: function(_CALLBACK){
-			var pathToBrands = core.brands.getPathToBrands();
+
+			// var pathToBrands = core.localData.brands.path;
+			var pathToBrands = core.brands.getFullPathToBrands();
+
 			var brandList = [];
+
+
+			console.log(typeof core.localData.brands.path);
+			console.log("path",pathToBrands);
 			fs.readdir(pathToBrands, function(_err, _files){
 				if(_err) console.log("error");
 				for(var i = 0, ii = _files.length; i < ii; i++) {
@@ -348,9 +400,9 @@ var core = Global.coreMethods = {
 		},
 
 		rmFromRecentBrands: function(_brandName, _CALLBACK){
-			var brandNameIndex = core.localData.recentBrands.indexOf(_brandName)
+			var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
 			if(brandNameIndex !== -1){
-				core.localData.recentBrands.splice(brandNameIndex, 1);
+				core.localData.brands.recent.splice(brandNameIndex, 1);
 				core.persistentDataFile.update();
 			}
 			_CALLBACK();
@@ -362,9 +414,11 @@ var core = Global.coreMethods = {
 			brands if its not already there */
 
 			// if local data is null
-			if(core.localData.recentBrands === null){
+			if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
 				core.persistentDataFile.read(function(_persistent_data){
-					core.localData.recentBrands = _persistent_data.recentBrands;
+					console.log("persistent-data recent brands", _persistent_data.recentBrands)
+					core.localData.brands.recent = _persistent_data.recentBrands;
+					console.log("1a) recentbrands:",core.localData.brands.recent);
 					_CALLBACK();
 				})
 			} 
@@ -372,9 +426,10 @@ var core = Global.coreMethods = {
 			else {
 
 				// if current brand is not the most recent brand
-				if(core.localData.currentBrand !== null && core.localData.recentBrands[0] !== core.localData.currentBrand){
-					core.localData.recentBrands.unshift(core.localData.currentBrand);
+				if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
+					core.localData.brands.recent.unshift(core.localData.currentBrand);
 					core.persistentDataFile.update(function(){
+						console.log("1b) recentbrands:",core.localData.brands.recent);
 						_CALLBACK();
 					});
 					
@@ -382,6 +437,7 @@ var core = Global.coreMethods = {
 
 				// local recent brands is up to date
 				else {
+					console.log("1c) recentbrands:",core.localData.brands.recent);
 					_CALLBACK();
 				}
 			}
@@ -405,8 +461,8 @@ var core = Global.coreMethods = {
 
 		setCurrentPreviewQuestionsFile: function(_fileName){
 			var path = Global.appRoot+"/local/preview-files";
-			this.currentPreviewQuestionsFile.name = _fileName;
-			this.currentPreviewQuestionsFile.path = path+"/"+_fileName;
+			this.previewQuestionFiles.current.name = _fileName;
+			this.previewQuestionFiles.current.path = path+"/"+_fileName;
 		}
 	},
 

@@ -1,17 +1,33 @@
-{"files":{
-	"pathToBrands":"brands",
-	"defaultPreviewFile":"preview-file-1.html",
-	"previewFiles":[
-		{"fileName":"preview-file-1.html","verboseName":"V4-Single"},
-		{"fileName":"preview-file-2.html","verboseName":"(not yet)"},
-		{"fileName":"preview-file-3.html","verboseName":"(not yet)"}
-	],
-	"lastPreviewFileIndex":3
-	},
-"preview":{
-	"refreshPreview":"onSave",
-	"defaultThumbnailName":"Thumb",
-	"defaultThumbnailExt":".gif",
-	"thumbnailExtensions":[".gif",".png",".jpg"]
-	}
+{
+  "files": {
+    "brands": {
+      "path": "brands"
+    },
+    "defaultPreviewFile": "preview-file-1.html",
+    "previewFiles": [
+      {
+        "fileName": "preview-file-1.html",
+        "verboseName": "V4-Single"
+      },
+      {
+        "fileName": "preview-file-2.html",
+        "verboseName": "(not yet)"
+      },
+      {
+        "fileName": "preview-file-3.html",
+        "verboseName": "(not yet)"
+      }
+    ],
+    "lastPreviewFileIndex": 3
+  },
+  "preview": {
+    "refreshPreview": "onSave",
+    "defaultThumbnailName": "Thumb",
+    "defaultThumbnailExt": ".gif",
+    "thumbnailExtensions": [
+      ".gif",
+      ".png",
+      ".jpg"
+    ]
+  }
 }

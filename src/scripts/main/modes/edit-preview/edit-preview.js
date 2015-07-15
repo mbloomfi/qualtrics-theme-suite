@@ -142,7 +142,7 @@ core.preview = {
 					if(_errHtml){ console.log("ERR",_errHtml);}
 					else {
 
-						fs.readFile(core.localData.currentPreviewQuestionsFile.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
+						fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 							if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
 							else {
 								gulp.src("local/previewTemplate.html")
