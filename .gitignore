@@ -3,3 +3,5 @@ src/scripts/main/_.js
 src/scripts/preferences/_.js
 src/styles/main/_.css
 src/styles/preferences/_.css
+local/currentPreview.html
+local/persistent-data.json
