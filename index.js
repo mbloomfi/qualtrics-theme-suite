@@ -253,6 +253,7 @@ var menuTemplate = [
     submenu: [
       {
         label: 'Preview File',
+
         submenu: [
           // These should be read from the user settings
           {
@@ -344,7 +345,7 @@ var menuTemplate = [
         type: "checkbox",
         checked: false,
         enabled: false,
-        icon: 'local/images/camera-small.png',
+        // icon: 'local/images/camera-small.png',
         click: function(){
           var self = appMenu.items[4].submenu.items[5];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
@@ -537,6 +538,14 @@ var menuTemplate = [
   }
     
 ];
+
+// console.log("menu index:",menuTemplate[4].submenu[0].submenu);
+
+// menuTemplate.populatePreviewFiles = function(_callback){
+//   var menuTemplate[4].submenu[0].submenu
+// };
+
+
 
 var appMenu = Menu.buildFromTemplate(menuTemplate);
 

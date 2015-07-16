@@ -133,19 +133,20 @@ core.preview = {
 
 			reload: function(){
 
+
 				function reloadPreview(){
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
 						this.addClass("reloading");
-						preview.src="#";
+						// preview.src="local/no-preview.html";
 
 						
 						setTimeout(function(){
 							core.preview.init();
 							setTimeout(function(){
 								preview.reload();
-							}, 0);
-						}, 0);
+							}, 50);
+						}, 50);
 							
 						
 						setTimeout(function(){
@@ -153,6 +154,8 @@ core.preview = {
 						}, 300);
 					}
 				}
+
+
 				reloadPreview.bind(el("#refreshPreviewBtn"))();
 
 			},

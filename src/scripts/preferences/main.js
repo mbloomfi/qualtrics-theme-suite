@@ -192,7 +192,7 @@ panel.buildPanel = function(_newPanel) {
 		currentPanel = el("+form#previewFilesForm").addClass("files");
 		//Path To Brands
 		currentPanel.append( 
-			el("+label").addClass("previewFilesLabel").append( 
+			el("+div").addClass("previewFilesLabel").append( 
 				el.join([
 					el("+div").text("Preview Question Files"),
 					el("+div#previewFilesCont").addClass("fileListContainer")
@@ -270,6 +270,8 @@ panel.setPanel = function(next, _newPanel) {
 }
 
 
+
+
 // --------------------------------
 //		INSERT DATA INTO PANEL
 // --------------------------------
@@ -326,8 +328,8 @@ panel.insertData = function(_panel){
 				previewFilesCont.append(
 					el("+div").addClass("file-item").append(
 						el.join([
-							el("+div").addClass("delete-file"),
-							el("+div").addClass("file-name").text(fileList[i])
+							el("+div#previewfile-"+i).addClass("delete-file"),
+							el("+label").addClass("file-name").text(fileList[i]).attr("for","previewfile-"+i)
 						])
 					)
 				);

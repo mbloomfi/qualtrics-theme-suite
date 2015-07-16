@@ -171,25 +171,33 @@ section#panel {
 		background-color rgb(255,255,255)
 		border 2px solid rgb(220,220,220)
 		box-sizing border-box
+		
 		.file-item {
 			border-top 1px solid rgb(240,240,240)
+			background-color rgb(255,255,255)
 			border-bottom 1px solid rgb(240,240,240)
 			font-size 16px
+			position relative
+			padding 5px
 			
-			// line-height 20px
-			// height 20px
+			.file-name {
+				vertical-align middle
+				// background-color orange
+				display inline-block
+			}
 			.delete-file {
 				vertical-align middle
 				width 20px
 				height 20px
 				background-color red
 				display inline-block
+				margin 0 10px 0 0
+				&:hover {
+					// position relative
+					background-color lime
+				}
 			}
-			.file-name {
-				vertical-align middle
-				background-color orange
-				display inline-block
-			}
+			
 		}
 	}
 

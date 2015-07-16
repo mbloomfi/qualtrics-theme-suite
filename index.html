@@ -1798,6 +1798,49 @@
 		</section>
 
 		<script>
+			function ace (_func){
+				// most of these b methods should be on their own (except for the utils). That way each baton doesnt have to produce so much code.
+				var b = {
+					run : function(){
+						var args = Array.prototype.splice.call(arguments, 0);
+						b.utils.i = -1;
+						return b.next.apply(this, args);
+					},
+					block : function(_callback){
+						if(typeof _callback === "function") this.utils.queue.push(_callback.bind(this));
+						return this;
+					},
+					next : function(){
+						// converts all incoming arguments into array
+						var args = Array.prototype.splice.call(arguments, 0);
+						// if a proceeding function has been defined (using the 'then' method)
+						if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
+			
+							// increment the current call index
+							b.utils.i++;
+			
+							// run the next function
+							return b.utils.queue[b.utils.i].apply(b, args);
+						}
+					},
+					utils : { 
+						// the queue that will hold all of the blocks in the series
+						queue:[], 
+						// index starts at -1 so that the first item is index zero
+						i:-1
+					}
+			
+				};
+			
+				// this allows them to us this.*method* inside of their callback, and then run it
+				window.block = b.block;
+				window.block = window.block.bind(b);
+				_func.bind(b)(_func.arguments);
+				window.block = undefined;
+			
+			
+				return b.run.bind(b);
+			};
 			function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
 			
 			function pause(time, _callback) {
@@ -16704,7 +16747,7 @@
 			
 					releaseManager: function(){
 			
-						preview.src = "http://sun.qprod.net/releasemanager/";
+						preview.src = "http://10.240.30.11/releasemanager";
 			
 						core.preview.active = false;
 			
@@ -16873,19 +16916,20 @@
 			
 						reload: function(){
 			
+			
 							function reloadPreview(){
 								if(this.hasClass("active") && core.localData.currentProject.name !== null){
 									var self = this;
 									this.addClass("reloading");
-									preview.src="#";
+									// preview.src="local/no-preview.html";
 			
 									
 									setTimeout(function(){
 										core.preview.init();
 										setTimeout(function(){
 											preview.reload();
-										}, 0);
-									}, 0);
+										}, 50);
+									}, 50);
 										
 									
 									setTimeout(function(){
@@ -16893,6 +16937,8 @@
 									}, 300);
 								}
 							}
+			
+			
 							reloadPreview.bind(el("#refreshPreviewBtn"))();
 			
 						},
@@ -20161,9 +20207,13 @@
 					preview.addEventListener("did-start-loading", function(){
 						// preview.reload();
 						preview.addClass("loading-fadeout");
-						if(preview.src === "http://sun.qprod.net/releasemanager/") {
+						if(preview.src === "http://10.240.30.11/releasemanager") {
 							// console.log("release manager redirecting!!");
 						}
+						// else if(preview.src === "local/no-preview.html"){
+						// 	console.log("preview src:#")
+						// 	core.preview.init();
+						// }
 						
 			
 			
@@ -20175,10 +20225,14 @@
 						// preview.reload();
 			
 						// console.log("dom ready!!");
-						if(preview.src === "http://sun.qprod.net/releasemanager/") {
+						if(preview.src === "http://10.240.30.11/releasemanager") {
 			
-							preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
+							preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar { display:none; border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
 						}
+			
+			
+			
+			
 			
 						setTimeout(function(){
 							preview.rmClass("loading-fadeout");

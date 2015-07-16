@@ -396,8 +396,15 @@
 		}
 		section#panel .fileListContainer .file-item {
 		  border-top: 1px solid #f0f0f0;
+		  background-color: #fff;
 		  border-bottom: 1px solid #f0f0f0;
 		  font-size: 16px;
+		  position: relative;
+		  padding: 5px;
+		}
+		section#panel .fileListContainer .file-item .file-name {
+		  vertical-align: middle;
+		  display: inline-block;
 		}
 		section#panel .fileListContainer .file-item .delete-file {
 		  vertical-align: middle;
@@ -405,11 +412,10 @@
 		  height: 20px;
 		  background-color: #f00;
 		  display: inline-block;
+		  margin: 0 10px 0 0;
 		}
-		section#panel .fileListContainer .file-item .file-name {
-		  vertical-align: middle;
-		  background-color: #ffa500;
-		  display: inline-block;
+		section#panel .fileListContainer .file-item .delete-file:hover {
+		  background-color: #0f0;
 		}
 		section#Prompter {
 		  position: fixed;
@@ -541,6 +547,49 @@
 			_callback.apply(null, args);
 		}, time);
 	}
+	function ace (_func){
+		// most of these b methods should be on their own (except for the utils). That way each baton doesnt have to produce so much code.
+		var b = {
+			run : function(){
+				var args = Array.prototype.splice.call(arguments, 0);
+				b.utils.i = -1;
+				return b.next.apply(this, args);
+			},
+			block : function(_callback){
+				if(typeof _callback === "function") this.utils.queue.push(_callback.bind(this));
+				return this;
+			},
+			next : function(){
+				// converts all incoming arguments into array
+				var args = Array.prototype.splice.call(arguments, 0);
+				// if a proceeding function has been defined (using the 'then' method)
+				if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
+	
+					// increment the current call index
+					b.utils.i++;
+	
+					// run the next function
+					return b.utils.queue[b.utils.i].apply(b, args);
+				}
+			},
+			utils : { 
+				// the queue that will hold all of the blocks in the series
+				queue:[], 
+				// index starts at -1 so that the first item is index zero
+				i:-1
+			}
+	
+		};
+	
+		// this allows them to us this.*method* inside of their callback, and then run it
+		window.block = b.block;
+		window.block = window.block.bind(b);
+		_func.bind(b)(_func.arguments);
+		window.block = undefined;
+	
+	
+		return b.run.bind(b);
+	};
 	// --------------------------------
 	//				GLOBAL VARS
 	// --------------------------------
@@ -1175,7 +1224,7 @@
 		mode: {
 			currentMode: "edit/preview",
 			releaseManager: function(){
-				preview.src = "http://sun.qprod.net/releasemanager/";
+				preview.src = "http://10.240.30.11/releasemanager";
 				core.preview.active = false;
 				this.currentMode  = "releaseManager";
 			},
@@ -1376,7 +1425,7 @@
 			currentPanel = el("+form#previewFilesForm").addClass("files");
 			//Path To Brands
 			currentPanel.append( 
-				el("+label").addClass("previewFilesLabel").append( 
+				el("+div").addClass("previewFilesLabel").append( 
 					el.join([
 						el("+div").text("Preview Question Files"),
 						el("+div#previewFilesCont").addClass("fileListContainer")
@@ -1454,6 +1503,8 @@
 	}
 	
 	
+	
+	
 	// --------------------------------
 	//		INSERT DATA INTO PANEL
 	// --------------------------------
@@ -1510,8 +1561,8 @@
 					previewFilesCont.append(
 						el("+div").addClass("file-item").append(
 							el.join([
-								el("+div").addClass("delete-file"),
-								el("+div").addClass("file-name").text(fileList[i])
+								el("+div#previewfile-"+i).addClass("delete-file"),
+								el("+label").addClass("file-name").text(fileList[i]).attr("for","previewfile-"+i)
 							])
 						)
 					);

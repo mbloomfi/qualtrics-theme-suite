@@ -623,7 +623,7 @@ var core = Global.coreMethods = {
 	mode: {
 		currentMode: "edit/preview",
 		releaseManager: function(){
-			preview.src = "http://sun.qprod.net/releasemanager/";
+			preview.src = "http://10.240.30.11/releasemanager";
 			core.preview.active = false;
 			this.currentMode  = "releaseManager";
 		},

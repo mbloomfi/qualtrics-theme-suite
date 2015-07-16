@@ -169,9 +169,13 @@ el.on("load", function(){
 		preview.addEventListener("did-start-loading", function(){
 			// preview.reload();
 			preview.addClass("loading-fadeout");
-			if(preview.src === "http://sun.qprod.net/releasemanager/") {
+			if(preview.src === "http://10.240.30.11/releasemanager") {
 				// console.log("release manager redirecting!!");
 			}
+			// else if(preview.src === "local/no-preview.html"){
+			// 	console.log("preview src:#")
+			// 	core.preview.init();
+			// }
 			
 
 
@@ -183,10 +187,14 @@ el.on("load", function(){
 			// preview.reload();
 
 			// console.log("dom ready!!");
-			if(preview.src === "http://sun.qprod.net/releasemanager/") {
+			if(preview.src === "http://10.240.30.11/releasemanager") {
 
-				preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar {border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
+				preview.insertCSS("body {background:white !important;} #Page, #Footer {border-radius:0 !important; box-shadow:none !important; background:white !important;} #Page #Toolbar { display:none; border:none !important; border-width:0 !important; border-radius:8px; border-top:none !important; border-bottom:none !important; background: rgb(210,210,210) !important; overflow:hidden;} #Page #Content { border-top:none !important;}");
 			}
+
+
+
+
 
 			setTimeout(function(){
 				preview.rmClass("loading-fadeout");

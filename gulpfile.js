@@ -113,6 +113,7 @@ gulp.task("prefScripts", function(){
 		//include
 		"src/scripts/libs/el.min.js", 
 		"src/scripts/libs/baton.min.js", 
+		"src/scripts/libs/aceBlock.js", 
 		"src/scripts/preferences/main.js",
 		//exclude
 		"!src/scripts/preferences/_.js"
