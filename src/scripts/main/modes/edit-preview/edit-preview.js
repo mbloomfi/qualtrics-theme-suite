@@ -137,9 +137,17 @@ core.preview = {
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
 						this.addClass("reloading");
-						core.preview.deactivate();
-						core.preview.init();
-						preview.reload();
+						preview.src="#";
+
+						
+						setTimeout(function(){
+							core.preview.init();
+							setTimeout(function(){
+								preview.reload();
+							}, 0);
+						}, 0);
+							
+						
 						setTimeout(function(){
 							self.rmClass("reloading");
 						}, 300);

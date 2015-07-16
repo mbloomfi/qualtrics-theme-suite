@@ -1,4 +1,6 @@
 // ==== APP MENU ====
+// var cameraImg = nativeImage.createFromPath("local/images/camera.svg");
+var cameraImg = "local/images/camera.svg";
 var menuTemplate = [
   {
     label: "QTS",
@@ -279,6 +281,7 @@ var menuTemplate = [
         type: "checkbox",
         checked: false,
         enabled: false,
+        icon: 'local/images/camera-small.png',
         click: function(){
           var self = appMenu.items[4].submenu.items[5];
           appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
