@@ -1,8 +1,15 @@
 function ace (_func){
-	// most of these b methods should be on their own (except for the utils). That way each baton doesnt have to produce so much code.
+	"use strict";
+	// These b methods should be extracted (except for the utils). 
+	// That way each ace doesnt have to reproduce the same base code over and over.
 	var b = {
 		run : function(){
-			var args = Array.prototype.splice.call(arguments, 0);
+			var args = [];
+          
+            for(var i = 0, ii = arguments.length; i < ii; i++){
+              args.push(arguments[i]);  
+            }
+          
 			b.utils.i = -1;
 			return b.next.apply(this, args);
 		},
@@ -12,7 +19,11 @@ function ace (_func){
 		},
 		next : function(){
 			// converts all incoming arguments into array
-			var args = Array.prototype.splice.call(arguments, 0);
+            var args = [];
+          
+            for(var i = 0, ii = arguments.length; i < ii; i++){
+              args.push(arguments[i]);  
+            }
 			// if a proceeding function has been defined (using the 'then' method)
 			if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
 
@@ -38,6 +49,5 @@ function ace (_func){
 	_func.bind(b)(_func.arguments);
 	window.block = undefined;
 
-
 	return b.run.bind(b);
-};
+}

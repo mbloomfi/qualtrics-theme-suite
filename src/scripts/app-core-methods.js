@@ -346,8 +346,6 @@ var core = Global.coreMethods = {
 					self.userSettings = _data;
 					self.brands.path = self.userSettings.files.brands.path;
 
-
-
 					self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 
 					if(_callback) _callback();

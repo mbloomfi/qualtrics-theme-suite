@@ -132,8 +132,6 @@ core.preview = {
 			},
 
 			reload: function(){
-
-
 				function reloadPreview(){
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;

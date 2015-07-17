@@ -1799,10 +1799,17 @@
 
 		<script>
 			function ace (_func){
-				// most of these b methods should be on their own (except for the utils). That way each baton doesnt have to produce so much code.
+				"use strict";
+				// These b methods should be extracted (except for the utils). 
+				// That way each ace doesnt have to reproduce the same base code over and over.
 				var b = {
 					run : function(){
-						var args = Array.prototype.splice.call(arguments, 0);
+						var args = [];
+			          
+			            for(var i = 0, ii = arguments.length; i < ii; i++){
+			              args.push(arguments[i]);  
+			            }
+			          
 						b.utils.i = -1;
 						return b.next.apply(this, args);
 					},
@@ -1812,7 +1819,11 @@
 					},
 					next : function(){
 						// converts all incoming arguments into array
-						var args = Array.prototype.splice.call(arguments, 0);
+			            var args = [];
+			          
+			            for(var i = 0, ii = arguments.length; i < ii; i++){
+			              args.push(arguments[i]);  
+			            }
 						// if a proceeding function has been defined (using the 'then' method)
 						if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
 			
@@ -1838,9 +1849,8 @@
 				_func.bind(b)(_func.arguments);
 				window.block = undefined;
 			
-			
 				return b.run.bind(b);
-			};
+			}
 			function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
 			
 			function pause(time, _callback) {
@@ -16193,10 +16203,6 @@
 			
 			
 			
-			
-			
-			
-			
 								self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
 			
 			
@@ -16915,8 +16921,6 @@
 						},
 			
 						reload: function(){
-			
-			
 							function reloadPreview(){
 								if(this.hasClass("active") && core.localData.currentProject.name !== null){
 									var self = this;
