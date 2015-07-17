@@ -3,7 +3,7 @@
     "brands": {
       "path": "brands"
     },
-    "defaultPreviewFile": "preview-file-3.html",
+    "defaultPreviewFile": "preview-file-4.html",
     "previewFiles": [
       {
         "fileName": "preview-file-1.html",
@@ -16,6 +16,10 @@
       {
         "fileName": "preview-file-3.html",
         "verboseName": "V4-Single-Dropdown-Matrix"
+      },
+      {
+        "fileName": "preview-file-4.html",
+        "verboseName": "V4-Single-with-Matrix"
       }
     ],
     "lastPreviewFileIndex": 3
