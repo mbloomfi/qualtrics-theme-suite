@@ -449,6 +449,7 @@ core.preview = {
 		},
 
 		screenshot: {
+
 			active: false,
 			enable: function(){
 				if(core.preview.mode.currentMode === "thumbnail"){
@@ -518,27 +519,9 @@ core.preview = {
 				}, 0);
 			},
 			box: {
-				getX: function(){
-					var windowWidth = Global.mainWindow.getContentSize()[0];
-					console.log("getting x")
-					return (windowWidth * (0.01 * (parseInt(editorPreviewBar.editorWidth))));
-				},
-				getY: function(){
-					console.log("getting y")
-					return (0);
-				},
-				getWidth: function(){
-					var windowWidth = Global.mainWindow.getContentSize()[0];
-					console.log("getting w")
-					return (windowWidth * (0.01 * (parseInt(editorPreviewBar.previewWidth))));
-				},
-				getHeight: function(){
-					console.log("getting h")
-					return Global.mainWindow.getContentSize()[1];;
-				},
 				dimensions: {
-					width:null,
-					height:null
+					width:"4px",
+					height: "100%"
 				},
 				location: {
 					x:null,
@@ -548,9 +531,9 @@ core.preview = {
 				create: function(){
 					var box = el("+div#screenshotBox").attr("draggable", "false");
 					box.style.height = "100%";
-					box.style.width = editorPreviewBar.previewWidth;
+					box.style.width = "4px";
 					box.style.top = "0";
-					box.style.right = "0";
+					box.style.left = (editor.clientWidth)+"px";
 					return box;
 				},
 
@@ -560,7 +543,7 @@ core.preview = {
 
 				update: function(){
 					console.log("resizing");
-					el("#screenshotBox").style.width = editorPreviewBar.previewWidth;
+					el("#screenshotBox").style.left = (editor.clientWidth)+"px";
 				}
 
 			},
