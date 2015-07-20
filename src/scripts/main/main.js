@@ -107,7 +107,8 @@ function codemirrorInit() {
 		indentWithTabs: true,
 		keyMap: "sublime",
 		lineWrapping: true,
-		lineNumbers: true
+		lineNumbers: true,
+		autoCloseBrackets: true
 	});
 }
 
@@ -164,6 +165,12 @@ el.on("load", function(){
 		core.preview.init();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
+
+		window.addEventListener("resize", function(){
+			core.preview.mode.screenshot.box.update();
+		})
+
+		
 		
 
 		preview.addEventListener("did-start-loading", function(){
@@ -208,5 +215,7 @@ el.on("load", function(){
 	})
 	.run();
 });
+
+
 
 

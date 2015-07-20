@@ -12,30 +12,37 @@ app.on('window-all-closed', function() {
 
 app.on("ready", function(){
 
-  Menu.setApplicationMenu(appMenu);
 
-	mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
-		width: 1800, 
-		height: 1000,
-		"min-height": 500,
-		"min-width": 200
+
+	setPreviewFiles(function(){
+		
+		Menu.setApplicationMenu(appMenu);
+
+		mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
+			width: 1800, 
+			height: 1000,
+			"min-height": 500,
+			"min-width": 200
+		});
+		mainWindow.loadUrl("file://"+__dirname+"/index.html");
+		
+		mainWindow.on('close', function(e) {
+			if(!global.sharedObject.canQuit){
+				e.preventDefault();
+				mainWindow.focusOnWebView();
+				console.log("Prompting for Quit");
+				mainWindow.webContents.executeJavaScript("Quitter.prompt();");
+			}
+	  });
+
+
+		// Run Gulp Listening
+
+	  runGulp(); // This will only be run when project is loaded
+	  runGulp_Dev(); // comment-out for production
 	});
-	mainWindow.loadUrl("file://"+__dirname+"/index.html");
-	
-	mainWindow.on('close', function(e) {
-		if(!global.sharedObject.canQuit){
-			e.preventDefault();
-			mainWindow.focusOnWebView();
-			console.log("Prompting for Quit");
-			mainWindow.webContents.executeJavaScript("Quitter.prompt();");
-		}
-  });
 
-
-	// Run Gulp Listening
-
-  runGulp(); // This will only be run when project is loaded
-  runGulp_Dev(); // comment-out for production
+	  
 
   // console.log(__dirname);
 });

@@ -355,6 +355,7 @@ var core = Global.coreMethods = {
 		},
 
 
+
 		updatePreviewFilesList: function(_callback){
 			var path = appRoot+"/local/preview-files";
 
@@ -449,15 +450,19 @@ var core = Global.coreMethods = {
 
 		setCurrentFile: function(_fileName){
 			core.localData.currentFile.name = _fileName;
-
 			core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
 
 		},
 
 		setCurrentPreviewQuestionsFile: function(_fileName){
+			console.log("filename:",_fileName);
 			var path = Global.appRoot+"/local/preview-files";
 			this.previewQuestionFiles.current.name = _fileName;
 			this.previewQuestionFiles.current.path = path+"/"+_fileName;
+			if(core.localData.currentProject.name !== null){
+				core.preview.mode.regular.hardRefresh();
+			}
+
 		}
 	},
 

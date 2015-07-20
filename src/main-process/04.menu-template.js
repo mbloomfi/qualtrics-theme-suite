@@ -1,6 +1,7 @@
 // ==== APP MENU ====
 // var cameraImg = nativeImage.createFromPath("local/images/camera.svg");
 var cameraImg = "local/images/camera.svg";
+
 var menuTemplate = [
   {
     label: "QTS",
@@ -165,6 +166,7 @@ var menuTemplate = [
     ]
   },
 
+
   {
     label: "Snippets",
     submenu: [
@@ -185,6 +187,8 @@ var menuTemplate = [
       },
     ]
   },
+
+
   {
     label: "Preview",
     submenu: [
@@ -193,55 +197,84 @@ var menuTemplate = [
 
         submenu: [
           // These should be read from the user settings
-          {
-            label: "v4 Vertical",
-            type: "checkbox",
-            checked: true
-          },
-          {
+          // {
+          //   label: "v4 Vertical",
+          //   type: "checkbox",
+          //   checked: true
+          // },
+          // {
             
-            label: "v4 Horizontal",
-            type: "checkbox",
-            checked: false
-          },
-          {
+          //   label: "v4 Horizontal",
+          //   type: "checkbox",
+          //   checked: false
+          // },
+          // {
             
-            label: "v4 Full",
-            type: "checkbox",
-            checked: false
-          },
-          {
-            type: "separator"
-          },
-          {
-            label: "v3 Vertical",
-            type: "checkbox",
-            checked: false
-          },
-          {
+          //   label: "v4 Full",
+          //   type: "checkbox",
+          //   checked: false
+          // },
+          // {
+          //   type: "separator"
+          // },
+          // {
+          //   label: "v3 Vertical",
+          //   type: "checkbox",
+          //   checked: false
+          // },
+          // {
             
-            label: "v3 Horizontal",
-            type: "checkbox",
-            checked: false
-          },
-          {
+          //   label: "v3 Horizontal",
+          //   type: "checkbox",
+          //   checked: false
+          // },
+          // {
             
-            label: "v3 Full",
-            type: "checkbox",
-            checked: false
-          }
+          //   label: "v3 Full",
+          //   type: "checkbox",
+          //   checked: false
+          // }
         ]
       },
       {
         type: 'separator'
       },
+
+
+      {
+        label: 'Show Header',
+        enabled: false,
+        type:"checkbox",
+        checked: false,
+        accelerator: 'Command+Shift+H',
+        click: function(){
+          var self = appMenu.items[4].submenu.items[2];
+          if(self.checked){
+            // self.checked = false;
+            console.log("self.checked", self.checked);
+            mainWindow.webContents.executeJavaScript("core.preview.mode.regular.injectionHeader.on();");
+          } else {
+            // self.checked = true;
+            console.log("self.checked", self.checked);
+            mainWindow.webContents.executeJavaScript("core.preview.mode.regular.injectionHeader.off();");
+          }
+
+        }
+      },
+
+
+      {
+        type: 'separator'
+      },
+
+
       {
         label: 'Preview Mode',
         enabled: false,
         uncheckPreviewModes: function(exception){
           var previewModes = appMenu.items[4].submenu.items;
           for(var i = 0, ii = previewModes.length; i < ii; i++){
-            if(previewModes[i].type === "checkbox" && previewModes[i].enabled === true){
+            if(previewModes[i].type === "checkbox" && previewModes[i].enabled === true && previewModes[i].isPreviewMode === true){
               if(previewModes[i] === exception){
                 previewModes[i].checked = true;
               } else {
@@ -259,9 +292,10 @@ var menuTemplate = [
         type: "checkbox",
         checked: true,
         enabled: false,
+        isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[3];
-          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          var self = appMenu.items[4].submenu.items[5];
+          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.regular.enable();");
         }
       },
@@ -271,9 +305,10 @@ var menuTemplate = [
         type: "checkbox",
         checked: false,
         enabled: false,
+        isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[4];
-          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          var self = appMenu.items[4].submenu.items[6];
+          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
         }
       },
       {
@@ -282,10 +317,11 @@ var menuTemplate = [
         type: "checkbox",
         checked: false,
         enabled: false,
+        isPreviewMode: true,
         // icon: 'local/images/camera-small.png',
         click: function(){
-          var self = appMenu.items[4].submenu.items[5];
-          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          var self = appMenu.items[4].submenu.items[7];
+          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.screenshot.enable();");
         }
       },
@@ -295,12 +331,25 @@ var menuTemplate = [
         type: "checkbox",
         checked: false,
         enabled: false,
+        isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[6];
-          appMenu.items[4].submenu.items[2].uncheckPreviewModes(self);
+          var self = appMenu.items[4].submenu.items[8];
+          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail.enable();");
         }
-      }
+      },
+
+      {
+        type: 'separator'
+      },
+
+      {
+        label: 'Hard Refresh',
+        accelerator: 'Command+Shift+R',
+        click: function(){
+          mainWindow.webContents.executeJavaScript("core.preview.mode.regular.hardRefresh();");
+        }
+      },
     ]
   },
   {
@@ -482,6 +531,47 @@ var menuTemplate = [
 //   var menuTemplate[4].submenu[0].submenu
 // };
 
+function setPreviewFiles(_callback){
+  fs.readFile("./local/user-settings.json", function(err, _file){
+    if(err)return console.log("ERROR:",err);
+    var OBJECT = JSON.parse(_file);
+    var previewFilesList = OBJECT.files.previewFiles;
+    console.log("OBJECT:", OBJECT)
+    var submenuIndex = 0;
+    for(var i = 0, ii = previewFilesList.length; i < ii; i++){
+
+      (function(previewFilesList, i){
+
+        // var fileStats = fs.statSync("./local/preview-files/"+previewFilesList[i]);
+        
+
+          menuTemplate[4].submenu[0].submenu[i] = {
+            label: previewFilesList[i].verboseName,
+            type: "radio",
+            name: "previewFile",
+            checked: false,
+            click: function(){
+              mainWindow.webContents.executeJavaScript("core.localData.setCurrentPreviewQuestionsFile('"+previewFilesList[i].fileName+"');");
+            }
+          };
+         
 
 
-var appMenu = Menu.buildFromTemplate(menuTemplate);
+      })(previewFilesList, i);
+
+    }
+
+    global.appMenu = Menu.buildFromTemplate(menuTemplate);
+    // console.log(menuTemplate[4].submenu[0].submenu)
+    if(_callback) _callback();
+    
+    
+  });
+  
+}
+
+
+
+
+
+

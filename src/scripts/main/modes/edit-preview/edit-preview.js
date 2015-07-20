@@ -131,6 +131,8 @@ core.preview = {
 				
 			},
 
+
+
 			reload: function(){
 				function reloadPreview(){
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
@@ -158,7 +160,7 @@ core.preview = {
 
 			},
 
-			update: function(){
+			update: function(_callback){
 				// to run, use:  core.preview.update();
 
 				var self = this;
@@ -174,16 +176,83 @@ core.preview = {
 								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
 								.pipe(replace("{~SKIN.HTML~}", _html))
 								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
-								.pipe(replace("{~Header~}", self.map["{~Header~}"]))
+								.pipe(replace("{~Header~}", self.injectionHeader.value))
 								.pipe(replace("{~Question~}", _previewQuestions ))
 								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
 								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
 								.pipe(rename("currentPreview.html"))
 								.pipe(gulp.dest("local/"));
+
+								if(_callback) _callback();
+
 							}
 						});
 					}
 				});
+			},
+
+			injectionHeader: {
+				value: "",
+				on: function(){
+					var self = this;
+					self.value = "Header Text Area";
+					core.preview.mode.regular.update(function(){
+						core.preview.mode.regular.reload();
+					});
+				},
+				off: function(){
+					var self = this;
+					self.value = "";
+					core.preview.mode.regular.update(function(){
+						core.preview.mode.regular.reload();
+					});
+				}
+			},
+
+
+			hardRefresh: function(){
+				var self = this;
+
+				ipc.send('asynchronous-message', 'disablePreviewModes');
+
+				core.preview.deactivate();
+
+				setTimeout(function(){
+
+					fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
+						if(_errHtml){ console.log("ERR",_errHtml);}
+						else {
+
+							fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
+								if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
+								else {
+									gulp.src("local/previewTemplate.html")
+									.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
+									.pipe(replace("{~SKIN.HTML~}", _html))
+									.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
+									.pipe(replace("{~Header~}", self.injectionHeader.value))
+									.pipe(replace("{~Question~}", _previewQuestions ))
+									.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
+									.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
+									.pipe(rename("currentPreview.html"))
+									.pipe(gulp.dest("local/"));
+
+									setTimeout(function(){
+										core.preview.init();
+										ipc.send('asynchronous-message', 'enablePreviewModes');
+									},500);
+
+								}
+							});
+						}
+					});
+
+				}, 500)
+
+
+					
+
+
 			}
 		},
 
@@ -543,7 +612,10 @@ core.preview = {
 
 				update: function(){
 					console.log("resizing");
-					el("#screenshotBox").style.left = (editor.clientWidth)+"px";
+					if(core.preview.mode.currentMode === "screenshot"){
+						el("#screenshotBox").style.left = (editor.clientWidth)+"px";
+					}
+					
 				}
 
 			},
