@@ -44,6 +44,18 @@ var menuTemplate = [
         type: 'separator'
       },
       {
+        label: 'Finder Hard Reset',
+        click: function(){
+           shell.exec("killall Finder", function(status, output){
+            console.log('Exit status:', status);
+            console.log('Program output:', output);
+           })
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Quit',
         accelerator: 'Command+Q',
         selector: 'terminate:'
@@ -81,6 +93,13 @@ var menuTemplate = [
       },
       {
         label: 'Duplicate Project'
+      },
+      {
+        label: 'Show Project in Finder',
+        accelerator: 'Shift+Command+F',
+        click: function(){
+           mainWindow.webContents.executeJavaScript("core.brands.projects.showInFinder();");
+        }
       },
       {
         type: "separator"

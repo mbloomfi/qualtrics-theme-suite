@@ -539,7 +539,6 @@ section#editor {
 								// height 200px
 								
 								
-								
 								.project-item {
 									display block
 									width 100%
@@ -549,6 +548,7 @@ section#editor {
 									padding 5px 5px
 									color $item-color
 									cursor pointer
+									position relative
 									transition background-color .3s ease, color .3s ease, padding .25s ease
 									&:hover, &:focus {
 										color $item-color-hover
@@ -557,6 +557,21 @@ section#editor {
 									}
 									&.current {
 										background-color alpha($primaryColor, .8)
+										cursor default
+										img.finder {
+											height 50%
+											width auto
+											position absolute
+											top 50%
+											transform translateY(-50%)
+											right 10px
+											opacity .7
+											cursor context-menu
+											transition opacity .25s ease, height .25s ease
+											&:hover {
+												opacity 1
+											}
+										}
 									}
 								}
 								

@@ -4,6 +4,7 @@ global.sharedObject = {
     devToolsOpen: false,
     currentEditorPreviewRatio: 3
   },
+  pathToProject: null,
   preferencesWindow: null,
   mainWindow: null
 };

@@ -209,7 +209,9 @@ editorCore.dropdowns.projects = {
 				for(var i = 0, ii = projects.length; i < ii; i++){
 					var projectItem = el("+button").addClass("project-item").attr("data-projectname",projects[i]).text(projects[i]);
 					if(projects[i] === core.localData.currentProject.name){
-						projectItem.addClass("current");
+						projectItem.addClass("current").append(
+							el("+img").addClass("finder").attr("src","local/images/folder.svg")
+						);
 					}
 					projectDropdownBody.append(projectItem);
 				}
@@ -218,6 +220,16 @@ editorCore.dropdowns.projects = {
 				el(".project-item").on("click", function(){
 					editorCore.dropdowns.projects.select(this.dataset.projectname);
 				});
+				try {
+					document.querySelector(".finder").addEventListener("click", function(){
+						core.brands.projects.showInFinder();
+					})
+				}
+				catch(e){
+					
+				}
+				
+
 
 			}
 

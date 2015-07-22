@@ -4,3 +4,4 @@ var gulp = require("gulp");
 var Menu = require("menu");
 var ipc = require("ipc");
 var fs = require("fs");
+var shell = require('shelljs');

@@ -73,6 +73,32 @@ var core = Global.coreMethods = {
 		}
 	},
 
+	resetFinder: function(){
+
+		var shelljs = require('shelljs');
+
+		// Sync call to exec()
+		// var version = exec('node --version', {silent:true}).output;
+
+		// Async call to exec()
+		shelljs.exec('open -a Finder', function(status, output) {
+		  console.log('Exit status:', status);
+		  console.log('Program output:', output);
+		});
+
+
+
+		// function run_cmd(cmd, args, callBack ) {
+		// 	var spawn = require('child_process').spawn;
+		// 	var child = spawn(cmd, args);
+		// 	var resp = "";
+
+		// 	child.stdout.on('data', function (buffer) { resp += buffer.toString() });
+		// 	child.stdout.on('end', function() { callBack (resp) });
+		// }
+		// run_cmd( "open Finder", ["-a"], function(text) { console.log (text) });
+	},
+
 
 	// ----------------------------
 	//  Brands
@@ -102,12 +128,16 @@ var core = Global.coreMethods = {
 					alert("Brand already exists. Nice try though.");
 				} else {
 					fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
-						if(!err) next();
+						if(!err) {
+							core.resetFinder();
+							next();
+						}
 					});
 				}
 				
 			})
 			.then(function(next){
+
 				// editorCore.dropdowns.brands.close();
 				self.infoFile.create(_brandName);
 				_CALLBACK();
@@ -250,7 +280,9 @@ var core = Global.coreMethods = {
 					if(exists) {
 						console.log(typeof core.brands.getFullPathToBrands());
 						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
-							if(!err) next();
+							if(!err) {
+								next();
+							}
 						});
 					} else {
 						alert("Brand doesn't exists. Nice try though.");
@@ -266,10 +298,26 @@ var core = Global.coreMethods = {
 				.run();
 			},
 
+			showInFinder: function(){
+				if(core.localData.currentProject.name !== null){
+					shell.exec('open '+core.localData.currentProject.path, function(status, output) {
+						console.log('Exit status:', status);
+						console.log('Program output:', output);
+					});
+				}
+			},
+
 			files: {
 				current: {
 					path: null,
 					dirty: false
+				},
+
+				viewImage: function(path){
+					shell.exec('open '+path, function(status, output) {
+						console.log('Exit status:', status);
+						console.log('Program output:', output);
+					});
 				},
 
 				/*Returns array of file names at current project path path*/
