@@ -317,7 +317,15 @@ editorCore.dropdowns.files = {
 				}) ;
 
 		}	else if(_fileName !== core.localData.currentFile.name){
-			selectFile();
+			if(path.extname(_fileName).toUpperCase() === ".PNG" || path.extname(_fileName).toUpperCase() === ".JPG" || path.extname(_fileName).toUpperCase() === ".GIF" || path.extname(_fileName).toUpperCase() === ".JPEG"){
+
+				core.brands.projects.files.viewImage(core.localData.currentProject.path+"/"+_fileName);
+				self.close();
+
+			} else {
+				selectFile();
+			}
+			
 		} else {
 			self.close();
 		}
