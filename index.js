@@ -390,11 +390,11 @@ var menuTemplate = [
           var self = appMenu.items[4].submenu.items[2];
           if(self.checked){
             // self.checked = false;
-            console.log("self.checked", self.checked);
+            // console.log("self.checked", self.checked);
             mainWindow.webContents.executeJavaScript("core.preview.mode.regular.injectionHeader.on();");
           } else {
             // self.checked = true;
-            console.log("self.checked", self.checked);
+            // console.log("self.checked", self.checked);
             mainWindow.webContents.executeJavaScript("core.preview.mode.regular.injectionHeader.off();");
           }
 
@@ -675,7 +675,7 @@ function setPreviewFiles(_callback){
     if(err)return console.log("ERROR:",err);
     var OBJECT = JSON.parse(_file);
     var previewFilesList = OBJECT.files.previewFiles;
-    console.log("OBJECT:", OBJECT)
+    // console.log("OBJECT:", OBJECT)
     var submenuIndex = 0;
     for(var i = 0, ii = previewFilesList.length; i < ii; i++){
 
@@ -747,7 +747,7 @@ app.on("ready", function(){
 			if(!global.sharedObject.canQuit){
 				e.preventDefault();
 				mainWindow.focusOnWebView();
-				console.log("Prompting for Quit");
+				// console.log("Prompting for Quit");
 				mainWindow.webContents.executeJavaScript("Quitter.prompt();");
 			}
 	  });
@@ -756,7 +756,7 @@ app.on("ready", function(){
 		// Run Gulp Listening
 
 	  runGulp(); // This will only be run when project is loaded
-	  runGulp_Dev(); // comment-out for production
+	  // runGulp_Dev(); // comment-out for production
 	});
 
 	  

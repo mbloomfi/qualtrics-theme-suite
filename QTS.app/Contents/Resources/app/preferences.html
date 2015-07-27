@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html class="white">
+
+<head>
+	<meta name="QTS Preferences" charset="UTF-8">
+	<title>QTS Preferences</title>
+
+	<style>
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
+		  font-weight: 200;
+		  src: url("local/fonts/SourceSansPro-ExtraLight.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 200;
+		  src: url("local/fonts/SourceSansPro-ExtraLight-It.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
+		  font-weight: 300;
+		  src: url("local/fonts/SourceSansPro-Light.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 300;
+		  src: url("local/fonts/SourceSansPro-Light-It.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: url("local/fonts/SourceSansPro-Regular.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: url("local/fonts/SourceSansPro-It.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: normal;
+		  font-weight: 600;
+		  src: url("local/fonts/SourceSansPro-Bold.otf");
+		}
+		@font-face {
+		  font-family: 'Source Sans Pro';
+		  font-style: italic;
+		  font-weight: 600;
+		  src: url("local/fonts/SourceSansPro-BoldIt.otf");
+		}
+		html,
+		body,
+		p,
+		h1,
+		h2,
+		input,
+		textarea,
+		label,
+		a,
+		button {
+		  padding: 0;
+		  margin: 0;
+		  border: none;
+		  outline: none;
+		  font-size: 100%;
+		  text-decoration: none;
+		  color: #464646;
+		  text-decoration: none;
+		  font-weight: normal;
+		  font-family: "Source Sans Pro", "Helvetica Neue";
+		}
+		pre,
+		xmp,
+		plaintext,
+		listing {
+		  font-family: "Source Code Pro", menlo, monospace;
+		}
+		html,
+		body {
+		  width: 100%;
+		  height: 100%;
+		  position: relative;
+		  overflow: hidden;
+		  background-color: #ebebeb;
+		  -webkit-user-select: none;
+		  -webkit-app-region: no-drag;
+		  -webkit-transition: background-color 0.3s ease;
+		          transition: background-color 0.3s ease;
+		}
+		html.white,
+		body.white {
+		  background-color: #fff;
+		}
+		html,
+		body,
+		p,
+		h1,
+		h2,
+		input,
+		select,
+		textarea,
+		label,
+		a {
+		  padding: 0;
+		  margin: 0;
+		  border: none;
+		  outline: none;
+		  font-size: 100%;
+		  text-decoration: none;
+		  color: #464646;
+		  text-decoration: none;
+		  font-weight: normal;
+		  font-family: "Source Sans Pro", "Helvetica Neue";
+		}
+		svg.logo {
+		  height: 80px;
+		  width: auto;
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  z-index: 100;
+		  padding: 0 30px 5px 0;
+		  -webkit-app-region: drag;
+		  cursor: default;
+		  -webkit-transition: top 0.3s ease;
+		          transition: top 0.3s ease;
+		}
+		svg.logo path#QUALTRICS-LOGO {
+		  fill: rgba(80,80,80,0.15);
+		  -webkit-transition: fill 0.25s ease;
+		          transition: fill 0.25s ease;
+		}
+		svg.logo:hover {
+		  cursor: -webkit-grab;
+		  cursor: grab;
+		}
+		svg.logo:hover path#QUALTRICS-LOGO {
+		  fill: rgba(80,80,80,0.25);
+		}
+		svg.logo.saved path#QUALTRICS-LOGO {
+		  fill: rgba(39,176,75,0.8);
+		}
+		svg.logo.hide {
+		  top: -100px;
+		}
+		#bottom-bar {
+		  height: 30px;
+		  width: 100%;
+		  position: absolute;
+		  bottom: 0;
+		  left: 0;
+		  box-sizing: border-box;
+		  text-align: center;
+		  line-height: 30px;
+		  -webkit-transition: bottom 0.3s ease;
+		          transition: bottom 0.3s ease;
+		}
+		#bottom-bar div.btn {
+		  -webkit-app-region: no-drag;
+		  height: 100%;
+		  width: 50%;
+		  position: absolute;
+		  top: 0;
+		  color: #fff;
+		  text-transform: uppercase;
+		  cursor: pointer;
+		  box-sizing: border-box;
+		  -webkit-transition: background-color 0.25s ease;
+		          transition: background-color 0.25s ease;
+		}
+		#bottom-bar div.btn:first-child {
+		  left: 0;
+		  background-color: #e14444;
+		  border-right: 1px solid #5f5f5f;
+		}
+		#bottom-bar div.btn:first-child:hover {
+		  background-color: #ed5050;
+		}
+		#bottom-bar div.btn:last-child {
+		  right: 0;
+		  background-color: #27b04b;
+		}
+		#bottom-bar div.btn:last-child:hover {
+		  background-color: #33bc57;
+		}
+		#bottom-bar.hide {
+		  bottom: -60px;
+		}
+		#preferences-wrapper {
+		  height: 500px;
+		  width: 100%;
+		  position: relative;
+		  top: 0;
+		}
+		nav#nav {
+		  height: 100%;
+		  width: 25%;
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  -webkit-transition: left 0.3s ease;
+		          transition: left 0.3s ease;
+		}
+		nav#nav div.nav_option {
+		  position: relative;
+		  -webkit-app-region: no-drag;
+		  height: 100px;
+		  box-sizing: border-box;
+		  background: #3c3c3c;
+		  color: #fff;
+		  width: 100%;
+		  line-height: 100px;
+		  padding: 0 0 0 20px;
+		  font-size: 32px;
+		  text-transform: uppercase;
+		  cursor: pointer;
+		  z-index: 10;
+		  -webkit-transition: width 0.25s ease, background 0.25s ease, color 0.25s ease;
+		          transition: width 0.25s ease, background 0.25s ease, color 0.25s ease;
+		}
+		nav#nav div.nav_option:hover {
+		  background: #5a5a5a;
+		}
+		nav#nav div.nav_option.current {
+		  width: 107%;
+		  background-color: #787878;
+		}
+		nav#nav.hide {
+		  left: -300px;
+		}
+		section#panel {
+		  background-color: rgba(40,180,50,0);
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  height: 100%;
+		  width: 75%;
+		  opacity: 1;
+		  font-size: 1.75em;
+		  -webkit-transition: opacity 0.3s ease;
+		          transition: opacity 0.3s ease;
+		}
+		section#panel div#preferences_splash {
+		  height: 100%;
+		  line-height: 500px;
+		  font-size: 2em;
+		  text-align: center;
+		  color: #c8c8c8;
+		}
+		section#panel form {
+		  position: relative;
+		  z-index: 10;
+		  width: 70%;
+		  left: 10%;
+		  top: 10%;
+		  -webkit-app-region: no-drag;
+		}
+		section#panel form label {
+		  display: block;
+		}
+		section#panel form label:after {
+		  content: "";
+		  display: block;
+		  clear: both;
+		}
+		section#panel form label.extraMarginBottom {
+		  margin-bottom: 35px;
+		}
+		section#panel form h2 {
+		  margin: 0 0 5px;
+		}
+		section#panel form div.fieldSet {
+		  width: 100%;
+		  margin: 0 0 15px 0;
+		}
+		section#panel form div.fieldSet:after {
+		  content: "";
+		  display: block;
+		  clear: both;
+		}
+		section#panel form input {
+		  font-size: 21px;
+		  padding: 3px 0;
+		  display: block;
+		  min-width: 90%;
+		  outline: 2px solid #d7d7d7;
+		  margin: 0 0 15px;
+		  text-indent: 2px;
+		  border: none;
+		  -webkit-transition: outline 0.25s ease;
+		          transition: outline 0.25s ease;
+		}
+		section#panel form input:focus {
+		  outline-offset: 0;
+		  outline: 2px solid #bebebe;
+		}
+		section#panel form input.thumbnailName {
+		  width: 40%;
+		  display: inline-block;
+		  min-width: 50%;
+		  margin: 0 10px 0 0;
+		  float: left;
+		}
+		section#panel form label.radioLabel {
+		  display: block;
+		  line-height: 1;
+		  padding: 0;
+		  margin: 0 0 5px;
+		  font-size: 18px;
+		}
+		section#panel form label.radioLabel input {
+		  padding: 0;
+		  display: inline-block;
+		  margin: 0 0 0 10px;
+		  background: transparent;
+		  outline: none;
+		  height: 15px;
+		  width: 15px;
+		}
+		section#panel form label.radioLabel span {
+		  font-size: 14px;
+		}
+		section#panel form button {
+		  font-size: 16px;
+		  background-color: #6e6e6e;
+		  color: #fff;
+		  padding: 5px 10px;
+		  cursor: pointer;
+		  display: block;
+		  margin: 0 0 15px;
+		}
+		section#panel form button:hover {
+		  background-color: #5a5a5a;
+		}
+		section#panel form div.select_cont {
+		  width: 90%;
+		  background-color: #fff;
+		  outline: 2px solid #d7d7d7;
+		}
+		section#panel form div.select_cont select {
+		  display: block;
+		  font-size: 18px;
+		  height: 30px;
+		  width: 100%;
+		  margin: 0 0 20px;
+		  text-indent: 2px;
+		  background: transparent;
+		}
+		section#panel form div.select_cont.inline-block {
+		  width: 25%;
+		  float: left;
+		  height: 33px;
+		  display: inline-block;
+		}
+		section#panel form div.select_cont.inline-block select {
+		  display: block;
+		  font-size: 18px;
+		  height: auto;
+		  width: 100%;
+		  margin: 0;
+		  text-indent: 2px;
+		  background: transparent;
+		}
+		section#panel form#preferences_form {
+		  padding: 50px 0 0 0;
+		}
+		section#panel form label#path-to-brands-label span#homeDirectory {
+		  font-size: 14px;
+		  color: #787878;
+		  text-style: italic;
+		  display: inline-block;
+		  margin: 0 5px 0 0;
+		  height: 35px;
+		  line-height: 35px;
+		  float: left;
+		}
+		section#panel form label#path-to-brands-label input#path-to-brands {
+		  float: left;
+		  width: 50%;
+		  min-width: 0;
+		  display: inline-block;
+		}
+		section#panel.hide {
+		  opacity: 0;
+		}
+		section#panel .fileListContainer {
+		  background-color: #fff;
+		  border: 2px solid #dcdcdc;
+		  box-sizing: border-box;
+		}
+		section#panel .fileListContainer .file-item {
+		  border-top: 1px solid #f0f0f0;
+		  background-color: #fff;
+		  border-bottom: 1px solid #f0f0f0;
+		  font-size: 16px;
+		  position: relative;
+		  padding: 5px;
+		}
+		section#panel .fileListContainer .file-item .file-name {
+		  vertical-align: middle;
+		  display: inline-block;
+		}
+		section#panel .fileListContainer .file-item .delete-file {
+		  vertical-align: middle;
+		  width: 20px;
+		  height: 20px;
+		  background-color: #f00;
+		  display: inline-block;
+		  margin: 0 10px 0 0;
+		}
+		section#panel .fileListContainer .file-item .delete-file:hover {
+		  background-color: #0f0;
+		}
+		section#Prompter {
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  background: #242424;
+		  color: #fff;
+		  height: 60px;
+		  width: 100%;
+		  border-bottom: 4px solid #df4848;
+		  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
+		  -webkit-transform: translateY(-150%);
+		      -ms-transform: translateY(-150%);
+		          transform: translateY(-150%);
+		  -webkit-transition: -webkit-transform 0.5s ease;
+		          transition: transform 0.5s ease;
+		}
+		section#Prompter.show {
+		  -webkit-transform: translateY(0%);
+		      -ms-transform: translateY(0%);
+		          transform: translateY(0%);
+		  -webkit-transition: -webkit-transform 0.25s ease;
+		          transition: transform 0.25s ease;
+		}
+		section#Prompter .message {
+		  color: inherit;
+		  font-weight: bold;
+		  height: 100%;
+		  position: relative;
+		  float: left;
+		  line-height: 60px;
+		  margin: 0 30px 0 30px;
+		  font-size: 1.75em;
+		}
+		section#Prompter .btn {
+		  color: inherit;
+		  height: 48px;
+		  position: relative;
+		  top: 6px;
+		  float: left;
+		  line-height: 48px;
+		  background: #ffa500;
+		  padding: 0 15px;
+		  font-size: 1.25em;
+		  cursor: pointer;
+		  text-align: center;
+		  min-width: 50px;
+		  background-color: rgba(255,255,255,0.15);
+		  -webkit-transition: background-color 0.3s ease;
+		          transition: background-color 0.3s ease;
+		}
+		section#Prompter .mainBtn {
+		  background-color: rgba(223,72,72,0.85);
+		}
+		section#Prompter .mainBtn:hover {
+		  background-color: #eb5454;
+		}
+		section#Prompter .btn2 {
+		  margin: 0 20px 0 0;
+		}
+		section#Prompter .btn2:hover {
+		  background-color: #eb5454;
+		  background-color: rgba(255,255,255,0.3);
+		}
+		div.overlay {
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  height: 100%;
+		  width: 100%;
+		  background-color: rgba(0,0,0,0.3);
+		  z-index: 9;
+		  opacity: 0;
+		  -webkit-transition: opacity 0.3s ease;
+		          transition: opacity 0.3s ease;
+		}
+		div.overlay.visible {
+		  opacity: 1;
+		}
+		
+
+	</style>
+		
+</head>
+
+<body class="white">
+
+	<!-- <img id="logo" class="logo hide" src="local/images/qualtrics_logo.svg"> -->
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="logo" class="logo hide" width="100%" height="100%" viewBox="0 0 126 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+	<path id="QUALTRICS-LOGO" d="M37.9173,74.0432c6.68848,7.68458 14.6885,11.6327 22.3897,11.5751c4.95345,-0.0370611 9.73569,-1.1885 14.1609,-3.46098c-5.19244,-13.0908 -10.8007,-25.3777 -23.872,-25.0034c-14.299,0.409384 -14.9891,12.3154 -12.6785,16.8893ZM91.9689,82.6168c8.95474,13.2447 17.0121,23.8614 31.322,15.7607c0.770884,1.17637 1.56866,2.03767 2.3827,3.81007c-31.4887,21.409 -40.8065,5.72587 -48.3271,-12.7698c-5.38387,1.62777 -11.0441,2.46135 -16.8531,2.41178c-38.2982,-0.326807 -70.2451,-39.0309 -57.2274,-91.3621c0,0 12.7673,-0.0503319 20.2662,-7.81597e-14c-4.03189,27.9679 0.0501284,49.5572 7.82732,63.9869c1.20683,-5.03507 5.66846,-13.712 19.2363,-13.6796c16.4375,0.0392013 26.6013,10.8233 34.9112,22.4071c11.2196,-13.3616 17.395,-37.5431 13.0168,-72.7144c5.49535,-0.00530837 20.2633,-2.34479e-13 20.2633,-2.34479e-13c9.15318,37.0042 -4.33444,67.575 -26.8182,82.1494Z"/>
+</svg>
+
+	<section id="bottom-bar" class="hide">
+		<div id="cancel" class="btn">cancel</div>
+		<div id="save" class="btn">save</div>
+	</section>
+
+	<section id="preferences-wrapper">
+
+		<nav id="nav" class="hide">
+			<div id="QTS-option" class="nav_option">QTS</div>
+			<div id="files-option" class="nav_option">Files</div>
+			<div id="snippets-option" class="nav_option">Snippets</div>
+			<div id="preview-option" class="nav_option">Preview</div>
+			<div id="window-option" class="nav_option">Window</div>
+		</nav>
+
+		<section id="panel" class="hide">
+
+			<div id="preferences_splash">PREFERENCES</div>
+
+		</section>
+
+	</section>
+
+<script type="text/javascript">
+	/*!
+	<el> by samueleaton
+	*/
+	!function(){el=function(e,t){function n(e){var n=e.charAt(0);switch(n){case"#":return i.getById(e.slice(1));case"+":if(e.slice(1).match(/#/)){var r=e.slice(1).split("#"),l=i.create(r[0],t);return el.isElementArray(l)?l.each(function(e){e.setAttribute("id",r[1])}):l.setAttribute("id",r[1]),l}return i.create(e.slice(1),t);case".":return i.getByClassName(e.slice(1));default:return i.getByTagName(e)}}var i=this===window?window.el:this;return"string"==typeof e?n(e):el.isElement(e)?el.elify(e):el.isCollection(e)||el.isNodeList(e)||el.isElementArray(e)?el.elify(e):void 0},el.create=function(e,t){if(t&&"number"==typeof t){for(var n=[],i=0,r=t;r>i;i++)n.push(el.elify(document.createElement(e)));return n}return el.elify(document.createElement(e))},el.getById=function(e){if(this===window.el)return el.elify(document.getElementById(e));if(el.isElement(this)){if(document.contains(this))return el.elify(document.getElementById(e));var t=this,n=!1,i=null;return t.el("*").each(function(t){return t.getAttribute("id")===e?(n=!0,i=t,0):void 0}),i}},el.getByClassName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByClassName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.getByTagName=function(e,t){var n=this===window.el?document:this,i=n.getElementsByTagName(e);return i=Array.prototype.slice.call(i),el.elify(i)},el.on=function(e,t){var n=el.isElement(this)||el.isElementArray(this)?this:window;return n.addEventListener(e,t),this},el.join=function(e){var t=[];if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)el.isElement(e[n])?t.push(e[n]):el.isElementArray(e[n])&&e[n].each(function(e){t.push(e)});return el.elify(t)},el.elify=function(e){function t(e){return e.el=el,e.getById=el.getById,e.getByClassName=el.getByClassName,e.getByTagName=el.getByTagName,e.getByAttribute=el.getByAttribute,e.elify=el.elify,e.on=el.on,e.addClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.add(e[n]);else"string"==typeof e&&t.classList.add(e);return t},e.rmClass=function(e){var t=this;if(el.isArray(e))for(var n=0,i=e.length;i>n;n++)t.classList.remove(e[n]);else"string"==typeof e&&t.classList.remove(e);return t},e.hasClass=function(e){return this.classList.contains(e)},e.rm=function(){var e=this;return e.parentNode&&e.parentNode.removeChild(e),e},e.append=function(e){if(el.isElementArray(e)){var n=document.createDocumentFragment();e.each(function(e){e.el||(e=t(e)),n.appendChild(e)}),e=n}return this.appendChild(e),this},e.appendTo=function(e){var t=this;return el.isElementArray(e)?e.each(function(e){var n=t.cloneNode(!0);e.appendChild(n)}):e.appendChild(t),t},e.purge=function(){for(var e=this;e.firstChild;)e.removeChild(e.firstChild);return e},Object.defineProperty(e,"text",{configurable:!0,enumerable:!0,writable:!0,value:function(t){return"string"==typeof t&&e.appendChild(document.createTextNode(t)),e}}),e.attr=function(e,t){return"string"==typeof e&&this.setAttribute(e,void 0!==t?t:""),this},e}return el.isElement(e)?t(e):((el.isCollection(e)||el.isNodeList(e))&&(e=Array.prototype.slice.call(e)),e.each=function(e){for(var t=this,n=0,i=t.length;i>n;n++)if(0===e(t[n],n,t))return this===window.el?void 0:this;return this===window.el?void 0:this},e.each(function(e){t(e)}),e.addClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.addClass(n))}),e},e.rmClass=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rmClass(n))}),e},e.hasClass=function(n,i){if("all"===i||"undefined"==typeof i){var r=!0;return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.hasClass(n)||(r=!1))}),r}return"any"===i?(e.each(function(e){return"undefined"!=typeof e&&(e.el||(e=t(e)),e.hasClass(n))?!0:void 0}),!1):e},e.rm=function(n){return this.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.rm())}),e},e.append=function(n){if(el.isElementArray(n)){var i=document.createDocumentFragment();n.each(function(e){void 0===e.el&&(e=t(e)),i.appendChild(e)}),n=i}return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.append(n.cloneNode(!0)))}),e},e.appendTo=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(void 0===e.el&&(e=t(e)),e.appendTo(n))}),i!==!1&&e.rm(),e},e.purge=function(){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.purge())}),e},e.text=function(n){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.text(n))}),e},e.attr=function(n,i){return e.each(function(e){"undefined"!=typeof e&&(e.el||(e=t(e)),e.attr(n,i))}),e},e.on=function(e,t){return this.each(function(n){n.addEventListener(e,t)}),this},e)},el.isArray=function(e){return Array.isArray(e)||e instanceof Array?!0:!1},el.isElementArray=function(e){return(Array.isArray(e)||e instanceof Array)&&el.isElement(e[0])?!0:!1},el.isElement=function(e){var t;try{t=e instanceof HTMLElement||e instanceof Element}catch(n){t=e&&e.nodeType?!0:!1}return t},el.isCollection=function(e){return e instanceof HTMLCollection},el.isNodeList=function(e){return e instanceof NodeList}}();
+	function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
+	
+	function pause(time, _callback) {
+		var args = Array.prototype.splice.call(arguments, 2);
+		console.log("args:",args);
+		setTimeout(function(){
+			_callback.apply(null, args);
+		}, time);
+	}
+	function ace (_func){
+		"use strict";
+		// These b methods should be extracted (except for the utils). 
+		// That way each ace doesnt have to reproduce the same base code over and over.
+		var b = {
+			run : function(){
+				var args = [];
+	          
+	            for(var i = 0, ii = arguments.length; i < ii; i++){
+	              args.push(arguments[i]);  
+	            }
+	          
+				b.utils.i = -1;
+				return b.next.apply(this, args);
+			},
+			block : function(_callback){
+				if(typeof _callback === "function") this.utils.queue.push(_callback.bind(this));
+				return this;
+			},
+			next : function(){
+				// converts all incoming arguments into array
+	            var args = [];
+	          
+	            for(var i = 0, ii = arguments.length; i < ii; i++){
+	              args.push(arguments[i]);  
+	            }
+				// if a proceeding function has been defined (using the 'then' method)
+				if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
+	
+					// increment the current call index
+					b.utils.i++;
+	
+					// run the next function
+					return b.utils.queue[b.utils.i].apply(b, args);
+				}
+			},
+			utils : { 
+				// the queue that will hold all of the blocks in the series
+				queue:[], 
+				// index starts at -1 so that the first item is index zero
+				i:-1
+			}
+	
+		};
+	
+		// this allows them to us this.*method* inside of their callback, and then run it
+		window.block = b.block;
+		window.block = window.block.bind(b);
+		_func.bind(b)(_func.arguments);
+		window.block = undefined;
+	
+		return b.run.bind(b);
+	}
+	// --------------------------------
+	//				GLOBAL VARS
+	// --------------------------------
+	var remote = require("remote");
+	var app = remote.require("app");
+	var Global = remote.getGlobal("sharedObject"); //see index.js
+	var appRoot = Global.appRoot;
+	var fs = require("fs-extra");
+	var path = require("path");
+	var core = Global.coreMethods = {
+	
+		// ----------------------------
+		//  Persistent Data File
+		// ----------------------------
+		persistentDataFile: {
+	
+			read: function (_successCallback){
+				fs.readJson(appRoot+"/local/persistent-data.json", function(_err, _data){
+					if(!_err) {
+						if(typeof _successCallback === "function") _successCallback(_data);
+					}
+					else {
+						console.log("readPersistantData ERROR:",_err);
+					}
+				});
+			},
+	
+			update: function (_successCallback){
+				var _DATA = {};
+				_DATA.recentBrands = core.localData.brands.recent;
+				//_DATA.x = core.localData.x;
+				fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
+					if(err) alert("Error Saving Changes");
+					else if(_successCallback!==undefined){
+						var args = Array.prototype.splice.call(arguments, 1);
+						_successCallback.apply(null, args);
+					}
+				});
+			}
+			
+		},
+	
+		// ----------------------------
+		//  User Settings File
+		// ----------------------------
+		userSettingsFile: {
+	
+			read: function(_successCallback){
+				fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+					if(!_err){ 
+						
+						if(typeof _successCallback === "function") _successCallback(_data);
+					}
+					else {
+						console.log("User Settings READ ERROR:", _err);
+					}
+				});
+			},
+	
+			update: function(_successCallback){
+				var self = this;
+	
+				if(core.localData.userSettings === null){
+					alert("Error with settings, sucks to be you.");
+					return;
+				}
+	
+				self.read(function(_data){
+					if(core.localData.userSettings !== _data){
+	
+						fs.writeJson(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
+							if(err) alert("Error Saving Changes");
+							else _successCallback();
+						});
+	
+					}
+				});
+	
+				
+	
+				
+			}
+		},
+	
+		resetFinder: function(){
+	
+			var shelljs = require('shelljs');
+	
+			// Sync call to exec()
+			// var version = exec('node --version', {silent:true}).output;
+	
+			// Async call to exec()
+			shelljs.exec('open -a Finder', function(status, output) {
+			  console.log('Exit status:', status);
+			  console.log('Program output:', output);
+			});
+	
+	
+	
+			// function run_cmd(cmd, args, callBack ) {
+			// 	var spawn = require('child_process').spawn;
+			// 	var child = spawn(cmd, args);
+			// 	var resp = "";
+	
+			// 	child.stdout.on('data', function (buffer) { resp += buffer.toString() });
+			// 	child.stdout.on('end', function() { callBack (resp) });
+			// }
+			// run_cmd( "open Finder", ["-a"], function(text) { console.log (text) });
+		},
+	
+	
+		// ----------------------------
+		//  Brands
+		// ----------------------------
+		brands: {
+	
+			getFullPathToBrands: function(){
+				return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
+			},
+	
+			select: function(_brandName){
+				
+				// add brand to recent brands, current brand
+				core.brands.setCurrentBrand(_brandName);
+				core.brands.projects.setCurrentProject(null);
+			},
+	
+			create: function(_brandName, _CALLBACK){
+				var self = this;
+				// create folder with brands name
+				baton(function(next){
+					self.exists(_brandName, next);
+				})
+				.then(function(next, exists){
+	
+					if(exists) {
+						alert("Brand already exists. Nice try though.");
+					} else {
+						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
+							if(!err) {
+								core.resetFinder();
+								next();
+							}
+						});
+					}
+					
+				})
+				.then(function(next){
+	
+					// editorCore.dropdowns.brands.close();
+					self.infoFile.create(_brandName);
+					_CALLBACK();
+				})
+				.run();
+	
+			},
+	
+			infoFile: {
+				ext: ".qtheme",
+				create: function(_brandName){
+	
+					
+				},
+				update: function(_brandName, _key, _value){
+	
+				}
+			},
+	
+				
+			/*
+				Adds the current brand to the front of the recent brands
+			*/
+			updateRecentBrands: function(){
+				var brand = core.localData.currentBrand;
+				var i = core.localData.brands.recent.indexOf(brand);
+				if(i !== -1) {
+					core.localData.brands.recent.splice(i, 1);
+				}
+				core.localData.brands.recent.unshift(brand);
+				core.persistentDataFile.update();
+			},	
+	
+			setCurrentBrand: function(_brandName){
+				core.localData.currentBrand = _brandName;
+				core.brands.updateRecentBrands();
+			},
+	
+	
+			exists: function(_brandName, _callback){
+				var self = this;
+				console.log(typeof core.localData.brands.path);
+				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
+					if(err) {
+						console.error("brand exists error",err)
+						return _callback(false);
+					}
+					else {
+						return _callback(stats.isDirectory());
+					}
+				});
+			},
+	
+	
+			hasInfoFile: function(_callback, _brandName){
+				var self = this;
+				baton(function(next){
+					//check if brand exists
+					self.exists(_brandName, next);
+				})
+				.then(function(next, _exists){
+					if(_exists){
+						next();
+					} 
+					else _callback(false);
+				})
+				.then(function(){
+					//check if brand has file
+					console.log(typeof core.brands.getFullPathToBrands());
+					fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+						if(err) {
+							return _callback(false);
+						}
+						else {
+							return _callback(stats.isFile());
+						}
+					});
+				})
+				.run();
+				
+			},
+	
+			projects: {
+	
+				setCurrentProject: function(_projectName){
+					core.localData.currentProject.name = _projectName;
+	
+	
+					core.localData.currentProject.path = (_projectName !== null)
+					?
+					(core.brands.getFullPathToBrands()+"/"+
+					core.localData.currentBrand+"/"+
+					core.localData.currentProject.name)
+					:
+					null
+					;
+	
+				},
+	
+				/*Runs a callback, passing it an array of the names of the projects*/
+				list: function(_brandName, _callback){
+					
+					baton(function(next){
+						
+						core.brands.exists(_brandName, next);
+					})
+					.then(function(next, exists){
+						if(exists){
+							var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
+							next(pathToBrand);
+						}
+					})
+					.then(function(next, path){
+						var projectList = [];
+						console.log(typeof path);
+						fs.readdir(path, function(_err, _projects){
+							if(_err) console.log("error listing projects");
+							for(var i = 0, ii = _projects.length; i < ii; i++){
+								var stats = fs.statSync(path+"/"+_projects[i]);
+								if(stats.isDirectory()) projectList.push(_projects[i]);
+							}
+							// currentBrand.projects = projectsList // ADD this
+							if(_callback!==undefined) _callback(projectList);
+						});
+					}).run();
+					
+					
+					
+	
+				},
+	
+				create: function(_brandName, _projectName, _callback){
+					var self = this;
+					// create folder with brands name
+					baton(function(next){
+						core.brands.exists(_brandName, next);
+					})
+					.then(function(next, exists){
+	
+						if(exists) {
+							console.log(typeof core.brands.getFullPathToBrands());
+							fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+								if(!err) {
+									next();
+								}
+							});
+						} else {
+							alert("Brand doesn't exists. Nice try though.");
+						}
+						
+					})
+					.then(function(next){
+						editorCore.dropdowns.projects.close();
+						
+						if(_callback!==undefined) _callback();
+						// self.infoFile.create(_brandName);
+					})
+					.run();
+				},
+	
+				showInFinder: function(){
+					if(core.localData.currentProject.name !== null){
+						shell.exec('open '+core.localData.currentProject.path, function(status, output) {
+							console.log('Exit status:', status);
+							console.log('Program output:', output);
+						});
+					}
+				},
+	
+				files: {
+					current: {
+						path: null,
+						dirty: false
+					},
+	
+					viewImage: function(path){
+						shell.exec('open '+path, function(status, output) {
+							console.log('Exit status:', status);
+							console.log('Program output:', output);
+						});
+					},
+	
+					/*Returns array of file names at current project path path*/
+					list: function(_callback){ 
+							var path = core.localData.currentProject.path;
+							
+							var fileList = [];
+							fs.readdir(path, function(_err, _files){
+								if(_err) console.log("error listing projects");
+								for(var i = 0, ii = _files.length; i < ii; i++){
+									var stats = fs.statSync(path+"/"+_files[i]);
+									if(stats.isFile()) fileList.push(_files[i]);
+								}
+								// currentBrand.projects = projectsList // ADD this
+								if(_callback!==undefined) _callback(fileList);
+							});
+	
+					}
+				}
+	
+			}
+	
+		},
+	
+	
+		// ----------------------------
+		//  Local Temp Data
+		// ----------------------------
+		localData: {
+			brands: {
+				path: null,
+				current: {
+					name: null
+				},
+				list: [],
+				recent: []
+			},
+			userSettings: null,
+			currentBrand: null,
+			currentProject: {
+				name: null,
+				path: null
+			},
+	
+	
+			currentFile:{
+				name: null,
+				path: null,
+				dirty: null,
+				isNew: true,
+				watch: null,
+				clear: function(){
+					var self = this;
+					self.name = self.path = self.dirty = null;
+				}
+			},
+	
+			previewQuestionFiles: {
+				list: [],
+				current: {
+					name: null,
+					path: null
+				}
+	
+	
+			},
+	
+			pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
+	
+			updateUserSettings: function(_callback){ // should only be run on app init
+				var self = this;
+				core.userSettingsFile.read(function(_data){
+					if(self.userSettings === null || core.localData.userSettings !== _data){
+						self.userSettings = _data;
+						self.brands.path = self.userSettings.files.brands.path;
+	
+						self.setCurrentPreviewQuestionsFile(_data.files.defaultPreviewFile);
+	
+						if(_callback) _callback();
+					}
+					
+				});
+			},
+	
+	
+	
+			updatePreviewFilesList: function(_callback){
+				var path = appRoot+"/local/preview-files";
+	
+	
+				fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+					if(!_err){ 
+						
+						if(typeof _successCallback === "function") _successCallback(_data);
+					}
+					else {
+						console.log("User Settings READ ERROR:", _err);
+					}
+				});
+				if(_callback) _callback();
+			},
+	
+	
+	
+			updateBrandsList: function(_CALLBACK){
+	
+				// var pathToBrands = core.localData.brands.path;
+				var pathToBrands = core.brands.getFullPathToBrands();
+	
+				var brandList = [];
+	
+	
+				console.log(typeof core.localData.brands.path);
+				console.log("path",pathToBrands);
+				fs.readdir(pathToBrands, function(_err, _files){
+					if(_err) console.log("error");
+					for(var i = 0, ii = _files.length; i < ii; i++) {
+						var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+						if(stats.isDirectory()) brandList.push(_files[i]);
+					}
+					core.localData.brandList = brandList;
+					if(_CALLBACK!==undefined) _CALLBACK();
+				});
+			},
+	
+			rmFromRecentBrands: function(_brandName, _CALLBACK){
+				var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
+				if(brandNameIndex !== -1){
+					core.localData.brands.recent.splice(brandNameIndex, 1);
+					core.persistentDataFile.update();
+				}
+				_CALLBACK();
+			},
+	
+			updateRecentBrands: function(_CALLBACK){
+				/* Main purpose of this method is to: (1) Set the local recent brands 
+				in case its null, and (2) Add the current brand to the front of recent 
+				brands if its not already there */
+	
+				// if local data is null
+				if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
+					core.persistentDataFile.read(function(_persistent_data){
+						console.log("persistent-data recent brands", _persistent_data.recentBrands)
+						core.localData.brands.recent = _persistent_data.recentBrands;
+						console.log("1a) recentbrands:",core.localData.brands.recent);
+						_CALLBACK();
+					})
+				} 
+				
+				else {
+	
+					// if current brand is not the most recent brand
+					if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
+						core.localData.brands.recent.unshift(core.localData.currentBrand);
+						core.persistentDataFile.update(function(){
+							console.log("1b) recentbrands:",core.localData.brands.recent);
+							_CALLBACK();
+						});
+						
+					} 
+	
+					// local recent brands is up to date
+					else {
+						console.log("1c) recentbrands:",core.localData.brands.recent);
+						_CALLBACK();
+					}
+				}
+			},
+	
+			filterBrands: function(criteria){
+				var matches = [];
+				for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
+					if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
+						matches.push(core.localData.brandList[i]);
+				}
+				return matches;
+			},
+	
+			setCurrentFile: function(_fileName){
+				core.localData.currentFile.name = _fileName;
+				core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
+	
+			},
+	
+			setCurrentPreviewQuestionsFile: function(_fileName){
+				console.log("filename:",_fileName);
+				var path = Global.appRoot+"/local/preview-files";
+				this.previewQuestionFiles.current.name = _fileName;
+				this.previewQuestionFiles.current.path = path+"/"+_fileName;
+				if(core.localData.currentProject.name !== null){
+					core.preview.mode.regular.hardRefresh();
+				}
+	
+			}
+		},
+	
+	
+	
+		getFiles: function(path, _callback){
+			var fileList = [];
+			fs.readdir(path, function(_err, _files){
+				if(_err) console.log("error getting files");
+				for(var i = 0, ii = _files.length; i < ii; i++){
+					var stats = fs.statSync(path+"/"+_files[i]);
+					if(stats.isFile()) fileList.push(_files[i]);
+				}
+				// currentBrand.projects = projectsList // ADD this
+				if(_callback!==undefined) _callback(fileList);
+			});
+		},
+	
+		updateEditor: function() {
+	
+			var ext = path.extname(core.localData.currentFile.name);
+			
+			var extMap = {
+				".html": "htmlmixed",
+				".css": "css",
+				".scss": "text/x-scss",
+				".styl": "text/x-styl",
+				".js": "javascript",
+				".qtheme": "application/json",
+				".json": "application/json",
+				".md": "markdown",
+			}
+	
+			if(extMap.hasOwnProperty(ext.toLowerCase())){
+				if(myCodeMirror.getOption("mode") !== extMap[ext]){
+					myCodeMirror.setOption("mode", extMap[ext]);
+				}	
+			}
+			else {
+				myCodeMirror.setOption("mode", "");
+			}
+	
+			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
+				if(err){ console.log("ERR",err);}
+				else {
+					myCodeMirror.setValue(data);
+					myCodeMirror.markClean();
+				}
+			});
+	
+		},
+	
+		prompt: function(_dialogue, _confirm, _cancel, _confirmCallback){
+	
+	
+		},
+	
+	
+		codeMirror: {
+			active: false,
+			activate: function(){
+				if(this.active === false){
+	
+					var codeMirrorCover = el("#codeMirror-cover");
+					codeMirrorCover.addClass("hide");
+					setTimeout(function(){
+						codeMirrorCover.addClass("remove");
+					},200);
+	
+					this.active = true;
+					
+	
+				}
+			},
+			
+			deactivate: function(){
+				if(this.active === true){
+	
+					var codeMirrorCover = el("#codeMirror-cover");
+					codeMirrorCover.rmClass("remove");
+					setTimeout(function(){
+						codeMirrorCover.rmClass("hide");
+					},0);
+	
+	
+					this.active = false;
+					
+					core.localData.currentFile.clear();
+				}
+			},
+	
+	
+			saveEditorFile: function(){
+				if(core.localData.currentFile.path !== null){
+					fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
+						if(err){ console.log("ERR",err);}
+						else {
+							
+							editorCore.dropdowns.files.setClean();
+							myCodeMirror.markClean();
+							if(core.localData.currentFile.name === "StyleSheet.scss"){
+								core.preview.mode.regular.compileSass();
+							}
+							
+						}
+					});
+				}
+					
+			},
+	
+	
+			dirtyWatch: function(){
+				myCodeMirror.on("change", function(){
+					if(core.localData.currentFile.isNew === true){
+						core.localData.currentFile.isNew = false;
+					} else {
+						if(!myCodeMirror.isClean()){
+							editorCore.dropdowns.files.setDirty();
+						} else {
+							editorCore.dropdowns.files.setClean();
+						}
+					}
+				})
+			}
+	
+		},
+	
+	
+		flash: function(pinnacleCallback){
+			var flash = el("+div").attr("style", "height:100%; width:100%; background:white; position:absolute; top:0; left:0; z-index:1000000; opacity:0; transition:opacity .1s ease;");
+			el("#body").append(flash);
+	
+	
+			var flashBaton = baton(function(next){
+				flash.style.opacity = 1;
+				setTimeout(next, 100);
+			})
+	
+			.then(function(next){
+				flash.style.transition = "opacity .4s ease";
+				setTimeout(function(){ flash.style.opacity = 0; } ,0);
+				if(typeof pinnacleCallback === "function") pinnacleCallback();
+				setTimeout(next, 500);
+			})
+	
+			.then(function(){
+				flash.rm();
+			})
+	
+			flashBaton.run();
+	
+			
+	
+	
+		},
+	
+	
+		/*
+		core project modes (edit/preview, release manager, ??ticket view)
+		*/
+		mode: {
+			currentMode: "edit/preview",
+			releaseManager: function(){
+				preview.src = "http://10.240.30.11/releasemanager";
+				core.preview.active = false;
+				this.currentMode  = "releaseManager";
+			},
+			edit_preview: function(){
+				// console.log("switching to edit/preview mode");
+				core.preview.init();
+				this.currentMode  = "edit/preview";
+			}
+		}
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	// --------------------------------
+	//	Set core.LocalData
+	// --------------------------------
+	core.localData.updateUserSettings();
+	
+	
+	
+	var currentPanel = {};
+	
+	var logo = el("#logo");
+	var panel = el("#panel");
+	var navOptions = el(".nav_option");
+	
+	// --------------------------------
+	//	Slide-in menus, btns etc.
+	// --------------------------------
+	setTimeout(function(){
+		panel.rmClass("hide");
+		logo.rmClass("hide");
+		el("#nav").rmClass("hide");
+		el("html")[0].rmClass("white");
+		el("body")[0].rmClass("white");
+		el("#bottom-bar").rmClass("hide");
+	}, 200);
+	
+		
+	
+	// --------------------------------
+	//				CANCEL BUTTON
+	// --------------------------------
+	el("#cancel").on("click", function(){
+		Global.preferencesWindow.close();
+	})
+	
+	
+	// --------------------------------
+	//				SAVE BUTTON
+	// --------------------------------
+	el("#save").on("click", function(e){
+		savePreferences();
+	});
+	
+	function savePreferences() {
+		// saves from localData.userSettings to user-settings.json
+			core.userSettingsFile.update(function(){ // on success
+				logo.addClass("saved");
+				setTimeout(function(){
+					Global.preferencesWindow.close();
+				}, 450);
+			});
+	}
+	
+	
+	// --------------------------------
+	//			PREFERENCES NAV
+	// --------------------------------
+	el("#QTS-option").on("click", function(){
+		panel.transitionTo.run("QTS");
+		navOptions.rmClass("current");
+		this.addClass("current");
+	})
+	el("#files-option").on("click", function(){
+		panel.transitionTo.run("files");
+		navOptions.rmClass("current");
+		this.addClass("current");
+	})
+		
+	
+	el("#snippets-option").on("click", function(){
+		panel.transitionTo.run("snippets");
+		navOptions.rmClass("current");
+		this.addClass("current");
+	})
+	el("#preview-option").on("click", function(){
+		panel.transitionTo.run("preview");
+		navOptions.rmClass("current");
+		this.addClass("current");
+	})
+	el("#window-option").on("click", function(){
+		panel.transitionTo.run("window");
+		navOptions.rmClass("current");
+		this.addClass("current");
+	})
+	
+	
+	// --------------------------------
+	//		CHANGE PREFERENCES PANEL
+	// --------------------------------
+	panel.transitionTo = baton(function(next, _newPanelName){
+	
+		panel.addClass("hide");
+		var _newPanel = panel.buildPanel(_newPanelName);
+		panel.insertData(_newPanelName);
+	
+		setTimeout(function(){
+			next(_newPanel);
+		}, 300);
+	
+	})
+	
+	.then(function(next, _newPanel){
+	
+		panel.setPanel(next, _newPanel);
+		panel.rmClass("hide");
+	
+	})
+	
+	.then(function(next){
+		// console.log("currentPanel:",currentPanel);
+		currentPanel.on("submit", function(evt){
+			evt.preventDefault();
+		});
+	
+	});
+	
+	
+	// --------------------------------
+	//			BUILD PANEL (FORM)
+	// --------------------------------
+	panel.buildPanel = function(_newPanel) {
+		if(_newPanel === "QTS"){
+	
+			currentPanel = el("+form#qtsForm").addClass("QTS").append(
+				el("+label").text("QTS Thing").append( el("+input") )
+			);
+			return currentPanel;
+		} 
+	
+	
+		else if(_newPanel === "files"){
+			console.log("a1")
+	
+			currentPanel = el("+form#filesForm").addClass("files");
+			//Path To Brands
+			currentPanel.append( 
+				el("+label#path-to-brands-label").append( 
+					el.join([
+						el("+div").text("Path To Brands"),
+						el("+span#homeDirectory").text(process.env.HOME+"/ "),
+						el("+input#path-to-brands")
+					])
+					 
+				) 
+			);
+			//Default Preview File
+			currentPanel.append( 
+				el("+label").addClass("extraMarginBottom").text("Default Preview File").append( 
+					el("+div").addClass("select_cont").append(
+						el("+select#default-preview-file").attr("name", "default-preview-file")
+					)
+				)
+			);
+			
+			// currentPanel.append( el("+br") );
+	
+			//Manage Preview Files
+			currentPanel.append( 
+				el("+button#managePreviewFiles").addClass("btn").text("Manage Preview Files") 
+			);
+	
+			//Manage Base Files
+			currentPanel.append( 
+				el("+button#manageBaseFiles").addClass("btn").text("Manage Base Files") 
+			);
+	
+			// --------------------------------
+			//	Manage Preview Files Litener
+			// --------------------------------
+			currentPanel.el("#managePreviewFiles").on("click", function(){
+				panel.transitionTo.run("previewFiles");
+			});
+	
+			console.log("a2")
+	
+			return currentPanel;
+		} 
+	
+	
+		else if(_newPanel === "previewFiles"){
+			currentPanel = el("+form#previewFilesForm").addClass("files");
+			//Path To Brands
+			currentPanel.append( 
+				el("+div").addClass("previewFilesLabel").append( 
+					el.join([
+						el("+div").text("Preview Question Files"),
+						el("+div#previewFilesCont").addClass("fileListContainer")
+					])
+					 
+				) 
+			);
+	
+			return currentPanel;
+		}
+	
+	
+		else if(_newPanel === "snippets"){
+	
+			currentPanel = el("+form#snippetsForm").addClass("snippets").append(
+				el("+label").text("Snippets Stuff").append( el("+input") )
+			);
+	
+			return currentPanel;
+	
+		} 
+	
+		else if(_newPanel === "preview"){
+			
+			currentPanel = el("+form#previewForm").addClass("preview").append(
+				el.join([
+					el("+div").addClass("fieldSet").append(
+						el.join([
+							el("+h2").text("Refresh Preview Window"),
+							el("+label").addClass(["radioLabel"]).text("On Save").append(
+								el("+span").text(" (⌘S) ")
+							).text(" and Command ").append(
+								el.join([
+									el("+span").text(" (⌘R) "),
+									el("+input#onSave").attr("type", "radio").attr("value", 1).attr("name", "refreshPreview")
+								])
+							),
+							el("+label").addClass("radioLabel").text("On Command Only").append(
+								el.join([
+									el("+span").text(" (⌘R) "),
+									el("+input#onCommand").attr("type", "radio").attr("value", 2).attr("name", "refreshPreview")
+								])
+							)
+						])
+					),
+					el("+div").addClass("fieldSet").append(
+						el.join([
+							el("+h2").text("Default Thumbnail Name"),
+							el("+input#thumbnailName").addClass("thumbnailName").attr("name", "thumbnailName"),
+							el("+div").addClass(["select_cont", "inline-block"]).append( el("+select#default-thumbnail-ext") )
+						])
+					),
+				])
+			);
+			return currentPanel;
+		} 
+	
+		else if(_newPanel === "window"){
+	
+			currentPanel = el("+form#windowForm").addClass("window").append(
+				el("+label").text("Window Thing").append( el("+input") )
+			);
+			return currentPanel;
+	
+		}
+	}
+	
+	
+	// --------------------------------
+	//		APPLY THE BUILT PANNEL
+	// --------------------------------
+	panel.setPanel = function(next, _newPanel) {
+		panel.purge().append(_newPanel);
+		next();
+	}
+	
+	
+	
+	
+	// --------------------------------
+	//		INSERT DATA INTO PANEL
+	// --------------------------------
+	panel.insertData = function(_panel){
+		if(_panel === "QTS"){
+	
+		} else if(_panel === "files"){
+	
+			// add path to Brands folder
+			var pathToBrands = currentPanel.el("#path-to-brands").attr("value",core.localData.brands.path);
+	
+			// Populate the preview files and select the default		
+			var defaultPreviewFile = currentPanel.el("#default-preview-file");
+			// ADD OPTIONS
+			var tempArray = [];		
+			for(var i = 0, ii = core.localData.userSettings.files.previewFiles.length; i < ii; i++ ){
+				var pF = core.localData.userSettings.files.previewFiles;			
+				var currentOption = el("+option").attr("value", pF[i].fileName).text( pF[i].verboseName );
+				if( pF[i].fileName === core.localData.userSettings.files.defaultPreviewFile ) currentOption.selected = true;
+				tempArray.push(currentOption);	
+			}		
+	
+			defaultPreviewFile.append( el(tempArray) );		
+	
+	
+			currentPanel.el("#path-to-brands").on("blur", function(){
+				if(this.value !== core.localData.brands.path){
+					core.localData.brands.path = core.localData.userSettings.files.brands.path = this.value;
+				}
+			});
+	
+			currentPanel.el("#default-preview-file").on("blur", function(){
+				if(this.options[this.selectedIndex].value !== core.localData.userSettings.files.defaultPreviewFile){
+					core.localData.userSettings.files.defaultPreviewFile = this.options[this.selectedIndex].value;
+				}
+			});
+	
+		}
+	
+	
+		else if(_panel = "previewFiles") {
+	
+			var previewFilesCont = currentPanel.el("#previewFilesCont");
+			var path = appRoot+"/local/preview-files"; 
+			var fileList = [];
+			fs.readdir(path, function(_err, _files){
+				if(_err) console.log("error listing preview files");
+				for(var i = 0, ii = _files.length; i < ii; i++){
+					var stats = fs.statSync(path+"/"+_files[i]);
+					if(stats.isFile() && _files[i].charAt(0) !== ".") fileList.push(_files[i]);
+				}
+	
+				for(var i = 0, ii = fileList.length; i < ii; i++){
+					previewFilesCont.append(
+						el("+div").addClass("file-item").append(
+							el.join([
+								el("+div#previewfile-"+i).addClass("delete-file"),
+								el("+label").addClass("file-name").text(fileList[i]).attr("for","previewfile-"+i)
+							])
+						)
+					);
+				}
+	
+				// loop through files list and populate preview files list container 
+				console.log("preview files list:",fileList);
+			});
+	
+		}
+	
+	
+		else if(_panel === "snippets"){
+	
+		} 
+	
+	
+		else if(_panel === "preview"){
+			currentPanel.el("#"+core.localData.userSettings.preview.refreshPreview).checked = true;
+			currentPanel.el("#thumbnailName").attr("value", core.localData.userSettings.preview.defaultThumbnailName);
+	
+			var defaultThumbnailExt = currentPanel.el("#default-thumbnail-ext");
+			// ADD OPTIONS
+			var tempArray = [];		
+			for(var i = 0, ii = core.localData.userSettings.preview.thumbnailExtensions.length; i < ii; i++ ){
+				var tnE = core.localData.userSettings.preview.thumbnailExtensions;		
+				var currentOption = el("+option").attr("value", tnE[i]).text( tnE[i] );
+				if( tnE[i] === core.localData.userSettings.preview.defaultThumbnailExt ) currentOption.selected = true;
+				tempArray.push(currentOption);
+			}		
+			defaultThumbnailExt.append( el(tempArray) );		
+	
+	
+	
+			currentPanel.el("#onSave").on("focus", function(){
+			if(core.localData.userSettings.preview.refreshPreview !== this.id){
+				core.localData.userSettings.preview.refreshPreview = this.id;
+			}
+		});
+		currentPanel.el("#onCommand").on("focus", function(){
+			if(core.localData.userSettings.preview.refreshPreview !== this.id){
+				core.localData.userSettings.preview.refreshPreview = this.id;
+			}
+		});
+	
+	
+		} else if(_panel === "window"){
+	
+		}
+	
+	}
+	
+	
+	// --------------------------------
+	// ELIFY APPENDED CHECK/RADIO BTNS
+	// --------------------------------
+	function checkAndRadio(){
+		el(document.querySelectorAll("input[type=radio]"))
+	}
+	
+	
+	
+	
+	
+	
+	
+
+</script>
+
+</body>
+
+</html>

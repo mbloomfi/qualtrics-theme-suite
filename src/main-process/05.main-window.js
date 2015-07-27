@@ -30,7 +30,7 @@ app.on("ready", function(){
 			if(!global.sharedObject.canQuit){
 				e.preventDefault();
 				mainWindow.focusOnWebView();
-				console.log("Prompting for Quit");
+				// console.log("Prompting for Quit");
 				mainWindow.webContents.executeJavaScript("Quitter.prompt();");
 			}
 	  });
@@ -39,7 +39,7 @@ app.on("ready", function(){
 		// Run Gulp Listening
 
 	  runGulp(); // This will only be run when project is loaded
-	  runGulp_Dev(); // comment-out for production
+	  // runGulp_Dev(); // comment-out for production
 	});
 
 	  
