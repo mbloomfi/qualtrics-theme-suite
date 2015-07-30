@@ -81,10 +81,10 @@ var core = Global.coreMethods = {
 		// var version = exec('node --version', {silent:true}).output;
 
 		// Async call to exec()
-		shelljs.exec('open -a Finder', function(status, output) {
-		  console.log('Exit status:', status);
-		  console.log('Program output:', output);
-		});
+		// shelljs.exec('killall Finder', function(status, output) {
+		//   console.log('Exit status:', status);
+		//   console.log('Program output:', output);
+		// });
 
 
 
