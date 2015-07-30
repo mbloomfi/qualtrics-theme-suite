@@ -95,6 +95,37 @@ editorCore.dropdowns.files = {
 		renameFileIcon.innerHTML = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 10 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M2.488,12.633l0,0l-1.971,1.235l0.084,-2.324l0,-0.001l1.887,1.09ZM8.244,2.664l-5.433,9.411l-1.888,-1.09l5.434,-9.411l1.887,1.09ZM8.566,2.106l-1.887,-1.09l0.586,-1.016l1.888,1.09l-0.587,1.016Z"/></svg>';
 
 
+//-------------------
+//	assets dropdown
+//-------------------
+// var assetsIcon = template(function(){
+// 	return etc.el("div", {
+// 		id:"assetsIcon",
+// 		className:"",
+// 		style: {
+// 			background:"lime",
+// 			width:"30px",
+// 			height:"100%",
+// 			position:"absolute",
+// 			top: 0,
+// 			right:'75px'
+// 		},
+// 		events: {
+// 			click: function() {
+// 				console.log("clicked assets icon");
+// 			}		
+// 		}
+// 	})
+// });
+
+// assetsIcon.render({}, document.getElementById('editorBarInner'));
+
+
+		// RENAME FILES ICON
+		var assetsIcon = el("+button#assetsIcon").addClass("icon");
+		assetsIcon.innerHTML = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 36 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g><path d="M34.135,1.686c0,-0.773 -0.628,-1.4 -1.401,-1.4c-5.421,0 -24.987,0 -30.407,0c-0.774,0 -1.401,0.627 -1.401,1.4c0,4.299 0,17.268 0,21.566c0,0.774 0.627,1.401 1.401,1.401c5.42,0 24.986,0 30.407,0c0.773,0 1.401,-0.627 1.401,-1.401c0,-4.298 0,-17.267 0,-21.566ZM32.776,2.98c0,-0.774 -0.627,-1.401 -1.401,-1.401c-5.093,0 -22.591,0 -27.684,0c-0.773,0 -1.401,0.627 -1.401,1.401c0,3.934 0,15.05 0,18.984c0,0.774 0.628,1.401 1.401,1.401c5.093,0 22.591,0 27.684,0c0.774,0 1.401,-0.627 1.401,-1.401c0,-3.934 0,-15.05 0,-18.984Z" class="primary"/><g><clipPath id="_clip1"><rect x="3.052" y="2.361" width="28.882" height="20.27"/></clipPath><g clip-path="url(#_clip1)"><path d="M9.845,22.631l-9.148,0l9.486,-12.177l4.574,5.871l-4.912,6.306Z" class="primary"/><path d="M22.894,7.551l11.748,15.08l-23.495,0l11.747,-15.08Z"  class="primary"/><circle cx="7.314" cy="4.49" r="3.061" class="secondary"/></g></g></g></svg>';
+
+
 		core.brands.projects.files.list(function(files){
 			// console.log("files",files);
 			filesDropdownBody.append(
@@ -103,6 +134,7 @@ editorCore.dropdowns.files = {
 						el("+span").text("Files"),
 						el("+div").addClass("icon_cont").append(
 							el.join([
+								assetsIcon,
 								renameFileIcon,
 								deleteFileIcon
 							])
@@ -142,6 +174,10 @@ editorCore.dropdowns.files = {
 						icon.rmClass("active");
 						el(".file-item").rmClass(icon.id);
 						el("#dropdownBody-files").rmClass(icon.id);
+
+						if(self.id === "assetsIcon") {
+							editorCore.dropdowns.files.assetMode.off();
+						}
 					}
 					
 					// Select Icon
@@ -149,7 +185,15 @@ editorCore.dropdowns.files = {
 						icon.addClass("active");
 						el(".file-item").addClass(self.id);
 						el("#dropdownBody-files").addClass(icon.id);
+
+						if(self.id === "assetsIcon") {
+							editorCore.dropdowns.files.assetMode.on();
+						}
 					}
+
+
+
+
 				});
 			});
 
@@ -190,6 +234,45 @@ editorCore.dropdowns.files = {
 			
 
 		});
+	},
+
+	assetMode: {
+		on: function(){
+
+			var dropdownBody_Files = el('#dropdownBody-files');
+			console.log("will get assets");
+			core.brands.projects.files.assets(function(files){
+				console.log("got assets");
+				var fragment = document.createDocumentFragment();
+				for(var i = 0, ii = files.length; i < ii; i++){
+
+					// if file is not a Dot file (e.g. ".DS_Store")
+					if(files[i].charAt(0) !== "."){
+						var _file = el("+button").addClass(["file-item","asset-file-item"]).attr("data-filename", files[i]).text(files[i]);
+						fragment.appendChild(_file);
+					}
+				}
+
+				dropdownBody_Files.append(fragment);
+
+				var assetFiles = dropdownBody_Files.el(".asset-file-item");
+				assetFiles.on("click", function(){
+					var thisImage = this;
+
+					thisImage.addClass("clicked");
+					core.brands.projects.files.viewImage(core.localData.currentProject.path+"/assets/"+thisImage.dataset.filename);
+					setTimeout(function(){
+						thisImage.rmClass("clicked");
+					}, 300);
+					// editorCore.dropdowns.files.close();
+				});
+
+			})
+		},
+
+		off: function(){
+
+		}
 	},
 
 	deleteFile: function(_fileName){
@@ -462,6 +545,11 @@ editorCore.dropdowns.files = {
 	}
 
 };
+
+
+
+
+
 
 
 

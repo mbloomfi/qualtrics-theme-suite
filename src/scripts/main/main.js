@@ -24,6 +24,8 @@ var shell = require("shelljs");
 var Global = remote.getGlobal("sharedObject"); //see index.js
 var appRoot = Global.appRoot;
 
+var template = etc.template;
+
 
 //= include ../app-core-methods.js
 //= include ./modes/edit-preview/edit-preview.js

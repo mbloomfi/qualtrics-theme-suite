@@ -224,8 +224,6 @@ var core = Global.coreMethods = {
 
 			setCurrentProject: function(_projectName){
 				core.localData.currentProject.name = _projectName;
-
-
 				core.localData.currentProject.path = (_projectName !== null)
 				?
 				(core.brands.getFullPathToBrands()+"/"+
@@ -313,6 +311,21 @@ var core = Global.coreMethods = {
 					dirty: false
 				},
 
+				assets: function(_callback){
+					var path = core.localData.currentProject.path;
+					var fileList = [];
+					fs.readdir(path+"/assets", function(_err, _files){
+						if(_err) console.log("error listing project assets");
+						console.log("the files",_files);
+						for(var i = 0, ii = _files.length; i < ii; i++){
+							var stats = fs.statSync(path+"/assets/"+_files[i]);
+							if(stats.isFile()) fileList.push(_files[i]);
+						}
+						// currentBrand.projects = projectsList // ADD this
+						if(_callback!==undefined) _callback(fileList);
+					});
+				},
+
 				viewImage: function(path){
 					shell.exec('open '+path, function(status, output) {
 						console.log('Exit status:', status);
@@ -322,18 +335,22 @@ var core = Global.coreMethods = {
 
 				/*Returns array of file names at current project path path*/
 				list: function(_callback){ 
-						var path = core.localData.currentProject.path;
-						
-						var fileList = [];
-						fs.readdir(path, function(_err, _files){
-							if(_err) console.log("error listing projects");
-							for(var i = 0, ii = _files.length; i < ii; i++){
-								var stats = fs.statSync(path+"/"+_files[i]);
-								if(stats.isFile()) fileList.push(_files[i]);
+
+					var path = core.localData.currentProject.path;
+					
+					var fileList = [];
+					fs.readdir(path, function(_err, _files){
+						if(_err) console.log("error listing projects");
+						for(var i = 0, ii = _files.length; i < ii; i++){
+							var stats = fs.statSync(path+"/"+_files[i]);
+							if(stats.isFile()) fileList.push(_files[i]);
+							if(stats.isDirectory() && _files[i] === "assets"){
+								console.log("has assets folder!!!");
 							}
-							// currentBrand.projects = projectsList // ADD this
-							if(_callback!==undefined) _callback(fileList);
-						});
+						}
+						// currentBrand.projects = projectsList // ADD this
+						if(_callback!==undefined) _callback(fileList);
+					});
 
 				}
 			}

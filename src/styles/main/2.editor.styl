@@ -169,6 +169,7 @@ section#editor {
 						}
 					}
 				}
+
 				
 				// DROPDOWN MENUS
 				.btn {
@@ -231,13 +232,14 @@ section#editor {
 							text-indent 5px
 							
 							.icon_cont {
-								height 22px
+								height 25px
 								// background alpha(lime, .5)
 								// outline 1px solid orange
 								position absolute
 								top 10px
 								right 10px
-								width 55px
+								width 90px
+								
 								
 								.icon {
 									display inline-block
@@ -260,10 +262,56 @@ section#editor {
 											}
 									}
 									
-									&#renameFile {
-										left 0
+									&#assetsIcon {
+										right 63px
+										height 92%
+										top 0
+										padding 2px 2px
+										// background lime
 										svg {
-											
+											path {
+												&.primary {
+													fill rgb(230,230,230)
+												}
+											}
+											circle.secondary {
+												fill $primaryColor
+											}
+										}
+										&:hover {
+											background-color rgba(255,255,255,.4)
+											svg {
+												path {
+													&.primary {
+														fill rgb(30,30,30)
+													}
+												}
+												circle.secondary {
+													fill $primaryColor
+												}
+											}
+										}
+										&.active {
+											background-color rgba(255,255,255,.9)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													&.primary {
+														fill rgb(60,60,60)
+													}
+												}
+												circle.secondary {
+													fill $primaryColor
+												}
+											}
+										}
+									}
+									
+									&#renameFile {
+										right 34px
+										top 0
+										// height 101%
+										svg {
 											path {
 												fill rgb(230,230,230)
 											}
@@ -289,6 +337,7 @@ section#editor {
 
 									&#deleteFile {
 										right 0
+										top 0
 										svg {
 											
 											path {
@@ -680,6 +729,14 @@ section#editor {
 
 										}
 										
+									}
+									
+									&.assetsIcon {
+										display none
+									}
+									
+									&.asset-file-item.clicked {
+										background $affirmative-green
 									}
 									
 
