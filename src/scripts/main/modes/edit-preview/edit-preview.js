@@ -310,6 +310,41 @@ core.preview = {
 			}
 		},
 
+
+		devices: {
+
+			active: false,
+
+			enable: function(){
+				// console.log("switching to edit/preview => regular mode");
+				if(core.preview.mode.currentMode === "thumbnail"){
+					// console.log("deactivating edit/preview => thumbnail mode");
+					core.preview.mode.thumbnail.deactivate();
+				}
+				else if(core.preview.mode.currentMode === "regular"){
+					core.preview.mode.regular.disable();
+				}
+				else if(core.preview.mode.currentMode === "screenshot"){
+					core.preview.mode.screenshot.deactivate();
+				}
+
+				if(core.localData.currentProject.name !== null){
+					preview.src = "local/currentPreview.html";
+					this.hidden = false;
+				} 
+				else {
+					this.disable();
+				}
+				core.preview.init();	
+				core.preview.mode.currentMode = "regular";
+			},
+
+			disable: function(){
+
+			},
+
+		},
+
 		
 		thumbnail: {
 

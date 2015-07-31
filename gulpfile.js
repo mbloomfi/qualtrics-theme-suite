@@ -96,7 +96,15 @@ gulp.task("prefView", ["prefStyles", "prefScripts"], function(){
 
 
 //CSS ==
-gulp.task("prefStyles", function(){
+gulp.task("prefStyles", ["prefStyles-stylus"], function(){
+	return gulp.src(["src/styles/libs/*.css","src/styles/preferences/_.css"])
+	.pipe(plumber())
+	.pipe(concat("_.css"))
+	.pipe( gulpif( production, minifyCss() ) )
+	.pipe(gulp.dest("src/styles/preferences/"));
+});
+
+gulp.task("prefStyles-stylus", function(){
 	return gulp.src(["src/styles/global.styl", "src/styles/preferences/*.styl", "src/styles/prompt.styl"])
 	.pipe(plumber())
 	.pipe(concat("_.styl"))
@@ -114,6 +122,9 @@ gulp.task("prefScripts", function(){
 		"src/scripts/libs/el.min.js", 
 		"src/scripts/libs/baton.min.js", 
 		"src/scripts/libs/aceBlock.js", 
+		"src/scripts/libs/codemirror/codemirror.js",
+		"src/scripts/libs/codemirror/modes/*",
+		"src/scripts/libs/codemirror/**",
 		"src/scripts/preferences/main.js",
 		//exclude
 		"!src/scripts/preferences/_.js"

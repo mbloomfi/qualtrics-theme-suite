@@ -319,7 +319,7 @@ var menuTemplate = [
         }
       },
       {
-        label: 'Mobile',
+        label: 'Devices',
         accelerator: 'Command+1',
         type: "checkbox",
         checked: false,
@@ -328,6 +328,7 @@ var menuTemplate = [
         click: function(){
           var self = appMenu.items[4].submenu.items[6];
           appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
+          mainWindow.webContents.executeJavaScript("core.preview.mode.devices.enable();");
         }
       },
       {

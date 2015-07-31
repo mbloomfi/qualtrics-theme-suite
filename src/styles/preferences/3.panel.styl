@@ -20,9 +20,10 @@ section#panel {
 	form {
 		position relative
 		z-index 10
-		width 70%
+		width 68%
 		left 10%
 		top 10%
+		height 90%
 		// background red
 		-webkit-app-region no-drag
 		
@@ -159,6 +160,113 @@ section#panel {
 				width 50%
 				min-width 0
 				display inline-block
+			}
+		}
+		
+		#snippetsListCont {
+			box-sizing border-box 
+			border 1px solid rgb(200,200,200)
+			background-color rgb(220,220,220)
+			height 150px
+			max-height 150px
+			overflow-y scroll
+			div.snippet-item {
+				font-size 16px
+				background-color rgba(50,50,50,.1)
+				cursor pointer
+				position relative
+				padding 4px
+				transition background-color .25s ease
+				&:hover {
+					background-color rgba(50,50,50,.25)
+				}
+				&.selected {
+					background-color rgb(21,100,245)
+					color white
+				}
+				&.addNew {
+					color white
+					background-color alpha($affirmative-green,.9)
+				}
+				.snippet-type {
+					position absolute
+					top 50%
+					right 10px
+					// background-color lime
+					transform translateY(-50%)
+				}
+
+			}
+			hr {
+				margin 0
+				padding 0
+				background-color rgb(180,180,180)
+				outline none
+				border none
+				height 1px
+			}
+			
+		}
+		
+		#snippetInfo {
+			position relative
+			height 40px
+			width 100%
+			top 10px
+			input#snippetName {
+				font-size 16px
+				width 150px
+				min-width 0
+				display inline-block
+				position absolute
+				left 0
+				height 100%
+				line-height 30px
+				height 30px
+				padding 0
+				top 5px
+				box-sizing border-box
+			}
+			#snippetTypeCont {
+				display inline-block
+				position absolute
+				left 170px
+				
+				label {
+					display inline-block
+					font-size 18px
+					line-height 40px
+					margin-right 10px
+					input {
+						display inline-block
+						outline none
+						border none
+						margin-left 3px
+					}
+				}
+					
+				
+			}
+		}
+		
+			
+		#snippetCodemirror {
+			font-size 16px
+			height 200px
+			width 100%
+			position absolute
+			top 210px
+		}
+		
+		#saveSnippet {
+			position absolute
+			top 165px
+			padding 5px 8px
+			right 0px
+			background-color rgb(21,100,245)
+			transition background-color .2s ease
+			&:hover {
+				background-color lighten(rgb(21,100,245),15%)
 			}
 		}
 

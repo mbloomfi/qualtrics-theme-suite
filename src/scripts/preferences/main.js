@@ -14,6 +14,7 @@ var path = require("path");
 //	Set core.LocalData
 // --------------------------------
 core.localData.updateUserSettings();
+core.localData.snippets.readFromPersistentData();
 
 
 
@@ -54,12 +55,79 @@ el("#save").on("click", function(e){
 
 function savePreferences() {
 	// saves from localData.userSettings to user-settings.json
+	core.localData.snippets.writeToPersitentData(function(){
 		core.userSettingsFile.update(function(){ // on success
 			logo.addClass("saved");
 			setTimeout(function(){
 				Global.preferencesWindow.close();
 			}, 450);
 		});
+	});
+		
+}
+
+var Snippet = {
+	current: null,
+	init: function(){
+		this.current = {
+			name:null,
+			id:null,
+			code:null,
+			type:null,
+			element: null,
+			index: null
+		};
+	},
+	setName: function(_name){
+		if(Snippet.current !== null){
+			Snippet.current.name = _name;
+			// if(Snippet.current.element !== null){
+			// 	Snippet.current.element.textContent = _name;
+			// }
+		}
+	},
+	setId: function(_id){
+		if(Snippet.current !== null){
+			Snippet.current.id = _id;
+		}
+	},
+	setType: function(type){
+		if(Snippet.current !== null){
+			Snippet.current.type = type;
+		}
+	},
+	setCode: function(code){
+		if(Snippet.current !== null){
+			Snippet.current.code = code;
+		}
+	},
+	setIndex: function(_index){
+		if(Snippet.current !== null){
+			Snippet.current.index = _index;
+		}
+	},
+	getCurrentCore: function(){
+		if(Snippet.current !== null)
+		return {
+			name: Snippet.current.name,
+			id: Snippet.current.id,
+			type: Snippet.current.type,
+			code: Snippet.current.code,
+		}
+	},
+	saveToLocal: function(){
+		if(this.current !== null){
+			if(Snippet.current.element !== null){
+				Snippet.current.element.textContent = Snippet.current.name;
+			}
+			core.localData.snippets.list[this.current.index] = this.getCurrentCore();
+		}
+	}
+}
+
+
+function updateCurrentSnippet() {
+	console.log()
 }
 
 
@@ -105,25 +173,66 @@ panel.transitionTo = baton(function(next, _newPanelName){
 	panel.insertData(_newPanelName);
 
 	setTimeout(function(){
-		next(_newPanel);
+		next(_newPanel, _newPanelName);
 	}, 300);
 
 })
 
-.then(function(next, _newPanel){
+.then(function(next, _newPanel, _newPanelName){
 
-	panel.setPanel(next, _newPanel);
+	panel.setPanel(function(){
+		next(_newPanelName);
+
+	}, _newPanel);
 	panel.rmClass("hide");
+
+	console.log("new panel",_newPanelName)
 
 })
 
-.then(function(next){
+.then(function(next, _newPanelName){
+	console.log("new panel name",_newPanelName)
+	if(_newPanelName === "manage-snippets"){
+
+
+		console.log("set code CodeMirror")
+		var snippetCodemirrorCont = document.getElementById("snippetCodemirror");
+
+		
+
+		// codemirrorContainer.el("textarea").attr("tabindex","-1");
+		setTimeout(function(){
+			snippetCodemirrorCont.el("textarea").attr("tabindex", "-1");
+			snippetCodemirror.on("change", function(){
+				Snippet.setCode(snippetCodemirror.getValue());
+			})
+		}, 0);
+		
+		window.snippetCodemirror = CodeMirror(snippetCodemirrorCont, {
+			mode: "css",
+			theme: "monokai",
+			tabSize: 2,
+			indentWithTabs: true,
+			keyMap: "sublime",
+			lineWrapping: true,
+			lineNumbers: true,
+			autoCloseBrackets: true
+		});
+
+
+
+
+	}
+
 	// console.log("currentPanel:",currentPanel);
 	currentPanel.on("submit", function(evt){
 		evt.preventDefault();
 	});
 
 });
+
+
+
 
 
 // --------------------------------
@@ -205,10 +314,66 @@ panel.buildPanel = function(_newPanel) {
 	}
 
 
+
 	else if(_newPanel === "snippets"){
 
 		currentPanel = el("+form#snippetsForm").addClass("snippets").append(
-			el("+label").text("Snippets Stuff").append( el("+input") )
+			el.join([
+				el("+button").text("Manage Snippets").on("click", function(){
+					panel.transitionTo.run("manage-snippets");
+				}),
+				el("+button").text("Manage Key Bindings"),
+			])
+		);
+
+		return currentPanel;
+
+	} 
+
+	else if(_newPanel === "manage-snippets"){
+
+		currentPanel = el("+form#snippetsForm").addClass("snippets").append(
+			el.join([
+				el("+div#snippetsListCont"),
+
+				el("+div#snippetInfo").append(el.join([
+
+					el("+input#snippetName").attr("placeholder", "Snippet Name")
+					.on("keyup", function(){
+						if(typeof Snippet.current !== "undefined" && Snippet.current.element) {
+
+							Snippet.setName(this.value);
+
+							// Snippet.current.element.textContent = this.value;
+							// Snippet.current.element.dataset.name = this.value;
+							// core.localData.snippets.list[Snippet.current.element.dataset.index].name = this.value;
+
+
+						}
+					}).on("paste", function(){
+						if(typeof Snippet.current !== "undefined" && Snippet.current.element) {
+							Snippet.setName(this.value);
+							// Snippet.current.element.textContent = this.value;
+							// Snippet.current.element.dataset.name = this.value;
+							// core.localData.snippets.list[Snippet.current.element.dataset.index].name = this.value;
+						}
+					})
+					,
+					el("+div#snippetTypeCont").append(el.join([
+						el("+label#snippetType-css").text("CSS").append(
+							el("+input#snippetRadio-css").attr("type","radio").attr("value", "css").attr("name","snippet-radio")
+						),
+						el("+label#snippetType-js").text("JS").append(
+							el("+input#snippetRadio-js").attr("type","radio").attr("value", "js").attr("name","snippet-radio")
+						)
+					])),
+				])),
+				el("+div#snippetCodemirror")
+				,
+				el("+button#saveSnippet").text("Save Snippet").on("click", function(){
+					Snippet.saveToLocal();
+				})
+			])
 		);
 
 		return currentPanel;
@@ -312,8 +477,9 @@ panel.insertData = function(_panel){
 	}
 
 
-	else if(_panel = "previewFiles") {
+	else if(_panel === "previewFiles") {
 
+		console.log("preview files?")
 		var previewFilesCont = currentPanel.el("#previewFilesCont");
 		var path = appRoot+"/local/preview-files"; 
 		var fileList = [];
@@ -342,9 +508,142 @@ panel.insertData = function(_panel){
 	}
 
 
+
 	else if(_panel === "snippets"){
 
 	} 
+
+
+
+	else if(_panel === "manage-snippets"){
+
+		var snippetsListCont = currentPanel.el("#snippetsListCont");
+		var snippetsList = core.localData.snippets.list;
+
+		var frag = document.createDocumentFragment();
+
+
+
+		for(var i = 0, ii = snippetsList.length; i < ii; i++){
+
+			var snippetItem = el("+div").addClass("snippet-item").text(snippetsList[i].name).attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i).append(
+					el("+div").addClass("snippet-type").text(snippetsList[i].type)
+				)
+
+				// CLICK snippet button
+				.on("click", function(){
+					var self = this;
+
+					el(".snippet-item").each(function(item){
+						item.rmClass("selected")
+					})
+					self.addClass("selected");
+
+					var _index;
+					var thisSnippet;
+					var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
+						if(self.dataset.id === snip.id) {
+							thisSnippet = snip;
+							_index=index;
+							return true;
+						}
+					});
+					console.log("thisSnippet",thisSnippet);
+
+					console.log("index",_index)
+					Snippet.init();
+					Snippet.setName(thisSnippet.name);
+					Snippet.setId(thisSnippet.id);
+					Snippet.setType(thisSnippet.type);
+					Snippet.setCode(thisSnippet.code);
+					Snippet.setIndex(_index);
+					Snippet.current.element = self;
+
+
+					snippetCodemirror.setValue(Snippet.current.code);
+					document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+					document.getElementById("snippetName").value = Snippet.current.name;
+
+				});
+			frag.appendChild(snippetItem);
+			frag.appendChild(el("+hr"));
+
+		}
+
+		// Create New Snippet Button
+		frag.appendChild(
+			el("+div").addClass(["snippet-item", "addNew"]).text("ADD NEW SNIPPET").on("click", function(){
+					var self = this;
+					el(".snippet-item").each(function(item){
+						item.rmClass("selected")
+					})
+					self.addClass("selected");
+					
+
+					function addNewSnippet(){
+						var i = core.localData.snippets.list.length;
+
+						var snippetItem = el("+div").addClass("snippet-item").text("New Snippet").attr("data-id","renadomness").attr("data-type","css").attr("data-name","New Snippet").attr("data-index",i).append(
+							el("+div").addClass("snippet-type").text("css")
+						)
+
+						// CLICK snippet button
+						.on("click", function(){
+							var self = this;
+
+							el(".snippet-item").each(function(item){
+								item.rmClass("selected")
+							})
+							self.addClass("selected");
+
+							var _index;
+							var thisSnippet;
+							var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
+								if(self.dataset.id === snip.id) {
+									thisSnippet = snip;
+									_index=index;
+									return true;
+								}
+							});
+							console.log("thisSnippet",thisSnippet);
+
+							console.log("index",_index)
+							Snippet.init();
+							Snippet.setName(thisSnippet.name);
+							Snippet.setId(thisSnippet.id);
+							Snippet.setType(thisSnippet.type);
+							Snippet.setCode(thisSnippet.code);
+							Snippet.setIndex(_index);
+							Snippet.current.element = self;
+
+
+							snippetCodemirror.setValue(Snippet.current.code);
+							document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+							document.getElementById("snippetName").value = Snippet.current.name;
+
+						});
+
+						var container = currentPanel.el("#snippetsListCont");
+						container.insertBefore(self, snippetItem)
+						container.append(el("+hr"));
+					// frag.appendChild(snippetItem);
+					// frag.appendChild(el("+hr"));
+					}
+					addNewSnippet();
+
+					Snippet.init();
+
+					document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+					document.getElementById("snippetName").value = "";
+					snippetCodemirror.setValue(Snippet.current.code);
+					console.log("Snippet.current",Snippet.current)
+				})
+		)
+
+
+		snippetsListCont.append(frag);
+
+	}
 
 
 	else if(_panel === "preview"){

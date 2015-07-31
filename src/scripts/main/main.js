@@ -148,6 +148,11 @@ el.on("load", function(){
 	})
 	.then(function(next){
 
+		core.localData.snippets.readFromPersistentData(next);
+
+	})
+	.then(function(next){
+
 		editorCore.dropdowns.setDropdownGlobals();
 
 		editorCore.dropdowns.bodyClick();

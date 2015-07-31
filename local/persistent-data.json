@@ -1,17 +1,20 @@
 {
   "recentBrands": [
+    "gbsviewpoints",
+    "github",
+    "tester5",
+    "uafieldtesting",
+    "thesportsauthority",
+    "paypal360",
     "tester",
     "tester4",
     "gadventures",
-    "paypal360",
     "gamestop",
     "bart",
-    "github",
     "wmsas",
     "arcelormittal",
     "travelocity",
     "hotwire",
-    "thesportsauthority",
     "csxoptm360",
     "csx360",
     "ericsson360",
@@ -58,5 +61,19 @@
     "toyotasurvey",
     "brassagency",
     "fake"
+  ],
+  "snippets": [
+    {
+      "name": "Progress Bar",
+      "id": "sjdo4ofodcnjw",
+      "type": "css",
+      "code": ".Skin #ProgressBarContainer {\n\tcolor: red;\n}"
+    },
+    {
+      "name": "JavaScript Thing 2",
+      "id": "di0nfni40d34",
+      "type": "js",
+      "code": "console.log(\"thing\");"
+    }
   ]
 }

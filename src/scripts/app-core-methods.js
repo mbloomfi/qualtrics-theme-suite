@@ -19,6 +19,7 @@ var core = Global.coreMethods = {
 		update: function (_successCallback){
 			var _DATA = {};
 			_DATA.recentBrands = core.localData.brands.recent;
+			_DATA.snippets = core.localData.snippets.list;
 			//_DATA.x = core.localData.x;
 			fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
 				if(err) alert("Error Saving Changes");
@@ -397,6 +398,39 @@ var core = Global.coreMethods = {
 			current: {
 				name: null,
 				path: null
+			}
+
+
+		},
+
+		snippets: {
+			list: null,
+
+			readFromPersistentData: function(_callback){
+				// if local data is null
+				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0){
+					core.persistentDataFile.read(function(_persistent_data){
+						console.log("persistent-data recent brands", _persistent_data.snippets)
+						core.localData.snippets.list = _persistent_data.snippets;
+						// console.log("1a) recentbrands:",core.localData.brands.recent);
+						if(_callback) _callback();
+					})
+				} 
+			},
+
+			writeToPersitentData: function(_callback){
+				core.persistentDataFile.read(function(_persistent_data){
+					_persistent_data.snippets = core.localData.snippets.list;
+
+					var _persistent_data = JSON.stringify(_persistent_data);
+
+					fs.writeFile(Global.appRoot+"/local/persistent-data.json", _persistent_data, function(err){
+						if(err) alert("Error Saving Changes");
+						if(_callback) _callback();
+					});
+
+					
+				});
 			}
 
 
