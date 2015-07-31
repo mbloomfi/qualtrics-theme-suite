@@ -3,6 +3,7 @@
 $dropdown-menus-color = alpha(rgb(40,40,40), 0.95)
 
 $dropdown_height = 300px
+$dropdown_width = 200px
 $searchbar_height = 40px
 $newBrand_btn_height = 30px
 $brandsListCont_height = ($dropdown_height - ($searchbar_height + 1))
@@ -211,7 +212,7 @@ section#editor {
 					div.dropdown {
 						overflow hidden
 						height 316px
-						width 200px
+						width $dropdown_width
 						cursor default
 						position absolute
 						top 120%
@@ -421,7 +422,7 @@ section#editor {
 								font-size 17px
 							}
 							
-
+							
 
 							// BRANDS DROPDOWN BODY
 							div#searchBrandsContainer {
@@ -622,6 +623,9 @@ section#editor {
 											}
 										}
 									}
+									
+								
+
 								}
 								
 								.no-projects {
@@ -634,7 +638,14 @@ section#editor {
 									width 100%
 								}
 								
-								
+								&.dim {
+									background-color rgba(15,15,15,.9)
+									transition background-color .2s ease
+									.project-item {
+										color darken($item-color,25%)
+										
+									}
+								}
 								
 
 							}
@@ -800,6 +811,58 @@ section#editor {
 								//
 							}
 
+						}
+						
+						#addBaseFilesCheck_cont {
+							position absolute
+							bottom 40px
+							left 1px
+							width ($dropdown_width) - (2px)
+							font-size 17px
+							line-height 40px
+							z-index 1001
+							height 40px
+							box-sizing border-box
+							border-top 1px solid rgb(70,70,70)
+							background-color rgb(50,50,50)
+							color white
+							#addBaseFilesCheck_label {
+								color white
+								margin-right 10px
+								padding 0 0 0 6px
+							}
+							#addBaseFilesCheck {
+								visibility hidden
+							}
+							#addBaseFilesCheck_custom {
+								height 20px
+								width 20px
+								background-color rgb(40,40,40)
+								display inline-block
+								vertical-align top
+								position relative
+								top 10px
+								cursor pointer
+								outline 1px solid rgb(90,90,90)
+								img {
+									width 80%
+									height auto
+									position absolute
+									top 50%
+									left 50%
+									opacity 0
+									transform translate(-50%,-50%)
+									transition opacity .15s ease
+								}
+								&.checked {
+									img {
+										opacity 1
+									}
+								}
+							}
+							&.hide {
+								bottom -50px
+							}
 						}
 						
 						#newProjectInput {

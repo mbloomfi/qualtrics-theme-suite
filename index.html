@@ -1110,6 +1110,14 @@
 			  text-align: center;
 			  width: 100%;
 			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects.dim {
+			  background-color: rgba(15,15,15,0.9);
+			  -webkit-transition: background-color 0.2s ease;
+			          transition: background-color 0.2s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.projects.dim .project-item {
+			  color: #b0b0b0;
+			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files {
 			  overflow-y: scroll;
 			  overflow-x: hidden;
@@ -1237,6 +1245,58 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown.hide .dropdownBody #newBrand {
 			  color: rgba(255,255,255,0);
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont {
+			  position: absolute;
+			  bottom: 40px;
+			  left: 1px;
+			  width: 198px;
+			  font-size: 17px;
+			  line-height: 40px;
+			  z-index: 1001;
+			  height: 40px;
+			  box-sizing: border-box;
+			  border-top: 1px solid #464646;
+			  background-color: #323232;
+			  color: #fff;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont #addBaseFilesCheck_label {
+			  color: #fff;
+			  margin-right: 10px;
+			  padding: 0 0 0 6px;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont #addBaseFilesCheck {
+			  visibility: hidden;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont #addBaseFilesCheck_custom {
+			  height: 20px;
+			  width: 20px;
+			  background-color: #282828;
+			  display: inline-block;
+			  vertical-align: top;
+			  position: relative;
+			  top: 10px;
+			  cursor: pointer;
+			  outline: 1px solid #5a5a5a;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont #addBaseFilesCheck_custom img {
+			  width: 80%;
+			  height: auto;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  opacity: 0;
+			  -webkit-transform: translate(-50%, -50%);
+			      -ms-transform: translate(-50%, -50%);
+			          transform: translate(-50%, -50%);
+			  -webkit-transition: opacity 0.15s ease;
+			          transition: opacity 0.15s ease;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont #addBaseFilesCheck_custom.checked img {
+			  opacity: 1;
+			}
+			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #addBaseFilesCheck_cont.hide {
+			  bottom: -50px;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown #newProjectInput {
 			  position: absolute;
@@ -2081,6 +2141,14 @@
 								for(var data in _props[prop]){
 									if(_props[prop].hasOwnProperty(data)){
 										newElm.dataset[data] = _props[prop][data];
+									}
+								}
+							}
+			
+							else if (prop === "attr"){
+								for(var attr in _props[prop]){
+									if(_props[prop].hasOwnProperty(attr)){
+										newElm.setAttribute(attr, _props[prop][attr]);
 									}
 								}
 							}
@@ -17478,6 +17546,7 @@
 			
 			
 						disable: function(){
+							console.log("disabling preview");
 							preview.src = "local/no-preview.html";
 							this.hidden = true;
 						},
@@ -17516,45 +17585,97 @@
 							}
 						},
 			
-						setWatchers: function(){
-							console.log("Setting Watchers");
+						setWatchers: function(_callback){
+							console.log("Setting Watchers:",_callback);
+			
 							var self = this;
-							self.watchCssFile();
-							self.watchSkinFile();
+							self.watchCssFile(function(_err){
+			
+								if(_err && _callback) {
+									console.log("watch css file error");
+									return _callback(_err);
+								} else {
+									console.log("no css error :)");
+								}
+			
+								self.watchSkinFile(function(_err){
+									if(_callback) {
+										console.log("running set watcher callback");
+										return _callback(_err);
+									}
+								});
+			
+							});
+							
+			
 						},
 			
-						watchCssFile: function(){
+						watchCssFile: function(_callback){
 							var self = this;
 							var path = core.localData.currentProject.path+"/StyleSheet.css";
+							console.log("ok, we are in the watch css");
+							// try{
+								fs.stat(path,function(_ERR){
+									if(_ERR) {
+										console.warn("error watching CSS File:",_ERR);
+										console.log("");
+										self.disable();
+										if(_callback) _callback(true);
+									}
+									else {
+										// console.log("path",core.localData.currentProject.path);
+										self.cssFileWatcher = fs.watch(path, function(){
+											console.log("css changed!!!!");
+											self.update(function(){
+												setTimeout(function(){
+													self.reload();
+												}, 0);
+											});
+											
+										});
+										console.log("no problemo with css");
+										if(_callback) _callback(false);
+										
+									}
+								})
+										
 							
-							try{
-								self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
-									self.update();
-									self.reload();
-								});
-							}
-							catch(e){
-								self.disable();
-								console.error("error watching CSS File:",e);
-							}
+							// }
+							// catch(e){
+								
+			
+			
+								// if(_callback) return _callback(true);
+							// }
 								
 							
 						},
 			
-						watchSkinFile: function(){
+						watchSkinFile: function(_callback){
 							var self = this;
 							var path = core.localData.currentProject.path+"/Skin.html";
 			
-							try {
-								self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
-									self.update();
-									self.reload();
-								});
-							}
-							catch(e){
-								self.disable();
-								console.error("error watching Skin File:",e);
-							}
+							fs.stat(path,function(_ERR){
+								if(_ERR) {
+									console.warn("error watching CSS File:",_ERR);
+									console.log("");
+									self.disable();
+									if(_callback) _callback(true);
+								}
+								else {
+									// console.log("path",core.localData.currentProject.path);
+									self.skinFileWatcher = fs.watch(path, function(){
+											self.update(function(){
+												setTimeout(function(){
+													self.reload();
+												}, 0);
+											});
+									});
+									console.log("no problemo with skin");
+									if(_callback) _callback(false);
+								}
+							});
+			
 								
 							
 						},
@@ -17562,6 +17683,7 @@
 			
 			
 						reload: function(){
+							console.log("===runing reload===");
 							function reloadPreview(){
 								if(this.hasClass("active") && core.localData.currentProject.name !== null){
 									var self = this;
@@ -17590,7 +17712,7 @@
 			
 						update: function(_callback){
 							// to run, use:  core.preview.update();
-			
+							console.log("===runing update===");
 							var self = this;
 							console.log("Updating current project:",core.localData.currentProject.name);
 							fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
@@ -20006,6 +20128,7 @@
 			
 						// Add this functionality
 						// core.brands.projects.select(_projectName);
+						
 						core.brands.projects.setCurrentProject(_projectName);
 						editorCore.dropdowns.files.activate(_projectName);
 						// editorCore.dropdowns.files.populate(_projectName);
@@ -20015,22 +20138,44 @@
 						editorCore.dropdowns.files.reset();
 						console.log("selecting project 2");
 						core.preview.mode.regular.clearWatchers();
-						core.preview.mode.regular.setWatchers();
-						console.log("selecting project 3");
-						core.preview.mode.regular.update();
-						core.preview.mode.regular.enable();
-						console.log("selecting project 4");
-						editorCore.dropdowns.files.autoSelectStyleSheet();
+						console.log("checkpoint 1");
+						core.preview.mode.regular.setWatchers(function(_err){
 			
-						editorCore.refreshBtn.activate();
+							if(_err) {
+								console.warn("could not set watchers");
+								core.preview.mode.regular.disable();
+							}
+							else {
 			
-						setTimeout(function(){
-							core.preview.mode.regular.compileSass();
-						},0);
+								console.log("there were NO errors!");
+								console.log("selecting project 3");
+								core.preview.mode.regular.update();
+								core.preview.mode.regular.enable();
+								console.log("selecting project 4");
+								editorCore.dropdowns.files.autoSelectStyleSheet();
+								editorCore.refreshBtn.activate();
+								console.log("checkpoint 2");
+								setTimeout(function(){
+									core.preview.mode.regular.compileSass();
+								},0);
+			
+								// these allow the menu items in the preview dropdown to become selectable
+								ipc.send('asynchronous-message', 'enablePreviewModes');
+			
+								console.log("checkpoint 3");
 			
 			
-						// these allow the menu items in the preview dropdown to become selectable
-						ipc.send('asynchronous-message', 'enablePreviewModes');
+							}
+			
+								
+			
+			
+						}); // error happens here if no StyleSheet.css or Skin.html
+			
+						
+			
+			
+						
 			
 					}
 					
@@ -20135,8 +20280,10 @@
 				close: function(){
 					var self = this;
 					self.status = "closed";
+			
 					baton(function(next){
 						projectDropdown.addClass("hide");
+						projectDropdownBody.rmClass("dim");
 						projectName.rmClass("dropdown-active");
 						projectDropdown.el(".arrow")[0].addClass("hide");
 						setTimeout(next, 200);
@@ -20181,15 +20328,77 @@
 					var self = this;
 					core.brands.projects.list(core.localData.currentBrand, function(projects){
 			
-						var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project");
+						var customCheck = etc.template(function(){
+			
+							var checked = this.props.checked;
+			
+							return etc.el("label", {
+								id:"addBaseFilesCheck_custom",
+								className:((checked)?"checked":""),
+								getCheckStatus: function(){
+									return document.getElementById('addBaseFilesCheck').checked;
+								},
+								update: function(){
+									var self = this;
+									setTimeout(function(){
+										if(self.getCheckStatus()){
+											self.classList.add("checked");
+										} else {
+											self.classList.remove("checked");
+										}
+									}, 0);
+								},
+								attr: {
+									"for":"addBaseFilesCheck"
+								},
+								events: {
+									click: function(){
+										this.update();
+									}
+								}
+							}).append(
+								etc.el("img",{src:"local/images/checkmark.svg"})
+							)
+			
+			
+						});
+							
+			
+			
+						var addBaseFilesCheck = el("+div#addBaseFilesCheck_custom").attr("type","checkbox").attr("checked","true");
+			
+						var addBaseFilesCheck = el("+input#addBaseFilesCheck").attr("type","checkbox").attr("checked","true");
+						var addBaseFilesCheck_label = el("+label#addBaseFilesCheck_label").attr("for","addBaseFilesCheck").text("Add Base Files");
+						addBaseFilesCheck_label.on("click", function(){
+							document.getElementById('addBaseFilesCheck_custom').update();
+						});
+						var addBaseFilesCheck_cont = el("+div#addBaseFilesCheck_cont").addClass("hide").append(
+							el.join([
+								addBaseFilesCheck_label,
+								customCheck.render({props:{checked:true}}),
+								addBaseFilesCheck
+							])
+						);
+			
+						
+			
+						var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project").on("click",function(){
+							document.getElementById('addBaseFilesCheck_cont').classList.remove("hide");
+							projectDropdownBody.addClass("dim");
+						});
+			
 						var newProjectInputBtn = el("+div#newProject-btn").append(
 							el.join([
 								el("+div").addClass("vertical-bar"),
 								el("+div").addClass("horizontal-bar")
 							])
 						);
+			
+			
+			
 						projectDropdownInputCont.append(newProjectInput);
 						projectDropdownInputCont.append(newProjectInputBtn);
+						projectDropdownInputCont.append(addBaseFilesCheck_cont);
 			
 						if(projects.length === 0)
 						{
@@ -20237,11 +20446,16 @@
 			
 								if(!match){
 									core.brands.projects.create(core.localData.currentBrand, inputVal, function(){
-										editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
-											// console.log("select:", inputVal);
-											editorCore.dropdowns.projects.select(inputVal);
 			
-										});
+										if(document.getElementById('addBaseFilesCheck').checked){
+											editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
+												editorCore.dropdowns.projects.select(inputVal);
+											});
+										} else {
+											editorCore.dropdowns.projects.select(inputVal);
+										}
+			
+											
 										
 									});
 			

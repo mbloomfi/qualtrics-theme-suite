@@ -50,6 +50,7 @@ core.preview = {
 
 
 			disable: function(){
+				console.log("disabling preview");
 				preview.src = "local/no-preview.html";
 				this.hidden = true;
 			},
@@ -88,45 +89,97 @@ core.preview = {
 				}
 			},
 
-			setWatchers: function(){
-				console.log("Setting Watchers");
+			setWatchers: function(_callback){
+				console.log("Setting Watchers:",_callback);
+
 				var self = this;
-				self.watchCssFile();
-				self.watchSkinFile();
+				self.watchCssFile(function(_err){
+
+					if(_err && _callback) {
+						console.log("watch css file error");
+						return _callback(_err);
+					} else {
+						console.log("no css error :)");
+					}
+
+					self.watchSkinFile(function(_err){
+						if(_callback) {
+							console.log("running set watcher callback");
+							return _callback(_err);
+						}
+					});
+
+				});
+				
+
 			},
 
-			watchCssFile: function(){
+			watchCssFile: function(_callback){
 				var self = this;
 				var path = core.localData.currentProject.path+"/StyleSheet.css";
+				console.log("ok, we are in the watch css");
+				// try{
+					fs.stat(path,function(_ERR){
+						if(_ERR) {
+							console.warn("error watching CSS File:",_ERR);
+							console.log("");
+							self.disable();
+							if(_callback) _callback(true);
+						}
+						else {
+							// console.log("path",core.localData.currentProject.path);
+							self.cssFileWatcher = fs.watch(path, function(){
+								console.log("css changed!!!!");
+								self.update(function(){
+									setTimeout(function(){
+										self.reload();
+									}, 0);
+								});
+								
+							});
+							console.log("no problemo with css");
+							if(_callback) _callback(false);
+							
+						}
+					})
+							
 				
-				try{
-					self.cssFileWatcher = fs.watch(path, function(evt, _fileName){
-						self.update();
-						self.reload();
-					});
-				}
-				catch(e){
-					self.disable();
-					console.error("error watching CSS File:",e);
-				}
+				// }
+				// catch(e){
+					
+
+
+					// if(_callback) return _callback(true);
+				// }
 					
 				
 			},
 
-			watchSkinFile: function(){
+			watchSkinFile: function(_callback){
 				var self = this;
 				var path = core.localData.currentProject.path+"/Skin.html";
 
-				try {
-					self.skinFileWatcher = fs.watch(path, function(evt, _fileName){
-						self.update();
-						self.reload();
-					});
-				}
-				catch(e){
-					self.disable();
-					console.error("error watching Skin File:",e);
-				}
+				fs.stat(path,function(_ERR){
+					if(_ERR) {
+						console.warn("error watching CSS File:",_ERR);
+						console.log("");
+						self.disable();
+						if(_callback) _callback(true);
+					}
+					else {
+						// console.log("path",core.localData.currentProject.path);
+						self.skinFileWatcher = fs.watch(path, function(){
+								self.update(function(){
+									setTimeout(function(){
+										self.reload();
+									}, 0);
+								});
+						});
+						console.log("no problemo with skin");
+						if(_callback) _callback(false);
+					}
+				});
+
 					
 				
 			},
@@ -134,6 +187,7 @@ core.preview = {
 
 
 			reload: function(){
+				console.log("===runing reload===");
 				function reloadPreview(){
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
@@ -162,7 +216,7 @@ core.preview = {
 
 			update: function(_callback){
 				// to run, use:  core.preview.update();
-
+				console.log("===runing update===");
 				var self = this;
 				console.log("Updating current project:",core.localData.currentProject.name);
 				fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){

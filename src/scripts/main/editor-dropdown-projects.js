@@ -11,6 +11,7 @@ editorCore.dropdowns.projects = {
 
 			// Add this functionality
 			// core.brands.projects.select(_projectName);
+			
 			core.brands.projects.setCurrentProject(_projectName);
 			editorCore.dropdowns.files.activate(_projectName);
 			// editorCore.dropdowns.files.populate(_projectName);
@@ -20,22 +21,44 @@ editorCore.dropdowns.projects = {
 			editorCore.dropdowns.files.reset();
 			console.log("selecting project 2");
 			core.preview.mode.regular.clearWatchers();
-			core.preview.mode.regular.setWatchers();
-			console.log("selecting project 3");
-			core.preview.mode.regular.update();
-			core.preview.mode.regular.enable();
-			console.log("selecting project 4");
-			editorCore.dropdowns.files.autoSelectStyleSheet();
+			console.log("checkpoint 1");
+			core.preview.mode.regular.setWatchers(function(_err){
 
-			editorCore.refreshBtn.activate();
+				if(_err) {
+					console.warn("could not set watchers");
+					core.preview.mode.regular.disable();
+				}
+				else {
 
-			setTimeout(function(){
-				core.preview.mode.regular.compileSass();
-			},0);
+					console.log("there were NO errors!");
+					console.log("selecting project 3");
+					core.preview.mode.regular.update();
+					core.preview.mode.regular.enable();
+					console.log("selecting project 4");
+					editorCore.dropdowns.files.autoSelectStyleSheet();
+					editorCore.refreshBtn.activate();
+					console.log("checkpoint 2");
+					setTimeout(function(){
+						core.preview.mode.regular.compileSass();
+					},0);
+
+					// these allow the menu items in the preview dropdown to become selectable
+					ipc.send('asynchronous-message', 'enablePreviewModes');
+
+					console.log("checkpoint 3");
 
 
-			// these allow the menu items in the preview dropdown to become selectable
-			ipc.send('asynchronous-message', 'enablePreviewModes');
+				}
+
+					
+
+
+			}); // error happens here if no StyleSheet.css or Skin.html
+
+			
+
+
+			
 
 		}
 		
@@ -140,8 +163,10 @@ editorCore.dropdowns.projects = {
 	close: function(){
 		var self = this;
 		self.status = "closed";
+
 		baton(function(next){
 			projectDropdown.addClass("hide");
+			projectDropdownBody.rmClass("dim");
 			projectName.rmClass("dropdown-active");
 			projectDropdown.el(".arrow")[0].addClass("hide");
 			setTimeout(next, 200);
@@ -186,15 +211,77 @@ editorCore.dropdowns.projects = {
 		var self = this;
 		core.brands.projects.list(core.localData.currentBrand, function(projects){
 
-			var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project");
+			var customCheck = etc.template(function(){
+
+				var checked = this.props.checked;
+
+				return etc.el("label", {
+					id:"addBaseFilesCheck_custom",
+					className:((checked)?"checked":""),
+					getCheckStatus: function(){
+						return document.getElementById('addBaseFilesCheck').checked;
+					},
+					update: function(){
+						var self = this;
+						setTimeout(function(){
+							if(self.getCheckStatus()){
+								self.classList.add("checked");
+							} else {
+								self.classList.remove("checked");
+							}
+						}, 0);
+					},
+					attr: {
+						"for":"addBaseFilesCheck"
+					},
+					events: {
+						click: function(){
+							this.update();
+						}
+					}
+				}).append(
+					etc.el("img",{src:"local/images/checkmark.svg"})
+				)
+
+
+			});
+				
+
+
+			var addBaseFilesCheck = el("+div#addBaseFilesCheck_custom").attr("type","checkbox").attr("checked","true");
+
+			var addBaseFilesCheck = el("+input#addBaseFilesCheck").attr("type","checkbox").attr("checked","true");
+			var addBaseFilesCheck_label = el("+label#addBaseFilesCheck_label").attr("for","addBaseFilesCheck").text("Add Base Files");
+			addBaseFilesCheck_label.on("click", function(){
+				document.getElementById('addBaseFilesCheck_custom').update();
+			});
+			var addBaseFilesCheck_cont = el("+div#addBaseFilesCheck_cont").addClass("hide").append(
+				el.join([
+					addBaseFilesCheck_label,
+					customCheck.render({props:{checked:true}}),
+					addBaseFilesCheck
+				])
+			);
+
+			
+
+			var newProjectInput = el("+input#newProjectInput").attr("placeholder","Create New Project").on("click",function(){
+				document.getElementById('addBaseFilesCheck_cont').classList.remove("hide");
+				projectDropdownBody.addClass("dim");
+			});
+
 			var newProjectInputBtn = el("+div#newProject-btn").append(
 				el.join([
 					el("+div").addClass("vertical-bar"),
 					el("+div").addClass("horizontal-bar")
 				])
 			);
+
+
+
 			projectDropdownInputCont.append(newProjectInput);
 			projectDropdownInputCont.append(newProjectInputBtn);
+			projectDropdownInputCont.append(addBaseFilesCheck_cont);
 
 			if(projects.length === 0)
 			{
@@ -242,11 +329,16 @@ editorCore.dropdowns.projects = {
 
 					if(!match){
 						core.brands.projects.create(core.localData.currentBrand, inputVal, function(){
-							editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
-								// console.log("select:", inputVal);
-								editorCore.dropdowns.projects.select(inputVal);
 
-							});
+							if(document.getElementById('addBaseFilesCheck').checked){
+								editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
+									editorCore.dropdowns.projects.select(inputVal);
+								});
+							} else {
+								editorCore.dropdowns.projects.select(inputVal);
+							}
+
+								
 							
 						});
 

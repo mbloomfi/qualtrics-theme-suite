@@ -163,6 +163,14 @@ var etc = {
 					}
 				}
 
+				else if (prop === "attr"){
+					for(var attr in _props[prop]){
+						if(_props[prop].hasOwnProperty(attr)){
+							newElm.setAttribute(attr, _props[prop][attr]);
+						}
+					}
+				}
+
 				else {
 					newElm[prop] = _props[prop];
 				}
