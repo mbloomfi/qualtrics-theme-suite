@@ -422,6 +422,8 @@ var core = Global.coreMethods = {
 				core.persistentDataFile.read(function(_persistent_data){
 					_persistent_data.snippets = core.localData.snippets.list;
 
+					console.log("new persistent-data"), _persistent_data;
+
 					var _persistent_data = JSON.stringify(_persistent_data);
 
 					fs.writeFile(Global.appRoot+"/local/persistent-data.json", _persistent_data, function(err){

@@ -3,23 +3,25 @@ var etc = {
 	template: function(_callback){
 		var _template = {
 
-			render: function(_obj, _domHook){
+			render: function(_props, _domHook){
 				var self = this;
 				var utils = self.__utils__;
 
-				var _object 	= ( typeof _obj === "undefined" || (_obj instanceof Object === false) ) ? {} : _obj;
-				_object.state	=	( typeof _obj === "undefined" || (_obj instanceof Object === false) ) ? {} : _object.state;
-				_object.props =	( typeof _obj === "undefined" || (_obj instanceof Object === false) ) ? {} : _object.props;
-				_object.current = self.current;
-				_object.inDom = self.inDom;
+				var _dataInject = {};
+				// var _dataInject = ( typeof _props === "undefined" || (_props instanceof Object === false) ) ? {} : _props;
+				// _dataInject.state	=	( typeof _props === "undefined" || (_props instanceof Object === false) ) ? {} : _dataInject.state;
+				_dataInject.props =	( typeof _props === "undefined" || (_props instanceof Object === false) ) ? {} : _props;
+				_dataInject.current = self.current;
+				_dataInject.inDom = self.inDom;
 
-				var tempCurrent = utils.build.call(_object);
+				var tempCurrent = utils.build.call(_dataInject);
 
 				// template returns nothing, don't set new current
 				if(typeof tempCurrent === "undefined" || tempCurrent === undefined){
 					return;
 				}
 
+				// if RENDER returns NULL
 				if(tempCurrent === null) {
 
 					if(etc.__utils__.isInDom(utils.current)){
@@ -44,8 +46,8 @@ var etc = {
 					}
 				}
 
-				else if(etc.__utils__.isElement(tempCurrent)){ 
-					console.log("tempCurrent",tempCurrent);
+				// if RENDER return an element
+				else if(etc.__utils__.isElement(tempCurrent)){
 					if( etc.__utils__.isInDom(utils.current) && utils.current.delayedRemoval.pending!==true ){
 						// the currently rendered element is in the DOM
 						utils.current.parentNode.replaceChild(tempCurrent, utils.current);
@@ -125,30 +127,30 @@ var etc = {
 
 
 
-	el: function(_el, _props){
+	el: function(_el, _attr, _append){
 		var newElm = document.createElement(_el);
-		newElm.props = (typeof _props === "object")?_props:{};
+		newElm.props = (typeof _attr === "object")?_attr:{};
 		newElm.props.nodeType = _el;
 
-		for(var prop in _props){
-			if(_props.hasOwnProperty(prop)){
+		for(var prop in _attr){
+			if(_attr.hasOwnProperty(prop)){
 				if(prop === "text"){
-					newElm.textContent = _props[prop];
+					newElm.textContent = _attr[prop];
 				} 
 				else if(prop === "styles" || prop === "style"){
-					for(var style in _props[prop]){
-						if(_props[prop].hasOwnProperty(style)){
-							newElm.style[style] = _props[prop][style];
+					for(var style in _attr[prop]){
+						if(_attr[prop].hasOwnProperty(style)){
+							newElm.style[style] = _attr[prop][style];
 						}
 					}
 				}
 				else if(prop === "events"){
-					for(var evt in _props[prop]){
-						if(_props[prop].hasOwnProperty(evt)){
+					for(var evt in _attr[prop]){
+						if(_attr[prop].hasOwnProperty(evt)){
 							if(evt === "attached"){
-								newElm.onAttach = _props[prop][evt];
+								newElm.onAttach = _attr[prop][evt];
 							} else {
-								newElm.addEventListener(evt, _props[prop][evt]);
+								newElm.addEventListener(evt, _attr[prop][evt]);
 							}
 							
 						}
@@ -156,23 +158,25 @@ var etc = {
 				}
 
 				else if(prop === "dataset"){
-					for(var data in _props[prop]){
-						if(_props[prop].hasOwnProperty(data)){
-							newElm.dataset[data] = _props[prop][data];
+					for(var data in _attr[prop]){
+						if(_attr[prop].hasOwnProperty(data)){
+							newElm.dataset[data] = _attr[prop][data];
 						}
 					}
 				}
 
 				else if (prop === "attr"){
-					for(var attr in _props[prop]){
-						if(_props[prop].hasOwnProperty(attr)){
-							newElm.setAttribute(attr, _props[prop][attr]);
+					for(var attr in _attr[prop]){
+						if(_attr[prop].hasOwnProperty(attr)){
+							newElm.setAttribute(attr, _attr[prop][attr]);
 						}
 					}
 				}
 
 				else {
-					newElm[prop] = _props[prop];
+					console.log("prop",prop);
+					console.log("attr",_attr[prop]);
+					newElm[prop] = _attr[prop];
 				}
 			}
 		}
@@ -192,6 +196,10 @@ var etc = {
 
 		newElm.append = function(_ELM){
 			if(typeof _ELM === "undefined" || _ELM === null) return this;
+			else if(typeof _ELM === "string"){
+				this.textContent += _ELM;
+				return this;
+			}
 
 			var elmsWithAttachListeners = [];
 			if(etc.__utils__.isArray(_ELM)){
@@ -240,7 +248,7 @@ var etc = {
 			return this;
 		}
 
-		return newElm;
+		return newElm.append(_append);;
 	},
 
 

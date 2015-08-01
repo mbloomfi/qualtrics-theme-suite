@@ -117,8 +117,15 @@ var Snippet = {
 	},
 	saveToLocal: function(){
 		if(this.current !== null){
+			var snippetRadios = document.getElementsByClassName("snippet-radio");
+			for(var i = 0, ii = snippetRadios.length; i < ii; i++){
+				if(snippetRadios[i].checked) Snippet.setType(snippetRadios[i].value);
+			}
 			if(Snippet.current.element !== null){
-				Snippet.current.element.textContent = Snippet.current.name;
+				console.log("name");
+
+				Snippet.current.element.getElementsByClassName("snippet_name")[0].textContent = Snippet.current.name;
+				Snippet.current.element.getElementsByClassName("snippet-type")[0].textContent = Snippet.current.type;
 			}
 			core.localData.snippets.list[this.current.index] = this.getCurrentCore();
 		}
@@ -361,10 +368,10 @@ panel.buildPanel = function(_newPanel) {
 					,
 					el("+div#snippetTypeCont").append(el.join([
 						el("+label#snippetType-css").text("CSS").append(
-							el("+input#snippetRadio-css").attr("type","radio").attr("value", "css").attr("name","snippet-radio")
+							el("+input#snippetRadio-css").addClass("snippet-radio").attr("type","radio").attr("value", "css").attr("name","snippet-radio")
 						),
 						el("+label#snippetType-js").text("JS").append(
-							el("+input#snippetRadio-js").attr("type","radio").attr("value", "js").attr("name","snippet-radio")
+							el("+input#snippetRadio-js").addClass("snippet-radio").attr("type","radio").attr("value", "js").attr("name","snippet-radio")
 						)
 					])),
 				])),
@@ -526,7 +533,10 @@ panel.insertData = function(_panel){
 
 		for(var i = 0, ii = snippetsList.length; i < ii; i++){
 
-			var snippetItem = el("+div").addClass("snippet-item").text(snippetsList[i].name).attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i).append(
+			var snippetItem = el("+div").addClass("snippet-item").attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i)
+				.append(
+					el("+div").addClass("snippet_name").text(snippetsList[i].name)
+				).append(
 					el("+div").addClass("snippet-type").text(snippetsList[i].type)
 				)
 
@@ -577,18 +587,41 @@ panel.insertData = function(_panel){
 					el(".snippet-item").each(function(item){
 						item.rmClass("selected")
 					})
-					self.addClass("selected");
+					
 					
 
 					function addNewSnippet(){
 						var i = core.localData.snippets.list.length;
 
-						var snippetItem = el("+div").addClass("snippet-item").text("New Snippet").attr("data-id","renadomness").attr("data-type","css").attr("data-name","New Snippet").attr("data-index",i).append(
+						// generate random string
+
+						var snippetItem = el("+div").addClass(["snippet-item", "selected"]).attr("data-id","renadomness").attr("data-type","css").attr("data-name","").attr("data-index",i)
+						.append(
+							el("+div").addClass("snippet_name").text("New Snippet (not saved)")
+						).append(
 							el("+div").addClass("snippet-type").text("css")
-						)
+						);
+
+
+						var thisSnippet = {
+							name: "",
+							id: "",
+							type: "css",
+							code: "/*code here*/"
+						};
+
+						Snippet.init();
+						Snippet.setName(thisSnippet.name);
+						Snippet.setId(thisSnippet.id);
+						Snippet.setType(thisSnippet.type);
+						Snippet.setCode(thisSnippet.code);
+						Snippet.setIndex(i);
+						Snippet.current.element = snippetItem;
+
+
 
 						// CLICK snippet button
-						.on("click", function(){
+						snippetItem.on("click", function(){
 							var self = this;
 
 							el(".snippet-item").each(function(item){
@@ -616,6 +649,8 @@ panel.insertData = function(_panel){
 							Snippet.setIndex(_index);
 							Snippet.current.element = self;
 
+							console.log("Snippet.current",Snippet.current);
+
 
 							snippetCodemirror.setValue(Snippet.current.code);
 							document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
@@ -624,14 +659,14 @@ panel.insertData = function(_panel){
 						});
 
 						var container = currentPanel.el("#snippetsListCont");
-						container.insertBefore(self, snippetItem)
-						container.append(el("+hr"));
+						container.insertBefore(el("+hr"), container.firstChild)
+						container.insertBefore(snippetItem, container.firstChild)
+						
 					// frag.appendChild(snippetItem);
 					// frag.appendChild(el("+hr"));
 					}
 					addNewSnippet();
 
-					Snippet.init();
 
 					document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
 					document.getElementById("snippetName").value = "";
