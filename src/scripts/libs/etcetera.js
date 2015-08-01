@@ -24,7 +24,7 @@ var etc = {
 				// if RENDER returns NULL
 				if(tempCurrent === null) {
 
-					if(etc.__utils__.isInDom(utils.current)){
+					if(etc.isInDom(utils.current)){
 
 						if(typeof utils.current.delayedRemoval.callback === "function" && typeof utils.current.delayedRemoval.time === "number"){
 							// console.log(" *Delaying Removal for ", utils.current);
@@ -47,14 +47,14 @@ var etc = {
 				}
 
 				// if RENDER return an element
-				else if(etc.__utils__.isElement(tempCurrent)){
-					if( etc.__utils__.isInDom(utils.current) && utils.current.delayedRemoval.pending!==true ){
+				else if(etc.isElement(tempCurrent)){
+					if( etc.isInDom(utils.current) && utils.current.delayedRemoval.pending!==true ){
 						// the currently rendered element is in the DOM
 						utils.current.parentNode.replaceChild(tempCurrent, utils.current);
 						utils.current = tempCurrent;
 					}
 					else {
-						utils.appendToDom( tempCurrent , (etc.__utils__.isInDom( _domHook ) ? _domHook : null) );
+						utils.appendToDom( tempCurrent , (etc.isInDom( _domHook ) ? _domHook : null) );
 					}
 
 				}			
@@ -65,7 +65,7 @@ var etc = {
 			current: function(){
 				var self = _template;
 				return (
-					etc.__utils__.isInDom(self.__utils__.current) && (self.__utils__.current.delayedRemoval.pending === false)
+					etc.isInDom(self.__utils__.current) && (self.__utils__.current.delayedRemoval.pending === false)
 					? 
 					self.__utils__.current
 					: 
@@ -77,7 +77,7 @@ var etc = {
 			inDom: function(){
 				var self = _template;
 				return (
-					etc.__utils__.isInDom(self.__utils__.current) && (self.__utils__.current.delayedRemoval.pending === false)
+					etc.isInDom(self.__utils__.current) && (self.__utils__.current.delayedRemoval.pending === false)
 					?
 					true
 					:
@@ -86,11 +86,18 @@ var etc = {
 			},
 
 
+			// setState: function(stateObject){
+			// 	for(var _state in stateObject){
+			// 		if(stateObject.hasOwnProperty(_state)){
+
+			// 		}
+			// 	}
+			// },
+
 			__utils__: {
 				current: null,
-				// temp: {},
-				// prev: null,
 				build: _callback,
+				
 
 				appendToDom: function( _newCurrent, _domHook){
 
@@ -174,8 +181,8 @@ var etc = {
 				}
 
 				else {
-					console.log("prop",prop);
-					console.log("attr",_attr[prop]);
+					// console.log("prop",prop);
+					// console.log("attr",_attr[prop]);
 					newElm[prop] = _attr[prop];
 				}
 			}
@@ -202,7 +209,7 @@ var etc = {
 			}
 
 			var elmsWithAttachListeners = [];
-			if(etc.__utils__.isArray(_ELM)){
+			if(etc.isArray(_ELM)){
 				var fragment = document.createDocumentFragment();
 				for(var i = 0, ii = _ELM.length; i < ii ; i++){
 
@@ -251,20 +258,16 @@ var etc = {
 		return newElm.append(_append);;
 	},
 
-
-	__utils__: {
-
-		isInDom: function(_element){
-			if(!this.isElement(_element)) return false;
-			return ( document.contains(_element) || document.body.contains(_element) ) ? true : false ;
-		},
-		isElement: function(_obj){
-			if(typeof _obj === "undefined" || _obj === null) return false;
-			return (_obj instanceof HTMLElement || _obj instanceof Element) ? true : false ;
-		},
-		isArray: function(_obj){
-			return (Array.isArray(_obj) || _obj instanceof Array) ? true : false;
-		}
+	isInDom: function(_element){
+		if(!etc.isElement(_element)) return false;
+		return ( document.contains(_element) || document.body.contains(_element) ) ? true : false ;
+	},
+	isElement: function(_obj){
+		if(typeof _obj === "undefined" || _obj === null) return false;
+		return (_obj instanceof HTMLElement || _obj instanceof Element) ? true : false ;
+	},
+	isArray: function(_obj){
+		return (Array.isArray(_obj) || _obj instanceof Array) ? true : false;
 	}
 
 };

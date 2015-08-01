@@ -4,128 +4,132 @@ $navHeight = $windowHeight - $barHeight
 
 
 html, body {
-  width 100%
-  height 100%
-  position: relative
-  overflow hidden
-  background-color rgb(235,235,235)
-  -webkit-user-select none
-  -webkit-app-region no-drag
-  transition background-color .3s ease
-  &.white {
-    background-color rgb(255,255,255)
-  }
+	width 100%
+	height 100%
+	position: relative
+	overflow hidden
+	background-color rgb(235,235,235)
+	-webkit-user-select none
+	-webkit-app-region no-drag
+	transition background-color .3s ease
+	&.white {
+		background-color rgb(255,255,255)
+	}
 }
 
 html, body, p, h1, h2, input, select, textarea, label, a {
-  padding 0
-  margin 0
-  border none
-  outline none
-  font-size 100% 
-  text-decoration none
-  color rgb(70,70,70)
-  text-decoration none
-  font-weight normal
-  font-family $font-stack
+	padding 0
+	margin 0
+	border none
+	outline none
+	font-size 100% 
+	text-decoration none
+	color rgb(70,70,70)
+	text-decoration none
+	font-weight normal
+	font-family $font-stack
 }
 
 // ----------------------
 // QUALTRICS LOGO
 // ----------------------
-svg.logo {
-  height 80px
-  width auto
-  position absolute
-  top 0
-  right 0
-  z-index 100
-  padding 0 30px 5px 0
-  -webkit-app-region drag
-  cursor default
-  transition top .3s ease
-  
-  path#QUALTRICS-LOGO {
-    fill rgba(80,80,80,.15)
-    transition fill .25s ease
-  }
-  
-  &:hover {
-    cursor grab
-    
-    path#QUALTRICS-LOGO {
-      fill rgba(80,80,80,.25)
-    }
-    
-  }
-  
-  &.saved {
-    path#QUALTRICS-LOGO {
-      fill decreaseOpacity($affirmative-green)
-    }
-  }
-  
-  &.hide {
-    top -100px
-  }
-  
+#Q-logo {
+	position absolute
+	top 0
+	right 0
+	height 80px
+	z-index 100
+	-webkit-app-region drag
+	padding 0 30px 5px 0
+	transition top .3s ease
+	
+	svg.logo {
+		height 100%
+		width auto
+		path#QUALTRICS-LOGO {
+			fill rgba(80,80,80,.15)
+			transition fill .25s ease
+		}
+	}
+	
+	&:hover {
+		cursor grab
+		svg.logo {
+			path#QUALTRICS-LOGO {
+				fill rgba(80,80,80,.25)
+			}
+		}
+	}
+	
+	&.saved {
+		svg.logo {
+			path#QUALTRICS-LOGO {
+				fill decreaseOpacity($affirmative-green)
+			}
+		}
+	}
+
+	&.hide {
+		top -100px
+	}
 }
+	
 
 
 // BOTTOM BAR (SAVE & CANCEL)
 #bottom-bar {
-  height ($barHeight)px
-  width 100%
-  position absolute
-  bottom 0
-  left 0
-  box-sizing border-box
-  // background-color rgb(210,210,210)
-  text-align center
-  line-height ($barHeight)px
-  transition bottom .3s ease
-  
-  div.btn {
-    -webkit-app-region: no-drag;
-    height 100%
-    width 50%
-    position absolute
-    top 0
-    color white
-    text-transform uppercase
-    cursor pointer
-    box-sizing border-box
-    transition background-color .25s ease
-    
-    &:first-child {
-      left 0
-      background-color $negative-red
-      border-right 1px solid rgb(95,95,95)
-      &:hover {
-        background-color lighterShade($negative-red)
-      }
-    }
-    
-    &:last-child {
-      right 0
-      background-color $affirmative-green
-      // border-left 1px solid rgb(95,95,95)
-      &:hover {
-        background-color lighterShade($affirmative-green)
-      }
-    }
+	height ($barHeight)px
+	width 100%
+	position absolute
+	bottom 0
+	left 0
+	box-sizing border-box
+	// background-color rgb(210,210,210)
+	text-align center
+	line-height ($barHeight)px
+	transition bottom .3s ease
+	
+	div.btn {
+		-webkit-app-region: no-drag;
+		height 100%
+		width 50%
+		position absolute
+		top 0
+		color white
+		text-transform uppercase
+		cursor pointer
+		box-sizing border-box
+		transition background-color .25s ease
+		
+		&:first-child {
+			left 0
+			background-color $negative-red
+			border-right 1px solid rgb(95,95,95)
+			&:hover {
+				background-color lighten($negative-red, 10%)
+			}
+		}
+		
+		&:last-child {
+			right 0
+			background-color $affirmative-green
+			// border-left 1px solid rgb(95,95,95)
+			&:hover {
+				background-color lighten($affirmative-green, 8%)
+			}
+		}
 
-  }
-  
-  &.hide {
-    bottom -($barHeight * 2)px
-  }
-  
+	}
+	
+	&.hide {
+		bottom -($barHeight * 2)px
+	}
+	
 }
 
 #preferences-wrapper {
-  height ($navHeight)px
-  width 100%
-  position relative
-  top 0
+	height ($navHeight)px
+	width 100%
+	position relative
+	top 0
 }

@@ -122,10 +122,12 @@ gulp.task("prefScripts", function(){
 		"src/scripts/libs/el.min.js", 
 		"src/scripts/libs/baton.min.js", 
 		"src/scripts/libs/aceBlock.js", 
+		"src/scripts/libs/etcetera.js", 
 		"src/scripts/libs/codemirror/codemirror.js",
 		"src/scripts/libs/codemirror/modes/*",
 		"src/scripts/libs/codemirror/**",
 		"src/scripts/preferences/main.js",
+		"src/scripts/preferences/*.js",
 		//exclude
 		"!src/scripts/preferences/_.js"
 		])
