@@ -1,3 +1,21 @@
+
+
+
+
+// --------------------------------
+//				GLOBAL VARS
+// --------------------------------
+var remote = require("remote");
+var app = remote.require("app");
+var Global = remote.getGlobal("sharedObject"); //see index.js
+var appRoot = Global.appRoot;
+var fs = require("fs-extra");
+var path = require("path");
+
+
+// --------------------------------
+//				EVE (pubsub)
+// --------------------------------
 var Eve = {
   events: {},
   on: function (eventName, fn) {
@@ -23,18 +41,6 @@ var Eve = {
     }
   }
 };
-
-
-
-// --------------------------------
-//				GLOBAL VARS
-// --------------------------------
-var remote = require("remote");
-var app = remote.require("app");
-var Global = remote.getGlobal("sharedObject"); //see index.js
-var appRoot = Global.appRoot;
-var fs = require("fs-extra");
-var path = require("path");
 
 //= include ../app-core-methods.js
 
@@ -262,24 +268,24 @@ Eve.on("init", function(){
 
 		
 
-// 		// codemirrorContainer.el("textarea").attr("tabindex","-1");
-// 		setTimeout(function(){
-// 			snippetCodemirrorCont.el("textarea").attr("tabindex", "-1");
-// 			snippetCodemirror.on("change", function(){
-// 				Snippet.setCode(snippetCodemirror.getValue());
-// 			})
-// 		}, 0);
+		// codemirrorContainer.el("textarea").attr("tabindex","-1");
+		// setTimeout(function(){
+		// 	snippetCodemirrorCont.el("textarea").attr("tabindex", "-1");
+		// 	snippetCodemirror.on("change", function(){
+		// 		Snippet.setCode(snippetCodemirror.getValue());
+		// 	})
+		// }, 0);
 		
-// 		window.snippetCodemirror = CodeMirror(snippetCodemirrorCont, {
-// 			mode: "css",
-// 			theme: "monokai",
-// 			tabSize: 2,
-// 			indentWithTabs: true,
-// 			keyMap: "sublime",
-// 			lineWrapping: true,
-// 			lineNumbers: true,
-// 			autoCloseBrackets: true
-// 		});
+		// window.snippetCodemirror = CodeMirror(snippetCodemirrorCont, {
+		// 	mode: "css",
+		// 	theme: "monokai",
+		// 	tabSize: 2,
+		// 	indentWithTabs: true,
+		// 	keyMap: "sublime",
+		// 	lineWrapping: true,
+		// 	lineNumbers: true,
+		// 	autoCloseBrackets: true
+		// });
 
 
 
@@ -586,54 +592,54 @@ Eve.on("init", function(){
 
 
 
-// 		for(var i = 0, ii = snippetsList.length; i < ii; i++){
+		// for(var i = 0, ii = snippetsList.length; i < ii; i++){
 
-// 			var snippetItem = el("+div").addClass("snippet-item").attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i)
-// 				.append(
-// 					el("+div").addClass("snippet_name").text(snippetsList[i].name)
-// 				).append(
-// 					el("+div").addClass("snippet-type").text(snippetsList[i].type)
-// 				)
+		// 	var snippetItem = el("+div").addClass("snippet-item").attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i)
+		// 		.append(
+		// 			el("+div").addClass("snippet_name").text(snippetsList[i].name)
+		// 		).append(
+		// 			el("+div").addClass("snippet-type").text(snippetsList[i].type)
+		// 		)
 
-// 				// CLICK snippet button
-// 				.on("click", function(){
-// 					var self = this;
+		// 		// CLICK snippet button
+		// 		.on("click", function(){
+		// 			var self = this;
 
-// 					el(".snippet-item").each(function(item){
-// 						item.rmClass("selected")
-// 					})
-// 					self.addClass("selected");
+		// 			el(".snippet-item").each(function(item){
+		// 				item.rmClass("selected")
+		// 			})
+		// 			self.addClass("selected");
 
-// 					var _index;
-// 					var thisSnippet;
-// 					var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
-// 						if(self.dataset.id === snip.id) {
-// 							thisSnippet = snip;
-// 							_index=index;
-// 							return true;
-// 						}
-// 					});
-// 					console.log("thisSnippet",thisSnippet);
+		// 			var _index;
+		// 			var thisSnippet;
+		// 			var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
+		// 				if(self.dataset.id === snip.id) {
+		// 					thisSnippet = snip;
+		// 					_index=index;
+		// 					return true;
+		// 				}
+		// 			});
+		// 			console.log("thisSnippet",thisSnippet);
 
-// 					console.log("index",_index)
-// 					Snippet.init();
-// 					Snippet.setName(thisSnippet.name);
-// 					Snippet.setId(thisSnippet.id);
-// 					Snippet.setType(thisSnippet.type);
-// 					Snippet.setCode(thisSnippet.code);
-// 					Snippet.setIndex(_index);
-// 					Snippet.current.element = self;
+		// 			console.log("index",_index)
+		// 			Snippet.init();
+		// 			Snippet.setName(thisSnippet.name);
+		// 			Snippet.setId(thisSnippet.id);
+		// 			Snippet.setType(thisSnippet.type);
+		// 			Snippet.setCode(thisSnippet.code);
+		// 			Snippet.setIndex(_index);
+		// 			Snippet.current.element = self;
 
 
-// 					snippetCodemirror.setValue(Snippet.current.code);
-// 					document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
-// 					document.getElementById("snippetName").value = Snippet.current.name;
+		// 			snippetCodemirror.setValue(Snippet.current.code);
+		// 			document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+		// 			document.getElementById("snippetName").value = Snippet.current.name;
 
-// 				});
-// 			frag.appendChild(snippetItem);
-// 			frag.appendChild(el("+hr"));
+		// 		});
+		// 	frag.appendChild(snippetItem);
+		// 	frag.appendChild(el("+hr"));
 
-// 		}
+		// }
 
 // 		// Create New Snippet Button
 // 		frag.appendChild(

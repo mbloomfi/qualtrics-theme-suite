@@ -68,6 +68,14 @@ html, body, p, h1, h2, input, select, textarea, label, a {
 			}
 		}
 	}
+	
+	&.deleted {
+		svg.logo {
+			path#QUALTRICS-LOGO {
+				fill decreaseOpacity($negative-red)
+			}
+		}
+	}
 
 	&.hide {
 		top -100px

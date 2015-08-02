@@ -163,112 +163,243 @@ section#panel {
 			}
 		}
 		
-		#snippetsListCont {
-			box-sizing border-box 
-			border 1px solid rgb(200,200,200)
-			background-color rgb(220,220,220)
-			height 150px
-			max-height 150px
-			overflow-y scroll
-			div.snippet-item {
-				font-size 16px
-				background-color rgba(50,50,50,.1)
-				cursor pointer
-				position relative
-				padding 4px
-				transition background-color .25s ease
-				&:hover {
-					background-color rgba(50,50,50,.25)
-				}
-				&.selected {
-					background-color rgb(21,100,245)
-					color white
-				}
-				&.addNew {
-					color white
-					background-color alpha($affirmative-green,.9)
-				}
-				.snippet-type {
-					position absolute
-					top 50%
-					right 10px
-					// background-color lime
-					transform translateY(-50%)
-				}
+		
+		&#snippetsForm {
+			width 70%
+			left 5%
+			top 5%
+			height 90%
 
-			}
-			hr {
-				margin 0
-				padding 0
-				background-color rgb(180,180,180)
-				outline none
-				border none
-				height 1px
+			#snippetsListCont {
+				box-sizing border-box 
+				border 1px solid rgb(200,200,200)
+				background-color rgb(220,220,220)
+				height 170px
+				max-height 170px
+				overflow-y scroll
+				div.snippet-item {
+					font-size 16px
+					background-color rgba(50,50,50,.1)
+					cursor pointer
+					position relative
+					padding 4px
+					transition background-color .25s ease
+					&:hover {
+						background-color rgba(50,50,50,.25)
+					}
+					&.selected {
+						background-color rgb(21,100,245)
+						color white
+					}
+					&.addNew {
+						color white
+						background-color alpha($affirmative-green,.9)
+					}
+					.snippet-type {
+						position absolute
+						top 50%
+						right 10px
+						// background-color lime
+						transform translateY(-50%)
+					}
+
+				}
+				hr {
+					margin 0
+					padding 0
+					background-color rgb(180,180,180)
+					outline none
+					border none
+					height 1px
+				}
+				
 			}
 			
-		}
-		
-		#snippetInfo {
-			position relative
-			height 40px
-			width 100%
-			top 10px
-			input#snippetName {
-				font-size 16px
-				width 150px
-				min-width 0
-				display inline-block
-				position absolute
-				left 0
-				height 100%
-				line-height 30px
-				height 30px
-				padding 0
-				top 5px
-				box-sizing border-box
-			}
-			#snippetTypeCont {
-				display inline-block
-				position absolute
-				left 170px
+			#snippetEditSection {
+				position relative 
+				top 12px
+				height 275px
+				border-top 1px solid rgb(200,200,200)
 				
-				label {
-					display inline-block
-					font-size 18px
-					line-height 40px
-					margin-right 10px
-					input {
+				#snippetInfo {
+					position relative
+					height 40px
+					width 100%
+					top 10px
+					input#snippetName {
+						font-size 16px
+						width 150px
+						min-width 0
 						display inline-block
-						outline none
-						border none
-						margin-left 3px
+						position absolute
+						left 0
+						height 100%
+						line-height 30px
+						height 30px
+						padding 0
+						top 5px
+						box-sizing border-box
+						&.error {
+							outline 2px solid $negative-red
+						}
+					}
+					#snippetTypeCont {
+						display inline-block
+						position absolute
+						left 200px
+						
+						label {
+							display inline-block
+							font-size 18px
+							line-height 40px
+							margin-right 10px
+							input {
+								display inline-block
+								outline none
+								border none
+								margin-left 3px
+							}
+						}
+							
+						
+					}
+					
+					#snippetArrowsCont {
+						height 30px
+						position absolute
+						right 0
+						top 5px
+						width 70px
+						div#snippetArrowUp {
+							height 100%
+							position absolute
+							right 0
+							cursor pointer
+							svg {
+								height 100%
+								width auto
+								path {
+									fill alpha($affirmative-green, .7)
+									transition fill .3s ease
+								}
+							}
+							&:hover {
+								svg {
+									path {
+										fill darken($affirmative-green, 5%)
+									}
+								}
+							}
+						}
+						
+						div#snippetArrowDown {
+							height 100%
+							position absolute
+							left 0
+							cursor pointer
+							transform rotate(180deg)
+							svg {
+								height 100%
+								width auto
+								path {
+									fill alpha($negative-red, .75)
+									transition fill .3s ease
+								}
+							}
+							&:hover {
+								svg {
+									path {
+										fill $negative-red
+									}
+								}
+							}
+						}
 					}
 				}
-					
 				
+					
+				#snippetCodemirror {
+					font-size 16px
+					height 215px
+					width 100%
+					position absolute
+					bottom 0
+				}
+				
+				&.inactive-no_snippet {
+					opacity .3
+				}
 			}
-		}
-		
 			
-		#snippetCodemirror {
-			font-size 16px
-			height 200px
-			width 100%
-			position absolute
-			top 210px
-		}
-		
-		#saveSnippet {
-			position absolute
-			top 165px
-			padding 5px 8px
-			right 0px
-			background-color rgb(21,100,245)
-			transition background-color .2s ease
-			&:hover {
-				background-color lighten(rgb(21,100,245),15%)
+
+			#snippetBtnsCont {
+				background rgba(230,230,230,.6)
+				border 1px solid rgb(210,210,210)
+				border-radius 2px
+				box-sizing border-box
+				height 275px
+				width 90px
+				position absolute
+				bottom -10px
+				
+				right -120px
+				
+				.btn {
+					height 60px 
+					width 100%
+					left 9px
+					width 70px
+					text-align center
+					font-size 18px
+					color white
+					position absolute
+					line-height 60px
+					cursor pointer
+					border-radius 2px
+					transition background-color .25s ease
+					&#saveSnippetBtn {
+						bottom 10px
+						background-color $affirmative-green
+						&:hover {
+							background-color lighten($affirmative-green,10%)
+						}
+					}
+					&#newSnippetBtn {
+						top 10px
+						background-color rgb(21,100,245)
+						&:hover {
+							background-color lighten(rgb(21,100,245),14%)
+						}
+					}
+					&#deleteSnippetBtn {
+						top 50%
+						transform translateY(-50%)
+						background-color $negative-red
+						&:hover {
+							background-color lighten($negative-red,14%)
+						}
+					}
+					&.inactive-no_snippet {
+						opacity .3
+						pointer default
+					}
+				}
+			}
+			
+			#saveSnippet {
+				position absolute
+				top 165px
+				padding 5px 8px
+				right 0px
+				background-color rgb(21,100,245)
+				transition background-color .2s ease
+				&:hover {
+					background-color lighten(rgb(21,100,245),15%)
+				}
 			}
 		}
+		
+
 
 	}
 	&.hide {

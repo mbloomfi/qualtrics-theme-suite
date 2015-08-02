@@ -545,6 +545,9 @@
 		#Q-logo.saved svg.logo path#QUALTRICS-LOGO {
 		  fill: rgba(39,176,75,0.8);
 		}
+		#Q-logo.deleted svg.logo path#QUALTRICS-LOGO {
+		  fill: rgba(225,68,68,0.8);
+		}
 		#Q-logo.hide {
 		  top: -100px;
 		}
@@ -786,15 +789,21 @@
 		  min-width: 0;
 		  display: inline-block;
 		}
-		section#panel form #snippetsListCont {
+		section#panel form#snippetsForm {
+		  width: 70%;
+		  left: 5%;
+		  top: 5%;
+		  height: 90%;
+		}
+		section#panel form#snippetsForm #snippetsListCont {
 		  box-sizing: border-box;
 		  border: 1px solid #c8c8c8;
 		  background-color: #dcdcdc;
-		  height: 150px;
-		  max-height: 150px;
+		  height: 170px;
+		  max-height: 170px;
 		  overflow-y: scroll;
 		}
-		section#panel form #snippetsListCont div.snippet-item {
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item {
 		  font-size: 16px;
 		  background-color: rgba(50,50,50,0.1);
 		  cursor: pointer;
@@ -803,18 +812,18 @@
 		  -webkit-transition: background-color 0.25s ease;
 		          transition: background-color 0.25s ease;
 		}
-		section#panel form #snippetsListCont div.snippet-item:hover {
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item:hover {
 		  background-color: rgba(50,50,50,0.25);
 		}
-		section#panel form #snippetsListCont div.snippet-item.selected {
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item.selected {
 		  background-color: #1564f5;
 		  color: #fff;
 		}
-		section#panel form #snippetsListCont div.snippet-item.addNew {
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item.addNew {
 		  color: #fff;
 		  background-color: rgba(39,176,75,0.9);
 		}
-		section#panel form #snippetsListCont div.snippet-item .snippet-type {
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item .snippet-type {
 		  position: absolute;
 		  top: 50%;
 		  right: 10px;
@@ -822,7 +831,7 @@
 		      -ms-transform: translateY(-50%);
 		          transform: translateY(-50%);
 		}
-		section#panel form #snippetsListCont hr {
+		section#panel form#snippetsForm #snippetsListCont hr {
 		  margin: 0;
 		  padding: 0;
 		  background-color: #b4b4b4;
@@ -830,13 +839,19 @@
 		  border: none;
 		  height: 1px;
 		}
-		section#panel form #snippetInfo {
+		section#panel form#snippetsForm #snippetEditSection {
+		  position: relative;
+		  top: 12px;
+		  height: 275px;
+		  border-top: 1px solid #c8c8c8;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo {
 		  position: relative;
 		  height: 40px;
 		  width: 100%;
 		  top: 10px;
 		}
-		section#panel form #snippetInfo input#snippetName {
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo input#snippetName {
 		  font-size: 16px;
 		  width: 150px;
 		  min-width: 0;
@@ -850,31 +865,137 @@
 		  top: 5px;
 		  box-sizing: border-box;
 		}
-		section#panel form #snippetInfo #snippetTypeCont {
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo input#snippetName.error {
+		  outline: 2px solid #e14444;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetTypeCont {
 		  display: inline-block;
 		  position: absolute;
-		  left: 170px;
+		  left: 200px;
 		}
-		section#panel form #snippetInfo #snippetTypeCont label {
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetTypeCont label {
 		  display: inline-block;
 		  font-size: 18px;
 		  line-height: 40px;
 		  margin-right: 10px;
 		}
-		section#panel form #snippetInfo #snippetTypeCont label input {
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetTypeCont label input {
 		  display: inline-block;
 		  outline: none;
 		  border: none;
 		  margin-left: 3px;
 		}
-		section#panel form #snippetCodemirror {
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont {
+		  height: 30px;
+		  position: absolute;
+		  right: 0;
+		  top: 5px;
+		  width: 70px;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowUp {
+		  height: 100%;
+		  position: absolute;
+		  right: 0;
+		  cursor: pointer;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowUp svg {
+		  height: 100%;
+		  width: auto;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowUp svg path {
+		  fill: rgba(39,176,75,0.7);
+		  -webkit-transition: fill 0.3s ease;
+		          transition: fill 0.3s ease;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowUp:hover svg path {
+		  fill: #25a747;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowDown {
+		  height: 100%;
+		  position: absolute;
+		  left: 0;
+		  cursor: pointer;
+		  -webkit-transform: rotate(180deg);
+		      -ms-transform: rotate(180deg);
+		          transform: rotate(180deg);
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowDown svg {
+		  height: 100%;
+		  width: auto;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowDown svg path {
+		  fill: rgba(225,68,68,0.75);
+		  -webkit-transition: fill 0.3s ease;
+		          transition: fill 0.3s ease;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetInfo #snippetArrowsCont div#snippetArrowDown:hover svg path {
+		  fill: #e14444;
+		}
+		section#panel form#snippetsForm #snippetEditSection #snippetCodemirror {
 		  font-size: 16px;
-		  height: 200px;
+		  height: 215px;
 		  width: 100%;
 		  position: absolute;
-		  top: 210px;
+		  bottom: 0;
 		}
-		section#panel form #saveSnippet {
+		section#panel form#snippetsForm #snippetEditSection.inactive-no_snippet {
+		  opacity: 0.3;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont {
+		  background: rgba(230,230,230,0.6);
+		  border: 1px solid #d2d2d2;
+		  border-radius: 2px;
+		  box-sizing: border-box;
+		  height: 275px;
+		  width: 90px;
+		  position: absolute;
+		  bottom: -10px;
+		  right: -120px;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn {
+		  height: 60px;
+		  width: 100%;
+		  left: 9px;
+		  width: 70px;
+		  text-align: center;
+		  font-size: 18px;
+		  color: #fff;
+		  position: absolute;
+		  line-height: 60px;
+		  cursor: pointer;
+		  border-radius: 2px;
+		  -webkit-transition: background-color 0.25s ease;
+		          transition: background-color 0.25s ease;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#saveSnippetBtn {
+		  bottom: 10px;
+		  background-color: #27b04b;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#saveSnippetBtn:hover {
+		  background-color: #2cc855;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#newSnippetBtn {
+		  top: 10px;
+		  background-color: #1564f5;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#newSnippetBtn:hover {
+		  background-color: #367af6;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#deleteSnippetBtn {
+		  top: 50%;
+		  -webkit-transform: translateY(-50%);
+		      -ms-transform: translateY(-50%);
+		          transform: translateY(-50%);
+		  background-color: #e14444;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn#deleteSnippetBtn:hover {
+		  background-color: #e55e5e;
+		}
+		section#panel form#snippetsForm #snippetBtnsCont .btn.inactive-no_snippet {
+		  opacity: 0.3;
+		  pointer: default;
+		}
+		section#panel form#snippetsForm #saveSnippet {
 		  position: absolute;
 		  top: 165px;
 		  padding: 5px 8px;
@@ -883,7 +1004,7 @@
 		  -webkit-transition: background-color 0.2s ease;
 		          transition: background-color 0.2s ease;
 		}
-		section#panel form #saveSnippet:hover {
+		section#panel form#snippetsForm #saveSnippet:hover {
 		  background-color: #387bf7;
 		}
 		section#panel.hide {
@@ -15178,6 +15299,24 @@
 	  CodeMirror.normalizeKeyMap(map);
 	});
 	
+	
+	
+	
+	
+	// --------------------------------
+	//				GLOBAL VARS
+	// --------------------------------
+	var remote = require("remote");
+	var app = remote.require("app");
+	var Global = remote.getGlobal("sharedObject"); //see index.js
+	var appRoot = Global.appRoot;
+	var fs = require("fs-extra");
+	var path = require("path");
+	
+	
+	// --------------------------------
+	//				EVE (pubsub)
+	// --------------------------------
 	var Eve = {
 	  events: {},
 	  on: function (eventName, fn) {
@@ -15203,18 +15342,6 @@
 	    }
 	  }
 	};
-	
-	
-	
-	// --------------------------------
-	//				GLOBAL VARS
-	// --------------------------------
-	var remote = require("remote");
-	var app = remote.require("app");
-	var Global = remote.getGlobal("sharedObject"); //see index.js
-	var appRoot = Global.appRoot;
-	var fs = require("fs-extra");
-	var path = require("path");
 	var core = Global.coreMethods = {
 	
 		// ----------------------------
@@ -16187,24 +16314,24 @@
 	
 			
 	
-	// 		// codemirrorContainer.el("textarea").attr("tabindex","-1");
-	// 		setTimeout(function(){
-	// 			snippetCodemirrorCont.el("textarea").attr("tabindex", "-1");
-	// 			snippetCodemirror.on("change", function(){
-	// 				Snippet.setCode(snippetCodemirror.getValue());
-	// 			})
-	// 		}, 0);
+			// codemirrorContainer.el("textarea").attr("tabindex","-1");
+			// setTimeout(function(){
+			// 	snippetCodemirrorCont.el("textarea").attr("tabindex", "-1");
+			// 	snippetCodemirror.on("change", function(){
+			// 		Snippet.setCode(snippetCodemirror.getValue());
+			// 	})
+			// }, 0);
 			
-	// 		window.snippetCodemirror = CodeMirror(snippetCodemirrorCont, {
-	// 			mode: "css",
-	// 			theme: "monokai",
-	// 			tabSize: 2,
-	// 			indentWithTabs: true,
-	// 			keyMap: "sublime",
-	// 			lineWrapping: true,
-	// 			lineNumbers: true,
-	// 			autoCloseBrackets: true
-	// 		});
+			// window.snippetCodemirror = CodeMirror(snippetCodemirrorCont, {
+			// 	mode: "css",
+			// 	theme: "monokai",
+			// 	tabSize: 2,
+			// 	indentWithTabs: true,
+			// 	keyMap: "sublime",
+			// 	lineWrapping: true,
+			// 	lineNumbers: true,
+			// 	autoCloseBrackets: true
+			// });
 	
 	
 	
@@ -16511,54 +16638,54 @@
 	
 	
 	
-	// 		for(var i = 0, ii = snippetsList.length; i < ii; i++){
+			// for(var i = 0, ii = snippetsList.length; i < ii; i++){
 	
-	// 			var snippetItem = el("+div").addClass("snippet-item").attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i)
-	// 				.append(
-	// 					el("+div").addClass("snippet_name").text(snippetsList[i].name)
-	// 				).append(
-	// 					el("+div").addClass("snippet-type").text(snippetsList[i].type)
-	// 				)
+			// 	var snippetItem = el("+div").addClass("snippet-item").attr("data-id",snippetsList[i].id).attr("data-type",snippetsList[i].type).attr("data-name",snippetsList[i].name).attr("data-index",i)
+			// 		.append(
+			// 			el("+div").addClass("snippet_name").text(snippetsList[i].name)
+			// 		).append(
+			// 			el("+div").addClass("snippet-type").text(snippetsList[i].type)
+			// 		)
 	
-	// 				// CLICK snippet button
-	// 				.on("click", function(){
-	// 					var self = this;
+			// 		// CLICK snippet button
+			// 		.on("click", function(){
+			// 			var self = this;
 	
-	// 					el(".snippet-item").each(function(item){
-	// 						item.rmClass("selected")
-	// 					})
-	// 					self.addClass("selected");
+			// 			el(".snippet-item").each(function(item){
+			// 				item.rmClass("selected")
+			// 			})
+			// 			self.addClass("selected");
 	
-	// 					var _index;
-	// 					var thisSnippet;
-	// 					var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
-	// 						if(self.dataset.id === snip.id) {
-	// 							thisSnippet = snip;
-	// 							_index=index;
-	// 							return true;
-	// 						}
-	// 					});
-	// 					console.log("thisSnippet",thisSnippet);
+			// 			var _index;
+			// 			var thisSnippet;
+			// 			var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
+			// 				if(self.dataset.id === snip.id) {
+			// 					thisSnippet = snip;
+			// 					_index=index;
+			// 					return true;
+			// 				}
+			// 			});
+			// 			console.log("thisSnippet",thisSnippet);
 	
-	// 					console.log("index",_index)
-	// 					Snippet.init();
-	// 					Snippet.setName(thisSnippet.name);
-	// 					Snippet.setId(thisSnippet.id);
-	// 					Snippet.setType(thisSnippet.type);
-	// 					Snippet.setCode(thisSnippet.code);
-	// 					Snippet.setIndex(_index);
-	// 					Snippet.current.element = self;
+			// 			console.log("index",_index)
+			// 			Snippet.init();
+			// 			Snippet.setName(thisSnippet.name);
+			// 			Snippet.setId(thisSnippet.id);
+			// 			Snippet.setType(thisSnippet.type);
+			// 			Snippet.setCode(thisSnippet.code);
+			// 			Snippet.setIndex(_index);
+			// 			Snippet.current.element = self;
 	
 	
-	// 					snippetCodemirror.setValue(Snippet.current.code);
-	// 					document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
-	// 					document.getElementById("snippetName").value = Snippet.current.name;
+			// 			snippetCodemirror.setValue(Snippet.current.code);
+			// 			document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+			// 			document.getElementById("snippetName").value = Snippet.current.name;
 	
-	// 				});
-	// 			frag.appendChild(snippetItem);
-	// 			frag.appendChild(el("+hr"));
+			// 		});
+			// 	frag.appendChild(snippetItem);
+			// 	frag.appendChild(el("+hr"));
 	
-	// 		}
+			// }
 	
 	// 		// Create New Snippet Button
 	// 		frag.appendChild(
@@ -16850,6 +16977,7 @@
 	
 	var Data = (function(){
 		var snippetsList;
+		var currentSnippet = null;
 		var preferncesData;
 	
 	
@@ -16858,16 +16986,303 @@
 			// read preferences and persistent data
 			init: function(){
 				console.log("init local data");
+				fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+					if(!_err) {
+						snippetsList = JSON.parse(_data).snippets;
+					}
+					else {
+						console.log("local init ERROR:",_err);
+					}
+				});
 			}
 		};
 	
 		function saveLocalToFiles(){
+			sanitizeSnippets();
+	
+			fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+				if(!_err) {
+					var persData = JSON.parse(_data);
+					persData.snippets = snippetsList;
+					persData = JSON.stringify(persData);
+	
+					fs.writeFile(appRoot+"/local/persistent-data.json",persData,function(_err){
+						if(!_err){
+							document.getElementById('Q-logo').classList.add("saved");
+							setTimeout(function(){
+								Global.preferencesWindow.close();
+							}, 450);
+						} else {
+							console.log("ERROR", _err);
+						}
+					})
+	
+				}
+				else {
+					console.log("local init ERROR:",_err);
+				}
+			});
 			console.log("saving local data to disk");
 		}
 	
-		Eve.on("init", local.init);
+		function cancelAll(){
+			Eve.off("saveAll", saveLocalToFiles);
+			console.log("cancel all changes");
+			document.getElementById('Q-logo').classList.add("deleted");
+			setTimeout(function(){
+				Global.preferencesWindow.close();
+			}, 200);
+		}
 	
+		function sanitizeSnippets(){
+			currentSnippet = null;
+			snippetsList.forEach(function(snip, i, arr){
+				if(snip.name === ""){
+					snip.name = snip.id;
+				}
+				if(snip.type === ""){
+					snip.type = "css";
+				}
+			});
+		}
+	
+		Eve.on("init", local.init);
 		Eve.on("saveAll", saveLocalToFiles);
+		Eve.on("cancelAll", cancelAll);
+	
+	
+		// CREATE NEW SNIPPET
+		Eve.on("createNewSnippet", function(){
+			console.log("creating new snippet");
+			var snippetItems = document.getElementsByClassName("snippet-item");
+			for(var i = 0, ii = snippetItems.length; i < ii; i++){
+				snippetItems[i].classList.remove("selected");
+			}
+			document.getElementById('snippetName').classList.remove("error");
+			var snippetID = ((new Date * (Math.random()+1)).toString(36).substring(0,8)) + "-" + ((new Date * (Math.random()+1)).toString(36).substring(0,4));
+			var snippetItem = etc.el("div", {
+				className:"snippet-item selected",
+				dataset: {
+					id: snippetID
+				},
+				events: {
+					click: function(){
+						var currentSnippet = Data.getCurrentSnippet()
+						if( currentSnippet === null || currentSnippet.name.trim().search(/[\w\s]+/i) !== -1 ){
+						
+							var snippetItems = document.getElementsByClassName("snippet-item");
+							for(var i = 0, ii = snippetItems.length; i < ii; i++){
+								snippetItems[i].classList.remove("selected");
+							}
+							this.classList.add("selected");
+								
+							Eve.emit("selectedSnippet", this.dataset.id);
+						} else {
+							console.log("current snippet name invalid");
+							Eve.emit("snippetNameInvalid");
+						}
+						
+					}
+				}
+			}).append([
+				etc.el("div", {className:"snippet_name"}, "No Name"),
+				etc.el("div", {className:"snippet-type"}, "css")
+			]);
+			snippetsList.push({name:"", type:"css", id:snippetID, code: ""});
+			var snippetsListCont = document.getElementById("snippetsListCont").append(snippetItem);
+			console.log("snippetItem",snippetItem);
+			var click = new MouseEvent("click", {
+		    bubbles: true,
+		    cancelable: true,
+		    view: window,
+		  });
+			snippetItem.dispatchEvent(click);
+		});
+	
+	
+	
+		Eve.on("selectedSnippet", function(_id){
+			var inactiveElements = document.getElementsByClassName("inactive-no_snippet");
+			while(inactiveElements.length > 0){
+				inactiveElements[0].classList.remove("inactive-no_snippet");
+			}
+	
+			//remove highlighting from all snippet items
+			document.getElementById('snippetName').classList.remove("error");
+	
+			//find the snippet in the local snippet list and set it to currentSnippet
+			currentSnippet = snippetsList.filter(function(snip, ind, arr){
+				if(snip.id === _id) return true;
+			})[0];
+	
+			//update the editor area
+			document.getElementById('snippetName').value = currentSnippet.name;
+			document.getElementById('snippetRadio-'+currentSnippet.type).checked = true;
+			if(currentSnippet.type === "css"){
+				snippetCodemirror.setOption("mode","text/x-scss");
+			} else if(currentSnippet.type === "js"){
+				snippetCodemirror.setOption("mode","javascript");
+			}
+			snippetCodemirror.setValue(currentSnippet.code);
+		});
+	
+	
+		Eve.on("deleteCurrentSnippet", function(){
+			if(currentSnippet === null) {
+				return;
+			}
+	
+			
+			//update the snippet in localData array
+			snippetsList.some(function(snip, index, arr){
+				if(currentSnippet.id === snip.id ){
+	
+					var qLogo = document.getElementById('Q-logo');
+					qLogo.classList.add("deleted");
+					setTimeout(function(){
+						qLogo.classList.remove("deleted");
+					}, 200);
+	
+					
+					// update the snippet info in the list of snippets
+					var snippetItems = document.getElementsByClassName("snippet-item");
+					for(var i = 0, ii = snippetItems.length; i < ii; i++){
+						if(snippetItems[i].dataset.id === currentSnippet.id) {
+							snippetItems[i].parentNode.removeChild(snippetItems[i]);
+						}
+					}
+	
+	
+					snippetsList.splice(index, 1);
+					currentSnippet = null;
+	
+					document.getElementById('deleteSnippetBtn').classList.add("inactive-no_snippet");
+					document.getElementById('saveSnippetBtn').classList.add("inactive-no_snippet");
+					document.getElementById('snippetEditSection').classList.add("inactive-no_snippet");
+	
+					
+	
+					return true;
+				}
+			});
+	
+	
+	
+		});
+	
+	
+		Eve.on("saveCurrentSnippet", function(){
+			if(currentSnippet === null) {
+				return;
+			}
+			//get name from input field
+			currentSnippet.name = document.getElementById('snippetName').value.trim();
+	
+			//get type from radio buttons
+			var snippetRadios = document.getElementsByClassName("snippet-radio");
+			console.log("snippetsRadios:",snippetRadios);
+			for(var i = 0, ii = snippetRadios.length; i < ii; i++){
+				console.log("snippetRadios[i];",snippetRadios[i]);
+				if(snippetRadios[i].checked) currentSnippet.type = snippetRadios[i].value;
+			}
+			console.log("currentSnippet.type:",currentSnippet.type);
+	
+			//get code from codemirror
+			currentSnippet.code = snippetCodemirror.getValue();
+	
+			//update the snippet in localData array
+			snippetsList.some(function(snip, index, arr){
+				if(currentSnippet.id === snip.id ){
+					snippetsList[index] = currentSnippet;
+					return true;
+				}
+			});
+	
+			// update the snippet info in the list of snippets
+			var snippetItems = document.getElementsByClassName("snippet-item");
+			for(var i = 0, ii = snippetItems.length; i < ii; i++){
+				if(snippetItems[i].dataset.id === currentSnippet.id) {
+					snippetItems[i].getElementsByClassName("snippet_name")[0].textContent = currentSnippet.name;
+					snippetItems[i].getElementsByClassName("snippet-type")[0].textContent = currentSnippet.type;
+				}
+			}
+	
+			var qLogo = document.getElementById('Q-logo');
+			qLogo.classList.add("saved");
+			setTimeout(function(){
+				qLogo.classList.remove("saved");
+			}, 400);
+		});
+	
+		Eve.on("snippetArrowUp", function(){
+			console.log("currentSnippet",currentSnippet);
+			if(currentSnippet === null || snippetsList[0].id === currentSnippet.id) return;
+			else {
+				var snippetItem = {};
+				var snippetItems = document.getElementsByClassName("snippet-item");
+	
+				for(var i = 0, ii = snippetItems.length; i < ii; i++){
+					if(snippetItems[i].dataset.id === currentSnippet.id) {
+						snippetItem.element = snippetItems[i];
+						snippetItem.index = i;
+					}
+				}
+	
+				var previousSibling = snippetItem.element.previousSibling;
+				var parentNode = snippetItem.element.parentNode;
+				parentNode.removeChild(snippetItem.element);
+				parentNode.insertBefore(snippetItem.element,previousSibling);
+	
+				snippetItem.element.scrollIntoView();
+	
+				currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
+				snippetsList.splice((snippetItem.index-1), 0, currentSnippet);
+			}
+		});
+	
+	
+		Eve.on("snippetArrowDown", function(){
+			console.log("currentSnippet",currentSnippet);
+			if(currentSnippet === null || snippetsList[snippetsList.length-1].id === currentSnippet.id) return;
+			else {
+				var snippetItem = {};
+				var snippetItems = document.getElementsByClassName("snippet-item");
+	
+				for(var i = 0, ii = snippetItems.length; i < ii; i++){
+					if(snippetItems[i].dataset.id === currentSnippet.id) {
+						snippetItem.element = snippetItems[i];
+						snippetItem.index = i;
+					}
+				}
+	
+				var nextSibling = snippetItem.element.nextSibling;
+				var parentNode = snippetItem.element.parentNode;
+				parentNode.removeChild(snippetItem.element);
+				parentNode.insertBefore(snippetItem.element,nextSibling.nextSibling);
+	
+				snippetItem.element.scrollIntoView(false);
+	
+				currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
+				snippetsList.splice((snippetItem.index+1), 0, currentSnippet);
+			}
+		});
+	
+		Eve.on("manageSnippetsInit", sanitizeSnippets);
+	
+	
+	
+	
+		return {
+			getSnippets: function(){
+				return snippetsList;
+			},
+			// setCurrentSnippet: function(){
+	
+			// },
+			getCurrentSnippet: function(){
+				return currentSnippet;
+			}
+		}
 	
 	})();
 	var nav = (function(){
@@ -17057,6 +17472,8 @@
 	Snippets Panel
 	*/
 	var SnippetsPanel = (function(){
+	
+	
 		var mainTemplate = etc.template(function(){
 			var container = etc.el("form", {id:"snippetsForm", className:"snippets"}, "Snippets");
 	
@@ -17072,13 +17489,245 @@
 			]);
 		});
 	
+		
+	
+	
 		var manageSnippetsTemplate = etc.template(function(){
-			return etc.el("div", {id:"preferences_splash"}, "MANAGE SNIPS");
+	
+			Eve.emit("manageSnippetsInit");
+	
+			var manageSnippetsCont = etc.el("form", {id:"snippetsForm", className:"snippets"});
+	
+			var snippetListCont = etc.el("div", {id:"snippetsListCont"});
+			var snippetsList = Data.getSnippets();
+	
+	
+	
+			for(var i = 0, ii = snippetsList.length; i < ii; i++){
+	
+				var snippetItem = etc.el("div", {
+					className:"snippet-item",
+					dataset: {
+						id:snippetsList[i].id
+					},
+					events: {
+						click: function(){
+							var currentSnippet = Data.getCurrentSnippet()
+							if( currentSnippet === null || currentSnippet.name.trim().search(/[\w\s]+/i) !== -1 ){
+							
+								if(currentSnippet !== null){
+									console.log("current snippet NAME:", currentSnippet.name.trim());
+									console.log("selected snippet MATCH:",currentSnippet.name.trim().match(/[\w\s]+/i));
+								}
+								var snippetItems = document.getElementsByClassName("snippet-item");
+								for(var i = 0, ii = snippetItems.length; i < ii; i++){
+									snippetItems[i].classList.remove("selected");
+								}
+								this.classList.add("selected");
+								Eve.emit("selectedSnippet", this.dataset.id);
+							} else {
+								console.log("current snippet name invalid");
+								Eve.emit("snippetNameInvalid");
+							}
+							
+						}
+					}
+				}).append([
+					etc.el("div", {className:"snippet_name"}, snippetsList[i].name),
+					etc.el("div", {className:"snippet-type"}, snippetsList[i].type)
+				]);
+	
+				// CLICK snippet button
+				// .on("click", function(){
+				// 	var self = this;
+	
+				// 	el(".snippet-item").each(function(item){
+				// 		item.rmClass("selected")
+				// 	})
+				// 	self.addClass("selected");
+	
+				// 	var _index;
+				// 	var thisSnippet;
+				// 	var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
+				// 		if(self.dataset.id === snip.id) {
+				// 			thisSnippet = snip;
+				// 			_index=index;
+				// 			return true;
+				// 		}
+				// 	});
+				// 	console.log("thisSnippet",thisSnippet);
+	
+				// 	console.log("index",_index)
+				// 	Snippet.init();
+				// 	Snippet.setName(thisSnippet.name);
+				// 	Snippet.setId(thisSnippet.id);
+				// 	Snippet.setType(thisSnippet.type);
+				// 	Snippet.setCode(thisSnippet.code);
+				// 	Snippet.setIndex(_index);
+				// 	Snippet.current.element = self;
+	
+	
+				// 	snippetCodemirror.setValue(Snippet.current.code);
+				// 	document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
+				// 	document.getElementById("snippetName").value = Snippet.current.name;
+	
+				// });
+				snippetListCont.append(snippetItem);
+			}
+	
+			var snippetEditSection = etc.el("section", {id:"snippetEditSection", className:"inactive-no_snippet"});
+			var snippetInfo = etc.el("div", {id:"snippetInfo"});
+			var snippetNameField = etc.el("input", {
+				id:"snippetName", placeholder:"Snippet Name"
+			});
+			var snippetTypeCont = etc.el("div",{id:"snippetTypeCont"}).append([
+				// css radio
+				etc.el("label",{id:"snippetType-css"},"CSS").append(
+					etc.el("input",{
+						id:"snippetRadio-css", className:"snippet-radio", type:"radio", value: "css", name: "snippet-radio",
+						events: {
+							click: function(){
+								snippetCodemirror.setOption("mode","text/x-scss");
+							}
+						}
+					})
+				),
+				// js radio
+				etc.el("label",{id:"snippetType-js"},"JS").append(
+					etc.el("input",{
+						id:"snippetRadio-js", className:"snippet-radio", type:"radio", value: "js", name: "snippet-radio",
+						events: {
+							click: function(){
+								snippetCodemirror.setOption("mode","javascript");
+							}
+						}
+					})
+				)
+			])
+	
+			var snippetArrows = etc.el("div", {id:"snippetArrowsCont"}).append([
+				etc.el("div",{id:"snippetArrowUp", events:{click: function(){Eve.emit("snippetArrowUp");}}, innerHTML:'<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 35 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M23.079,42.366l-11.604,0l0,-17.924l-10.775,0l16.577,-24.231l16.577,24.231l-10.775,0l0,17.924Z" /></svg>'}),
+				etc.el("div",{id:"snippetArrowDown", events:{click: function(){Eve.emit("snippetArrowDown");}}, innerHTML:'<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 35 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M23.079,42.366l-11.604,0l0,-17.924l-10.775,0l16.577,-24.231l16.577,24.231l-10.775,0l0,17.924Z" /></svg>'})
+			])
+	
+			var snippetCodemirrorCont = etc.el("div", {
+				id:"snippetCodemirror", 
+				events: {
+					attached: function(){
+						var self = this;
+						
+						
+						window.snippetCodemirror = CodeMirror(self, {
+							mode: "css",
+							theme: "monokai",
+							tabSize: 2,
+							indentWithTabs: true,
+							keyMap: "sublime",
+							lineWrapping: true,
+							lineNumbers: true,
+							autoCloseBrackets: true
+						});
+	
+						setTimeout(function(){
+							snippetCodemirror.on("change", function(){
+								console.log("changed codemirror");
+								// Snippet.setCode(snippetCodemirror.getValue());
+							})
+						}, 0);
+	
+					}
+				}
+			});
+	
+			var snippetBtnsCont = etc.el("section", {id:"snippetBtnsCont"}).append([
+				etc.el("div", {
+					id:"newSnippetBtn", className:"btn",
+					events: {
+						click: function(){
+							var currentSnippet = Data.getCurrentSnippet()
+							if( currentSnippet === null || currentSnippet.name.trim().search(/[\w\s]+/i) !== -1 ){
+								Eve.emit("createNewSnippet");
+	
+							} else {
+								Eve.emit("snippetNameInvalid");
+							}
+						}
+					}
+				}, "New"),
+				etc.el("div", {id:"deleteSnippetBtn", className:"btn inactive-no_snippet",
+					events: {
+						click: function(){
+							if(this.classList.contains("inactive-no_snippet")) return;
+							Eve.emit("deleteCurrentSnippet");
+						}
+					}
+				}, "Delete"),
+				etc.el("div", {id:"saveSnippetBtn", className:"btn inactive-no_snippet",
+					events: {
+						click: function(){
+							if(this.classList.contains("inactive-no_snippet")) return;
+							var currentSnippet = Data.getCurrentSnippet();
+							var errors = 0;
+							//get type from radio buttons
+							var snippetRadios = document.getElementsByClassName("snippet-radio");
+							if(currentSnippet !== null && !snippetRadios[0].checked && !snippetRadios[1].checked){
+								errors++;
+								alert("Select Snippet Type (CSS or JavaScript)")
+							}
+	
+							var snippetNameField = document.getElementById('snippetName');
+							if( currentSnippet !== null ){	
+								console.log("currentSnippet",currentSnippet);
+								if(snippetNameField.value.trim().search(/[\w\s]+/i) === -1){
+									errors++;
+									Eve.emit("snippetNameInvalid");
+								}
+							} 
+	
+							if(errors === 0){
+								Eve.emit("saveCurrentSnippet");
+							}
+							
+								
+	
+						}
+					}
+				}, "Save"),
+			])
+	
+			return manageSnippetsCont.append([
+				snippetListCont,
+				snippetEditSection.append([
+					snippetInfo.append([
+						snippetNameField,
+						snippetTypeCont,
+						snippetArrows
+					]),
+					snippetCodemirrorCont
+				]),
+				snippetBtnsCont
+			]);
 		});
 	
 		var manageKeybindingsTemplate = etc.template(function(){
 	
 		});
+	
+		Eve.on("snippetNameInvalid", function(){
+			console.log("invalid snippet name");
+			document.getElementById('snippetName').classList.add("error");
+		});
+	
+		// Eve.on("selectedSnippet", function(_id){
+		// 	document.getElementById('snippetName').classList.remove("error");
+		// 	var localSnippetsList = Data.getSnippets();
+		// 	var selectedSnippet = localSnippetsList.filter(function(snip, ind, arr){
+		// 		if(snip.id === _id) return true;
+		// 	})[0];
+		// 	currentSnippet = selectedSnippet;
+		// 	console.log("selected snippet:",selectedSnippet);
+		// })
+	
 	
 	
 		return {
@@ -17089,7 +17738,7 @@
 	})();
 	
 	
-	console.log(SnippetsPanel);
+	
 	
 
 </script>

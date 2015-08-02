@@ -1,1 +1,133 @@
-{"recentBrands":["gbsviewpoints","github","tester5","uafieldtesting","thesportsauthority","paypal360","tester","tester4","gadventures","gamestop","bart","wmsas","arcelormittal","travelocity","hotwire","csxoptm360","csx360","ericsson360","ibbt","omainsurance","fandm","mitresearch","optumsurveys","travelpn","lds","soa","wintec","wiley","avannis","testbrand","test","nde","landsend","workiva","ulstersocialsciences","rac","facebook","wsubusiness","kennesaw","alliancedata","zillow","testa","amazon10","macomb","idstats","synopsys","thinkingphones","healthcareindustry","research1","teachforamerica","ubayreuthmarketing","tervis","biorx","sands","fmrtraining","ferrarispa","nvm","wellsfargosurvey","toyotasurvey","brassagency","fake"],"snippets":[{"name":"Progress Bar","id":"sjdo4ofodcnjw","type":"css","code":".Skin #ProgressBarContainer {\n\tcolor: red;\n}"},{"name":"JavaScript Thing 2","id":"di0nfni40d34","type":"js","code":"console.log(\"thing\");"},{"name":"NEW1","id":"","type":"css","code":"/*code here*/"}]}
+{
+  "recentBrands": [
+    "tester",
+    "gbsviewpoints",
+    "github",
+    "tester5",
+    "uafieldtesting",
+    "thesportsauthority",
+    "paypal360",
+    "tester4",
+    "gadventures",
+    "gamestop",
+    "bart",
+    "wmsas",
+    "arcelormittal",
+    "travelocity",
+    "hotwire",
+    "csxoptm360",
+    "csx360",
+    "ericsson360",
+    "ibbt",
+    "omainsurance",
+    "fandm",
+    "mitresearch",
+    "optumsurveys",
+    "travelpn",
+    "lds",
+    "soa",
+    "wintec",
+    "wiley",
+    "avannis",
+    "testbrand",
+    "test",
+    "nde",
+    "landsend",
+    "workiva",
+    "ulstersocialsciences",
+    "rac",
+    "facebook",
+    "wsubusiness",
+    "kennesaw",
+    "alliancedata",
+    "zillow",
+    "testa",
+    "amazon10",
+    "macomb",
+    "idstats",
+    "synopsys",
+    "thinkingphones",
+    "healthcareindustry",
+    "research1",
+    "teachforamerica",
+    "ubayreuthmarketing",
+    "tervis",
+    "biorx",
+    "sands",
+    "fmrtraining",
+    "ferrarispa",
+    "nvm",
+    "wellsfargosurvey",
+    "toyotasurvey",
+    "brassagency",
+    "fake"
+  ],
+  "snippets": [
+    {
+      "name": "Lion",
+      "type": "css",
+      "id": "ud2zoj35-lxlc",
+      "code": "//Lion"
+    },
+    {
+      "name": "Penguin",
+      "type": "css",
+      "id": "ybxm8mxy-tg6n",
+      "code": ""
+    },
+    {
+      "name": "Progress Bar",
+      "id": "uxi253n5-ur36",
+      "type": "css",
+      "code": ".Skin #ProgressBarContainer {\n\tcolor: red;\n}"
+    },
+    {
+      "name": "Tester2",
+      "type": "js",
+      "id": "plpxzecs-xuc8",
+      "code": "//tester 2 code here"
+    },
+    {
+      "name": "Tester3",
+      "type": "js",
+      "id": "rpect97f-rl77",
+      "code": "//tester3"
+    },
+    {
+      "name": "JavaScript Thing 3",
+      "id": "vl2uxx4z-z43b",
+      "type": "js",
+      "code": "console.log(\"thing\");"
+    },
+    {
+      "name": "Elephant",
+      "type": "js",
+      "id": "q20i9b3r-na40",
+      "code": "//elephant"
+    },
+    {
+      "name": "Tester1",
+      "type": "css",
+      "id": "10iml5ea-l8z2",
+      "code": "/*tester2 code here*/"
+    },
+    {
+      "name": "Zebra",
+      "type": "css",
+      "id": "idupt4me-tjjb",
+      "code": ""
+    },
+    {
+      "name": "Dog",
+      "type": "css",
+      "id": "w8sy7p05-v2e6",
+      "code": ""
+    },
+    {
+      "name": "Kitty",
+      "type": "css",
+      "id": "kgv6ivoi-kxxc",
+      "code": ""
+    }
+  ]
+}
