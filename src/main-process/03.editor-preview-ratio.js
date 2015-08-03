@@ -7,3 +7,5 @@ function setEditorPreviewRatio(_newIndex) {
   mainWindow.webContents.executeJavaScript("editorPreviewBar.set("+_newIndex+"); window.dispatchEvent(new Event('resize'));");
 
 }
+
+

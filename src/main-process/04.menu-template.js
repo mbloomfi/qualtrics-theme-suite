@@ -1,6 +1,5 @@
 // ==== APP MENU ====
 // var cameraImg = nativeImage.createFromPath("local/images/camera.svg");
-var cameraImg = "local/images/camera.svg";
 
 
 
@@ -548,11 +547,13 @@ var menuTemplate = [
 
 
 function setPreviewFiles(_callback){
-  fs.readFile("./local/user-settings.json", function(err, _file){
-    if(err)return console.log("ERROR:",err);
+  fs.readFile(__dirname+"/local/user-settings.json", function(err, _file){
+    if(err) {
+      fs.appendFile(__dirname+"/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){})
+      return console.log("ERROR:",err);
+    }
     var OBJECT = JSON.parse(_file);
     var previewFilesList = OBJECT.files.previewFiles;
-    // console.log("OBJECT:", OBJECT)
     var submenuIndex = 0;
     for(var i = 0, ii = previewFilesList.length; i < ii; i++){
 
@@ -579,7 +580,7 @@ function setPreviewFiles(_callback){
 
     global.sharedObject.appMenu = Menu.buildFromTemplate(menuTemplate);
     // console.log(menuTemplate[4].submenu[0].submenu)
-    if(_callback) _callback();
+    if(typeof _callback !== "undefined") _callback();
     
     
   });

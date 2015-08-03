@@ -10,6 +10,8 @@ global.sharedObject = {
   mainWindow: null
 };
 
+
+
 global.sharedObject.appRoot = __dirname;
 
 function ace (_func){
@@ -65,3 +67,5 @@ function ace (_func){
 
 	return b.run.bind(b);
 }
+
+

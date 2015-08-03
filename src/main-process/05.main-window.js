@@ -1,8 +1,9 @@
-app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
-app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
+// app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
+// app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
 
 // MAIN RENDERER
 var mainWindow = global.sharedObject.mainWindow = null;
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -10,7 +11,13 @@ app.on('window-all-closed', function() {
 });
 
 
+
 app.on("ready", function(){
+
+
+
+	
+
 
 
 
@@ -24,8 +31,9 @@ app.on("ready", function(){
 			"min-height": 500,
 			"min-width": 200
 		});
+
 		mainWindow.loadUrl("file://"+__dirname+"/index.html");
-		
+
 		mainWindow.on('close', function(e) {
 			if(!global.sharedObject.canQuit){
 				e.preventDefault();
@@ -34,6 +42,14 @@ app.on("ready", function(){
 				mainWindow.webContents.executeJavaScript("Quitter.prompt();");
 			}
 	  });
+
+		//this is where the problem is. there is an issue with the menu
+		// the above few blocks of code were in here in set preview files.
+
+
+		
+		
+		
 
 
 		// Run Gulp Listening
@@ -46,3 +62,4 @@ app.on("ready", function(){
 
   // console.log(__dirname);
 });
+

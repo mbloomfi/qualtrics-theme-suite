@@ -1,10 +1,20 @@
+var fs = require("fs");
+
+
+
+process.on('uncaughtException', function(err) {
+    // handle the error safely
+    fs.appendFile("errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){})
+})
+
 var app = require("app");
 var BrowserWindow = require("browser-window");
 var gulp = require("gulp");
 var Menu = require("menu");
 var ipc = require("ipc");
-var fs = require("fs");
 var shell = require('shelljs');
+
+
 global.sharedObject = {
 	appMenu: null,
   canQuit: false,
@@ -16,6 +26,8 @@ global.sharedObject = {
   preferencesWindow: null,
   mainWindow: null
 };
+
+
 
 global.sharedObject.appRoot = __dirname;
 
@@ -72,6 +84,9 @@ function ace (_func){
 
 	return b.run.bind(b);
 }
+
+
+
 function openPreferences() {
   if(global.sharedObject.preferencesWindow ===null){
 
@@ -110,6 +125,8 @@ function openPreferences() {
   } 
 }
 
+
+
 // This is the function that set the ratio between the editor and the preview screen
 function setEditorPreviewRatio(_newIndex) {
   var i = global.sharedObject.menuStatus.currentEditorPreviewRatio;
@@ -119,9 +136,11 @@ function setEditorPreviewRatio(_newIndex) {
   mainWindow.webContents.executeJavaScript("editorPreviewBar.set("+_newIndex+"); window.dispatchEvent(new Event('resize'));");
 
 }
+
+
+
 // ==== APP MENU ====
 // var cameraImg = nativeImage.createFromPath("local/images/camera.svg");
-var cameraImg = "local/images/camera.svg";
 
 
 
@@ -669,11 +688,13 @@ var menuTemplate = [
 
 
 function setPreviewFiles(_callback){
-  fs.readFile("./local/user-settings.json", function(err, _file){
-    if(err)return console.log("ERROR:",err);
+  fs.readFile(__dirname+"/local/user-settings.json", function(err, _file){
+    if(err) {
+      fs.appendFile(__dirname+"/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){})
+      return console.log("ERROR:",err);
+    }
     var OBJECT = JSON.parse(_file);
     var previewFilesList = OBJECT.files.previewFiles;
-    // console.log("OBJECT:", OBJECT)
     var submenuIndex = 0;
     for(var i = 0, ii = previewFilesList.length; i < ii; i++){
 
@@ -700,7 +721,7 @@ function setPreviewFiles(_callback){
 
     global.sharedObject.appMenu = Menu.buildFromTemplate(menuTemplate);
     // console.log(menuTemplate[4].submenu[0].submenu)
-    if(_callback) _callback();
+    if(typeof _callback !== "undefined") _callback();
     
     
   });
@@ -713,11 +734,12 @@ function setPreviewFiles(_callback){
 
 
 
-app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
-app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
+// app.commandLine.appendSwitch('ppapi-flash-path', __dirname+'/local/PepperFlashPlayer.plugin');
+// app.commandLine.appendSwitch('ppapi-flash-version', '18.0.0.194');
 
 // MAIN RENDERER
 var mainWindow = global.sharedObject.mainWindow = null;
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -725,7 +747,13 @@ app.on('window-all-closed', function() {
 });
 
 
+
 app.on("ready", function(){
+
+
+
+	
+
 
 
 
@@ -739,8 +767,9 @@ app.on("ready", function(){
 			"min-height": 500,
 			"min-width": 200
 		});
+
 		mainWindow.loadUrl("file://"+__dirname+"/index.html");
-		
+
 		mainWindow.on('close', function(e) {
 			if(!global.sharedObject.canQuit){
 				e.preventDefault();
@@ -749,6 +778,14 @@ app.on("ready", function(){
 				mainWindow.webContents.executeJavaScript("Quitter.prompt();");
 			}
 	  });
+
+		//this is where the problem is. there is an issue with the menu
+		// the above few blocks of code were in here in set preview files.
+
+
+		
+		
+		
 
 
 		// Run Gulp Listening
@@ -762,7 +799,10 @@ app.on("ready", function(){
   // console.log(__dirname);
 });
 
+
 //GULP
+
+
 function runGulp(){
 }
 
@@ -810,3 +850,5 @@ var previewModes = {
 		global.sharedObject.appMenu.items[4].submenu.items[8].enabled = false;
 	}
 };
+
+
