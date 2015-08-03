@@ -1,6 +1,6 @@
-/* 
+/***************** 
 Panel Main
-*/
+*****************/
 var panel = (function(){
 
 	/*
@@ -33,9 +33,7 @@ var panel = (function(){
 		return etc.el("div", {id:"preferences_splash"}, "QTS");
 	});
 
-	var filesPanel = etc.template(function(){
-		return etc.el("div", {id:"preferences_splash"}, "FILES");
-	});
+
 
 	var previewPanel = etc.template(function(){
 		return etc.el("div", {id:"preferences_splash"}, "PREVIEW");
@@ -54,18 +52,19 @@ var panel = (function(){
 	Set Panel State
 	*/
 	function setPanel(selected_nav){
-		var navMap = {
+		var panelMap = {
 			splash: splashPanel,
 			qts: QTS_Panel,
-			files: filesPanel,
+			files: FilesPanel.mainTemplate,
+			managePreviewFiles: FilesPanel.previewFilesTemplate,
 			snippets: SnippetsPanel.main,
 			manageSnippets: SnippetsPanel.manageSnippets,
 			preview: previewPanel,
 			window: windowPanel
 		};
 
-		if(navMap.hasOwnProperty(selected_nav)){
-			panelTemplate.render({panel:navMap[selected_nav]}, document.body);
+		if(panelMap.hasOwnProperty(selected_nav)){
+			panelTemplate.render({panel:panelMap[selected_nav]}, document.body);
 		} 
 	}
 
@@ -81,16 +80,110 @@ var panel = (function(){
 })();
 
 
+// 	else if(_newPanel === "previewFiles"){
+// 		currentPanel = el("+form#previewFilesForm").addClass("files");
+// 		//Path To Brands
+// 		currentPanel.append( 
+// 			el("+div").addClass("previewFilesLabel").append( 
+// 				el.join([
+// 					el("+div").text("Preview Question Files"),
+// 					el("+div#previewFilesCont").addClass("fileListContainer")
+// 				])
+				 
+// 			) 
+// 		);
+
+// 		return currentPanel;
+// 	}
+
+/*****************
+Files Panel
+*****************/
+var FilesPanel = (function(){
+
+	// main template
+	var filesTemplate = etc.template(function(){
+		var container = etc.el("form", {id:"filesForm", className:"files"});
+		container.append([
+			etc.el("label", {id:"path-to-brands-label"}).append([
+				etc.el("div", {},"Path To Brands"),
+				etc.el("span", {id:"homeDirectory"}, process.env.HOME+"/ "),
+				etc.el("input", {id:"path-to-brands"})
+			]),
+			etc.el("br")
+		]);
 
 
-/* 
+		container.append( 
+			etc.el("button",{id:"managePreviewFiles", className:"btn", events:{
+				click: function(e){
+					e.preventDefault();
+					Eve.emit("selectPanel", "managePreviewFiles")
+				}
+			}}, "Manage Preview Files")
+		);
+
+		container.append( 
+			etc.el("button",{id:"manageBaseFiles", className:"btn"}, "Manage Base Files")
+		);
+		
+
+		return container;
+	});
+
+
+
+
+	//manage preview files template
+	var previewFilesTemplate = etc.template(function(){
+		var filesList = Data.getPreviewFiles();
+
+		var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"});
+
+		for(var i = 0, ii = filesList.length; i < ii; i++){
+			previewFilesCont.append(
+				etc.el("div", {className:"file-item", dataset:{name:filesList[i]}},filesList[i])
+			);
+		}
+
+		var container = etc.el("form", {id:"previewFilesForm", className:"files"});
+		container.append( 
+			etc.el("div", {className:"previewFilesLabel"}).append([
+				etc.el("div", {},"Preview Question Files"),
+				previewFilesCont
+			])
+		);
+
+		var editBtnsCont = etc.el("div", {id:"editBtnsCont"}).append([
+			etc.el("div", {id:"deletePreviewFile-btn", className:"btn"}, "Delete File")
+		]);
+		container.append(
+			etc.el("section", {id:"edit-preview-files"}).append([
+				editBtnsCont
+			])
+		)
+
+		return container;
+	});
+
+	return {
+		mainTemplate: filesTemplate,
+		previewFilesTemplate: previewFilesTemplate,
+	};
+})();
+
+
+
+
+
+/***************** 
 Snippets Panel
-*/
+*****************/
 var SnippetsPanel = (function(){
 
 
 	var mainTemplate = etc.template(function(){
-		var container = etc.el("form", {id:"snippetsForm", className:"snippets"}, "Snippets");
+		var container = etc.el("form", {id:"snippetsForm", className:"snippets"});
 
 		var manageSnippetsBtn = etc.el("button",{events:{
 			click:function(e){
@@ -105,7 +198,6 @@ var SnippetsPanel = (function(){
 	});
 
 	
-
 
 	var manageSnippetsTemplate = etc.template(function(){
 
@@ -151,42 +243,6 @@ var SnippetsPanel = (function(){
 				etc.el("div", {className:"snippet_name"}, snippetsList[i].name),
 				etc.el("div", {className:"snippet-type"}, snippetsList[i].type)
 			]);
-
-			// CLICK snippet button
-			// .on("click", function(){
-			// 	var self = this;
-
-			// 	el(".snippet-item").each(function(item){
-			// 		item.rmClass("selected")
-			// 	})
-			// 	self.addClass("selected");
-
-			// 	var _index;
-			// 	var thisSnippet;
-			// 	var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
-			// 		if(self.dataset.id === snip.id) {
-			// 			thisSnippet = snip;
-			// 			_index=index;
-			// 			return true;
-			// 		}
-			// 	});
-			// 	console.log("thisSnippet",thisSnippet);
-
-			// 	console.log("index",_index)
-			// 	Snippet.init();
-			// 	Snippet.setName(thisSnippet.name);
-			// 	Snippet.setId(thisSnippet.id);
-			// 	Snippet.setType(thisSnippet.type);
-			// 	Snippet.setCode(thisSnippet.code);
-			// 	Snippet.setIndex(_index);
-			// 	Snippet.current.element = self;
-
-
-			// 	snippetCodemirror.setValue(Snippet.current.code);
-			// 	document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
-			// 	document.getElementById("snippetName").value = Snippet.current.name;
-
-			// });
 			snippetListCont.append(snippetItem);
 		}
 

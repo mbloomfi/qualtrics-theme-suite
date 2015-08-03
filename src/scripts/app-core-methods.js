@@ -433,6 +433,10 @@ var core = Global.coreMethods = {
 
 					
 				});
+			},
+
+			updateContextMenu: function(){
+
 			}
 
 
@@ -625,6 +629,8 @@ var core = Global.coreMethods = {
 	codeMirror: {
 		active: false,
 		activate: function(){
+			this.resetContextMenu();
+
 			if(this.active === false){
 
 				var codeMirrorCover = el("#codeMirror-cover");
@@ -687,6 +693,34 @@ var core = Global.coreMethods = {
 					}
 				}
 			})
+		},
+
+		resetContextMenu: function(){
+			// 'menu' is declared in main.js
+			menu = new Menu();
+			var recentSnippetsList = [];
+			fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+				if(!_err) {
+					recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
+
+					menu.append( new MenuItem({ label: 'Insert Snippet', enabled: false }) );
+					for(var i = 0, ii = recentSnippetsList.length; i < ii; i++){
+						menu.append( new MenuItem({ 
+							label: recentSnippetsList[i].name ,
+							thisSnippet: recentSnippetsList[i],
+							click: (function(i){
+								var index = i;
+								return function(){
+									myCodeMirror.replaceSelection(recentSnippetsList[index].code);
+								}
+							})(i)
+						}) );
+					}
+					menu.append( new MenuItem({ type: 'separator' }) );
+					menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+
+				}
+			});
 		}
 
 	},

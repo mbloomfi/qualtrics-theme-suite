@@ -6,6 +6,7 @@ var ipc = require("ipc");
 var fs = require("fs");
 var shell = require('shelljs');
 global.sharedObject = {
+	appMenu: null,
   canQuit: false,
   menuStatus: {
     devToolsOpen: false,
@@ -112,8 +113,8 @@ function openPreferences() {
 // This is the function that set the ratio between the editor and the preview screen
 function setEditorPreviewRatio(_newIndex) {
   var i = global.sharedObject.menuStatus.currentEditorPreviewRatio;
-  appMenu.items[5].submenu.items[0].submenu.items[i].checked = false;
-  appMenu.items[5].submenu.items[0].submenu.items[_newIndex].checked = true;
+  global.sharedObject.appMenu.items[5].submenu.items[0].submenu.items[i].checked = false;
+  global.sharedObject.appMenu.items[5].submenu.items[0].submenu.items[_newIndex].checked = true;
   global.sharedObject.menuStatus.currentEditorPreviewRatio = _newIndex;
   mainWindow.webContents.executeJavaScript("editorPreviewBar.set("+_newIndex+"); window.dispatchEvent(new Event('resize'));");
 
@@ -121,6 +122,8 @@ function setEditorPreviewRatio(_newIndex) {
 // ==== APP MENU ====
 // var cameraImg = nativeImage.createFromPath("local/images/camera.svg");
 var cameraImg = "local/images/camera.svg";
+
+
 
 var menuTemplate = [
   {
@@ -248,7 +251,7 @@ var menuTemplate = [
         checked: true,
         accelerator: 'Shift+Command+E',
         click: function(){
-          appMenu.items[1].submenu.items[10].checked = false;
+          global.sharedObject.appMenu.items[1].submenu.items[10].checked = false;
           mainWindow.webContents.executeJavaScript("core.mode.edit_preview()");
         }
       },
@@ -258,7 +261,7 @@ var menuTemplate = [
         checked: false,
         accelerator: 'Shift+Command+U',
         click: function(){
-          appMenu.items[1].submenu.items[9].checked = false;
+          global.sharedObject.appMenu.items[1].submenu.items[9].checked = false;
           mainWindow.webContents.executeJavaScript("core.mode.releaseManager()");
         }
       }
@@ -309,21 +312,10 @@ var menuTemplate = [
   {
     label: "Snippets",
     submenu: [
-      {
-        label: 'Recent Snippets',
-        submenu: []
-      },
-      {
-        type: "separator"
-      },
-      {
-        label: 'Snippets Library',
-        accelerator: "Shift+Command+S"
-      },
-      {
-        label: 'Key Bindings',
-        accelerator: "Shift+Command+K"
-      },
+       //all snippets
+        {label: "label 1"},
+        {label: "label 2"}
+        
     ]
   },
 
@@ -387,7 +379,7 @@ var menuTemplate = [
         checked: false,
         accelerator: 'Command+Shift+H',
         click: function(){
-          var self = appMenu.items[4].submenu.items[2];
+          var self = global.sharedObject.appMenu.items[4].submenu.items[2];
           if(self.checked){
             // self.checked = false;
             // console.log("self.checked", self.checked);
@@ -411,7 +403,7 @@ var menuTemplate = [
         label: 'Preview Mode',
         enabled: false,
         uncheckPreviewModes: function(exception){
-          var previewModes = appMenu.items[4].submenu.items;
+          var previewModes = global.sharedObject.appMenu.items[4].submenu.items;
           for(var i = 0, ii = previewModes.length; i < ii; i++){
             if(previewModes[i].type === "checkbox" && previewModes[i].enabled === true && previewModes[i].isPreviewMode === true){
               if(previewModes[i] === exception){
@@ -422,7 +414,7 @@ var menuTemplate = [
               
             }
           }
-          appMenu.items[4].submenu.items[2]
+          global.sharedObject.appMenu.items[4].submenu.items[2]
         }
       },
       {
@@ -433,8 +425,8 @@ var menuTemplate = [
         enabled: false,
         isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[5];
-          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
+          var self = global.sharedObject.appMenu.items[4].submenu.items[5];
+          global.sharedObject.appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.regular.enable();");
         }
       },
@@ -446,8 +438,8 @@ var menuTemplate = [
         enabled: false,
         isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[6];
-          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
+          var self = global.sharedObject.appMenu.items[4].submenu.items[6];
+          global.sharedObject.appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.devices.enable();");
         }
       },
@@ -460,8 +452,8 @@ var menuTemplate = [
         isPreviewMode: true,
         // icon: 'local/images/camera-small.png',
         click: function(){
-          var self = appMenu.items[4].submenu.items[7];
-          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
+          var self = global.sharedObject.appMenu.items[4].submenu.items[7];
+          global.sharedObject.appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.screenshot.enable();");
         }
       },
@@ -473,8 +465,8 @@ var menuTemplate = [
         enabled: false,
         isPreviewMode: true,
         click: function(){
-          var self = appMenu.items[4].submenu.items[8];
-          appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
+          var self = global.sharedObject.appMenu.items[4].submenu.items[8];
+          global.sharedObject.appMenu.items[4].submenu.items[4].uncheckPreviewModes(self);
           mainWindow.webContents.executeJavaScript("core.preview.mode.thumbnail.enable();");
         }
       },
@@ -670,6 +662,11 @@ var menuTemplate = [
 // menuTemplate.populatePreviewFiles = function(_callback){
 //   var menuTemplate[4].submenu[0].submenu
 // };
+// function updateMainMenuSnippets(){
+//   console.log("");
+// }
+
+
 
 function setPreviewFiles(_callback){
   fs.readFile("./local/user-settings.json", function(err, _file){
@@ -701,7 +698,7 @@ function setPreviewFiles(_callback){
 
     }
 
-    global.appMenu = Menu.buildFromTemplate(menuTemplate);
+    global.sharedObject.appMenu = Menu.buildFromTemplate(menuTemplate);
     // console.log(menuTemplate[4].submenu[0].submenu)
     if(_callback) _callback();
     
@@ -734,7 +731,7 @@ app.on("ready", function(){
 
 	setPreviewFiles(function(){
 		
-		Menu.setApplicationMenu(appMenu);
+		Menu.setApplicationMenu(global.sharedObject.appMenu);
 
 		mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
 			width: 1800, 
@@ -786,21 +783,30 @@ function runGulp_Dev(){ // will not be called for production
 ipc.on('asynchronous-message', function(event, arg) {
 	if(arg === "disablePreviewModes") previewModes.disable();
 	else if(arg === "enablePreviewModes") previewModes.enable();
+	else if(arg === "resetAppMenu") {
+		console.log("BEFORE:appmenu reset>>",global.sharedObject.appMenu.items[3].submenu.items[0].submenu);
+		global.sharedObject.appMenu.items[3].submenu.items[0].submenu.items[0].label = "new name";
+		global.sharedObject.appMenu.items[3].submenu.items[0].submenu.items[0].enabled = false;
+		console.log("AFTER:appmenu reset>>",global.sharedObject.appMenu.items[3].submenu.items[0].submenu);
+		// Menu.setApplicationMenu(global.sharedObject.appMenu);
+		global.sharedObject.mainWindow.setMenu(global.sharedObject.appMenu);
+		// global.sharedObject.appMenu.items[3].submenu.items[0].enabled = false;
+	}
 });
 
 var previewModes = {
 	enable: function(){
-		appMenu.items[4].submenu.items[2].enabled = true;
-		appMenu.items[4].submenu.items[5].enabled = true;
-		appMenu.items[4].submenu.items[6].enabled = true;
-		appMenu.items[4].submenu.items[7].enabled = true;
-		appMenu.items[4].submenu.items[8].enabled = true;
+		global.sharedObject.appMenu.items[4].submenu.items[2].enabled = true;
+		global.sharedObject.appMenu.items[4].submenu.items[5].enabled = true;
+		global.sharedObject.appMenu.items[4].submenu.items[6].enabled = true;
+		global.sharedObject.appMenu.items[4].submenu.items[7].enabled = true;
+		global.sharedObject.appMenu.items[4].submenu.items[8].enabled = true;
 	},
 	disable: function(){
-		appMenu.items[4].submenu.items[2].enabled = false;
-		appMenu.items[4].submenu.items[5].enabled = false;
-		appMenu.items[4].submenu.items[6].enabled = false;
-		appMenu.items[4].submenu.items[7].enabled = false;
-		appMenu.items[4].submenu.items[8].enabled = false;
+		global.sharedObject.appMenu.items[4].submenu.items[2].enabled = false;
+		global.sharedObject.appMenu.items[4].submenu.items[5].enabled = false;
+		global.sharedObject.appMenu.items[4].submenu.items[6].enabled = false;
+		global.sharedObject.appMenu.items[4].submenu.items[7].enabled = false;
+		global.sharedObject.appMenu.items[4].submenu.items[8].enabled = false;
 	}
 };

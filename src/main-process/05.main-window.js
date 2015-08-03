@@ -16,7 +16,7 @@ app.on("ready", function(){
 
 	setPreviewFiles(function(){
 		
-		Menu.setApplicationMenu(appMenu);
+		Menu.setApplicationMenu(global.sharedObject.appMenu);
 
 		mainWindow = global.sharedObject.mainWindow = new BrowserWindow({
 			width: 1800, 

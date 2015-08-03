@@ -262,6 +262,7 @@ editorCore.dropdowns.brands = {
 				self.prepareInputListener();
 				// SAVE BRANDS TO LOCAL PERSISTENT DATA
 				brandSearchInput.on("focus", function(){
+					console.log("reloading brands?");
 					core.localData.updateBrandsList();
 				});
 

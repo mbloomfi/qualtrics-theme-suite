@@ -328,7 +328,7 @@ editorCore.dropdowns.files = {
 		fileName.addClass("dropdown-active");
 	},
 
-	close: function(){
+	close: function(_callback){
 		// console.log("!!closing files!!");
 		var self = this;
 		
@@ -352,6 +352,7 @@ editorCore.dropdowns.files = {
 			el("#dropdownBody-files").rmClass("deleteFile");
 			el("#dropdownBody-files").rmClass("renameFile");
 			self.purge();
+			if(typeof _callback !== "undefined")_callback();
 		}).run();
 	},
 
@@ -489,7 +490,17 @@ editorCore.dropdowns.files = {
 						el("#editorBar").rmClass("img_dragged");
 					},300);
 				}
-				self.close();
+				if(self.status === "opened"){
+
+					self.close(function(){
+						setTimeout(function(){
+							self.open();
+						}, 100);
+					});
+						
+				}
+				editorCore.dropdowns.projects.close();
+				
 			}
 			
 		});

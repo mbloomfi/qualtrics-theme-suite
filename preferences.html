@@ -809,6 +809,9 @@
 		  cursor: pointer;
 		  position: relative;
 		  padding: 4px;
+		  box-sizing: border-box;
+		  border-top: 1px solid #b4b4b4;
+		  border-bottom: 1px solid #b4b4b4;
 		  -webkit-transition: background-color 0.25s ease;
 		          transition: background-color 0.25s ease;
 		}
@@ -822,6 +825,16 @@
 		section#panel form#snippetsForm #snippetsListCont div.snippet-item.addNew {
 		  color: #fff;
 		  background-color: rgba(39,176,75,0.9);
+		}
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item.top10 {
+		  border-left: 2px solid #2c73f6;
+		  border-right: 2px solid #2c73f6;
+		}
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item.top10:nth-child(0n+1) {
+		  border-top: 3px solid #2c73f6;
+		}
+		section#panel form#snippetsForm #snippetsListCont div.snippet-item.top10:nth-child(0n+10) {
+		  border-bottom: 3px solid #2c73f6;
 		}
 		section#panel form#snippetsForm #snippetsListCont div.snippet-item .snippet-type {
 		  position: absolute;
@@ -1014,6 +1027,9 @@
 		  background-color: #fff;
 		  border: 2px solid #dcdcdc;
 		  box-sizing: border-box;
+		  height: 250px;
+		  max-height: 250px;
+		  overflow-y: scroll;
 		}
 		section#panel .fileListContainer .file-item {
 		  border-top: 1px solid #f0f0f0;
@@ -1022,21 +1038,33 @@
 		  font-size: 16px;
 		  position: relative;
 		  padding: 5px;
+		  cursor: pointer;
 		}
-		section#panel .fileListContainer .file-item .file-name {
-		  vertical-align: middle;
-		  display: inline-block;
+		section#panel .fileListContainer .file-item:hover {
+		  background-color: rgba(0,0,0,0.1);
 		}
-		section#panel .fileListContainer .file-item .delete-file {
-		  vertical-align: middle;
-		  width: 20px;
-		  height: 20px;
-		  background-color: #f00;
-		  display: inline-block;
-		  margin: 0 10px 0 0;
+		section#panel #editBtnsCont {
+		  width: 100%;
+		  position: relative;
+		  top: 15px;
+		  height: 50px;
 		}
-		section#panel .fileListContainer .file-item .delete-file:hover {
-		  background-color: #0f0;
+		section#panel #editBtnsCont .btn {
+		  height: 100%;
+		  width: 40%;
+		  text-align: center;
+		  line-height: 50px;
+		  color: #fff;
+		  position: absolute;
+		  top: 0;
+		  cursor: pointer;
+		  left: 0;
+		  background-color: #e14444;
+		  -webkit-transition: background-color 0.25s ease;
+		          transition: background-color 0.25s ease;
+		}
+		section#panel #editBtnsCont .btn:hover {
+		  background-color: #e55a5a;
 		}
 		section#Prompter {
 		  position: fixed;
@@ -15300,9 +15328,6 @@
 	});
 	
 	
-	
-	
-	
 	// --------------------------------
 	//				GLOBAL VARS
 	// --------------------------------
@@ -15318,29 +15343,29 @@
 	//				EVE (pubsub)
 	// --------------------------------
 	var Eve = {
-	  events: {},
-	  on: function (eventName, fn) {
-	    this.events[eventName] = this.events[eventName] || [];
-	    this.events[eventName].push(fn);
-	  },
-	  off: function(eventName, fn) {
-	    if (this.events[eventName]) {
-	      for (var i = 0; i < this.events[eventName].length; i++) {
-	        if (this.events[eventName][i] === fn) {
-	          this.events[eventName].splice(i, 1);
-	          break;
-	        }
-	      };
-	    }
-	  },
-	  emit: function (eventName, data) {
-	    if (this.events[eventName]) {
-	      this.events[eventName].forEach(function(fn) {
-	      	if(typeof data !== undefined) fn(data);
-	      	else fn(undefined);
-	      });
-	    }
-	  }
+		events: {},
+		on: function (eventName, fn) {
+			this.events[eventName] = this.events[eventName] || [];
+			this.events[eventName].push(fn);
+		},
+		off: function(eventName, fn) {
+			if (this.events[eventName]) {
+				for (var i = 0; i < this.events[eventName].length; i++) {
+					if (this.events[eventName][i] === fn) {
+						this.events[eventName].splice(i, 1);
+						break;
+					}
+				};
+			}
+		},
+		emit: function (eventName, data) {
+			if (this.events[eventName]) {
+				this.events[eventName].forEach(function(fn) {
+					if(typeof data !== undefined) fn(data);
+					else fn(undefined);
+				});
+			}
+		}
 	};
 	var core = Global.coreMethods = {
 	
@@ -15777,6 +15802,10 @@
 	
 						
 					});
+				},
+	
+				updateContextMenu: function(){
+	
 				}
 	
 	
@@ -15969,6 +15998,8 @@
 		codeMirror: {
 			active: false,
 			activate: function(){
+				this.resetContextMenu();
+	
 				if(this.active === false){
 	
 					var codeMirrorCover = el("#codeMirror-cover");
@@ -16031,6 +16062,34 @@
 						}
 					}
 				})
+			},
+	
+			resetContextMenu: function(){
+				// 'menu' is declared in main.js
+				menu = new Menu();
+				var recentSnippetsList = [];
+				fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+					if(!_err) {
+						recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
+	
+						menu.append( new MenuItem({ label: 'Insert Snippet', enabled: false }) );
+						for(var i = 0, ii = recentSnippetsList.length; i < ii; i++){
+							menu.append( new MenuItem({ 
+								label: recentSnippetsList[i].name ,
+								thisSnippet: recentSnippetsList[i],
+								click: (function(i){
+									var index = i;
+									return function(){
+										myCodeMirror.replaceSelection(recentSnippetsList[index].code);
+									}
+								})(i)
+							}) );
+						}
+						menu.append( new MenuItem({ type: 'separator' }) );
+						menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+	
+					}
+				});
 			}
 	
 		},
@@ -16122,7 +16181,7 @@
 	}, 200);
 	
 	
-	
+	console.log("global:",Global);
 	
 	
 	/* 
@@ -16979,6 +17038,7 @@
 		var snippetsList;
 		var currentSnippet = null;
 		var preferncesData;
+		var previewFilesList = [];
 	
 	
 	
@@ -16992,6 +17052,14 @@
 					}
 					else {
 						console.log("local init ERROR:",_err);
+					}
+				});
+	
+				fs.readdir(appRoot+"/local/preview-files", function(_err, _files){
+					if(_err) return console.error("local init ERROR:",_err);
+					for(var i = 0, ii = _files.length; i < ii ; i++){
+						var stats = fs.statSync(appRoot+"/local/preview-files"+"/"+_files[i]);
+						if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 					}
 				});
 			}
@@ -17010,6 +17078,7 @@
 						if(!_err){
 							document.getElementById('Q-logo').classList.add("saved");
 							setTimeout(function(){
+								Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
 								Global.preferencesWindow.close();
 							}, 450);
 						} else {
@@ -17046,9 +17115,12 @@
 			});
 		}
 	
+	
+	
 		Eve.on("init", local.init);
 		Eve.on("saveAll", saveLocalToFiles);
 		Eve.on("cancelAll", cancelAll);
+	
 	
 	
 		// CREATE NEW SNIPPET
@@ -17059,7 +17131,7 @@
 				snippetItems[i].classList.remove("selected");
 			}
 			document.getElementById('snippetName').classList.remove("error");
-			var snippetID = ((new Date * (Math.random()+1)).toString(36).substring(0,8)) + "-" + ((new Date * (Math.random()+1)).toString(36).substring(0,4));
+			var snippetID = ((Date.now() * (Math.random()+1)).toString(36).substring(0,8)) + "-" + ((Date.now() * (Math.random()+1)).toString(36).substring(0,4));
 			var snippetItem = etc.el("div", {
 				className:"snippet-item selected",
 				dataset: {
@@ -17101,6 +17173,8 @@
 	
 	
 	
+	
+	
 		Eve.on("selectedSnippet", function(_id){
 			var inactiveElements = document.getElementsByClassName("inactive-no_snippet");
 			while(inactiveElements.length > 0){
@@ -17127,12 +17201,13 @@
 		});
 	
 	
+	
+	
 		Eve.on("deleteCurrentSnippet", function(){
 			if(currentSnippet === null) {
 				return;
 			}
 	
-			
 			//update the snippet in localData array
 			snippetsList.some(function(snip, index, arr){
 				if(currentSnippet.id === snip.id ){
@@ -17165,10 +17240,9 @@
 					return true;
 				}
 			});
-	
-	
-	
 		});
+	
+	
 	
 	
 		Eve.on("saveCurrentSnippet", function(){
@@ -17214,6 +17288,8 @@
 			}, 400);
 		});
 	
+	
+	
 		Eve.on("snippetArrowUp", function(){
 			console.log("currentSnippet",currentSnippet);
 			if(currentSnippet === null || snippetsList[0].id === currentSnippet.id) return;
@@ -17237,8 +17313,20 @@
 	
 				currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
 				snippetsList.splice((snippetItem.index-1), 0, currentSnippet);
+	
+				for(var i = 0, ii = snippetItems.length; i < ii; i++){
+					if (i < 10) {
+						// if(i === 0) snippetItems[i].classList.add("first");
+						// else if(i === 9) snippetItems[i].classList.add("top10");
+						snippetItems[i].classList.add("top10");
+					}
+					else {
+						snippetItems[i].classList.remove("top10");
+					}
+				}
 			}
 		});
+	
 	
 	
 		Eve.on("snippetArrowDown", function(){
@@ -17255,17 +17343,32 @@
 					}
 				}
 	
+				
+	
 				var nextSibling = snippetItem.element.nextSibling;
 				var parentNode = snippetItem.element.parentNode;
 				parentNode.removeChild(snippetItem.element);
 				parentNode.insertBefore(snippetItem.element,nextSibling.nextSibling);
 	
-				snippetItem.element.scrollIntoView(false);
-	
 				currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
 				snippetsList.splice((snippetItem.index+1), 0, currentSnippet);
+	
+				snippetItem.element.scrollIntoView(false);
+	
+				
+				for(var i = 0, ii = snippetItems.length; i < ii; i++){
+					if (i < 10) {
+						snippetItems[i].classList.add("top10");
+					}
+					else {
+						snippetItems[i].classList.remove("top10");
+					}
+				}
+	
 			}
 		});
+	
+	
 	
 		Eve.on("manageSnippetsInit", sanitizeSnippets);
 	
@@ -17276,11 +17379,13 @@
 			getSnippets: function(){
 				return snippetsList;
 			},
-			// setCurrentSnippet: function(){
 	
-			// },
 			getCurrentSnippet: function(){
 				return currentSnippet;
+			},
+	
+			getPreviewFiles: function(){
+				return previewFilesList;
 			}
 		}
 	
@@ -17383,9 +17488,9 @@
 	})();
 	
 	
-	/* 
+	/***************** 
 	Panel Main
-	*/
+	*****************/
 	var panel = (function(){
 	
 		/*
@@ -17418,9 +17523,7 @@
 			return etc.el("div", {id:"preferences_splash"}, "QTS");
 		});
 	
-		var filesPanel = etc.template(function(){
-			return etc.el("div", {id:"preferences_splash"}, "FILES");
-		});
+	
 	
 		var previewPanel = etc.template(function(){
 			return etc.el("div", {id:"preferences_splash"}, "PREVIEW");
@@ -17439,18 +17542,19 @@
 		Set Panel State
 		*/
 		function setPanel(selected_nav){
-			var navMap = {
+			var panelMap = {
 				splash: splashPanel,
 				qts: QTS_Panel,
-				files: filesPanel,
+				files: FilesPanel.mainTemplate,
+				managePreviewFiles: FilesPanel.previewFilesTemplate,
 				snippets: SnippetsPanel.main,
 				manageSnippets: SnippetsPanel.manageSnippets,
 				preview: previewPanel,
 				window: windowPanel
 			};
 	
-			if(navMap.hasOwnProperty(selected_nav)){
-				panelTemplate.render({panel:navMap[selected_nav]}, document.body);
+			if(panelMap.hasOwnProperty(selected_nav)){
+				panelTemplate.render({panel:panelMap[selected_nav]}, document.body);
 			} 
 		}
 	
@@ -17466,16 +17570,110 @@
 	})();
 	
 	
+	// 	else if(_newPanel === "previewFiles"){
+	// 		currentPanel = el("+form#previewFilesForm").addClass("files");
+	// 		//Path To Brands
+	// 		currentPanel.append( 
+	// 			el("+div").addClass("previewFilesLabel").append( 
+	// 				el.join([
+	// 					el("+div").text("Preview Question Files"),
+	// 					el("+div#previewFilesCont").addClass("fileListContainer")
+	// 				])
+					 
+	// 			) 
+	// 		);
+	
+	// 		return currentPanel;
+	// 	}
+	
+	/*****************
+	Files Panel
+	*****************/
+	var FilesPanel = (function(){
+	
+		// main template
+		var filesTemplate = etc.template(function(){
+			var container = etc.el("form", {id:"filesForm", className:"files"});
+			container.append([
+				etc.el("label", {id:"path-to-brands-label"}).append([
+					etc.el("div", {},"Path To Brands"),
+					etc.el("span", {id:"homeDirectory"}, process.env.HOME+"/ "),
+					etc.el("input", {id:"path-to-brands"})
+				]),
+				etc.el("br")
+			]);
 	
 	
-	/* 
+			container.append( 
+				etc.el("button",{id:"managePreviewFiles", className:"btn", events:{
+					click: function(e){
+						e.preventDefault();
+						Eve.emit("selectPanel", "managePreviewFiles")
+					}
+				}}, "Manage Preview Files")
+			);
+	
+			container.append( 
+				etc.el("button",{id:"manageBaseFiles", className:"btn"}, "Manage Base Files")
+			);
+			
+	
+			return container;
+		});
+	
+	
+	
+	
+		//manage preview files template
+		var previewFilesTemplate = etc.template(function(){
+			var filesList = Data.getPreviewFiles();
+	
+			var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"});
+	
+			for(var i = 0, ii = filesList.length; i < ii; i++){
+				previewFilesCont.append(
+					etc.el("div", {className:"file-item", dataset:{name:filesList[i]}},filesList[i])
+				);
+			}
+	
+			var container = etc.el("form", {id:"previewFilesForm", className:"files"});
+			container.append( 
+				etc.el("div", {className:"previewFilesLabel"}).append([
+					etc.el("div", {},"Preview Question Files"),
+					previewFilesCont
+				])
+			);
+	
+			var editBtnsCont = etc.el("div", {id:"editBtnsCont"}).append([
+				etc.el("div", {id:"deletePreviewFile-btn", className:"btn"}, "Delete File")
+			]);
+			container.append(
+				etc.el("section", {id:"edit-preview-files"}).append([
+					editBtnsCont
+				])
+			)
+	
+			return container;
+		});
+	
+		return {
+			mainTemplate: filesTemplate,
+			previewFilesTemplate: previewFilesTemplate,
+		};
+	})();
+	
+	
+	
+	
+	
+	/***************** 
 	Snippets Panel
-	*/
+	*****************/
 	var SnippetsPanel = (function(){
 	
 	
 		var mainTemplate = etc.template(function(){
-			var container = etc.el("form", {id:"snippetsForm", className:"snippets"}, "Snippets");
+			var container = etc.el("form", {id:"snippetsForm", className:"snippets"});
 	
 			var manageSnippetsBtn = etc.el("button",{events:{
 				click:function(e){
@@ -17490,7 +17688,6 @@
 		});
 	
 		
-	
 	
 		var manageSnippetsTemplate = etc.template(function(){
 	
@@ -17536,42 +17733,6 @@
 					etc.el("div", {className:"snippet_name"}, snippetsList[i].name),
 					etc.el("div", {className:"snippet-type"}, snippetsList[i].type)
 				]);
-	
-				// CLICK snippet button
-				// .on("click", function(){
-				// 	var self = this;
-	
-				// 	el(".snippet-item").each(function(item){
-				// 		item.rmClass("selected")
-				// 	})
-				// 	self.addClass("selected");
-	
-				// 	var _index;
-				// 	var thisSnippet;
-				// 	var matchingSnippet = core.localData.snippets.list.some(function(snip, index){
-				// 		if(self.dataset.id === snip.id) {
-				// 			thisSnippet = snip;
-				// 			_index=index;
-				// 			return true;
-				// 		}
-				// 	});
-				// 	console.log("thisSnippet",thisSnippet);
-	
-				// 	console.log("index",_index)
-				// 	Snippet.init();
-				// 	Snippet.setName(thisSnippet.name);
-				// 	Snippet.setId(thisSnippet.id);
-				// 	Snippet.setType(thisSnippet.type);
-				// 	Snippet.setCode(thisSnippet.code);
-				// 	Snippet.setIndex(_index);
-				// 	Snippet.current.element = self;
-	
-	
-				// 	snippetCodemirror.setValue(Snippet.current.code);
-				// 	document.getElementById("snippetRadio-"+Snippet.current.type).checked = true;
-				// 	document.getElementById("snippetName").value = Snippet.current.name;
-	
-				// });
 				snippetListCont.append(snippetItem);
 			}
 	

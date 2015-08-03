@@ -146,9 +146,7 @@ editorCore.dropdowns.projects = {
 		}
 	},
 
-	addBaseFiles:function(_projectName){
 
-	},
 
 	open: function(){
 		var self = this;
@@ -214,7 +212,7 @@ editorCore.dropdowns.projects = {
 			var customCheck = etc.template(function(){
 
 				var checked = this.props.checked;
-
+				console.log("checked?",checked);
 				return etc.el("label", {
 					id:"addBaseFilesCheck_custom",
 					className:((checked)?"checked":""),
@@ -248,7 +246,7 @@ editorCore.dropdowns.projects = {
 				
 
 
-			var addBaseFilesCheck = el("+div#addBaseFilesCheck_custom").attr("type","checkbox").attr("checked","true");
+			// var addBaseFilesCheck = el("+div#addBaseFilesCheck_custom").attr("type","checkbox").attr("checked","true");
 
 			var addBaseFilesCheck = el("+input#addBaseFilesCheck").attr("type","checkbox").attr("checked","true");
 			var addBaseFilesCheck_label = el("+label#addBaseFilesCheck_label").attr("for","addBaseFilesCheck").text("Add Base Files");
@@ -258,7 +256,7 @@ editorCore.dropdowns.projects = {
 			var addBaseFilesCheck_cont = el("+div#addBaseFilesCheck_cont").addClass("hide").append(
 				el.join([
 					addBaseFilesCheck_label,
-					customCheck.render({props:{checked:true}}),
+					customCheck.render({checked:true}),
 					addBaseFilesCheck
 				])
 			);

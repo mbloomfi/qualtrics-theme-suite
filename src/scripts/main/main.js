@@ -29,32 +29,10 @@ var appRoot = Global.appRoot;
 var template = etc.template;
 
 
-var menu = new Menu();
 
-var recentSnippetsList = [];
-fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
-	if(!_err) {
-		recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
+var menu; // see core.codeMirror.activate()
 
-		menu.append( new MenuItem({ label: 'Insert Snippet', enabled: false }) );
-		for(var i = 0, ii = recentSnippetsList.length; i < ii; i++){
-			menu.append( new MenuItem({ 
-				label: recentSnippetsList[i].name ,
-				thisSnippet: recentSnippetsList[i],
-				click: (function(i){
-					var index = i;
-					return function(){
-						myCodeMirror.replaceSelection(recentSnippetsList[index].code);
-					}
-				})(i)
-			}) );
-		}
-		menu.append( new MenuItem({ type: 'separator' }) );
-		menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
-
-
-	}
-});
+	
 
 // context menu (right click)
 
@@ -62,13 +40,7 @@ fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
 
 
 
-window.addEventListener('contextmenu',function(e){
-	console.log("e",e);
-	e.preventDefault();
-  menu.popup(remote.getCurrentWindow());
-	console.log("context menu!");
 
-});
 
 //= include ../app-core-methods.js
 //= include ./modes/edit-preview/edit-preview.js
@@ -144,6 +116,18 @@ function codemirrorInit() {
 
 	setTimeout(function(){
 		codemirrorContainer.el("textarea").attr("tabindex", "-1");
+
+
+
+
+		codemirrorContainer.addEventListener('contextmenu',function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			if(core.codeMirror.active){
+				menu.popup(remote.getCurrentWindow());
+			}
+			console.log("right clicked codemirror");
+		}, true);
 	}, 0);
 	
 	window.myCodeMirror = CodeMirror(codemirrorContainer, {
@@ -180,7 +164,7 @@ el.on("load", function(){
 	})
 
 	.then(function(next){
-
+		console.log("reloading?");
 		core.localData.updateBrandsList(next);
 
 	})

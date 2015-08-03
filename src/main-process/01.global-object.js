@@ -1,4 +1,5 @@
 global.sharedObject = {
+	appMenu: null,
   canQuit: false,
   menuStatus: {
     devToolsOpen: false,

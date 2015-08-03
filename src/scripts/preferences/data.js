@@ -2,6 +2,7 @@ var Data = (function(){
 	var snippetsList;
 	var currentSnippet = null;
 	var preferncesData;
+	var previewFilesList = [];
 
 
 
@@ -15,6 +16,14 @@ var Data = (function(){
 				}
 				else {
 					console.log("local init ERROR:",_err);
+				}
+			});
+
+			fs.readdir(appRoot+"/local/preview-files", function(_err, _files){
+				if(_err) return console.error("local init ERROR:",_err);
+				for(var i = 0, ii = _files.length; i < ii ; i++){
+					var stats = fs.statSync(appRoot+"/local/preview-files"+"/"+_files[i]);
+					if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 				}
 			});
 		}
@@ -33,6 +42,7 @@ var Data = (function(){
 					if(!_err){
 						document.getElementById('Q-logo').classList.add("saved");
 						setTimeout(function(){
+							Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
 							Global.preferencesWindow.close();
 						}, 450);
 					} else {
@@ -69,9 +79,12 @@ var Data = (function(){
 		});
 	}
 
+
+
 	Eve.on("init", local.init);
 	Eve.on("saveAll", saveLocalToFiles);
 	Eve.on("cancelAll", cancelAll);
+
 
 
 	// CREATE NEW SNIPPET
@@ -82,7 +95,7 @@ var Data = (function(){
 			snippetItems[i].classList.remove("selected");
 		}
 		document.getElementById('snippetName').classList.remove("error");
-		var snippetID = ((new Date * (Math.random()+1)).toString(36).substring(0,8)) + "-" + ((new Date * (Math.random()+1)).toString(36).substring(0,4));
+		var snippetID = ((Date.now() * (Math.random()+1)).toString(36).substring(0,8)) + "-" + ((Date.now() * (Math.random()+1)).toString(36).substring(0,4));
 		var snippetItem = etc.el("div", {
 			className:"snippet-item selected",
 			dataset: {
@@ -124,6 +137,8 @@ var Data = (function(){
 
 
 
+
+
 	Eve.on("selectedSnippet", function(_id){
 		var inactiveElements = document.getElementsByClassName("inactive-no_snippet");
 		while(inactiveElements.length > 0){
@@ -150,12 +165,13 @@ var Data = (function(){
 	});
 
 
+
+
 	Eve.on("deleteCurrentSnippet", function(){
 		if(currentSnippet === null) {
 			return;
 		}
 
-		
 		//update the snippet in localData array
 		snippetsList.some(function(snip, index, arr){
 			if(currentSnippet.id === snip.id ){
@@ -188,10 +204,9 @@ var Data = (function(){
 				return true;
 			}
 		});
-
-
-
 	});
+
+
 
 
 	Eve.on("saveCurrentSnippet", function(){
@@ -237,6 +252,8 @@ var Data = (function(){
 		}, 400);
 	});
 
+
+
 	Eve.on("snippetArrowUp", function(){
 		console.log("currentSnippet",currentSnippet);
 		if(currentSnippet === null || snippetsList[0].id === currentSnippet.id) return;
@@ -260,8 +277,20 @@ var Data = (function(){
 
 			currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
 			snippetsList.splice((snippetItem.index-1), 0, currentSnippet);
+
+			for(var i = 0, ii = snippetItems.length; i < ii; i++){
+				if (i < 10) {
+					// if(i === 0) snippetItems[i].classList.add("first");
+					// else if(i === 9) snippetItems[i].classList.add("top10");
+					snippetItems[i].classList.add("top10");
+				}
+				else {
+					snippetItems[i].classList.remove("top10");
+				}
+			}
 		}
 	});
+
 
 
 	Eve.on("snippetArrowDown", function(){
@@ -278,17 +307,32 @@ var Data = (function(){
 				}
 			}
 
+			
+
 			var nextSibling = snippetItem.element.nextSibling;
 			var parentNode = snippetItem.element.parentNode;
 			parentNode.removeChild(snippetItem.element);
 			parentNode.insertBefore(snippetItem.element,nextSibling.nextSibling);
 
-			snippetItem.element.scrollIntoView(false);
-
 			currentSnippet = snippetsList.splice(snippetItem.index, 1)[0];
 			snippetsList.splice((snippetItem.index+1), 0, currentSnippet);
+
+			snippetItem.element.scrollIntoView(false);
+
+			
+			for(var i = 0, ii = snippetItems.length; i < ii; i++){
+				if (i < 10) {
+					snippetItems[i].classList.add("top10");
+				}
+				else {
+					snippetItems[i].classList.remove("top10");
+				}
+			}
+
 		}
 	});
+
+
 
 	Eve.on("manageSnippetsInit", sanitizeSnippets);
 
@@ -299,11 +343,13 @@ var Data = (function(){
 		getSnippets: function(){
 			return snippetsList;
 		},
-		// setCurrentSnippet: function(){
 
-		// },
 		getCurrentSnippet: function(){
 			return currentSnippet;
+		},
+
+		getPreviewFiles: function(){
+			return previewFilesList;
 		}
 	}
 

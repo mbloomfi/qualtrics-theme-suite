@@ -1,3 +1,5 @@
+$blue = rgb(21,100,245)
+
 section#panel {
 	background-color rgba(40, 180, 50, 0)
 	position absolute
@@ -183,17 +185,30 @@ section#panel {
 					cursor pointer
 					position relative
 					padding 4px
+					box-sizing border-box
+					border-top 1px solid rgb(180,180,180)
+					border-bottom 1px solid rgb(180,180,180)
 					transition background-color .25s ease
 					&:hover {
 						background-color rgba(50,50,50,.25)
 					}
 					&.selected {
-						background-color rgb(21,100,245)
+						background-color $blue
 						color white
 					}
 					&.addNew {
 						color white
 						background-color alpha($affirmative-green,.9)
+					}
+					&.top10 {
+						border-left 2px solid lighten($blue,10%)
+						border-right 2px solid lighten($blue,10%)
+						&:nth-child(0n+1) {
+							border-top 3px solid lighten($blue,10%)
+						}
+						&:nth-child(0n+10) {
+							border-bottom 3px solid lighten($blue,10%)
+						}
 					}
 					.snippet-type {
 						position absolute
@@ -366,9 +381,9 @@ section#panel {
 					}
 					&#newSnippetBtn {
 						top 10px
-						background-color rgb(21,100,245)
+						background-color $blue
 						&:hover {
-							background-color lighten(rgb(21,100,245),14%)
+							background-color lighten($blue,14%)
 						}
 					}
 					&#deleteSnippetBtn {
@@ -391,10 +406,10 @@ section#panel {
 				top 165px
 				padding 5px 8px
 				right 0px
-				background-color rgb(21,100,245)
+				background-color $blue
 				transition background-color .2s ease
 				&:hover {
-					background-color lighten(rgb(21,100,245),15%)
+					background-color lighten($blue,15%)
 				}
 			}
 		}
@@ -410,6 +425,9 @@ section#panel {
 		background-color rgb(255,255,255)
 		border 2px solid rgb(220,220,220)
 		box-sizing border-box
+		height 250px
+		max-height 250px
+		overflow-y scroll
 		
 		.file-item {
 			border-top 1px solid rgb(240,240,240)
@@ -418,25 +436,44 @@ section#panel {
 			font-size 16px
 			position relative
 			padding 5px
-			
-			.file-name {
-				vertical-align middle
-				// background-color orange
-				display inline-block
-			}
-			.delete-file {
-				vertical-align middle
-				width 20px
-				height 20px
-				background-color red
-				display inline-block
-				margin 0 10px 0 0
-				&:hover {
-					// position relative
-					background-color lime
-				}
+			cursor pointer
+			&:hover {
+				background-color rgba(0,0,0,.1)
 			}
 			
+		}
+	}
+	
+	#editBtnsCont {
+		// background lime
+		width 100%
+		position relative
+		top 15px
+		height 50px
+		.btn {
+			height 100%
+			width 40%
+			text-align center
+			line-height 50px
+			color white
+			position absolute
+			top 0
+			cursor pointer
+			left 0
+			background-color $negative-red
+			transition background-color .25s ease
+			&:hover {
+				background-color lighten($negative-red,12%)
+			}
+
+			// &:last-child {
+			// 	right 0
+			// 	background-color $affirmative-green
+			// 	transition background-color .25s ease
+			// 	&:hover {
+			// 		background-color lighten($affirmative-green,8%)
+			// 	}
+			// }
 		}
 	}
 
