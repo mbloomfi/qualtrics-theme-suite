@@ -5,7 +5,7 @@ core.preview = {
 	init: function(){
 		// console.log("init edit_preview => regular mode")
 		if(core.localData.currentProject.name !== null){
-			preview.src = "local/currentPreview.html";
+			preview.src = __dirname+"/local/currentPreview.html";
 			this.active = true;
 		} else {
 			this.deactivate();
@@ -13,7 +13,7 @@ core.preview = {
 	},
 
 	deactivate: function(){
-		preview.src = "local/no-preview.html";
+		preview.src = __dirname+"/local/no-preview.html";
 		this.active = false;
 	},
 
@@ -38,7 +38,7 @@ core.preview = {
 				}
 
 				if(core.localData.currentProject.name !== null){
-					preview.src = "local/currentPreview.html";
+					preview.src = __dirname+"/local/currentPreview.html";
 					this.hidden = false;
 				} 
 				else {
@@ -51,7 +51,7 @@ core.preview = {
 
 			disable: function(){
 				console.log("disabling preview");
-				preview.src = "local/no-preview.html";
+				preview.src = __dirname+"/local/no-preview.html";
 				this.hidden = true;
 			},
 
@@ -68,7 +68,10 @@ core.preview = {
 
 			compileSass: function(){
 				return gulp.src(core.localData.currentProject.path+"/StyleSheet.scss")
-					.pipe(sass()).on('error', function(e){alert("Sass Error!\nLine: "+e.line+"\n\""+e.message+"\"");})
+					.pipe(sass()).on('error', function(e){
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+						alert("Sass Error!\nLine: "+e.line+"\n\""+e.message+"\"");
+					})
 					.pipe(autoprefixer())
 					.pipe(minifyCss())
 					.pipe(gulp.dest(core.localData.currentProject.path+"/"));
@@ -96,6 +99,7 @@ core.preview = {
 				self.watchCssFile(function(_err){
 
 					if(_err && _callback) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch css file error\n"+_err+"\n\n", function(){});
 						console.log("watch css file error");
 						return _callback(_err);
 					} else {
@@ -104,6 +108,9 @@ core.preview = {
 
 					self.watchSkinFile(function(_err){
 						if(_callback) {
+							if(_err){
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch skin file error\n"+_err+"\n\n", function(){});
+							}
 							console.log("running set watcher callback");
 							return _callback(_err);
 						}
@@ -121,6 +128,7 @@ core.preview = {
 				// try{
 					fs.stat(path,function(_ERR){
 						if(_ERR) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 							console.warn("error watching CSS File:",_ERR);
 							console.log("");
 							self.disable();
@@ -161,6 +169,7 @@ core.preview = {
 
 				fs.stat(path,function(_ERR){
 					if(_ERR) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 						console.warn("error watching CSS File:",_ERR);
 						console.log("");
 						self.disable();
@@ -192,7 +201,7 @@ core.preview = {
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
 						this.addClass("reloading");
-						// preview.src="local/no-preview.html";
+						// preview.src=__dirname+"/local/no-preview.html";
 
 						
 						setTimeout(function(){
@@ -220,24 +229,64 @@ core.preview = {
 				var self = this;
 				console.log("Updating current project:",core.localData.currentProject.name);
 				fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
-					if(_errHtml){ console.log("ERR",_errHtml);}
+					if(_errHtml){ 
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
+						console.log("ERR",_errHtml);
+					}
 					else {
 
 						fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
-							if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
+							if(_errPreviewQuestions){ 
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
+								console.log("ERR",_errPreviewQuestions);
+							}
 							else {
-								gulp.src("local/previewTemplate.html")
-								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
-								.pipe(replace("{~SKIN.HTML~}", _html))
-								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
-								.pipe(replace("{~Header~}", self.injectionHeader.value))
-								.pipe(replace("{~Question~}", _previewQuestions ))
-								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
-								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
-								.pipe(rename("currentPreview.html"))
-								.pipe(gulp.dest("local/"));
+								console.log("rewriting preview file!!!");
+								console.log("replace",replace);
+								console.log("rename",rename);
+								console.log("gulp.dest",gulp.dest);
 
-								if(_callback) _callback();
+								fs.readFile(__dirname+"/local/previewTemplate.html", function(err,fileData){
+									if(err) {
+										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+									}
+									console.log("previewTemplate file", fileData);
+								});
+
+								var gulpStream = gulp.src(__dirname+"/local/previewTemplate.html")
+								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css")).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~SKIN.HTML~}", _html)).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"])).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~Header~}", self.injectionHeader.value)).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~Question~}", _previewQuestions )).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] )).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] )).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(rename("currentPreview.html")).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								})
+								.pipe(gulp.dest(__dirname+"/local")).on('error', function(e){
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
+								});
+
+								if(typeof _callback !== "undefined") {
+									console.log("CALLING CALLBACK (in update ppreview file)");
+									console.log("gulpStream", gulpStream)
+									_callback();
+								}
 
 							}
 						});
@@ -274,13 +323,21 @@ core.preview = {
 				setTimeout(function(){
 
 					fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
-						if(_errHtml){ console.log("ERR",_errHtml);}
+						if(_errHtml){ 
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
+							console.log("ERR",_errHtml);
+						}
 						else {
 
 							fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
-								if(_errPreviewQuestions){ console.log("ERR",_errPreviewQuestions);}
+								if(_errPreviewQuestions){ 
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
+									console.log("ERR",_errPreviewQuestions);
+								}
 								else {
-									gulp.src("local/previewTemplate.html")
+									console.log("HARD REFRESH, rewriting preview file");
+
+									gulp.src(__dirname+"/local/previewTemplate.html")
 									.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
 									.pipe(replace("{~SKIN.HTML~}", _html))
 									.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
@@ -289,7 +346,7 @@ core.preview = {
 									.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
 									.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
 									.pipe(rename("currentPreview.html"))
-									.pipe(gulp.dest("local/"));
+									.pipe(gulp.dest(__dirname+"/local"));
 
 									setTimeout(function(){
 										core.preview.init();
@@ -329,7 +386,7 @@ core.preview = {
 				}
 
 				if(core.localData.currentProject.name !== null){
-					preview.src = "local/currentPreview.html";
+					preview.src = __dirname+"/local/currentPreview.html";
 					this.hidden = false;
 				} 
 				else {
@@ -418,7 +475,10 @@ core.preview = {
 						lwip.open(pngImgBuff, 'png', function(err, _image){
 							_image.resize(self.box.ratio.width, self.box.ratio.height, function(){
 								_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
-									if(err) return console.log("ERR:",err);
+									if(err) {
+										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+										return console.log("ERR:",err);
+									}
 								});
 							});
 					  });
@@ -669,7 +729,11 @@ core.preview = {
 						});
 						console.log("mid-snapshot");
 						fs.outputFile(core.localData.currentProject.path+"/assets/"+core.localData.currentBrand+"-"+Date.now()+".png", pngImgBuff, function(err){
-							if(err) return console.log("ERR:",err);
+							if(err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+								return console.log("ERR:",err);
+							} 
+								
 							console.log("post-snapshot");
 						});
 

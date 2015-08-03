@@ -15,12 +15,11 @@ var lwip = require("lwip");
 var gulp = require("gulp");
 var rename = require("gulp-rename");
 var replace = require("gulp-replace");
-var replace = require("gulp-replace");
 var sass = require("gulp-sass");
 var minifyCss = require('gulp-minify-css');
 // var stylus = require("gulp-stylus");
 var autoprefixer = require("gulp-autoprefixer");
-var shell = require("shelljs");
+var shelljs = require("shelljs");
 
 // == Custom ==
 var Global = remote.getGlobal("sharedObject"); //see index.js

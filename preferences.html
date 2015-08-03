@@ -13814,192 +13814,6 @@
 	  else // Plain browser env
 	    mod(CodeMirror);
 	})(function(CodeMirror) {
-	  var defaults = {
-	    pairs: "()[]{}''\"\"",
-	    triples: "",
-	    explode: "[]{}"
-	  };
-	
-	  var Pos = CodeMirror.Pos;
-	
-	  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
-	    if (old && old != CodeMirror.Init) {
-	      cm.removeKeyMap(keyMap);
-	      cm.state.closeBrackets = null;
-	    }
-	    if (val) {
-	      cm.state.closeBrackets = val;
-	      cm.addKeyMap(keyMap);
-	    }
-	  });
-	
-	  function getOption(conf, name) {
-	    if (name == "pairs" && typeof conf == "string") return conf;
-	    if (typeof conf == "object" && conf[name] != null) return conf[name];
-	    return defaults[name];
-	  }
-	
-	  var bind = defaults.pairs + "`";
-	  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};
-	  for (var i = 0; i < bind.length; i++)
-	    keyMap["'" + bind.charAt(i) + "'"] = handler(bind.charAt(i));
-	
-	  function handler(ch) {
-	    return function(cm) { return handleChar(cm, ch); };
-	  }
-	
-	  function getConfig(cm) {
-	    var deflt = cm.state.closeBrackets;
-	    if (!deflt) return null;
-	    var mode = cm.getModeAt(cm.getCursor());
-	    return mode.closeBrackets || deflt;
-	  }
-	
-	  function handleBackspace(cm) {
-	    var conf = getConfig(cm);
-	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
-	
-	    var pairs = getOption(conf, "pairs");
-	    var ranges = cm.listSelections();
-	    for (var i = 0; i < ranges.length; i++) {
-	      if (!ranges[i].empty()) return CodeMirror.Pass;
-	      var around = charsAround(cm, ranges[i].head);
-	      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;
-	    }
-	    for (var i = ranges.length - 1; i >= 0; i--) {
-	      var cur = ranges[i].head;
-	      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1));
-	    }
-	  }
-	
-	  function handleEnter(cm) {
-	    var conf = getConfig(cm);
-	    var explode = conf && getOption(conf, "explode");
-	    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;
-	
-	    var ranges = cm.listSelections();
-	    for (var i = 0; i < ranges.length; i++) {
-	      if (!ranges[i].empty()) return CodeMirror.Pass;
-	      var around = charsAround(cm, ranges[i].head);
-	      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;
-	    }
-	    cm.operation(function() {
-	      cm.replaceSelection("\n\n", null);
-	      cm.execCommand("goCharLeft");
-	      ranges = cm.listSelections();
-	      for (var i = 0; i < ranges.length; i++) {
-	        var line = ranges[i].head.line;
-	        cm.indentLine(line, null, true);
-	        cm.indentLine(line + 1, null, true);
-	      }
-	    });
-	  }
-	
-	  function handleChar(cm, ch) {
-	    var conf = getConfig(cm);
-	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
-	
-	    var pairs = getOption(conf, "pairs");
-	    var pos = pairs.indexOf(ch);
-	    if (pos == -1) return CodeMirror.Pass;
-	    var triples = getOption(conf, "triples");
-	
-	    var identical = pairs.charAt(pos + 1) == ch;
-	    var ranges = cm.listSelections();
-	    var opening = pos % 2 == 0;
-	
-	    var type, next;
-	    for (var i = 0; i < ranges.length; i++) {
-	      var range = ranges[i], cur = range.head, curType;
-	      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));
-	      if (opening && !range.empty()) {
-	        curType = "surround";
-	      } else if ((identical || !opening) && next == ch) {
-	        if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)
-	          curType = "skipThree";
-	        else
-	          curType = "skip";
-	      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&
-	                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch &&
-	                 (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != ch)) {
-	        curType = "addFour";
-	      } else if (identical) {
-	        if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, ch)) curType = "both";
-	        else return CodeMirror.Pass;
-	      } else if (opening && (cm.getLine(cur.line).length == cur.ch ||
-	                             isClosingBracket(next, pairs) ||
-	                             /\s/.test(next))) {
-	        curType = "both";
-	      } else {
-	        return CodeMirror.Pass;
-	      }
-	      if (!type) type = curType;
-	      else if (type != curType) return CodeMirror.Pass;
-	    }
-	
-	    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;
-	    var right = pos % 2 ? ch : pairs.charAt(pos + 1);
-	    cm.operation(function() {
-	      if (type == "skip") {
-	        cm.execCommand("goCharRight");
-	      } else if (type == "skipThree") {
-	        for (var i = 0; i < 3; i++)
-	          cm.execCommand("goCharRight");
-	      } else if (type == "surround") {
-	        var sels = cm.getSelections();
-	        for (var i = 0; i < sels.length; i++)
-	          sels[i] = left + sels[i] + right;
-	        cm.replaceSelections(sels, "around");
-	      } else if (type == "both") {
-	        cm.replaceSelection(left + right, null);
-	        cm.triggerElectric(left + right);
-	        cm.execCommand("goCharLeft");
-	      } else if (type == "addFour") {
-	        cm.replaceSelection(left + left + left + left, "before");
-	        cm.execCommand("goCharRight");
-	      }
-	    });
-	  }
-	
-	  function isClosingBracket(ch, pairs) {
-	    var pos = pairs.lastIndexOf(ch);
-	    return pos > -1 && pos % 2 == 1;
-	  }
-	
-	  function charsAround(cm, pos) {
-	    var str = cm.getRange(Pos(pos.line, pos.ch - 1),
-	                          Pos(pos.line, pos.ch + 1));
-	    return str.length == 2 ? str : null;
-	  }
-	
-	  // Project the token type that will exists after the given char is
-	  // typed, and use it to determine whether it would cause the start
-	  // of a string token.
-	  function enteringString(cm, pos, ch) {
-	    var line = cm.getLine(pos.line);
-	    var token = cm.getTokenAt(pos);
-	    if (/\bstring2?\b/.test(token.type)) return false;
-	    var stream = new CodeMirror.StringStream(line.slice(0, pos.ch) + ch + line.slice(pos.ch), 4);
-	    stream.pos = stream.start = token.start;
-	    for (;;) {
-	      var type1 = cm.getMode().token(stream, token.state);
-	      if (stream.pos >= pos.ch + 1) return /\bstring2?\b/.test(type1);
-	      stream.start = stream.pos;
-	    }
-	  }
-	});
-	
-	// CodeMirror, copyright (c) by Marijn Haverbeke and others
-	// Distributed under an MIT license: http://codemirror.net/LICENSE
-	
-	(function(mod) {
-	  if (typeof exports == "object" && typeof module == "object") // CommonJS
-	    mod(require("../../lib/codemirror"));
-	  else if (typeof define == "function" && define.amd) // AMD
-	    define(["../../lib/codemirror"], mod);
-	  else // Plain browser env
-	    mod(CodeMirror);
-	})(function(CodeMirror) {
 	  "use strict";
 	
 	  var noOptions = {};
@@ -14262,8 +14076,6 @@
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
 	
-	// Open simple dialogs on top of an editor. Relies on dialog.css.
-	
 	(function(mod) {
 	  if (typeof exports == "object" && typeof module == "object") // CommonJS
 	    mod(require("../../lib/codemirror"));
@@ -14272,149 +14084,179 @@
 	  else // Plain browser env
 	    mod(CodeMirror);
 	})(function(CodeMirror) {
-	  function dialogDiv(cm, template, bottom) {
-	    var wrap = cm.getWrapperElement();
-	    var dialog;
-	    dialog = wrap.appendChild(document.createElement("div"));
-	    if (bottom)
-	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-bottom";
-	    else
-	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-top";
+	  var defaults = {
+	    pairs: "()[]{}''\"\"",
+	    triples: "",
+	    explode: "[]{}"
+	  };
 	
-	    if (typeof template == "string") {
-	      dialog.innerHTML = template;
-	    } else { // Assuming it's a detached DOM element.
-	      dialog.appendChild(template);
+	  var Pos = CodeMirror.Pos;
+	
+	  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
+	    if (old && old != CodeMirror.Init) {
+	      cm.removeKeyMap(keyMap);
+	      cm.state.closeBrackets = null;
 	    }
-	    return dialog;
-	  }
-	
-	  function closeNotification(cm, newVal) {
-	    if (cm.state.currentNotificationClose)
-	      cm.state.currentNotificationClose();
-	    cm.state.currentNotificationClose = newVal;
-	  }
-	
-	  CodeMirror.defineExtension("openDialog", function(template, callback, options) {
-	    if (!options) options = {};
-	
-	    closeNotification(this, null);
-	
-	    var dialog = dialogDiv(this, template, options.bottom);
-	    var closed = false, me = this;
-	    function close(newVal) {
-	      if (typeof newVal == 'string') {
-	        inp.value = newVal;
-	      } else {
-	        if (closed) return;
-	        closed = true;
-	        dialog.parentNode.removeChild(dialog);
-	        me.focus();
-	
-	        if (options.onClose) options.onClose(dialog);
-	      }
-	    }
-	
-	    var inp = dialog.getElementsByTagName("input")[0], button;
-	    if (inp) {
-	      if (options.value) {
-	        inp.value = options.value;
-	        if (options.selectValueOnOpen !== false) {
-	          inp.select();
-	        }
-	      }
-	
-	      if (options.onInput)
-	        CodeMirror.on(inp, "input", function(e) { options.onInput(e, inp.value, close);});
-	      if (options.onKeyUp)
-	        CodeMirror.on(inp, "keyup", function(e) {options.onKeyUp(e, inp.value, close);});
-	
-	      CodeMirror.on(inp, "keydown", function(e) {
-	        if (options && options.onKeyDown && options.onKeyDown(e, inp.value, close)) { return; }
-	        if (e.keyCode == 27 || (options.closeOnEnter !== false && e.keyCode == 13)) {
-	          inp.blur();
-	          CodeMirror.e_stop(e);
-	          close();
-	        }
-	        if (e.keyCode == 13) callback(inp.value, e);
-	      });
-	
-	      if (options.closeOnBlur !== false) CodeMirror.on(inp, "blur", close);
-	
-	      inp.focus();
-	    } else if (button = dialog.getElementsByTagName("button")[0]) {
-	      CodeMirror.on(button, "click", function() {
-	        close();
-	        me.focus();
-	      });
-	
-	      if (options.closeOnBlur !== false) CodeMirror.on(button, "blur", close);
-	
-	      button.focus();
-	    }
-	    return close;
-	  });
-	
-	  CodeMirror.defineExtension("openConfirm", function(template, callbacks, options) {
-	    closeNotification(this, null);
-	    var dialog = dialogDiv(this, template, options && options.bottom);
-	    var buttons = dialog.getElementsByTagName("button");
-	    var closed = false, me = this, blurring = 1;
-	    function close() {
-	      if (closed) return;
-	      closed = true;
-	      dialog.parentNode.removeChild(dialog);
-	      me.focus();
-	    }
-	    buttons[0].focus();
-	    for (var i = 0; i < buttons.length; ++i) {
-	      var b = buttons[i];
-	      (function(callback) {
-	        CodeMirror.on(b, "click", function(e) {
-	          CodeMirror.e_preventDefault(e);
-	          close();
-	          if (callback) callback(me);
-	        });
-	      })(callbacks[i]);
-	      CodeMirror.on(b, "blur", function() {
-	        --blurring;
-	        setTimeout(function() { if (blurring <= 0) close(); }, 200);
-	      });
-	      CodeMirror.on(b, "focus", function() { ++blurring; });
+	    if (val) {
+	      cm.state.closeBrackets = val;
+	      cm.addKeyMap(keyMap);
 	    }
 	  });
 	
-	  /*
-	   * openNotification
-	   * Opens a notification, that can be closed with an optional timer
-	   * (default 5000ms timer) and always closes on click.
-	   *
-	   * If a notification is opened while another is opened, it will close the
-	   * currently opened one and open the new one immediately.
-	   */
-	  CodeMirror.defineExtension("openNotification", function(template, options) {
-	    closeNotification(this, close);
-	    var dialog = dialogDiv(this, template, options && options.bottom);
-	    var closed = false, doneTimer;
-	    var duration = options && typeof options.duration !== "undefined" ? options.duration : 5000;
+	  function getOption(conf, name) {
+	    if (name == "pairs" && typeof conf == "string") return conf;
+	    if (typeof conf == "object" && conf[name] != null) return conf[name];
+	    return defaults[name];
+	  }
 	
-	    function close() {
-	      if (closed) return;
-	      closed = true;
-	      clearTimeout(doneTimer);
-	      dialog.parentNode.removeChild(dialog);
+	  var bind = defaults.pairs + "`";
+	  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};
+	  for (var i = 0; i < bind.length; i++)
+	    keyMap["'" + bind.charAt(i) + "'"] = handler(bind.charAt(i));
+	
+	  function handler(ch) {
+	    return function(cm) { return handleChar(cm, ch); };
+	  }
+	
+	  function getConfig(cm) {
+	    var deflt = cm.state.closeBrackets;
+	    if (!deflt) return null;
+	    var mode = cm.getModeAt(cm.getCursor());
+	    return mode.closeBrackets || deflt;
+	  }
+	
+	  function handleBackspace(cm) {
+	    var conf = getConfig(cm);
+	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+	
+	    var pairs = getOption(conf, "pairs");
+	    var ranges = cm.listSelections();
+	    for (var i = 0; i < ranges.length; i++) {
+	      if (!ranges[i].empty()) return CodeMirror.Pass;
+	      var around = charsAround(cm, ranges[i].head);
+	      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;
 	    }
+	    for (var i = ranges.length - 1; i >= 0; i--) {
+	      var cur = ranges[i].head;
+	      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1));
+	    }
+	  }
 	
-	    CodeMirror.on(dialog, 'click', function(e) {
-	      CodeMirror.e_preventDefault(e);
-	      close();
+	  function handleEnter(cm) {
+	    var conf = getConfig(cm);
+	    var explode = conf && getOption(conf, "explode");
+	    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;
+	
+	    var ranges = cm.listSelections();
+	    for (var i = 0; i < ranges.length; i++) {
+	      if (!ranges[i].empty()) return CodeMirror.Pass;
+	      var around = charsAround(cm, ranges[i].head);
+	      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+	    }
+	    cm.operation(function() {
+	      cm.replaceSelection("\n\n", null);
+	      cm.execCommand("goCharLeft");
+	      ranges = cm.listSelections();
+	      for (var i = 0; i < ranges.length; i++) {
+	        var line = ranges[i].head.line;
+	        cm.indentLine(line, null, true);
+	        cm.indentLine(line + 1, null, true);
+	      }
 	    });
+	  }
 	
-	    if (duration)
-	      doneTimer = setTimeout(close, duration);
+	  function handleChar(cm, ch) {
+	    var conf = getConfig(cm);
+	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
 	
-	    return close;
-	  });
+	    var pairs = getOption(conf, "pairs");
+	    var pos = pairs.indexOf(ch);
+	    if (pos == -1) return CodeMirror.Pass;
+	    var triples = getOption(conf, "triples");
+	
+	    var identical = pairs.charAt(pos + 1) == ch;
+	    var ranges = cm.listSelections();
+	    var opening = pos % 2 == 0;
+	
+	    var type, next;
+	    for (var i = 0; i < ranges.length; i++) {
+	      var range = ranges[i], cur = range.head, curType;
+	      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));
+	      if (opening && !range.empty()) {
+	        curType = "surround";
+	      } else if ((identical || !opening) && next == ch) {
+	        if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)
+	          curType = "skipThree";
+	        else
+	          curType = "skip";
+	      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&
+	                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch &&
+	                 (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != ch)) {
+	        curType = "addFour";
+	      } else if (identical) {
+	        if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, ch)) curType = "both";
+	        else return CodeMirror.Pass;
+	      } else if (opening && (cm.getLine(cur.line).length == cur.ch ||
+	                             isClosingBracket(next, pairs) ||
+	                             /\s/.test(next))) {
+	        curType = "both";
+	      } else {
+	        return CodeMirror.Pass;
+	      }
+	      if (!type) type = curType;
+	      else if (type != curType) return CodeMirror.Pass;
+	    }
+	
+	    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;
+	    var right = pos % 2 ? ch : pairs.charAt(pos + 1);
+	    cm.operation(function() {
+	      if (type == "skip") {
+	        cm.execCommand("goCharRight");
+	      } else if (type == "skipThree") {
+	        for (var i = 0; i < 3; i++)
+	          cm.execCommand("goCharRight");
+	      } else if (type == "surround") {
+	        var sels = cm.getSelections();
+	        for (var i = 0; i < sels.length; i++)
+	          sels[i] = left + sels[i] + right;
+	        cm.replaceSelections(sels, "around");
+	      } else if (type == "both") {
+	        cm.replaceSelection(left + right, null);
+	        cm.triggerElectric(left + right);
+	        cm.execCommand("goCharLeft");
+	      } else if (type == "addFour") {
+	        cm.replaceSelection(left + left + left + left, "before");
+	        cm.execCommand("goCharRight");
+	      }
+	    });
+	  }
+	
+	  function isClosingBracket(ch, pairs) {
+	    var pos = pairs.lastIndexOf(ch);
+	    return pos > -1 && pos % 2 == 1;
+	  }
+	
+	  function charsAround(cm, pos) {
+	    var str = cm.getRange(Pos(pos.line, pos.ch - 1),
+	                          Pos(pos.line, pos.ch + 1));
+	    return str.length == 2 ? str : null;
+	  }
+	
+	  // Project the token type that will exists after the given char is
+	  // typed, and use it to determine whether it would cause the start
+	  // of a string token.
+	  function enteringString(cm, pos, ch) {
+	    var line = cm.getLine(pos.line);
+	    var token = cm.getTokenAt(pos);
+	    if (/\bstring2?\b/.test(token.type)) return false;
+	    var stream = new CodeMirror.StringStream(line.slice(0, pos.ch) + ch + line.slice(pos.ch), 4);
+	    stream.pos = stream.start = token.start;
+	    for (;;) {
+	      var type1 = cm.getMode().token(stream, token.state);
+	      if (stream.pos >= pos.ch + 1) return /\bstring2?\b/.test(type1);
+	      stream.start = stream.pos;
+	    }
+	  }
 	});
 	
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14582,6 +14424,164 @@
 	  CodeMirror.commands.clearSearch = clearSearch;
 	  CodeMirror.commands.replace = replace;
 	  CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
+	});
+	
+	// CodeMirror, copyright (c) by Marijn Haverbeke and others
+	// Distributed under an MIT license: http://codemirror.net/LICENSE
+	
+	// Open simple dialogs on top of an editor. Relies on dialog.css.
+	
+	(function(mod) {
+	  if (typeof exports == "object" && typeof module == "object") // CommonJS
+	    mod(require("../../lib/codemirror"));
+	  else if (typeof define == "function" && define.amd) // AMD
+	    define(["../../lib/codemirror"], mod);
+	  else // Plain browser env
+	    mod(CodeMirror);
+	})(function(CodeMirror) {
+	  function dialogDiv(cm, template, bottom) {
+	    var wrap = cm.getWrapperElement();
+	    var dialog;
+	    dialog = wrap.appendChild(document.createElement("div"));
+	    if (bottom)
+	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-bottom";
+	    else
+	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-top";
+	
+	    if (typeof template == "string") {
+	      dialog.innerHTML = template;
+	    } else { // Assuming it's a detached DOM element.
+	      dialog.appendChild(template);
+	    }
+	    return dialog;
+	  }
+	
+	  function closeNotification(cm, newVal) {
+	    if (cm.state.currentNotificationClose)
+	      cm.state.currentNotificationClose();
+	    cm.state.currentNotificationClose = newVal;
+	  }
+	
+	  CodeMirror.defineExtension("openDialog", function(template, callback, options) {
+	    if (!options) options = {};
+	
+	    closeNotification(this, null);
+	
+	    var dialog = dialogDiv(this, template, options.bottom);
+	    var closed = false, me = this;
+	    function close(newVal) {
+	      if (typeof newVal == 'string') {
+	        inp.value = newVal;
+	      } else {
+	        if (closed) return;
+	        closed = true;
+	        dialog.parentNode.removeChild(dialog);
+	        me.focus();
+	
+	        if (options.onClose) options.onClose(dialog);
+	      }
+	    }
+	
+	    var inp = dialog.getElementsByTagName("input")[0], button;
+	    if (inp) {
+	      if (options.value) {
+	        inp.value = options.value;
+	        if (options.selectValueOnOpen !== false) {
+	          inp.select();
+	        }
+	      }
+	
+	      if (options.onInput)
+	        CodeMirror.on(inp, "input", function(e) { options.onInput(e, inp.value, close);});
+	      if (options.onKeyUp)
+	        CodeMirror.on(inp, "keyup", function(e) {options.onKeyUp(e, inp.value, close);});
+	
+	      CodeMirror.on(inp, "keydown", function(e) {
+	        if (options && options.onKeyDown && options.onKeyDown(e, inp.value, close)) { return; }
+	        if (e.keyCode == 27 || (options.closeOnEnter !== false && e.keyCode == 13)) {
+	          inp.blur();
+	          CodeMirror.e_stop(e);
+	          close();
+	        }
+	        if (e.keyCode == 13) callback(inp.value, e);
+	      });
+	
+	      if (options.closeOnBlur !== false) CodeMirror.on(inp, "blur", close);
+	
+	      inp.focus();
+	    } else if (button = dialog.getElementsByTagName("button")[0]) {
+	      CodeMirror.on(button, "click", function() {
+	        close();
+	        me.focus();
+	      });
+	
+	      if (options.closeOnBlur !== false) CodeMirror.on(button, "blur", close);
+	
+	      button.focus();
+	    }
+	    return close;
+	  });
+	
+	  CodeMirror.defineExtension("openConfirm", function(template, callbacks, options) {
+	    closeNotification(this, null);
+	    var dialog = dialogDiv(this, template, options && options.bottom);
+	    var buttons = dialog.getElementsByTagName("button");
+	    var closed = false, me = this, blurring = 1;
+	    function close() {
+	      if (closed) return;
+	      closed = true;
+	      dialog.parentNode.removeChild(dialog);
+	      me.focus();
+	    }
+	    buttons[0].focus();
+	    for (var i = 0; i < buttons.length; ++i) {
+	      var b = buttons[i];
+	      (function(callback) {
+	        CodeMirror.on(b, "click", function(e) {
+	          CodeMirror.e_preventDefault(e);
+	          close();
+	          if (callback) callback(me);
+	        });
+	      })(callbacks[i]);
+	      CodeMirror.on(b, "blur", function() {
+	        --blurring;
+	        setTimeout(function() { if (blurring <= 0) close(); }, 200);
+	      });
+	      CodeMirror.on(b, "focus", function() { ++blurring; });
+	    }
+	  });
+	
+	  /*
+	   * openNotification
+	   * Opens a notification, that can be closed with an optional timer
+	   * (default 5000ms timer) and always closes on click.
+	   *
+	   * If a notification is opened while another is opened, it will close the
+	   * currently opened one and open the new one immediately.
+	   */
+	  CodeMirror.defineExtension("openNotification", function(template, options) {
+	    closeNotification(this, close);
+	    var dialog = dialogDiv(this, template, options && options.bottom);
+	    var closed = false, doneTimer;
+	    var duration = options && typeof options.duration !== "undefined" ? options.duration : 5000;
+	
+	    function close() {
+	      if (closed) return;
+	      closed = true;
+	      clearTimeout(doneTimer);
+	      dialog.parentNode.removeChild(dialog);
+	    }
+	
+	    CodeMirror.on(dialog, 'click', function(e) {
+	      CodeMirror.e_preventDefault(e);
+	      close();
+	    });
+	
+	    if (duration)
+	      doneTimer = setTimeout(close, duration);
+	
+	    return close;
+	  });
 	});
 	
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -15375,11 +15375,12 @@
 		persistentDataFile: {
 	
 			read: function (_successCallback){
-				fs.readJson(appRoot+"/local/persistent-data.json", function(_err, _data){
+				fs.readJson(__dirname+"/local/persistent-data.json", function(_err, _data){
 					if(!_err) {
 						if(typeof _successCallback === "function") _successCallback(_data);
 					}
 					else {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 						console.log("readPersistantData ERROR:",_err);
 					}
 				});
@@ -15390,8 +15391,11 @@
 				_DATA.recentBrands = core.localData.brands.recent;
 				_DATA.snippets = core.localData.snippets.list;
 				//_DATA.x = core.localData.x;
-				fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
-					if(err) alert("Error Saving Changes");
+				fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
+					if(err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+						alert("Error Saving Changes");
+					}
 					else if(_successCallback!==undefined){
 						var args = Array.prototype.splice.call(arguments, 1);
 						_successCallback.apply(null, args);
@@ -15407,12 +15411,13 @@
 		userSettingsFile: {
 	
 			read: function(_successCallback){
-				fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+				fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
 					if(!_err){ 
 						
 						if(typeof _successCallback === "function") _successCallback(_data);
 					}
 					else {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 						console.log("User Settings READ ERROR:", _err);
 					}
 				});
@@ -15422,6 +15427,7 @@
 				var self = this;
 	
 				if(core.localData.userSettings === null){
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
 					alert("Error with settings, sucks to be you.");
 					return;
 				}
@@ -15429,8 +15435,12 @@
 				self.read(function(_data){
 					if(core.localData.userSettings !== _data){
 	
-						fs.writeJson(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
-							if(err) alert("Error Saving Changes");
+						fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
+							if(err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+								alert("Error Saving Changes");
+							} 
+								
 							else _successCallback();
 						});
 	
@@ -15445,7 +15455,6 @@
 	
 		resetFinder: function(){
 	
-			var shelljs = require('shelljs');
 	
 			// Sync call to exec()
 			// var version = exec('node --version', {silent:true}).output;
@@ -15501,6 +15510,8 @@
 							if(!err) {
 								core.resetFinder();
 								next();
+							} else {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 							}
 						});
 					}
@@ -15552,6 +15563,7 @@
 				console.log(typeof core.localData.brands.path);
 				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 					if(err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						console.error("brand exists error",err)
 						return _callback(false);
 					}
@@ -15579,6 +15591,7 @@
 					console.log(typeof core.brands.getFullPathToBrands());
 					fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
 						if(err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 							return _callback(false);
 						}
 						else {
@@ -15622,7 +15635,10 @@
 						var projectList = [];
 						console.log(typeof path);
 						fs.readdir(path, function(_err, _projects){
-							if(_err) console.log("error listing projects");
+							if(_err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+								console.log("error listing projects");
+							}
 							for(var i = 0, ii = _projects.length; i < ii; i++){
 								var stats = fs.statSync(path+"/"+_projects[i]);
 								if(stats.isDirectory()) projectList.push(_projects[i]);
@@ -15650,6 +15666,8 @@
 							fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 								if(!err) {
 									next();
+								} else {
+									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 								}
 							});
 						} else {
@@ -15668,7 +15686,7 @@
 	
 				showInFinder: function(){
 					if(core.localData.currentProject.name !== null){
-						shell.exec('open '+core.localData.currentProject.path, function(status, output) {
+						shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
 							console.log('Exit status:', status);
 							console.log('Program output:', output);
 						});
@@ -15685,7 +15703,10 @@
 						var path = core.localData.currentProject.path;
 						var fileList = [];
 						fs.readdir(path+"/assets", function(_err, _files){
-							if(_err) console.log("error listing project assets");
+							if(_err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+								console.log("error listing project assets");
+							}
 							console.log("the files",_files);
 							for(var i = 0, ii = _files.length; i < ii; i++){
 								var stats = fs.statSync(path+"/assets/"+_files[i]);
@@ -15697,7 +15718,7 @@
 					},
 	
 					viewImage: function(path){
-						shell.exec('open '+path, function(status, output) {
+						shelljs.exec('open '+path, function(status, output) {
 							console.log('Exit status:', status);
 							console.log('Program output:', output);
 						});
@@ -15710,7 +15731,10 @@
 						
 						var fileList = [];
 						fs.readdir(path, function(_err, _files){
-							if(_err) console.log("error listing projects");
+							if(_err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+								console.log("error listing projects");
+							}
 							for(var i = 0, ii = _files.length; i < ii; i++){
 								var stats = fs.statSync(path+"/"+_files[i]);
 								if(stats.isFile()) fileList.push(_files[i]);
@@ -15795,8 +15819,11 @@
 	
 						var _persistent_data = JSON.stringify(_persistent_data);
 	
-						fs.writeFile(Global.appRoot+"/local/persistent-data.json", _persistent_data, function(err){
-							if(err) alert("Error Saving Changes");
+						fs.writeFile(__dirname+"/local/persistent-data.json", _persistent_data, function(err){
+							if(err) {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+								alert("Error Saving Changes");
+							}
 							if(_callback) _callback();
 						});
 	
@@ -15811,7 +15838,7 @@
 	
 			},
 	
-			pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
+			pathToBaseFiles: __dirname+"/local/BaseFiles",
 	
 			updateUserSettings: function(_callback){ // should only be run on app init
 				var self = this;
@@ -15831,15 +15858,13 @@
 	
 	
 			updatePreviewFilesList: function(_callback){
-				var path = appRoot+"/local/preview-files";
-	
-	
-				fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+				fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
 					if(!_err){ 
 						
 						if(typeof _successCallback === "function") _successCallback(_data);
 					}
 					else {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 						console.log("User Settings READ ERROR:", _err);
 					}
 				});
@@ -15859,7 +15884,10 @@
 				console.log(typeof core.localData.brands.path);
 				console.log("path",pathToBrands);
 				fs.readdir(pathToBrands, function(_err, _files){
-					if(_err) console.log("error");
+					if(_err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+						console.log("error");
+					}
 					for(var i = 0, ii = _files.length; i < ii; i++) {
 						var stats = fs.statSync(pathToBrands+"/"+_files[i]);
 						if(stats.isDirectory()) brandList.push(_files[i]);
@@ -15930,7 +15958,7 @@
 	
 			setCurrentPreviewQuestionsFile: function(_fileName){
 				console.log("filename:",_fileName);
-				var path = Global.appRoot+"/local/preview-files";
+				var path = __dirname+"/local/preview-files";
 				this.previewQuestionFiles.current.name = _fileName;
 				this.previewQuestionFiles.current.path = path+"/"+_fileName;
 				if(core.localData.currentProject.name !== null){
@@ -15945,7 +15973,10 @@
 		getFiles: function(path, _callback){
 			var fileList = [];
 			fs.readdir(path, function(_err, _files){
-				if(_err) console.log("error getting files");
+				if(_err) {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+					console.log("error getting files");
+				}
 				for(var i = 0, ii = _files.length; i < ii; i++){
 					var stats = fs.statSync(path+"/"+_files[i]);
 					if(stats.isFile()) fileList.push(_files[i]);
@@ -15980,7 +16011,10 @@
 			}
 	
 			fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
-				if(err){ console.log("ERR",err);}
+				if(err){ 
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+					console.log("ERR",err);
+				}
 				else {
 					myCodeMirror.setValue(data);
 					myCodeMirror.markClean();
@@ -16034,7 +16068,10 @@
 			saveEditorFile: function(){
 				if(core.localData.currentFile.path !== null){
 					fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
-						if(err){ console.log("ERR",err);}
+						if(err){ 
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+							console.log("ERR",err);
+					}
 						else {
 							
 							editorCore.dropdowns.files.setClean();
@@ -16068,7 +16105,7 @@
 				// 'menu' is declared in main.js
 				menu = new Menu();
 				var recentSnippetsList = [];
-				fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+				fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 					if(!_err) {
 						recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
 	
@@ -16088,6 +16125,8 @@
 						menu.append( new MenuItem({ type: 'separator' }) );
 						menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
 	
+					} else {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 					}
 				});
 			}
@@ -17037,7 +17076,8 @@
 	var Data = (function(){
 		var snippetsList;
 		var currentSnippet = null;
-		var preferncesData;
+		var preferencesData;
+		var pathToBrands;
 		var previewFilesList = [];
 	
 	
@@ -17062,6 +17102,13 @@
 						if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 					}
 				});
+	
+				fs.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+					if(_err) return console.error("local init ERROR:",_err);
+					preferencesData = JSON.parse(_data);
+					pathToBrands = preferencesData.files.brands.path;
+					console.log("preferencesData:",preferencesData);
+				});
 			}
 		};
 	
@@ -17076,11 +17123,22 @@
 	
 					fs.writeFile(appRoot+"/local/persistent-data.json",persData,function(_err){
 						if(!_err){
-							document.getElementById('Q-logo').classList.add("saved");
-							setTimeout(function(){
-								Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
-								Global.preferencesWindow.close();
-							}, 450);
+	
+							fs.writeFile(appRoot+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
+								if(!_err){
+	
+									document.getElementById('Q-logo').classList.add("saved");
+									setTimeout(function(){
+										Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
+										Global.preferencesWindow.close();
+									}, 450);
+	
+								}
+								else {
+									alert("Save Error!")
+								}
+							});
+									
 						} else {
 							console.log("ERROR", _err);
 						}
@@ -17372,6 +17430,9 @@
 	
 		Eve.on("manageSnippetsInit", sanitizeSnippets);
 	
+		Eve.on("pathToBrands-inputChange", function(){
+			pathToBrands = preferencesData.files.brands.path = document.getElementById("path-to-brands").value;
+		});
 	
 	
 	
@@ -17386,7 +17447,12 @@
 	
 			getPreviewFiles: function(){
 				return previewFilesList;
+			},
+	
+			getPathToBrands: function(){
+				return pathToBrands;
 			}
+	
 		}
 	
 	})();
@@ -17596,9 +17662,22 @@
 			var container = etc.el("form", {id:"filesForm", className:"files"});
 			container.append([
 				etc.el("label", {id:"path-to-brands-label"}).append([
-					etc.el("div", {},"Path To Brands"),
+					etc.el("div", {},"path to Brands"),
 					etc.el("span", {id:"homeDirectory"}, process.env.HOME+"/ "),
-					etc.el("input", {id:"path-to-brands"})
+					etc.el("input", {
+						id:"path-to-brands", value:Data.getPathToBrands(),
+						events: {
+							blur: function(){
+								Eve.emit("pathToBrands-inputChange");
+							},
+							keyup: function(){
+								Eve.emit("pathToBrands-inputChange");
+							},
+							paste: function(){
+								Eve.emit("pathToBrands-inputChange");
+							}
+						}
+					})
 				]),
 				etc.el("br")
 			]);
@@ -17628,7 +17707,11 @@
 		var previewFilesTemplate = etc.template(function(){
 			var filesList = Data.getPreviewFiles();
 	
-			var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"});
+			var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"})
+			//
+			.append("THIS IS NOT YET FUNCTIONAL!")
+			//
+			;
 	
 			for(var i = 0, ii = filesList.length; i < ii; i++){
 				previewFilesCont.append(
@@ -17682,8 +17765,17 @@
 				}
 			}},"Manage Snippets");
 	
+			var manageKeybindingsBtn = etc.el("button",{events:{
+				click:function(e){
+					e.preventDefault();
+					alert("Not yet functional. Sorry.")
+					// Eve.emit("selectPanel", "manageSnippets")
+				}
+			}},"Manage Key Bindings");
+	
 			return container.append([
-				manageSnippetsBtn
+				manageSnippetsBtn,
+				manageKeybindingsBtn
 			]);
 		});
 	

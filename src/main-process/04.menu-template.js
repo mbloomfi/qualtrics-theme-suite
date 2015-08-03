@@ -47,7 +47,7 @@ var menuTemplate = [
       {
         label: 'Finder Hard Reset',
         click: function(){
-           shell.exec("killall Finder", function(status, output){
+           shelljs.exec("killall Finder", function(status, output){
             console.log('Exit status:', status);
             console.log('Program output:', output);
            })
@@ -516,12 +516,15 @@ var menuTemplate = [
             global.sharedObject.devToolsOpen = true;
           }  
         }
-      },
+      }
+
+      ,
       {
         label: "* Electron Developer Tools",
         accelerator: "Alt+Command+C",
         click: function(){mainWindow.toggleDevTools();}
       }
+
     ]
   },
   {
@@ -560,13 +563,14 @@ function setPreviewFiles(_callback){
       (function(previewFilesList, i){
 
         // var fileStats = fs.statSync("./local/preview-files/"+previewFilesList[i]);
-        
+          console.log("Object:",OBJECT.files.defaultPreviewFile);
+          console.log("previewFilesList",previewFilesList);
 
           menuTemplate[4].submenu[0].submenu[i] = {
             label: previewFilesList[i].verboseName,
             type: "radio",
             name: "previewFile",
-            checked: false,
+            checked: (OBJECT.files.defaultPreviewFile === previewFilesList[i].fileName)?true:false,
             click: function(){
               mainWindow.webContents.executeJavaScript("core.localData.setCurrentPreviewQuestionsFile('"+previewFilesList[i].fileName+"');");
             }

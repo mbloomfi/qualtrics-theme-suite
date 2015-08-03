@@ -4,7 +4,7 @@ var fs = require("fs");
 
 process.on('uncaughtException', function(err) {
     // handle the error safely
-    fs.appendFile("errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){})
+    fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 })
 
 var app = require("app");
@@ -12,7 +12,7 @@ var BrowserWindow = require("browser-window");
 var gulp = require("gulp");
 var Menu = require("menu");
 var ipc = require("ipc");
-var shell = require('shelljs');
+var shelljs = require('shelljs');
 
 
 global.sharedObject = {
@@ -188,7 +188,7 @@ var menuTemplate = [
       {
         label: 'Finder Hard Reset',
         click: function(){
-           shell.exec("killall Finder", function(status, output){
+           shelljs.exec("killall Finder", function(status, output){
             console.log('Exit status:', status);
             console.log('Program output:', output);
            })
@@ -657,12 +657,15 @@ var menuTemplate = [
             global.sharedObject.devToolsOpen = true;
           }  
         }
-      },
+      }
+
+      ,
       {
         label: "* Electron Developer Tools",
         accelerator: "Alt+Command+C",
         click: function(){mainWindow.toggleDevTools();}
       }
+
     ]
   },
   {
@@ -701,13 +704,14 @@ function setPreviewFiles(_callback){
       (function(previewFilesList, i){
 
         // var fileStats = fs.statSync("./local/preview-files/"+previewFilesList[i]);
-        
+          console.log("Object:",OBJECT.files.defaultPreviewFile);
+          console.log("previewFilesList",previewFilesList);
 
           menuTemplate[4].submenu[0].submenu[i] = {
             label: previewFilesList[i].verboseName,
             type: "radio",
             name: "previewFile",
-            checked: false,
+            checked: (OBJECT.files.defaultPreviewFile === previewFilesList[i].fileName)?true:false,
             click: function(){
               mainWindow.webContents.executeJavaScript("core.localData.setCurrentPreviewQuestionsFile('"+previewFilesList[i].fileName+"');");
             }
@@ -790,8 +794,8 @@ app.on("ready", function(){
 
 		// Run Gulp Listening
 
-	  runGulp(); // This will only be run when project is loaded
-	  runGulp_Dev(); // comment-out for production
+	  // runGulp(); // This will only be run when project is loaded
+	  // runGulp_Dev(); // comment-out for production
 	});
 
 	  

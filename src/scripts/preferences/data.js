@@ -1,7 +1,8 @@
 var Data = (function(){
 	var snippetsList;
 	var currentSnippet = null;
-	var preferncesData;
+	var preferencesData;
+	var pathToBrands;
 	var previewFilesList = [];
 
 
@@ -26,6 +27,13 @@ var Data = (function(){
 					if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 				}
 			});
+
+			fs.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+				if(_err) return console.error("local init ERROR:",_err);
+				preferencesData = JSON.parse(_data);
+				pathToBrands = preferencesData.files.brands.path;
+				console.log("preferencesData:",preferencesData);
+			});
 		}
 	};
 
@@ -40,11 +48,22 @@ var Data = (function(){
 
 				fs.writeFile(appRoot+"/local/persistent-data.json",persData,function(_err){
 					if(!_err){
-						document.getElementById('Q-logo').classList.add("saved");
-						setTimeout(function(){
-							Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
-							Global.preferencesWindow.close();
-						}, 450);
+
+						fs.writeFile(appRoot+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
+							if(!_err){
+
+								document.getElementById('Q-logo').classList.add("saved");
+								setTimeout(function(){
+									Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
+									Global.preferencesWindow.close();
+								}, 450);
+
+							}
+							else {
+								alert("Save Error!")
+							}
+						});
+								
 					} else {
 						console.log("ERROR", _err);
 					}
@@ -336,6 +355,9 @@ var Data = (function(){
 
 	Eve.on("manageSnippetsInit", sanitizeSnippets);
 
+	Eve.on("pathToBrands-inputChange", function(){
+		pathToBrands = preferencesData.files.brands.path = document.getElementById("path-to-brands").value;
+	});
 
 
 
@@ -350,7 +372,12 @@ var Data = (function(){
 
 		getPreviewFiles: function(){
 			return previewFilesList;
+		},
+
+		getPathToBrands: function(){
+			return pathToBrands;
 		}
+
 	}
 
 })();

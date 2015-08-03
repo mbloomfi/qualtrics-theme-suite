@@ -6,11 +6,12 @@ var core = Global.coreMethods = {
 	persistentDataFile: {
 
 		read: function (_successCallback){
-			fs.readJson(appRoot+"/local/persistent-data.json", function(_err, _data){
+			fs.readJson(__dirname+"/local/persistent-data.json", function(_err, _data){
 				if(!_err) {
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 					console.log("readPersistantData ERROR:",_err);
 				}
 			});
@@ -21,8 +22,11 @@ var core = Global.coreMethods = {
 			_DATA.recentBrands = core.localData.brands.recent;
 			_DATA.snippets = core.localData.snippets.list;
 			//_DATA.x = core.localData.x;
-			fs.writeJson(Global.appRoot+"/local/persistent-data.json", _DATA, function(err){
-				if(err) alert("Error Saving Changes");
+			fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
+				if(err) {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+					alert("Error Saving Changes");
+				}
 				else if(_successCallback!==undefined){
 					var args = Array.prototype.splice.call(arguments, 1);
 					_successCallback.apply(null, args);
@@ -38,12 +42,13 @@ var core = Global.coreMethods = {
 	userSettingsFile: {
 
 		read: function(_successCallback){
-			fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+			fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
 					
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 					console.log("User Settings READ ERROR:", _err);
 				}
 			});
@@ -53,6 +58,7 @@ var core = Global.coreMethods = {
 			var self = this;
 
 			if(core.localData.userSettings === null){
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
 				alert("Error with settings, sucks to be you.");
 				return;
 			}
@@ -60,8 +66,12 @@ var core = Global.coreMethods = {
 			self.read(function(_data){
 				if(core.localData.userSettings !== _data){
 
-					fs.writeJson(appRoot+"/local/user-settings.json", core.localData.userSettings, function(err){
-						if(err) alert("Error Saving Changes");
+					fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
+						if(err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+							alert("Error Saving Changes");
+						} 
+							
 						else _successCallback();
 					});
 
@@ -76,7 +86,6 @@ var core = Global.coreMethods = {
 
 	resetFinder: function(){
 
-		var shelljs = require('shelljs');
 
 		// Sync call to exec()
 		// var version = exec('node --version', {silent:true}).output;
@@ -132,6 +141,8 @@ var core = Global.coreMethods = {
 						if(!err) {
 							core.resetFinder();
 							next();
+						} else {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						}
 					});
 				}
@@ -183,6 +194,7 @@ var core = Global.coreMethods = {
 			console.log(typeof core.localData.brands.path);
 			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 					console.error("brand exists error",err)
 					return _callback(false);
 				}
@@ -210,6 +222,7 @@ var core = Global.coreMethods = {
 				console.log(typeof core.brands.getFullPathToBrands());
 				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
 					if(err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						return _callback(false);
 					}
 					else {
@@ -253,7 +266,10 @@ var core = Global.coreMethods = {
 					var projectList = [];
 					console.log(typeof path);
 					fs.readdir(path, function(_err, _projects){
-						if(_err) console.log("error listing projects");
+						if(_err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+							console.log("error listing projects");
+						}
 						for(var i = 0, ii = _projects.length; i < ii; i++){
 							var stats = fs.statSync(path+"/"+_projects[i]);
 							if(stats.isDirectory()) projectList.push(_projects[i]);
@@ -281,6 +297,8 @@ var core = Global.coreMethods = {
 						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 							if(!err) {
 								next();
+							} else {
+								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 							}
 						});
 					} else {
@@ -299,7 +317,7 @@ var core = Global.coreMethods = {
 
 			showInFinder: function(){
 				if(core.localData.currentProject.name !== null){
-					shell.exec('open '+core.localData.currentProject.path, function(status, output) {
+					shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
 						console.log('Exit status:', status);
 						console.log('Program output:', output);
 					});
@@ -316,7 +334,10 @@ var core = Global.coreMethods = {
 					var path = core.localData.currentProject.path;
 					var fileList = [];
 					fs.readdir(path+"/assets", function(_err, _files){
-						if(_err) console.log("error listing project assets");
+						if(_err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+							console.log("error listing project assets");
+						}
 						console.log("the files",_files);
 						for(var i = 0, ii = _files.length; i < ii; i++){
 							var stats = fs.statSync(path+"/assets/"+_files[i]);
@@ -328,7 +349,7 @@ var core = Global.coreMethods = {
 				},
 
 				viewImage: function(path){
-					shell.exec('open '+path, function(status, output) {
+					shelljs.exec('open '+path, function(status, output) {
 						console.log('Exit status:', status);
 						console.log('Program output:', output);
 					});
@@ -341,7 +362,10 @@ var core = Global.coreMethods = {
 					
 					var fileList = [];
 					fs.readdir(path, function(_err, _files){
-						if(_err) console.log("error listing projects");
+						if(_err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+							console.log("error listing projects");
+						}
 						for(var i = 0, ii = _files.length; i < ii; i++){
 							var stats = fs.statSync(path+"/"+_files[i]);
 							if(stats.isFile()) fileList.push(_files[i]);
@@ -426,8 +450,11 @@ var core = Global.coreMethods = {
 
 					var _persistent_data = JSON.stringify(_persistent_data);
 
-					fs.writeFile(Global.appRoot+"/local/persistent-data.json", _persistent_data, function(err){
-						if(err) alert("Error Saving Changes");
+					fs.writeFile(__dirname+"/local/persistent-data.json", _persistent_data, function(err){
+						if(err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+							alert("Error Saving Changes");
+						}
 						if(_callback) _callback();
 					});
 
@@ -442,7 +469,7 @@ var core = Global.coreMethods = {
 
 		},
 
-		pathToBaseFiles: Global.appRoot+"/local/BaseFiles",
+		pathToBaseFiles: __dirname+"/local/BaseFiles",
 
 		updateUserSettings: function(_callback){ // should only be run on app init
 			var self = this;
@@ -462,15 +489,13 @@ var core = Global.coreMethods = {
 
 
 		updatePreviewFilesList: function(_callback){
-			var path = appRoot+"/local/preview-files";
-
-
-			fs.readJson(appRoot+"/local/user-settings.json", function(_err, _data){
+			fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
 					
 					if(typeof _successCallback === "function") _successCallback(_data);
 				}
 				else {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 					console.log("User Settings READ ERROR:", _err);
 				}
 			});
@@ -490,7 +515,10 @@ var core = Global.coreMethods = {
 			console.log(typeof core.localData.brands.path);
 			console.log("path",pathToBrands);
 			fs.readdir(pathToBrands, function(_err, _files){
-				if(_err) console.log("error");
+				if(_err) {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+					console.log("error");
+				}
 				for(var i = 0, ii = _files.length; i < ii; i++) {
 					var stats = fs.statSync(pathToBrands+"/"+_files[i]);
 					if(stats.isDirectory()) brandList.push(_files[i]);
@@ -561,7 +589,7 @@ var core = Global.coreMethods = {
 
 		setCurrentPreviewQuestionsFile: function(_fileName){
 			console.log("filename:",_fileName);
-			var path = Global.appRoot+"/local/preview-files";
+			var path = __dirname+"/local/preview-files";
 			this.previewQuestionFiles.current.name = _fileName;
 			this.previewQuestionFiles.current.path = path+"/"+_fileName;
 			if(core.localData.currentProject.name !== null){
@@ -576,7 +604,10 @@ var core = Global.coreMethods = {
 	getFiles: function(path, _callback){
 		var fileList = [];
 		fs.readdir(path, function(_err, _files){
-			if(_err) console.log("error getting files");
+			if(_err) {
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+				console.log("error getting files");
+			}
 			for(var i = 0, ii = _files.length; i < ii; i++){
 				var stats = fs.statSync(path+"/"+_files[i]);
 				if(stats.isFile()) fileList.push(_files[i]);
@@ -611,7 +642,10 @@ var core = Global.coreMethods = {
 		}
 
 		fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
-			if(err){ console.log("ERR",err);}
+			if(err){ 
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				console.log("ERR",err);
+			}
 			else {
 				myCodeMirror.setValue(data);
 				myCodeMirror.markClean();
@@ -665,7 +699,10 @@ var core = Global.coreMethods = {
 		saveEditorFile: function(){
 			if(core.localData.currentFile.path !== null){
 				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
-					if(err){ console.log("ERR",err);}
+					if(err){ 
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+						console.log("ERR",err);
+				}
 					else {
 						
 						editorCore.dropdowns.files.setClean();
@@ -699,7 +736,7 @@ var core = Global.coreMethods = {
 			// 'menu' is declared in main.js
 			menu = new Menu();
 			var recentSnippetsList = [];
-			fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+			fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 				if(!_err) {
 					recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
 
@@ -719,6 +756,8 @@ var core = Global.coreMethods = {
 					menu.append( new MenuItem({ type: 'separator' }) );
 					menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
 
+				} else {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 				}
 			});
 		}

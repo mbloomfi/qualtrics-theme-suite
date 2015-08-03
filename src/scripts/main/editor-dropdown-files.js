@@ -279,7 +279,10 @@ editorCore.dropdowns.files = {
 		var self = this;
 		var pathToProj = core.localData.currentProject.path+"/";
 		fs.unlink(pathToProj+_fileName, function(err){
-			if(err){ alert("Error Deleting File:\n"+err); }
+			if(err){ 
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				alert("Error Deleting File:\n"+err); 
+		}
 			else {
 				el("#editorBar").addClass("deleted_file");
 				setTimeout(function(){
@@ -295,7 +298,10 @@ editorCore.dropdowns.files = {
 		var self = this;
 		var pathToProj = core.localData.currentProject.path+"/";
 		fs.rename(pathToProj+_prevFileName, pathToProj+_newFileName, function(err){
-			if(err){ alert("Error Renaming File:\n"+err); }
+			if(err){ 
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				alert("Error Renaming File:\n"+err); 
+			}
 			else {
 				el("#editorBar").addClass("renamed_file");
 				setTimeout(function(){
@@ -540,7 +546,10 @@ editorCore.dropdowns.files = {
 					
 				(function(_file){
 					fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
-						if(err) return console.log("ERR copying:",_file.name, err);
+						if(err) {
+							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+							return console.log("ERR copying:",_file.name, err);
+						}
 						// console.log("copied:", _file.name);
 						filesCopied++;
 						if(filesCopied === filesTotal){

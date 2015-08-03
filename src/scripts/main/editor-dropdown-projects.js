@@ -25,6 +25,7 @@ editorCore.dropdowns.projects = {
 			core.preview.mode.regular.setWatchers(function(_err){
 
 				if(_err) {
+					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 					console.warn("could not set watchers");
 					core.preview.mode.regular.disable();
 				}

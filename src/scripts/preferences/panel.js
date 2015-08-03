@@ -106,9 +106,22 @@ var FilesPanel = (function(){
 		var container = etc.el("form", {id:"filesForm", className:"files"});
 		container.append([
 			etc.el("label", {id:"path-to-brands-label"}).append([
-				etc.el("div", {},"Path To Brands"),
+				etc.el("div", {},"path to Brands"),
 				etc.el("span", {id:"homeDirectory"}, process.env.HOME+"/ "),
-				etc.el("input", {id:"path-to-brands"})
+				etc.el("input", {
+					id:"path-to-brands", value:Data.getPathToBrands(),
+					events: {
+						blur: function(){
+							Eve.emit("pathToBrands-inputChange");
+						},
+						keyup: function(){
+							Eve.emit("pathToBrands-inputChange");
+						},
+						paste: function(){
+							Eve.emit("pathToBrands-inputChange");
+						}
+					}
+				})
 			]),
 			etc.el("br")
 		]);
@@ -138,7 +151,11 @@ var FilesPanel = (function(){
 	var previewFilesTemplate = etc.template(function(){
 		var filesList = Data.getPreviewFiles();
 
-		var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"});
+		var previewFilesCont = etc.el("div", {id:"previewFilesCont", className:"fileListContainer"})
+		//
+		.append("THIS IS NOT YET FUNCTIONAL!")
+		//
+		;
 
 		for(var i = 0, ii = filesList.length; i < ii; i++){
 			previewFilesCont.append(
@@ -192,8 +209,17 @@ var SnippetsPanel = (function(){
 			}
 		}},"Manage Snippets");
 
+		var manageKeybindingsBtn = etc.el("button",{events:{
+			click:function(e){
+				e.preventDefault();
+				alert("Not yet functional. Sorry.")
+				// Eve.emit("selectPanel", "manageSnippets")
+			}
+		}},"Manage Key Bindings");
+
 		return container.append([
-			manageSnippetsBtn
+			manageSnippetsBtn,
+			manageKeybindingsBtn
 		]);
 	});
 
