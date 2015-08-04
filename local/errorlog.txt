@@ -11,3 +11,7 @@ true
 Mon Aug 03 2015 13:15:39 GMT-0600 (MDT)
 	true
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 03 2015 20:27:42 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/ibbt'
+

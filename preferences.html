@@ -13814,6 +13814,192 @@
 	  else // Plain browser env
 	    mod(CodeMirror);
 	})(function(CodeMirror) {
+	  var defaults = {
+	    pairs: "()[]{}''\"\"",
+	    triples: "",
+	    explode: "[]{}"
+	  };
+	
+	  var Pos = CodeMirror.Pos;
+	
+	  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
+	    if (old && old != CodeMirror.Init) {
+	      cm.removeKeyMap(keyMap);
+	      cm.state.closeBrackets = null;
+	    }
+	    if (val) {
+	      cm.state.closeBrackets = val;
+	      cm.addKeyMap(keyMap);
+	    }
+	  });
+	
+	  function getOption(conf, name) {
+	    if (name == "pairs" && typeof conf == "string") return conf;
+	    if (typeof conf == "object" && conf[name] != null) return conf[name];
+	    return defaults[name];
+	  }
+	
+	  var bind = defaults.pairs + "`";
+	  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};
+	  for (var i = 0; i < bind.length; i++)
+	    keyMap["'" + bind.charAt(i) + "'"] = handler(bind.charAt(i));
+	
+	  function handler(ch) {
+	    return function(cm) { return handleChar(cm, ch); };
+	  }
+	
+	  function getConfig(cm) {
+	    var deflt = cm.state.closeBrackets;
+	    if (!deflt) return null;
+	    var mode = cm.getModeAt(cm.getCursor());
+	    return mode.closeBrackets || deflt;
+	  }
+	
+	  function handleBackspace(cm) {
+	    var conf = getConfig(cm);
+	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+	
+	    var pairs = getOption(conf, "pairs");
+	    var ranges = cm.listSelections();
+	    for (var i = 0; i < ranges.length; i++) {
+	      if (!ranges[i].empty()) return CodeMirror.Pass;
+	      var around = charsAround(cm, ranges[i].head);
+	      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+	    }
+	    for (var i = ranges.length - 1; i >= 0; i--) {
+	      var cur = ranges[i].head;
+	      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1));
+	    }
+	  }
+	
+	  function handleEnter(cm) {
+	    var conf = getConfig(cm);
+	    var explode = conf && getOption(conf, "explode");
+	    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;
+	
+	    var ranges = cm.listSelections();
+	    for (var i = 0; i < ranges.length; i++) {
+	      if (!ranges[i].empty()) return CodeMirror.Pass;
+	      var around = charsAround(cm, ranges[i].head);
+	      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+	    }
+	    cm.operation(function() {
+	      cm.replaceSelection("\n\n", null);
+	      cm.execCommand("goCharLeft");
+	      ranges = cm.listSelections();
+	      for (var i = 0; i < ranges.length; i++) {
+	        var line = ranges[i].head.line;
+	        cm.indentLine(line, null, true);
+	        cm.indentLine(line + 1, null, true);
+	      }
+	    });
+	  }
+	
+	  function handleChar(cm, ch) {
+	    var conf = getConfig(cm);
+	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+	
+	    var pairs = getOption(conf, "pairs");
+	    var pos = pairs.indexOf(ch);
+	    if (pos == -1) return CodeMirror.Pass;
+	    var triples = getOption(conf, "triples");
+	
+	    var identical = pairs.charAt(pos + 1) == ch;
+	    var ranges = cm.listSelections();
+	    var opening = pos % 2 == 0;
+	
+	    var type, next;
+	    for (var i = 0; i < ranges.length; i++) {
+	      var range = ranges[i], cur = range.head, curType;
+	      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));
+	      if (opening && !range.empty()) {
+	        curType = "surround";
+	      } else if ((identical || !opening) && next == ch) {
+	        if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)
+	          curType = "skipThree";
+	        else
+	          curType = "skip";
+	      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&
+	                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch &&
+	                 (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != ch)) {
+	        curType = "addFour";
+	      } else if (identical) {
+	        if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, ch)) curType = "both";
+	        else return CodeMirror.Pass;
+	      } else if (opening && (cm.getLine(cur.line).length == cur.ch ||
+	                             isClosingBracket(next, pairs) ||
+	                             /\s/.test(next))) {
+	        curType = "both";
+	      } else {
+	        return CodeMirror.Pass;
+	      }
+	      if (!type) type = curType;
+	      else if (type != curType) return CodeMirror.Pass;
+	    }
+	
+	    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;
+	    var right = pos % 2 ? ch : pairs.charAt(pos + 1);
+	    cm.operation(function() {
+	      if (type == "skip") {
+	        cm.execCommand("goCharRight");
+	      } else if (type == "skipThree") {
+	        for (var i = 0; i < 3; i++)
+	          cm.execCommand("goCharRight");
+	      } else if (type == "surround") {
+	        var sels = cm.getSelections();
+	        for (var i = 0; i < sels.length; i++)
+	          sels[i] = left + sels[i] + right;
+	        cm.replaceSelections(sels, "around");
+	      } else if (type == "both") {
+	        cm.replaceSelection(left + right, null);
+	        cm.triggerElectric(left + right);
+	        cm.execCommand("goCharLeft");
+	      } else if (type == "addFour") {
+	        cm.replaceSelection(left + left + left + left, "before");
+	        cm.execCommand("goCharRight");
+	      }
+	    });
+	  }
+	
+	  function isClosingBracket(ch, pairs) {
+	    var pos = pairs.lastIndexOf(ch);
+	    return pos > -1 && pos % 2 == 1;
+	  }
+	
+	  function charsAround(cm, pos) {
+	    var str = cm.getRange(Pos(pos.line, pos.ch - 1),
+	                          Pos(pos.line, pos.ch + 1));
+	    return str.length == 2 ? str : null;
+	  }
+	
+	  // Project the token type that will exists after the given char is
+	  // typed, and use it to determine whether it would cause the start
+	  // of a string token.
+	  function enteringString(cm, pos, ch) {
+	    var line = cm.getLine(pos.line);
+	    var token = cm.getTokenAt(pos);
+	    if (/\bstring2?\b/.test(token.type)) return false;
+	    var stream = new CodeMirror.StringStream(line.slice(0, pos.ch) + ch + line.slice(pos.ch), 4);
+	    stream.pos = stream.start = token.start;
+	    for (;;) {
+	      var type1 = cm.getMode().token(stream, token.state);
+	      if (stream.pos >= pos.ch + 1) return /\bstring2?\b/.test(type1);
+	      stream.start = stream.pos;
+	    }
+	  }
+	});
+	
+	// CodeMirror, copyright (c) by Marijn Haverbeke and others
+	// Distributed under an MIT license: http://codemirror.net/LICENSE
+	
+	(function(mod) {
+	  if (typeof exports == "object" && typeof module == "object") // CommonJS
+	    mod(require("../../lib/codemirror"));
+	  else if (typeof define == "function" && define.amd) // AMD
+	    define(["../../lib/codemirror"], mod);
+	  else // Plain browser env
+	    mod(CodeMirror);
+	})(function(CodeMirror) {
 	  "use strict";
 	
 	  var noOptions = {};
@@ -14076,6 +14262,8 @@
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
 	// Distributed under an MIT license: http://codemirror.net/LICENSE
 	
+	// Open simple dialogs on top of an editor. Relies on dialog.css.
+	
 	(function(mod) {
 	  if (typeof exports == "object" && typeof module == "object") // CommonJS
 	    mod(require("../../lib/codemirror"));
@@ -14084,179 +14272,149 @@
 	  else // Plain browser env
 	    mod(CodeMirror);
 	})(function(CodeMirror) {
-	  var defaults = {
-	    pairs: "()[]{}''\"\"",
-	    triples: "",
-	    explode: "[]{}"
-	  };
+	  function dialogDiv(cm, template, bottom) {
+	    var wrap = cm.getWrapperElement();
+	    var dialog;
+	    dialog = wrap.appendChild(document.createElement("div"));
+	    if (bottom)
+	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-bottom";
+	    else
+	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-top";
 	
-	  var Pos = CodeMirror.Pos;
-	
-	  CodeMirror.defineOption("autoCloseBrackets", false, function(cm, val, old) {
-	    if (old && old != CodeMirror.Init) {
-	      cm.removeKeyMap(keyMap);
-	      cm.state.closeBrackets = null;
+	    if (typeof template == "string") {
+	      dialog.innerHTML = template;
+	    } else { // Assuming it's a detached DOM element.
+	      dialog.appendChild(template);
 	    }
-	    if (val) {
-	      cm.state.closeBrackets = val;
-	      cm.addKeyMap(keyMap);
+	    return dialog;
+	  }
+	
+	  function closeNotification(cm, newVal) {
+	    if (cm.state.currentNotificationClose)
+	      cm.state.currentNotificationClose();
+	    cm.state.currentNotificationClose = newVal;
+	  }
+	
+	  CodeMirror.defineExtension("openDialog", function(template, callback, options) {
+	    if (!options) options = {};
+	
+	    closeNotification(this, null);
+	
+	    var dialog = dialogDiv(this, template, options.bottom);
+	    var closed = false, me = this;
+	    function close(newVal) {
+	      if (typeof newVal == 'string') {
+	        inp.value = newVal;
+	      } else {
+	        if (closed) return;
+	        closed = true;
+	        dialog.parentNode.removeChild(dialog);
+	        me.focus();
+	
+	        if (options.onClose) options.onClose(dialog);
+	      }
+	    }
+	
+	    var inp = dialog.getElementsByTagName("input")[0], button;
+	    if (inp) {
+	      if (options.value) {
+	        inp.value = options.value;
+	        if (options.selectValueOnOpen !== false) {
+	          inp.select();
+	        }
+	      }
+	
+	      if (options.onInput)
+	        CodeMirror.on(inp, "input", function(e) { options.onInput(e, inp.value, close);});
+	      if (options.onKeyUp)
+	        CodeMirror.on(inp, "keyup", function(e) {options.onKeyUp(e, inp.value, close);});
+	
+	      CodeMirror.on(inp, "keydown", function(e) {
+	        if (options && options.onKeyDown && options.onKeyDown(e, inp.value, close)) { return; }
+	        if (e.keyCode == 27 || (options.closeOnEnter !== false && e.keyCode == 13)) {
+	          inp.blur();
+	          CodeMirror.e_stop(e);
+	          close();
+	        }
+	        if (e.keyCode == 13) callback(inp.value, e);
+	      });
+	
+	      if (options.closeOnBlur !== false) CodeMirror.on(inp, "blur", close);
+	
+	      inp.focus();
+	    } else if (button = dialog.getElementsByTagName("button")[0]) {
+	      CodeMirror.on(button, "click", function() {
+	        close();
+	        me.focus();
+	      });
+	
+	      if (options.closeOnBlur !== false) CodeMirror.on(button, "blur", close);
+	
+	      button.focus();
+	    }
+	    return close;
+	  });
+	
+	  CodeMirror.defineExtension("openConfirm", function(template, callbacks, options) {
+	    closeNotification(this, null);
+	    var dialog = dialogDiv(this, template, options && options.bottom);
+	    var buttons = dialog.getElementsByTagName("button");
+	    var closed = false, me = this, blurring = 1;
+	    function close() {
+	      if (closed) return;
+	      closed = true;
+	      dialog.parentNode.removeChild(dialog);
+	      me.focus();
+	    }
+	    buttons[0].focus();
+	    for (var i = 0; i < buttons.length; ++i) {
+	      var b = buttons[i];
+	      (function(callback) {
+	        CodeMirror.on(b, "click", function(e) {
+	          CodeMirror.e_preventDefault(e);
+	          close();
+	          if (callback) callback(me);
+	        });
+	      })(callbacks[i]);
+	      CodeMirror.on(b, "blur", function() {
+	        --blurring;
+	        setTimeout(function() { if (blurring <= 0) close(); }, 200);
+	      });
+	      CodeMirror.on(b, "focus", function() { ++blurring; });
 	    }
 	  });
 	
-	  function getOption(conf, name) {
-	    if (name == "pairs" && typeof conf == "string") return conf;
-	    if (typeof conf == "object" && conf[name] != null) return conf[name];
-	    return defaults[name];
-	  }
+	  /*
+	   * openNotification
+	   * Opens a notification, that can be closed with an optional timer
+	   * (default 5000ms timer) and always closes on click.
+	   *
+	   * If a notification is opened while another is opened, it will close the
+	   * currently opened one and open the new one immediately.
+	   */
+	  CodeMirror.defineExtension("openNotification", function(template, options) {
+	    closeNotification(this, close);
+	    var dialog = dialogDiv(this, template, options && options.bottom);
+	    var closed = false, doneTimer;
+	    var duration = options && typeof options.duration !== "undefined" ? options.duration : 5000;
 	
-	  var bind = defaults.pairs + "`";
-	  var keyMap = {Backspace: handleBackspace, Enter: handleEnter};
-	  for (var i = 0; i < bind.length; i++)
-	    keyMap["'" + bind.charAt(i) + "'"] = handler(bind.charAt(i));
-	
-	  function handler(ch) {
-	    return function(cm) { return handleChar(cm, ch); };
-	  }
-	
-	  function getConfig(cm) {
-	    var deflt = cm.state.closeBrackets;
-	    if (!deflt) return null;
-	    var mode = cm.getModeAt(cm.getCursor());
-	    return mode.closeBrackets || deflt;
-	  }
-	
-	  function handleBackspace(cm) {
-	    var conf = getConfig(cm);
-	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
-	
-	    var pairs = getOption(conf, "pairs");
-	    var ranges = cm.listSelections();
-	    for (var i = 0; i < ranges.length; i++) {
-	      if (!ranges[i].empty()) return CodeMirror.Pass;
-	      var around = charsAround(cm, ranges[i].head);
-	      if (!around || pairs.indexOf(around) % 2 != 0) return CodeMirror.Pass;
+	    function close() {
+	      if (closed) return;
+	      closed = true;
+	      clearTimeout(doneTimer);
+	      dialog.parentNode.removeChild(dialog);
 	    }
-	    for (var i = ranges.length - 1; i >= 0; i--) {
-	      var cur = ranges[i].head;
-	      cm.replaceRange("", Pos(cur.line, cur.ch - 1), Pos(cur.line, cur.ch + 1));
-	    }
-	  }
 	
-	  function handleEnter(cm) {
-	    var conf = getConfig(cm);
-	    var explode = conf && getOption(conf, "explode");
-	    if (!explode || cm.getOption("disableInput")) return CodeMirror.Pass;
-	
-	    var ranges = cm.listSelections();
-	    for (var i = 0; i < ranges.length; i++) {
-	      if (!ranges[i].empty()) return CodeMirror.Pass;
-	      var around = charsAround(cm, ranges[i].head);
-	      if (!around || explode.indexOf(around) % 2 != 0) return CodeMirror.Pass;
-	    }
-	    cm.operation(function() {
-	      cm.replaceSelection("\n\n", null);
-	      cm.execCommand("goCharLeft");
-	      ranges = cm.listSelections();
-	      for (var i = 0; i < ranges.length; i++) {
-	        var line = ranges[i].head.line;
-	        cm.indentLine(line, null, true);
-	        cm.indentLine(line + 1, null, true);
-	      }
+	    CodeMirror.on(dialog, 'click', function(e) {
+	      CodeMirror.e_preventDefault(e);
+	      close();
 	    });
-	  }
 	
-	  function handleChar(cm, ch) {
-	    var conf = getConfig(cm);
-	    if (!conf || cm.getOption("disableInput")) return CodeMirror.Pass;
+	    if (duration)
+	      doneTimer = setTimeout(close, duration);
 	
-	    var pairs = getOption(conf, "pairs");
-	    var pos = pairs.indexOf(ch);
-	    if (pos == -1) return CodeMirror.Pass;
-	    var triples = getOption(conf, "triples");
-	
-	    var identical = pairs.charAt(pos + 1) == ch;
-	    var ranges = cm.listSelections();
-	    var opening = pos % 2 == 0;
-	
-	    var type, next;
-	    for (var i = 0; i < ranges.length; i++) {
-	      var range = ranges[i], cur = range.head, curType;
-	      var next = cm.getRange(cur, Pos(cur.line, cur.ch + 1));
-	      if (opening && !range.empty()) {
-	        curType = "surround";
-	      } else if ((identical || !opening) && next == ch) {
-	        if (triples.indexOf(ch) >= 0 && cm.getRange(cur, Pos(cur.line, cur.ch + 3)) == ch + ch + ch)
-	          curType = "skipThree";
-	        else
-	          curType = "skip";
-	      } else if (identical && cur.ch > 1 && triples.indexOf(ch) >= 0 &&
-	                 cm.getRange(Pos(cur.line, cur.ch - 2), cur) == ch + ch &&
-	                 (cur.ch <= 2 || cm.getRange(Pos(cur.line, cur.ch - 3), Pos(cur.line, cur.ch - 2)) != ch)) {
-	        curType = "addFour";
-	      } else if (identical) {
-	        if (!CodeMirror.isWordChar(next) && enteringString(cm, cur, ch)) curType = "both";
-	        else return CodeMirror.Pass;
-	      } else if (opening && (cm.getLine(cur.line).length == cur.ch ||
-	                             isClosingBracket(next, pairs) ||
-	                             /\s/.test(next))) {
-	        curType = "both";
-	      } else {
-	        return CodeMirror.Pass;
-	      }
-	      if (!type) type = curType;
-	      else if (type != curType) return CodeMirror.Pass;
-	    }
-	
-	    var left = pos % 2 ? pairs.charAt(pos - 1) : ch;
-	    var right = pos % 2 ? ch : pairs.charAt(pos + 1);
-	    cm.operation(function() {
-	      if (type == "skip") {
-	        cm.execCommand("goCharRight");
-	      } else if (type == "skipThree") {
-	        for (var i = 0; i < 3; i++)
-	          cm.execCommand("goCharRight");
-	      } else if (type == "surround") {
-	        var sels = cm.getSelections();
-	        for (var i = 0; i < sels.length; i++)
-	          sels[i] = left + sels[i] + right;
-	        cm.replaceSelections(sels, "around");
-	      } else if (type == "both") {
-	        cm.replaceSelection(left + right, null);
-	        cm.triggerElectric(left + right);
-	        cm.execCommand("goCharLeft");
-	      } else if (type == "addFour") {
-	        cm.replaceSelection(left + left + left + left, "before");
-	        cm.execCommand("goCharRight");
-	      }
-	    });
-	  }
-	
-	  function isClosingBracket(ch, pairs) {
-	    var pos = pairs.lastIndexOf(ch);
-	    return pos > -1 && pos % 2 == 1;
-	  }
-	
-	  function charsAround(cm, pos) {
-	    var str = cm.getRange(Pos(pos.line, pos.ch - 1),
-	                          Pos(pos.line, pos.ch + 1));
-	    return str.length == 2 ? str : null;
-	  }
-	
-	  // Project the token type that will exists after the given char is
-	  // typed, and use it to determine whether it would cause the start
-	  // of a string token.
-	  function enteringString(cm, pos, ch) {
-	    var line = cm.getLine(pos.line);
-	    var token = cm.getTokenAt(pos);
-	    if (/\bstring2?\b/.test(token.type)) return false;
-	    var stream = new CodeMirror.StringStream(line.slice(0, pos.ch) + ch + line.slice(pos.ch), 4);
-	    stream.pos = stream.start = token.start;
-	    for (;;) {
-	      var type1 = cm.getMode().token(stream, token.state);
-	      if (stream.pos >= pos.ch + 1) return /\bstring2?\b/.test(type1);
-	      stream.start = stream.pos;
-	    }
-	  }
+	    return close;
+	  });
 	});
 	
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -14424,164 +14582,6 @@
 	  CodeMirror.commands.clearSearch = clearSearch;
 	  CodeMirror.commands.replace = replace;
 	  CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
-	});
-	
-	// CodeMirror, copyright (c) by Marijn Haverbeke and others
-	// Distributed under an MIT license: http://codemirror.net/LICENSE
-	
-	// Open simple dialogs on top of an editor. Relies on dialog.css.
-	
-	(function(mod) {
-	  if (typeof exports == "object" && typeof module == "object") // CommonJS
-	    mod(require("../../lib/codemirror"));
-	  else if (typeof define == "function" && define.amd) // AMD
-	    define(["../../lib/codemirror"], mod);
-	  else // Plain browser env
-	    mod(CodeMirror);
-	})(function(CodeMirror) {
-	  function dialogDiv(cm, template, bottom) {
-	    var wrap = cm.getWrapperElement();
-	    var dialog;
-	    dialog = wrap.appendChild(document.createElement("div"));
-	    if (bottom)
-	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-bottom";
-	    else
-	      dialog.className = "CodeMirror-dialog CodeMirror-dialog-top";
-	
-	    if (typeof template == "string") {
-	      dialog.innerHTML = template;
-	    } else { // Assuming it's a detached DOM element.
-	      dialog.appendChild(template);
-	    }
-	    return dialog;
-	  }
-	
-	  function closeNotification(cm, newVal) {
-	    if (cm.state.currentNotificationClose)
-	      cm.state.currentNotificationClose();
-	    cm.state.currentNotificationClose = newVal;
-	  }
-	
-	  CodeMirror.defineExtension("openDialog", function(template, callback, options) {
-	    if (!options) options = {};
-	
-	    closeNotification(this, null);
-	
-	    var dialog = dialogDiv(this, template, options.bottom);
-	    var closed = false, me = this;
-	    function close(newVal) {
-	      if (typeof newVal == 'string') {
-	        inp.value = newVal;
-	      } else {
-	        if (closed) return;
-	        closed = true;
-	        dialog.parentNode.removeChild(dialog);
-	        me.focus();
-	
-	        if (options.onClose) options.onClose(dialog);
-	      }
-	    }
-	
-	    var inp = dialog.getElementsByTagName("input")[0], button;
-	    if (inp) {
-	      if (options.value) {
-	        inp.value = options.value;
-	        if (options.selectValueOnOpen !== false) {
-	          inp.select();
-	        }
-	      }
-	
-	      if (options.onInput)
-	        CodeMirror.on(inp, "input", function(e) { options.onInput(e, inp.value, close);});
-	      if (options.onKeyUp)
-	        CodeMirror.on(inp, "keyup", function(e) {options.onKeyUp(e, inp.value, close);});
-	
-	      CodeMirror.on(inp, "keydown", function(e) {
-	        if (options && options.onKeyDown && options.onKeyDown(e, inp.value, close)) { return; }
-	        if (e.keyCode == 27 || (options.closeOnEnter !== false && e.keyCode == 13)) {
-	          inp.blur();
-	          CodeMirror.e_stop(e);
-	          close();
-	        }
-	        if (e.keyCode == 13) callback(inp.value, e);
-	      });
-	
-	      if (options.closeOnBlur !== false) CodeMirror.on(inp, "blur", close);
-	
-	      inp.focus();
-	    } else if (button = dialog.getElementsByTagName("button")[0]) {
-	      CodeMirror.on(button, "click", function() {
-	        close();
-	        me.focus();
-	      });
-	
-	      if (options.closeOnBlur !== false) CodeMirror.on(button, "blur", close);
-	
-	      button.focus();
-	    }
-	    return close;
-	  });
-	
-	  CodeMirror.defineExtension("openConfirm", function(template, callbacks, options) {
-	    closeNotification(this, null);
-	    var dialog = dialogDiv(this, template, options && options.bottom);
-	    var buttons = dialog.getElementsByTagName("button");
-	    var closed = false, me = this, blurring = 1;
-	    function close() {
-	      if (closed) return;
-	      closed = true;
-	      dialog.parentNode.removeChild(dialog);
-	      me.focus();
-	    }
-	    buttons[0].focus();
-	    for (var i = 0; i < buttons.length; ++i) {
-	      var b = buttons[i];
-	      (function(callback) {
-	        CodeMirror.on(b, "click", function(e) {
-	          CodeMirror.e_preventDefault(e);
-	          close();
-	          if (callback) callback(me);
-	        });
-	      })(callbacks[i]);
-	      CodeMirror.on(b, "blur", function() {
-	        --blurring;
-	        setTimeout(function() { if (blurring <= 0) close(); }, 200);
-	      });
-	      CodeMirror.on(b, "focus", function() { ++blurring; });
-	    }
-	  });
-	
-	  /*
-	   * openNotification
-	   * Opens a notification, that can be closed with an optional timer
-	   * (default 5000ms timer) and always closes on click.
-	   *
-	   * If a notification is opened while another is opened, it will close the
-	   * currently opened one and open the new one immediately.
-	   */
-	  CodeMirror.defineExtension("openNotification", function(template, options) {
-	    closeNotification(this, close);
-	    var dialog = dialogDiv(this, template, options && options.bottom);
-	    var closed = false, doneTimer;
-	    var duration = options && typeof options.duration !== "undefined" ? options.duration : 5000;
-	
-	    function close() {
-	      if (closed) return;
-	      closed = true;
-	      clearTimeout(doneTimer);
-	      dialog.parentNode.removeChild(dialog);
-	    }
-	
-	    CodeMirror.on(dialog, 'click', function(e) {
-	      CodeMirror.e_preventDefault(e);
-	      close();
-	    });
-	
-	    if (duration)
-	      doneTimer = setTimeout(close, duration);
-	
-	    return close;
-	  });
 	});
 	
 	// CodeMirror, copyright (c) by Marijn Haverbeke and others
@@ -17086,7 +17086,7 @@
 			// read preferences and persistent data
 			init: function(){
 				console.log("init local data");
-				fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+				fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 					if(!_err) {
 						snippetsList = JSON.parse(_data).snippets;
 					}
@@ -17095,15 +17095,15 @@
 					}
 				});
 	
-				fs.readdir(appRoot+"/local/preview-files", function(_err, _files){
+				fs.readdir(__dirname+"/local/preview-files", function(_err, _files){
 					if(_err) return console.error("local init ERROR:",_err);
 					for(var i = 0, ii = _files.length; i < ii ; i++){
-						var stats = fs.statSync(appRoot+"/local/preview-files"+"/"+_files[i]);
+						var stats = fs.statSync(__dirname+"/local/preview-files"+"/"+_files[i]);
 						if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 					}
 				});
 	
-				fs.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+				fs.readFile(__dirname+"/local/user-settings.json", function(_err, _data){
 					if(_err) return console.error("local init ERROR:",_err);
 					preferencesData = JSON.parse(_data);
 					pathToBrands = preferencesData.files.brands.path;
@@ -17115,16 +17115,16 @@
 		function saveLocalToFiles(){
 			sanitizeSnippets();
 	
-			fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+			fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 				if(!_err) {
 					var persData = JSON.parse(_data);
 					persData.snippets = snippetsList;
 					persData = JSON.stringify(persData);
 	
-					fs.writeFile(appRoot+"/local/persistent-data.json",persData,function(_err){
+					fs.writeFile(__dirname+"/local/persistent-data.json",persData,function(_err){
 						if(!_err){
 	
-							fs.writeFile(appRoot+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
+							fs.writeFile(__dirname+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
 								if(!_err){
 	
 									document.getElementById('Q-logo').classList.add("saved");

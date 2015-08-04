@@ -11,7 +11,7 @@ var Data = (function(){
 		// read preferences and persistent data
 		init: function(){
 			console.log("init local data");
-			fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+			fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 				if(!_err) {
 					snippetsList = JSON.parse(_data).snippets;
 				}
@@ -20,15 +20,15 @@ var Data = (function(){
 				}
 			});
 
-			fs.readdir(appRoot+"/local/preview-files", function(_err, _files){
+			fs.readdir(__dirname+"/local/preview-files", function(_err, _files){
 				if(_err) return console.error("local init ERROR:",_err);
 				for(var i = 0, ii = _files.length; i < ii ; i++){
-					var stats = fs.statSync(appRoot+"/local/preview-files"+"/"+_files[i]);
+					var stats = fs.statSync(__dirname+"/local/preview-files"+"/"+_files[i]);
 					if(stats.isFile() && _files[i].charAt(0) !== ".") previewFilesList.push(_files[i]);
 				}
 			});
 
-			fs.readFile(appRoot+"/local/user-settings.json", function(_err, _data){
+			fs.readFile(__dirname+"/local/user-settings.json", function(_err, _data){
 				if(_err) return console.error("local init ERROR:",_err);
 				preferencesData = JSON.parse(_data);
 				pathToBrands = preferencesData.files.brands.path;
@@ -40,16 +40,16 @@ var Data = (function(){
 	function saveLocalToFiles(){
 		sanitizeSnippets();
 
-		fs.readFile(appRoot+"/local/persistent-data.json", function(_err, _data){
+		fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 			if(!_err) {
 				var persData = JSON.parse(_data);
 				persData.snippets = snippetsList;
 				persData = JSON.stringify(persData);
 
-				fs.writeFile(appRoot+"/local/persistent-data.json",persData,function(_err){
+				fs.writeFile(__dirname+"/local/persistent-data.json",persData,function(_err){
 					if(!_err){
 
-						fs.writeFile(appRoot+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
+						fs.writeFile(__dirname+"/local/user-settings.json",JSON.stringify(preferencesData),function(_err){
 							if(!_err){
 
 								document.getElementById('Q-logo').classList.add("saved");

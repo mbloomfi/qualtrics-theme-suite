@@ -241,52 +241,30 @@ core.preview = {
 								console.log("ERR",_errPreviewQuestions);
 							}
 							else {
-								console.log("rewriting preview file!!!");
-								console.log("replace",replace);
-								console.log("rename",rename);
-								console.log("gulp.dest",gulp.dest);
 
-								fs.readFile(__dirname+"/local/previewTemplate.html", function(err,fileData){
-									if(err) {
-										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-									}
-									console.log("previewTemplate file", fileData);
+								fs.readFile(__dirname+"/local/previewTemplate.html", "utf-8", function(err,data){
+									var newPreview = data.replace(
+										"{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"
+									).replace(
+										"{~SKIN.HTML~}", _html
+									).replace(
+										"{~ProgressBar~}", self.map["{~ProgressBar~}"]
+									).replace(
+										"{~Header~}", self.injectionHeader.value
+									).replace(
+										"{~Question~}", _previewQuestions
+									).replace(
+										"{~Buttons~}", self.map["{~Buttons~}"]
+									).replace(
+										"{~Footer~}", self.map["{~Footer~}"]
+									).replace(
+										"{~SKIN.HTML~}", _html
+									);
+									fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
+										if(err) alert("ERROR!");
+										if(typeof _callback !== "undefined") _callback();
+									});
 								});
-
-								var gulpStream = gulp.src(__dirname+"/local/previewTemplate.html")
-								.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css")).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~SKIN.HTML~}", _html)).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"])).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~Header~}", self.injectionHeader.value)).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~Question~}", _previewQuestions )).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] )).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(replace("{~Footer~}", self.map["{~Footer~}"] )).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(rename("currentPreview.html")).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								})
-								.pipe(gulp.dest(__dirname+"/local")).on('error', function(e){
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+e+"\n\n", function(){});
-								});
-
-								if(typeof _callback !== "undefined") {
-									console.log("CALLING CALLBACK (in update ppreview file)");
-									console.log("gulpStream", gulpStream)
-									_callback();
-								}
 
 							}
 						});
@@ -337,21 +315,37 @@ core.preview = {
 								else {
 									console.log("HARD REFRESH, rewriting preview file");
 
-									gulp.src(__dirname+"/local/previewTemplate.html")
-									.pipe(replace("{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"))
-									.pipe(replace("{~SKIN.HTML~}", _html))
-									.pipe(replace("{~ProgressBar~}", self.map["{~ProgressBar~}"]))
-									.pipe(replace("{~Header~}", self.injectionHeader.value))
-									.pipe(replace("{~Question~}", _previewQuestions ))
-									.pipe(replace("{~Buttons~}", self.map["{~Buttons~}"] ))
-									.pipe(replace("{~Footer~}", self.map["{~Footer~}"] ))
-									.pipe(rename("currentPreview.html"))
-									.pipe(gulp.dest(__dirname+"/local"));
+									fs.readFile(__dirname+"/local/previewTemplate.html", "utf-8", function(err,data){
+										var newPreview = data.replace(
+											"{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"
+										).replace(
+											"{~SKIN.HTML~}", _html
+										).replace(
+											"{~ProgressBar~}", self.map["{~ProgressBar~}"]
+										).replace(
+											"{~Header~}", self.injectionHeader.value
+										).replace(
+											"{~Question~}", _previewQuestions
+										).replace(
+											"{~Buttons~}", self.map["{~Buttons~}"]
+										).replace(
+											"{~Footer~}", self.map["{~Footer~}"]
+										).replace(
+											"{~SKIN.HTML~}", _html
+										);
+										fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
+											if(err) alert("ERROR!");
 
-									setTimeout(function(){
-										core.preview.init();
-										ipc.send('asynchronous-message', 'enablePreviewModes');
-									},500);
+											setTimeout(function(){
+												core.preview.init();
+												ipc.send('asynchronous-message', 'enablePreviewModes');
+											},500);
+
+	
+										});
+									});
+
+									
 
 								}
 							});

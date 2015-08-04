@@ -1,1 +1,21 @@
-{"recentBrands":["ibbt","uafieldtesting","github"],"snippets":[{"name":"progress bar 1","type":"css","id":"jrq21tab-oumh","code":"/// code here for pb1\n\n// cool right?"},{"name":"pb2","type":"css","id":"kct33329-uqg1","code":"//pb2"}]}
+{
+  "recentBrands": [
+    "tester",
+    "uafieldtesting",
+    "github"
+  ],
+  "snippets": [
+    {
+      "name": "progress bar 1",
+      "type": "css",
+      "id": "jrq21tab-oumh",
+      "code": "/// code here for pb1\n\n// cool right?"
+    },
+    {
+      "name": "pb2",
+      "type": "css",
+      "id": "kct33329-uqg1",
+      "code": "//pb2"
+    }
+  ]
+}
