@@ -260,11 +260,27 @@ core.preview = {
 									).replace(
 										"{~SKIN.HTML~}", _html
 									);
-									fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
-										if(err) alert("ERROR!");
-										if(typeof _callback !== "undefined") _callback();
-									});
+									console.log("")
+									console.log("")
+									console.log("new cuurentPreview.html (PRE-WRITE)::")
+									console.log("")
+									console.log(newPreview);
+
+									setTimeout(function(){
+										fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
+											if(err) alert("ERROR!");
+											console.log("")
+											console.log("")
+											console.log("")
+											console.log("new cuurentPreview.html (POST-WRITE)::")
+											console.log("")
+											console.log(fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+											if(typeof _callback !== "undefined") _callback();
+										});
+									},0);
+
 								});
+										
 
 							}
 						});
@@ -333,16 +349,26 @@ core.preview = {
 										).replace(
 											"{~SKIN.HTML~}", _html
 										);
-										fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
-											if(err) alert("ERROR!");
+										console.log("")
+										console.log("new cuurentPreview.html (pre-write)::", newPreview);
+											
 
-											setTimeout(function(){
-												core.preview.init();
-												ipc.send('asynchronous-message', 'enablePreviewModes');
-											},500);
+										setTimeout(function(){
+
+											fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
+												if(err) alert("ERROR!");
+												console.log("")
+												console.log("new cuurentPreview.html (POST-write)::", fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+
+												setTimeout(function(){
+													core.preview.init();
+													ipc.send('asynchronous-message', 'enablePreviewModes');
+												},300);
+											});
+										},300);
 
 	
-										});
+										
 									});
 
 									
