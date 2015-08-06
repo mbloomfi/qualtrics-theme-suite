@@ -478,7 +478,8 @@ core.preview = {
 			capture: function(){
 				var self = this;
 				//hide #thumbBox before the screenshot
-				
+				var thumbBoxContainer = document.getElementById("thumbBox");
+				thumbBoxContainer.style.visibility = "hidden";
 				setTimeout(function(){
 					Global.mainWindow.capturePage({
 						x: self.box.getX(), 
@@ -486,6 +487,10 @@ core.preview = {
 						width: self.box.getWidth(), 
 						height: self.box.getHeight()
 					},function(_img){
+						setTimeout(function(){
+							thumbBoxContainer.style.visibility = "visible";
+						},0);
+						
 						var pngImgBuff = _img.toPng();
 
 						core.flash(function(){
@@ -629,17 +634,17 @@ core.preview = {
 					// console.log("starting interface:", _interface);
 					el("#body").append(_interface);
 
-					el(".decrease-thumb-size")[0].onclick = function(){
+					el("#decrease-thumb-size").addEventListener("click", function(){
 						core.preview.mode.thumbnail.box.ratio.decrement();
-					}
+					});
 
-					el(".increase-thumb-size")[0].onclick = function(){
+					el("#increase-thumb-size").addEventListener("click", function(){
 						core.preview.mode.thumbnail.box.ratio.increment();
-					}
+					});
 
-					el("#thumbCamera").onclick = function(){
+					el("#thumbCamera").addEventListener("click", function(){
 						core.preview.mode.thumbnail.capture();
-					}
+					});
 
 					el("#thumbCamera").onmouseover = function(){
 						el("#thumbBox").addClass("screenshot-in-progress");
@@ -662,8 +667,8 @@ core.preview = {
 								el("+section").append(
 									el.join([
 										el("+div").addClass("interface-header").text("Thumnail Size"),
-										el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
-										el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
+										el("+div#decrease-thumb-size").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
+										el("+div#increase-thumb-size").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
 									])
 								),
 								el("+section").append(

@@ -182,7 +182,25 @@ var menuTemplate = [
         label: 'Select All',
         accelerator: 'Command+A',
         selector: 'selectAll:'
+      },
+      {
+        type:'separator'
+      },
+      {
+        label: "Increase Font Size",
+        accelerator: 'Command+=',
+        click:function(){
+          mainWindow.webContents.executeJavaScript("editorCore.increaseFontSize();");
+        }
+      },
+      {
+        label: "Decrease Font Size",
+        accelerator: 'Command+-',
+        click:function(){
+          mainWindow.webContents.executeJavaScript("editorCore.decreaseFontSize();");
+        }
       }
+
     ]
   },
 

@@ -66,6 +66,25 @@ var editorCore = {
 		}
 
 
+	},
+
+	increaseFontSize: function(){
+		if(core.preview.mode.currentMode === "thumbnail") return;
+		var codeMirrorElement = document.querySelector(".CodeMirror");
+		var currentSize = parseInt(codeMirrorElement.style.fontSize);
+		if( currentSize < 24 ){
+			console.log("increasing");
+			codeMirrorElement.style.fontSize = (++currentSize)+"px";
+		}
+	},
+	decreaseFontSize: function(){
+		if(core.preview.mode.currentMode === "thumbnail") return;
+		var codeMirrorElement = document.querySelector(".CodeMirror");
+		var currentSize = parseInt(codeMirrorElement.style.fontSize);
+		if( currentSize > 10 ){
+			console.log("decreasing");
+			codeMirrorElement.style.fontSize = (--currentSize)+"px";
+		}
 	}
 
 	

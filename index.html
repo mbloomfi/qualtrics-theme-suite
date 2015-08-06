@@ -18554,21 +18554,364 @@
 			
 			
 			
-								shelljs.exec('open '+path, function(status, output) {
 			
 			
 			
 			
 			
 			
-									console.log('Exit status:', status);
+			
+								window.imagePreview = etc.template(function(){
 			
 			
 			
 			
 			
 			
-									console.log('Program output:', output);
+									if(document.getElementById("image_preview_container")){
+			
+			
+			
+			
+			
+			
+										var imgCont = document.getElementById("image_preview_container");
+			
+			
+			
+			
+			
+			
+										console.log("changing image")
+			
+			
+			
+			
+			
+			
+										imgCont.getElementsByTagName('img')[0].src = path;
+			
+			
+			
+			
+			
+			
+										return;
+			
+			
+			
+			
+			
+			
+									}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+									var container = etc.el("div", {
+			
+			
+			
+			
+			
+			
+										id:"image_preview_container",
+			
+			
+			
+			
+			
+			
+										style : {
+			
+			
+			
+			
+			
+			
+											position:'absolute',
+			
+			
+			
+			
+			
+			
+											top:'50%',
+			
+			
+			
+			
+			
+			
+											left:'50%',
+			
+			
+			
+			
+			
+			
+											transform: 'translate(-50%, -50%)',
+			
+			
+			
+			
+			
+			
+											padding:'45px 10px 10px',
+			
+			
+			
+			
+			
+			
+											backgroundColor:'rgba(250,250,250,1)',
+			
+			
+			
+			
+			
+			
+											minWidth:'100px',
+			
+			
+			
+			
+			
+			
+											minHeight:'50px',
+			
+			
+			
+			
+			
+			
+											borderRadius:'2px',
+			
+			
+			
+			
+			
+			
+											border:'1px solid rgb(200,200,200)',
+			
+			
+			
+			
+			
+			
+											boxShadow:'0 3px 15px rgba(0,0,0,.3)'
+			
+			
+			
+			
+			
+			
+										}
+			
+			
+			
+			
+			
+			
+									});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+									container.append(
+			
+			
+			
+			
+			
+			
+										etc.el("div", {
+			
+			
+			
+			
+			
+			
+											className: "change-image-bg-cont",
+			
+			
+			
+			
+			
+			
+											style: {
+			
+			
+			
+			
+			
+			
+												background:'rgb(255,0,0)',
+			
+			
+			
+			
+			
+			
+												height:'25px',
+			
+			
+			
+			
+			
+			
+												width:'50px',
+			
+			
+			
+			
+			
+			
+												position:'absolute',
+			
+			
+			
+			
+			
+			
+												top:'10px',
+			
+			
+			
+			
+			
+			
+												right:'10px',
+			
+			
+			
+			
+			
+			
+												display:'block',
+			
+			
+			
+			
+			
+			
+												margin:'0 auto'
+			
+			
+			
+			
+			
+			
+											}
+			
+			
+			
+			
+			
+			
+										})
+			
+			
+			
+			
+			
+			
+									)
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+									container.append(
+			
+			
+			
+			
+			
+			
+										etc.el("img", {
+			
+			
+			
+			
+			
+			
+											src: this.props.path,
+			
+			
+			
+			
+			
+			
+											style: {
+			
+			
+			
+			
+			
+			
+												maxHeight:'300px',
+			
+			
+			
+			
+			
+			
+												maxWidth:'300px'
+			
+			
+			
+			
+			
+			
+											}
+			
+			
+			
+			
+			
+			
+										})
+			
+			
+			
+			
+			
+			
+									);
+			
+			
+			
+			
+			
+			
+									return container;
 			
 			
 			
@@ -18576,6 +18919,48 @@
 			
 			
 								});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+								imagePreview.render({path:path}, document.body);
+			
+			
+			
+			
+			
+			
+								// shelljs.exec('open '+path, function(status, output) {
+			
+			
+			
+			
+			
+			
+								// 	console.log('Exit status:', status);
+			
+			
+			
+			
+			
+			
+								// 	console.log('Program output:', output);
+			
+			
+			
+			
+			
+			
+								// });
 			
 			
 			
@@ -22305,7 +22690,8 @@
 						capture: function(){
 							var self = this;
 							//hide #thumbBox before the screenshot
-							
+							var thumbBoxContainer = document.getElementById("thumbBox");
+							thumbBoxContainer.style.visibility = "hidden";
 							setTimeout(function(){
 								Global.mainWindow.capturePage({
 									x: self.box.getX(), 
@@ -22313,6 +22699,10 @@
 									width: self.box.getWidth(), 
 									height: self.box.getHeight()
 								},function(_img){
+									setTimeout(function(){
+										thumbBoxContainer.style.visibility = "visible";
+									},0);
+									
 									var pngImgBuff = _img.toPng();
 			
 									core.flash(function(){
@@ -22456,17 +22846,17 @@
 								// console.log("starting interface:", _interface);
 								el("#body").append(_interface);
 			
-								el(".decrease-thumb-size")[0].onclick = function(){
+								el("#decrease-thumb-size").addEventListener("click", function(){
 									core.preview.mode.thumbnail.box.ratio.decrement();
-								}
+								});
 			
-								el(".increase-thumb-size")[0].onclick = function(){
+								el("#increase-thumb-size").addEventListener("click", function(){
 									core.preview.mode.thumbnail.box.ratio.increment();
-								}
+								});
 			
-								el("#thumbCamera").onclick = function(){
+								el("#thumbCamera").addEventListener("click", function(){
 									core.preview.mode.thumbnail.capture();
-								}
+								});
 			
 								el("#thumbCamera").onmouseover = function(){
 									el("#thumbBox").addClass("screenshot-in-progress");
@@ -22489,8 +22879,8 @@
 											el("+section").append(
 												el.join([
 													el("+div").addClass("interface-header").text("Thumnail Size"),
-													el("+div").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
-													el("+div").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
+													el("+div#decrease-thumb-size").addClass(["decrease-thumb-size", "thumbSizeBtn"]).text("–"),
+													el("+div#increase-thumb-size").addClass(["increase-thumb-size", "thumbSizeBtn"]).text("+")
 												])
 											),
 											el("+section").append(
@@ -22741,8 +23131,6 @@
 					codemirrorContainer.el("textarea").attr("tabindex", "-1");
 			
 			
-			
-			
 					codemirrorContainer.addEventListener('contextmenu',function(e){
 						e.stopPropagation();
 						e.preventDefault();
@@ -22751,6 +23139,10 @@
 						}
 						console.log("right clicked codemirror");
 					}, true);
+			
+					var codeMirrorElement = document.querySelector(".CodeMirror").style.fontSize = "16px";
+			
+			
 				}, 0);
 				
 				window.myCodeMirror = CodeMirror(codemirrorContainer, {
@@ -22832,6 +23224,25 @@
 					}
 			
 			
+				},
+			
+				increaseFontSize: function(){
+					if(core.preview.mode.currentMode === "thumbnail") return;
+					var codeMirrorElement = document.querySelector(".CodeMirror");
+					var currentSize = parseInt(codeMirrorElement.style.fontSize);
+					if( currentSize < 24 ){
+						console.log("increasing");
+						codeMirrorElement.style.fontSize = (++currentSize)+"px";
+					}
+				},
+				decreaseFontSize: function(){
+					if(core.preview.mode.currentMode === "thumbnail") return;
+					var codeMirrorElement = document.querySelector(".CodeMirror");
+					var currentSize = parseInt(codeMirrorElement.style.fontSize);
+					if( currentSize > 10 ){
+						console.log("decreasing");
+						codeMirrorElement.style.fontSize = (--currentSize)+"px";
+					}
 				}
 			
 				
@@ -25714,12 +26125,217 @@
 					//un-hide page // show editor and webview
 					el.join( [editor, preview] ).rmClass("hide");
 			
+			
+			
 					window.addEventListener("resize", function(){
 						core.preview.mode.screenshot.box.update();
 					})
 			
-					
-					
+			
+			
+					window.addEventListener("keypress", function(e){
+			
+					console.log("e",e);
+						// enter key
+						if(e.keyCode === 13) {
+							if(core.preview.mode.currentMode === "thumbnail"){
+								var clickEvent = new MouseEvent("click");
+								document.getElementById("thumbCamera").dispatchEvent(clickEvent);
+							}
+							else if(core.preview.mode.currentMode === "screenshot"){
+								var clickEvent = new MouseEvent("click");
+								document.getElementById("screenshotCamera").dispatchEvent(clickEvent);
+								console.log("take screenshot");
+							}
+						}
+			
+					});
+			
+					window.keystate = [];
+			
+			
+			
+					document.addEventListener('keydown',function(evt){
+						keystate[evt.keyCode] = true;
+						if (evt.keyCode === 38 || evt.keyCode === 40 || evt.keyCode === 39 || evt.keyCode === 37 || evt.keyCode === 32) {
+							evt.preventDefault();
+							
+						}
+			
+						// if 'minus' key
+						if(evt.keyCode === 189){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND'
+							if(keystate[91]){
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var clickEvent = new MouseEvent("click");
+									document.getElementById("decrease-thumb-size").dispatchEvent(clickEvent);
+								}
+							}
+						}
+			
+						// if 'equals' key
+						else if(evt.keyCode === 187){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND'
+							if(keystate[91]){
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var clickEvent = new MouseEvent("click");
+									document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+								}
+							}
+						}
+			
+						// if 'right arrow' key
+						else if(evt.keyCode === 39){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND' and 'OPTION' keys not pressed
+							if(keystate[91] && keystate[18]){
+								return;
+							}	
+			
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var thumbBox = document.getElementById("thumbBox");
+									if(keystate[91]){
+										thumbBox.style.left = (parseInt(thumbBox.style.left) + (50))+"px";
+									} else {
+										thumbBox.style.left = (parseInt(thumbBox.style.left) + (10))+"px";
+									}
+			
+									if( (parseInt(thumbBox.style.left) + thumbBox.clientWidth) > window.innerWidth ) thumbBox.style.left = (
+										window.innerWidth - thumbBox.clientWidth
+										)+"px";
+									
+									// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
+									// var clickEvent = new MouseEvent("click");
+									// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+								}
+							
+						}
+			
+						// if 'left arrow' key
+						else if(evt.keyCode === 37){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND' and 'OPTION' keys not pressed
+							if(keystate[91] && keystate[18]){
+								return;
+							}	
+			
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var thumbBox = document.getElementById("thumbBox");
+									if(keystate[91]){
+			
+										if(parseInt(thumbBox.style.left) - (50) < 0){
+											thumbBox.style.left = "0px";
+										} else {
+											thumbBox.style.left = (parseInt(thumbBox.style.left) - (50))+"px";
+										}
+										
+									} else {
+			
+										if(parseInt(thumbBox.style.left) - (10) < 0){
+											thumbBox.style.left = "0px";
+										} else {
+											thumbBox.style.left = (parseInt(thumbBox.style.left) - (10))+"px";
+										}
+			
+									}
+			
+								}
+							
+						}
+			
+						// if 'down arrow' key
+						else if(evt.keyCode === 40){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND' and 'OPTION' keys not pressed
+							if(keystate[91] && keystate[18]){
+								return;
+							}	
+			
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var thumbBox = document.getElementById("thumbBox");
+									
+									if(keystate[91]){
+										thumbBox.style.top = (parseInt(thumbBox.style.top) + (50))+"px";
+									} else {
+										thumbBox.style.top = (parseInt(thumbBox.style.top) + (10))+"px";
+									}
+									console.log("top",parseInt(thumbBox.style.top));
+									console.log("box height",thumbBox.clientHeight);
+									console.log("window height",window.innerHeight);
+			
+			
+									if( (parseInt(thumbBox.style.top) + thumbBox.clientHeight) >= window.innerHeight) {
+										console.log("reset top")
+										thumbBox.style.top = (
+										window.innerHeight - thumbBox.clientHeight
+										)+"px";
+									}
+										
+									
+									// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
+									// var clickEvent = new MouseEvent("click");
+									// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+								}
+							
+						}
+			
+						// if 'up arrow' key
+						else if(evt.keyCode === 38){
+							keystate[evt.keyCode] = false;
+			
+							//if 'COMMAND' and 'OPTION' keys not pressed
+							if(keystate[91] && keystate[18]){
+								return;
+							}	
+			
+								if(core.preview.mode.currentMode === "thumbnail"){
+									var thumbBox = document.getElementById("thumbBox");
+									if(keystate[91]){
+			
+										if(parseInt(thumbBox.style.top) - (50) < 0){
+											thumbBox.style.top = "0px";
+										} else {
+											thumbBox.style.top = (parseInt(thumbBox.style.top) - (50))+"px";
+										}
+			
+			
+									} else {
+			
+										if(parseInt(thumbBox.style.top) - (10) < 0){
+											thumbBox.style.top = "0px";
+										} else {
+											thumbBox.style.top = (parseInt(thumbBox.style.top) - (10))+"px";
+										}
+										
+									}
+			
+									
+									// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
+									// var clickEvent = new MouseEvent("click");
+									// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+								}
+							
+						}
+			
+			
+			
+			
+			
+					});
+			
+			
+					document.addEventListener('keyup',function(evt){
+			
+						keystate[evt.keyCode] = false;
+						console.log("keystate:",keystate);
+					});
 			
 					preview.addEventListener("did-start-loading", function(){
 						// preview.reload();
