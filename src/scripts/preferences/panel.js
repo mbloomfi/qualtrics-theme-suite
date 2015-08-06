@@ -29,9 +29,7 @@ var panel = (function(){
 		return etc.el("div", {id:"preferences_splash"}, "PREFERENCES");
 	});
 
-	var QTS_Panel = etc.template(function(){
-		return etc.el("div", {id:"preferences_splash"}, "QTS");
-	});
+		
 
 
 
@@ -54,7 +52,7 @@ var panel = (function(){
 	function setPanel(selected_nav){
 		var panelMap = {
 			splash: splashPanel,
-			qts: QTS_Panel,
+			qts: QTS_Panel.QTS_Panel_Template,
 			files: FilesPanel.mainTemplate,
 			managePreviewFiles: FilesPanel.previewFilesTemplate,
 			snippets: SnippetsPanel.main,
@@ -95,6 +93,29 @@ var panel = (function(){
 
 // 		return currentPanel;
 // 	}
+/*****************
+QTS Panel
+*****************/
+var QTS_Panel = (function(){
+
+	var QTS_Panel_Template = etc.template(function(){
+		return etc.el("label", {
+			id:"user_name"
+		}, "Your Name").append(
+			etc.el("input", {
+				id:"user_name_input",
+				placeholder:"Name"
+			})
+		);
+	});	
+
+
+
+	return {
+		QTS_Panel_Template: QTS_Panel_Template
+	}
+})();
+
 
 /*****************
 Files Panel
