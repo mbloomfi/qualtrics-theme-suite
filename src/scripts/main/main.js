@@ -233,7 +233,7 @@ el.on("load", function(){
 		document.addEventListener('keydown',function(evt){
 			keystate[evt.keyCode] = true;
 			if (evt.keyCode === 38 || evt.keyCode === 40 || evt.keyCode === 39 || evt.keyCode === 37 || evt.keyCode === 32) {
-				evt.preventDefault();
+				// evt.preventDefault();
 				
 			}
 

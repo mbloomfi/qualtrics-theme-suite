@@ -353,40 +353,37 @@ var core = Global.coreMethods = {
 					window.imagePreview = etc.template(function(){
 						if(document.getElementById("image_preview_container")){
 							var imgCont = document.getElementById("image_preview_container");
-							console.log("changing image")
 							imgCont.getElementsByTagName('img')[0].src = path;
 							return;
 						}
 
 						var container = etc.el("div", {
 							id:"image_preview_container",
-							style : {
-								position:'absolute',
-								top:'50%',
-								left:'50%',
-								transform: 'translate(-50%, -50%)',
-								padding:'45px 10px 10px',
-								backgroundColor:'rgba(250,250,250,1)',
-								minWidth:'100px',
-								minHeight:'50px',
-								borderRadius:'2px',
-								border:'1px solid rgb(200,200,200)',
-								boxShadow:'0 3px 15px rgba(0,0,0,.3)'
-							}
+							className:"light"
 						});
+
+
 
 						container.append(
 							etc.el("div", {
-								className: "change-image-bg-cont",
-								style: {
-									background:'rgb(255,0,0)',
-									height:'25px',
-									width:'50px',
-									position:'absolute',
-									top:'10px',
-									right:'10px',
-									display:'block',
-									margin:'0 auto'
+								className: "change-image-bg-cont dark",
+								events: {
+									click: function(e){
+										e.stopPropagation();										
+										var imgCont = document.getElementById("image_preview_container");
+										if(this.classList.contains("light")){
+											this.classList.add("dark");
+											this.classList.remove("light");
+											imgCont.classList.remove("dark");
+											imgCont.classList.add("light");
+
+										} else {
+											this.classList.remove("dark");
+											this.classList.add("light");
+											imgCont.classList.add("dark");
+											imgCont.classList.remove("light");
+										}
+									}
 								}
 							})
 						)
@@ -395,8 +392,8 @@ var core = Global.coreMethods = {
 							etc.el("img", {
 								src: this.props.path,
 								style: {
-									maxHeight:'300px',
-									maxWidth:'300px'
+									maxHeight:'500px',
+									maxWidth:'500px'
 								}
 							})
 						);

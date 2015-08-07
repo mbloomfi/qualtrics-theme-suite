@@ -127,4 +127,43 @@ div.dimmer {
 }
 
 
+#image_preview_container {
+  position absolute
+  top 50%
+  left 50%
+  transform  translate(-50%, -50%)
+  padding 45px 10px 10px
+  min-width 100px
+  min-height 50px
+  borderRadius 2px
+  user-select none
+  pointer-events none
+  box-shadow 0 4px 20px rgba(0,0,0,.5) 
+  &.light {
+    background-color rgb(240,240,240)
+    border 1px solid rgb(200,200,200)
+  }
+  &.dark {
+    background-color rgb(50,50,50)
+    border 1px solid rgb(20,20,20)
+  }
+}
+.change-image-bg-cont {
+  height 25px
+  width 25px
+  border-radius 50%
+  position absolute
+  top 10px
+  right 10px
+  display block
+  margin 0 auto
+  cursor pointer
+  pointer-events all
+  &.light {
+    background-color rgb(240,240,240)
+  }
+  &.dark {
+    background-color rgb(50,50,50)
+  }
+}
 

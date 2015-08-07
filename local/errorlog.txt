@@ -19,3 +19,20 @@ Mon Aug 03 2015 20:27:42 GMT-0600 (MDT)
 Thu Aug 06 2015 11:05:16 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, stat '/Users/same/brands/qualtrics'
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:26:40 GMT-0600 (MDT)
+	SyntaxError: Unexpected token <
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/facebook/facebook1/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	true
+

@@ -41,6 +41,9 @@ var editorCore = {
 				if(editorCore.dropdowns.files.status === "opened"){
 					editorCore.dropdowns.files.close();
 				}
+				if(document.getElementById("image_preview_container")){
+					document.getElementById("image_preview_container").rm();
+				}
 			});
 		}
 
