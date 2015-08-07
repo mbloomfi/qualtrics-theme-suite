@@ -15,13 +15,13 @@ editorCore.dropdowns.projects = {
 			core.brands.projects.setCurrentProject(_projectName);
 			editorCore.dropdowns.files.activate(_projectName);
 			// editorCore.dropdowns.files.populate(_projectName);
-			console.log("selecting project 1");
+			// console.log("selecting project 1");
 			core.codeMirror.deactivate();
 			myCodeMirror.markClean();
 			editorCore.dropdowns.files.reset();
-			console.log("selecting project 2");
+			// console.log("selecting project 2");
 			core.preview.mode.regular.clearWatchers();
-			console.log("checkpoint 1");
+			// console.log("checkpoint 1");
 			core.preview.mode.regular.setWatchers(function(_err){
 
 				if(_err) {
@@ -31,14 +31,14 @@ editorCore.dropdowns.projects = {
 				}
 				else {
 
-					console.log("there were NO errors!");
-					console.log("selecting project 3");
+					// console.log("there were NO errors!");
+					// console.log("selecting project 3");
 					core.preview.mode.regular.update();
 					core.preview.mode.regular.enable();
-					console.log("selecting project 4");
+					// console.log("selecting project 4");
 					editorCore.dropdowns.files.autoSelectStyleSheet();
 					editorCore.refreshBtn.activate();
-					console.log("checkpoint 2");
+					// console.log("checkpoint 2");
 					setTimeout(function(){
 						core.preview.mode.regular.compileSass();
 					},0);
@@ -46,7 +46,7 @@ editorCore.dropdowns.projects = {
 					// these allow the menu items in the preview dropdown to become selectable
 					ipc.send('asynchronous-message', 'enablePreviewModes');
 
-					console.log("checkpoint 3");
+					// console.log("checkpoint 3");
 
 
 				}
@@ -213,7 +213,7 @@ editorCore.dropdowns.projects = {
 			var customCheck = etc.template(function(){
 
 				var checked = this.props.checked;
-				console.log("checked?",checked);
+				// console.log("checked?",checked);
 				return etc.el("label", {
 					id:"addBaseFilesCheck_custom",
 					className:((checked)?"checked":""),

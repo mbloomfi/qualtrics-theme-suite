@@ -1205,14 +1205,14 @@
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.deleteFile {
 			  background-color: rgba(0,0,0,0);
-			  cursor: url("local/images/delete-cursor.svg"), auto;
+			  cursor: not-allowed;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.deleteFile:hover,
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.deleteFile:focus {
 			  outline: 1px solid #e14444;
 			  background: #1e1e1e;
 			  color: #fff;
-			  cursor: url("local/images/delete-cursor.svg"), auto;
+			  cursor: not-allowed;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files .file-item.renameFile {
 			  background-color: rgba(0,0,0,0);
@@ -1266,7 +1266,7 @@
 			  background: #27b04b;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files#dropdownBody-files.deleteFile {
-			  cursor: url("local/images/delete-cursor.svg"), auto;
+			  cursor: not-allowed;
 			}
 			section#editor section#sectionInner div#editorBar div#editorBarInner .btn div.dropdown .dropdownBody.files#dropdownBody-files.renameFile {
 			  cursor: url("local/images/pencil-cursor.svg"), auto;
@@ -1592,7 +1592,7 @@
 			  position: absolute;
 			  background-color: rgba(55,95,245,0);
 			  outline: 3px solid #375ff5;
-			  z-index: 100000;
+			  z-index: 1000;
 			  cursor: -webkit-grab;
 			  cursor: grab;
 			  -webkit-transition: background-color 0.3s ease;
@@ -1616,7 +1616,7 @@
 			#thumbInterface {
 			  position: absolute;
 			  background-color: #375ff5;
-			  z-index: 100000;
+			  z-index: 1000;
 			  bottom: 0;
 			  left: 0;
 			  height: 200px;
@@ -1697,12 +1697,12 @@
 			#screenshotBox {
 			  position: absolute;
 			  background-color: #fa9b1e;
-			  z-index: 100000;
+			  z-index: 1000;
 			}
 			#screenshotInterface {
 			  position: absolute;
 			  background-color: #fa9b1e;
-			  z-index: 100000;
+			  z-index: 1000;
 			  bottom: 0;
 			  left: 0;
 			  height: 90px;
@@ -1788,6 +1788,7 @@
 			  color: #fff;
 			  height: 60px;
 			  width: 100%;
+			  z-index: 10000;
 			  border-bottom: 4px solid #df4848;
 			  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
 			  -webkit-transform: translateY(-150%);
@@ -16239,7 +16240,7 @@
 			
 			
 			
-								console.log("readPersistantData ERROR:",_err);
+								// console.log("readPersistantData ERROR:",_err);
 			
 			
 			
@@ -16498,7 +16499,7 @@
 			
 			
 			
-								console.log("User Settings READ ERROR:", _err);
+								// console.log("User Settings READ ERROR:", _err);
 			
 			
 			
@@ -17492,7 +17493,7 @@
 			
 			
 			
-						console.log(typeof core.localData.brands.path);
+						// console.log(typeof core.localData.brands.path);
 			
 			
 			
@@ -17688,7 +17689,7 @@
 			
 			
 			
-							console.log(typeof core.brands.getFullPathToBrands());
+							// console.log(typeof core.brands.getFullPathToBrands());
 			
 			
 			
@@ -18003,7 +18004,7 @@
 			
 			
 			
-								console.log(typeof path);
+								// console.log(typeof path);
 			
 			
 			
@@ -18031,7 +18032,7 @@
 			
 			
 			
-										console.log("error listing projects");
+										// console.log("error listing projects");
 			
 			
 			
@@ -18206,7 +18207,7 @@
 			
 			
 			
-									console.log(typeof core.brands.getFullPathToBrands());
+									// console.log(typeof core.brands.getFullPathToBrands());
 			
 			
 			
@@ -18381,14 +18382,14 @@
 			
 			
 			
-									console.log('Exit status:', status);
+									// console.log('Exit status:', status);
 			
 			
 			
 			
 			
 			
-									console.log('Program output:', output);
+									// console.log('Program output:', output);
 			
 			
 			
@@ -18507,7 +18508,7 @@
 			
 			
 			
-										console.log("error listing project assets");
+										// console.log("error listing project assets");
 			
 			
 			
@@ -18521,7 +18522,7 @@
 			
 			
 			
-									console.log("the files",_files);
+									// console.log("the files",_files);
 			
 			
 			
@@ -18969,7 +18970,7 @@
 			
 			
 			
-								// 	console.log('Exit status:', status);
+									// console.log('Exit status:', status);
 			
 			
 			
@@ -19067,7 +19068,7 @@
 			
 			
 			
-										console.log("error listing projects");
+										// console.log("error listing projects");
 			
 			
 			
@@ -19109,7 +19110,7 @@
 			
 			
 			
-											console.log("has assets folder!!!");
+											// console.log("has assets folder!!!");
 			
 			
 			
@@ -19557,7 +19558,7 @@
 			
 			
 			
-									console.log("persistent-data recent brands", _persistent_data.snippets)
+									// console.log("persistent-data recent brands", _persistent_data.snippets)
 			
 			
 			
@@ -19641,7 +19642,7 @@
 			
 			
 			
-								console.log("new persistent-data"), _persistent_data;
+								// console.log("new persistent-data"), _persistent_data;
 			
 			
 			
@@ -19991,7 +19992,7 @@
 			
 			
 			
-								console.log("User Settings READ ERROR:", _err);
+								// console.log("User Settings READ ERROR:", _err);
 			
 			
 			
@@ -20103,14 +20104,14 @@
 			
 			
 			
-						console.log(typeof core.localData.brands.path);
+						// console.log(typeof core.localData.brands.path);
 			
 			
 			
 			
 			
 			
-						console.log("path",pathToBrands);
+						// console.log("path",pathToBrands);
 			
 			
 			
@@ -20138,7 +20139,7 @@
 			
 			
 			
-								console.log("error");
+								// console.log("error");
 			
 			
 			
@@ -20334,7 +20335,7 @@
 			
 			
 			
-								console.log("persistent-data recent brands", _persistent_data.recentBrands)
+								// console.log("persistent-data recent brands", _persistent_data.recentBrands)
 			
 			
 			
@@ -20348,7 +20349,7 @@
 			
 			
 			
-								console.log("1a) recentbrands:",core.localData.brands.recent);
+								// console.log("1a) recentbrands:",core.localData.brands.recent);
 			
 			
 			
@@ -20425,7 +20426,7 @@
 			
 			
 			
-									console.log("1b) recentbrands:",core.localData.brands.recent);
+									// console.log("1b) recentbrands:",core.localData.brands.recent);
 			
 			
 			
@@ -20481,7 +20482,7 @@
 			
 			
 			
-								console.log("1c) recentbrands:",core.localData.brands.recent);
+								// console.log("1c) recentbrands:",core.localData.brands.recent);
 			
 			
 			
@@ -20635,7 +20636,7 @@
 			
 			
 			
-						console.log("filename:",_fileName);
+						// console.log("filename:",_fileName);
 			
 			
 			
@@ -20761,7 +20762,7 @@
 			
 			
 			
-							console.log("error getting files");
+							// console.log("error getting files");
 			
 			
 			
@@ -21027,7 +21028,7 @@
 			
 			
 			
-							console.log("ERR",err);
+							// console.log("ERR",err);
 			
 			
 			
@@ -21426,7 +21427,7 @@
 			
 			
 			
-									console.log("ERR",err);
+									// console.log("ERR",err);
 			
 			
 			
@@ -22285,7 +22286,7 @@
 			
 			
 						disable: function(){
-							console.log("disabling preview");
+							// console.log("disabling preview");
 							preview.src = __dirname+"/local/no-preview.html";
 							this.hidden = true;
 						},
@@ -22314,7 +22315,7 @@
 						},
 			
 						clearWatchers: function(){
-							console.log("Clearing Watchers");
+							// console.log("Clearing Watchers");
 							var self = this;
 							if(self.cssFileWatcher !== null){
 								self.cssFileWatcher.close();
@@ -22328,17 +22329,17 @@
 						},
 			
 						setWatchers: function(_callback){
-							console.log("Setting Watchers:",_callback);
+							// console.log("Setting Watchers:",_callback);
 			
 							var self = this;
 							self.watchCssFile(function(_err){
 			
 								if(_err && _callback) {
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch css file error\n"+_err+"\n\n", function(){});
-									console.log("watch css file error");
+									// console.log("watch css file error");
 									return _callback(_err);
 								} else {
-									console.log("no css error :)");
+									// console.log("no css error :)");
 								}
 			
 								self.watchSkinFile(function(_err){
@@ -22346,7 +22347,7 @@
 										if(_err){
 											fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch skin file error\n"+_err+"\n\n", function(){});
 										}
-										console.log("running set watcher callback");
+										// console.log("running set watcher callback");
 										return _callback(_err);
 									}
 								});
@@ -22359,20 +22360,20 @@
 						watchCssFile: function(_callback){
 							var self = this;
 							var path = core.localData.currentProject.path+"/StyleSheet.css";
-							console.log("ok, we are in the watch css");
+							// console.log("ok, we are in the watch css");
 							// try{
 								fs.stat(path,function(_ERR){
 									if(_ERR) {
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 										console.warn("error watching CSS File:",_ERR);
-										console.log("");
+										// console.log("");
 										self.disable();
 										if(_callback) _callback(true);
 									}
 									else {
 										// console.log("path",core.localData.currentProject.path);
 										self.cssFileWatcher = fs.watch(path, function(){
-											console.log("css changed!!!!");
+											// console.log("css changed!!!!");
 											self.update(function(){
 												setTimeout(function(){
 													self.reload();
@@ -22380,7 +22381,7 @@
 											});
 											
 										});
-										console.log("no problemo with css");
+										// console.log("no problemo with css");
 										if(_callback) _callback(false);
 										
 									}
@@ -22406,7 +22407,7 @@
 								if(_ERR) {
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 									console.warn("error watching CSS File:",_ERR);
-									console.log("");
+									// console.log("");
 									self.disable();
 									if(_callback) _callback(true);
 								}
@@ -22419,7 +22420,7 @@
 												}, 0);
 											});
 									});
-									console.log("no problemo with skin");
+									// console.log("no problemo with skin");
 									if(_callback) _callback(false);
 								}
 							});
@@ -22431,7 +22432,7 @@
 			
 			
 						reload: function(){
-							console.log("===runing reload===");
+							// console.log("===runing reload===");
 							function reloadPreview(){
 								if(this.hasClass("active") && core.localData.currentProject.name !== null){
 									var self = this;
@@ -22460,20 +22461,20 @@
 			
 						update: function(_callback){
 							// to run, use:  core.preview.update();
-							console.log("===runing update===");
+							// console.log("===runing update===");
 							var self = this;
-							console.log("Updating current project:",core.localData.currentProject.name);
+							// console.log("Updating current project:",core.localData.currentProject.name);
 							fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 								if(_errHtml){ 
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
-									console.log("ERR",_errHtml);
+									console.error("ERR",_errHtml);
 								}
 								else {
 			
 									fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 										if(_errPreviewQuestions){ 
 											fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
-											console.log("ERR",_errPreviewQuestions);
+											console.error("ERR",_errPreviewQuestions);
 										}
 										else {
 			
@@ -22495,21 +22496,21 @@
 												).replace(
 													"{~SKIN.HTML~}", _html
 												);
-												console.log("")
-												console.log("")
-												console.log("new cuurentPreview.html (PRE-WRITE)::")
-												console.log("")
-												console.log(newPreview);
+												// console.log("")
+												// console.log("")
+												// console.log("new cuurentPreview.html (PRE-WRITE)::")
+												// console.log("")
+												// console.log(newPreview);
 			
 												setTimeout(function(){
 													fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
 														if(err) alert("ERROR!");
-														console.log("")
-														console.log("")
-														console.log("")
-														console.log("new cuurentPreview.html (POST-WRITE)::")
-														console.log("")
-														console.log(fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+														// console.log("")
+														// console.log("")
+														// console.log("")
+														// console.log("new cuurentPreview.html (POST-WRITE)::")
+														// console.log("")
+														// console.log(fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
 														if(typeof _callback !== "undefined") _callback();
 													});
 												},0);
@@ -22554,17 +22555,17 @@
 								fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 									if(_errHtml){ 
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
-										console.log("ERR",_errHtml);
+										console.error("ERR",_errHtml);
 									}
 									else {
 			
 										fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 											if(_errPreviewQuestions){ 
 												fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
-												console.log("ERR",_errPreviewQuestions);
+												console.error("ERR",_errPreviewQuestions);
 											}
 											else {
-												console.log("HARD REFRESH, rewriting preview file");
+												// console.log("HARD REFRESH, rewriting preview file");
 			
 												fs.readFile(__dirname+"/local/previewTemplate.html", "utf-8", function(err,data){
 													var newPreview = data.replace(
@@ -22584,16 +22585,16 @@
 													).replace(
 														"{~SKIN.HTML~}", _html
 													);
-													console.log("")
-													console.log("new cuurentPreview.html (pre-write)::", newPreview);
+													// console.log("")
+													// console.log("new cuurentPreview.html (pre-write)::", newPreview);
 														
 			
 													setTimeout(function(){
 			
 														fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
 															if(err) alert("ERROR!");
-															console.log("")
-															console.log("new cuurentPreview.html (POST-write)::", fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+															// console.log("")
+															// console.log("new cuurentPreview.html (POST-write)::", fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
 			
 															setTimeout(function(){
 																core.preview.init();
@@ -22737,7 +22738,7 @@
 											_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
 												if(err) {
 													fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-													return console.log("ERR:",err);
+													return console.error("ERR:",err);
 												}
 											});
 										});
@@ -22943,7 +22944,7 @@
 			
 							var _interface = this.interface.create();
 							this.interface.init(_interface);
-							console.log("enabled screenshot mode");
+							// console.log("enabled screenshot mode");
 							editorCore.deactivate();
 			
 						},
@@ -22959,7 +22960,7 @@
 							var self = this;
 							
 							setTimeout(function(){
-								console.log("pre-snapshot");
+								// console.log("pre-snapshot");
 			
 								function getX(){
 									return (window.innerWidth - preview.clientWidth);
@@ -22981,20 +22982,20 @@
 									width: getW(), 
 									height: getH()
 								},function(_img){
-									console.log("pre-flash");
+									// console.log("pre-flash");
 									var pngImgBuff = _img.toPng();
-									console.log("pre-flash 2");
+									// console.log("pre-flash 2");
 									core.flash(function(){
 										// el("#thumbBox").rmClass("screenshot-in-progress");
 									});
-									console.log("mid-snapshot");
+									// console.log("mid-snapshot");
 									fs.outputFile(core.localData.currentProject.path+"/assets/"+core.localData.currentBrand+"-"+Date.now()+".png", pngImgBuff, function(err){
 										if(err) {
 											fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-											return console.log("ERR:",err);
+											return console.error("ERR:",err);
 										} 
 											
-										console.log("post-snapshot");
+										// console.log("post-snapshot");
 									});
 			
 								});
@@ -23024,7 +23025,7 @@
 							},
 			
 							update: function(){
-								console.log("resizing");
+								// console.log("resizing");
 								if(core.preview.mode.currentMode === "screenshot"){
 									el("#screenshotBox").style.left = (editor.clientWidth)+"px";
 								}
@@ -23135,7 +23136,7 @@
 					if(core.preview.mode.screenshot.active){
 						core.preview.mode.screenshot.box.update();
 					} else {
-						console.log("not active")
+						// console.log("not active")
 					}
 				}
 			
@@ -23160,7 +23161,7 @@
 						if(core.codeMirror.active){
 							menu.popup(remote.getCurrentWindow());
 						}
-						console.log("right clicked codemirror");
+						// console.log("right clicked codemirror");
 					}, true);
 			
 					var codeMirrorElement = document.querySelector(".CodeMirror").style.fontSize = "16px";
@@ -23240,12 +23241,12 @@
 					},
 			
 					activate: function(){
-						console.log("activating refreesh btn");
+						// console.log("activating refreesh btn");
 						el("#refreshPreviewBtn").addClass("active");
 					},
 			
 					deactivate: function(){
-						console.log("deactivating refreesh btn");
+						// console.log("deactivating refreesh btn");
 						el("#refreshPreviewBtn").rmClass("active");
 					}
 			
@@ -23257,7 +23258,7 @@
 					var codeMirrorElement = document.querySelector(".CodeMirror");
 					var currentSize = parseInt(codeMirrorElement.style.fontSize);
 					if( currentSize < 24 ){
-						console.log("increasing");
+						// console.log("increasing");
 						codeMirrorElement.style.fontSize = (++currentSize)+"px";
 					}
 				},
@@ -23266,7 +23267,7 @@
 					var codeMirrorElement = document.querySelector(".CodeMirror");
 					var currentSize = parseInt(codeMirrorElement.style.fontSize);
 					if( currentSize > 10 ){
-						console.log("decreasing");
+						// console.log("decreasing");
 						codeMirrorElement.style.fontSize = (--currentSize)+"px";
 					}
 				}
@@ -23396,7 +23397,7 @@
 			
 			
 			
-						console.log("selecting:",_brandName);
+						// console.log("selecting:",_brandName);
 			
 			
 			
@@ -23468,7 +23469,7 @@
 			
 			
 			
-									console.log("brand ",_brandName,"does not exists")
+									// console.log("brand ",_brandName,"does not exists")
 			
 			
 			
@@ -24072,7 +24073,7 @@
 			
 			
 			
-						console.log("start populating recent brands:",core.localData.brands.recent);
+						// console.log("start populating recent brands:",core.localData.brands.recent);
 			
 			
 			
@@ -24112,7 +24113,7 @@
 			
 			
 			
-							console.log("recentBrandsArray::", recentBrandsArray);
+							// console.log("recentBrandsArray::", recentBrandsArray);
 			
 			
 			
@@ -24332,7 +24333,7 @@
 			
 			
 			
-								console.log("reloading brands?");
+								// console.log("reloading brands?");
 			
 			
 			
@@ -25035,13 +25036,13 @@
 						core.brands.projects.setCurrentProject(_projectName);
 						editorCore.dropdowns.files.activate(_projectName);
 						// editorCore.dropdowns.files.populate(_projectName);
-						console.log("selecting project 1");
+						// console.log("selecting project 1");
 						core.codeMirror.deactivate();
 						myCodeMirror.markClean();
 						editorCore.dropdowns.files.reset();
-						console.log("selecting project 2");
+						// console.log("selecting project 2");
 						core.preview.mode.regular.clearWatchers();
-						console.log("checkpoint 1");
+						// console.log("checkpoint 1");
 						core.preview.mode.regular.setWatchers(function(_err){
 			
 							if(_err) {
@@ -25051,14 +25052,14 @@
 							}
 							else {
 			
-								console.log("there were NO errors!");
-								console.log("selecting project 3");
+								// console.log("there were NO errors!");
+								// console.log("selecting project 3");
 								core.preview.mode.regular.update();
 								core.preview.mode.regular.enable();
-								console.log("selecting project 4");
+								// console.log("selecting project 4");
 								editorCore.dropdowns.files.autoSelectStyleSheet();
 								editorCore.refreshBtn.activate();
-								console.log("checkpoint 2");
+								// console.log("checkpoint 2");
 								setTimeout(function(){
 									core.preview.mode.regular.compileSass();
 								},0);
@@ -25066,7 +25067,7 @@
 								// these allow the menu items in the preview dropdown to become selectable
 								ipc.send('asynchronous-message', 'enablePreviewModes');
 			
-								console.log("checkpoint 3");
+								// console.log("checkpoint 3");
 			
 			
 							}
@@ -25233,7 +25234,7 @@
 						var customCheck = etc.template(function(){
 			
 							var checked = this.props.checked;
-							console.log("checked?",checked);
+							// console.log("checked?",checked);
 							return etc.el("label", {
 								id:"addBaseFilesCheck_custom",
 								className:((checked)?"checked":""),
@@ -25536,7 +25537,7 @@
 			// assetsIcon.render({}, document.getElementById('editorBarInner'));
 			
 			
-					// RENAME FILES ICON
+					// ASSETS ICON
 					var assetsIcon = el("+button#assetsIcon").addClass("icon");
 					assetsIcon.innerHTML = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 36 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><g><path d="M34.135,1.686c0,-0.773 -0.628,-1.4 -1.401,-1.4c-5.421,0 -24.987,0 -30.407,0c-0.774,0 -1.401,0.627 -1.401,1.4c0,4.299 0,17.268 0,21.566c0,0.774 0.627,1.401 1.401,1.401c5.42,0 24.986,0 30.407,0c0.773,0 1.401,-0.627 1.401,-1.401c0,-4.298 0,-17.267 0,-21.566ZM32.776,2.98c0,-0.774 -0.627,-1.401 -1.401,-1.401c-5.093,0 -22.591,0 -27.684,0c-0.773,0 -1.401,0.627 -1.401,1.401c0,3.934 0,15.05 0,18.984c0,0.774 0.628,1.401 1.401,1.401c5.093,0 22.591,0 27.684,0c0.774,0 1.401,-0.627 1.401,-1.401c0,-3.934 0,-15.05 0,-18.984Z" class="primary"/><g><clipPath id="_clip1"><rect x="3.052" y="2.361" width="28.882" height="20.27"/></clipPath><g clip-path="url(#_clip1)"><path d="M9.845,22.631l-9.148,0l9.486,-12.177l4.574,5.871l-4.912,6.306Z" class="primary"/><path d="M22.894,7.551l11.748,15.08l-23.495,0l11.747,-15.08Z"  class="primary"/><circle cx="7.314" cy="4.49" r="3.061" class="secondary"/></g></g></g></svg>';
 			
@@ -25655,9 +25656,9 @@
 					on: function(){
 			
 						var dropdownBody_Files = el('#dropdownBody-files');
-						console.log("will get assets");
+						// console.log("will get assets");
 						core.brands.projects.files.assets(function(files){
-							console.log("got assets");
+							// console.log("got assets");
 							var fragment = document.createDocumentFragment();
 							for(var i = 0, ii = files.length; i < ii; i++){
 			
@@ -25686,7 +25687,11 @@
 					},
 			
 					off: function(){
-			
+						var assetFileItems = document.getElementsByClassName("asset-file-item");
+						while(assetFileItems[0]){
+							assetFileItems[0].parentNode.removeChild(assetFileItems[0]);
+						}
+						
 					}
 				},
 			
@@ -25789,7 +25794,7 @@
 					if(_fileName === null) return;
 			
 					function selectFile() {
-						console.log("Selecting File: ", _fileName);
+						// console.log("Selecting File: ", _fileName);
 						el("#fileNameText").purge().text(_fileName);
 						editorCore.dropdowns.files.close();
 						core.codeMirror.activate();
@@ -26114,7 +26119,7 @@
 				})
 			
 				.then(function(next){
-					console.log("reloading?");
+					// console.log("reloading?");
 					core.localData.updateBrandsList(next);
 			
 				})
@@ -26161,7 +26166,7 @@
 			
 					window.addEventListener("keypress", function(e){
 			
-					console.log("e",e);
+					// console.log("e",e);
 						// enter key
 						if(e.keyCode === 13) {
 							if(core.preview.mode.currentMode === "thumbnail"){
@@ -26171,7 +26176,7 @@
 							else if(core.preview.mode.currentMode === "screenshot"){
 								var clickEvent = new MouseEvent("click");
 								document.getElementById("screenshotCamera").dispatchEvent(clickEvent);
-								console.log("take screenshot");
+								// console.log("take screenshot");
 							}
 						}
 			
@@ -26292,13 +26297,13 @@
 									} else {
 										thumbBox.style.top = (parseInt(thumbBox.style.top) + (10))+"px";
 									}
-									console.log("top",parseInt(thumbBox.style.top));
-									console.log("box height",thumbBox.clientHeight);
-									console.log("window height",window.innerHeight);
+									// console.log("top",parseInt(thumbBox.style.top));
+									// console.log("box height",thumbBox.clientHeight);
+									// console.log("window height",window.innerHeight);
 			
 			
 									if( (parseInt(thumbBox.style.top) + thumbBox.clientHeight) >= window.innerHeight) {
-										console.log("reset top")
+										// console.log("reset top")
 										thumbBox.style.top = (
 										window.innerHeight - thumbBox.clientHeight
 										)+"px";
@@ -26360,7 +26365,7 @@
 					document.addEventListener('keyup',function(evt){
 			
 						keystate[evt.keyCode] = false;
-						console.log("keystate:",keystate);
+						// console.log("keystate:",keystate);
 					});
 			
 					preview.addEventListener("did-start-loading", function(){

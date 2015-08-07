@@ -36,3 +36,61 @@ true
 Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
 	true
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/tester/tester2/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/tester/tester3/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:14:54 GMT-0600 (MDT)
+	Error in plugin 'gulp-sass'
+Message:
+    ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+Details:
+    column: 9
+    line: 63
+    file: stdin
+    status: 1
+    messageFormatted: ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:15:17 GMT-0600 (MDT)
+	Error in plugin 'gulp-sass'
+Message:
+    ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+Details:
+    column: 9
+    line: 63
+    file: stdin
+    status: 1
+    messageFormatted: ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+

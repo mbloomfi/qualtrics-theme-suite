@@ -96,7 +96,7 @@ var editorPreviewBar = {
 		if(core.preview.mode.screenshot.active){
 			core.preview.mode.screenshot.box.update();
 		} else {
-			console.log("not active")
+			// console.log("not active")
 		}
 	}
 
@@ -121,7 +121,7 @@ function codemirrorInit() {
 			if(core.codeMirror.active){
 				menu.popup(remote.getCurrentWindow());
 			}
-			console.log("right clicked codemirror");
+			// console.log("right clicked codemirror");
 		}, true);
 
 		var codeMirrorElement = document.querySelector(".CodeMirror").style.fontSize = "16px";
@@ -163,7 +163,7 @@ el.on("load", function(){
 	})
 
 	.then(function(next){
-		console.log("reloading?");
+		// console.log("reloading?");
 		core.localData.updateBrandsList(next);
 
 	})
@@ -210,7 +210,7 @@ el.on("load", function(){
 
 		window.addEventListener("keypress", function(e){
 
-		console.log("e",e);
+		// console.log("e",e);
 			// enter key
 			if(e.keyCode === 13) {
 				if(core.preview.mode.currentMode === "thumbnail"){
@@ -220,7 +220,7 @@ el.on("load", function(){
 				else if(core.preview.mode.currentMode === "screenshot"){
 					var clickEvent = new MouseEvent("click");
 					document.getElementById("screenshotCamera").dispatchEvent(clickEvent);
-					console.log("take screenshot");
+					// console.log("take screenshot");
 				}
 			}
 
@@ -341,13 +341,13 @@ el.on("load", function(){
 						} else {
 							thumbBox.style.top = (parseInt(thumbBox.style.top) + (10))+"px";
 						}
-						console.log("top",parseInt(thumbBox.style.top));
-						console.log("box height",thumbBox.clientHeight);
-						console.log("window height",window.innerHeight);
+						// console.log("top",parseInt(thumbBox.style.top));
+						// console.log("box height",thumbBox.clientHeight);
+						// console.log("window height",window.innerHeight);
 
 
 						if( (parseInt(thumbBox.style.top) + thumbBox.clientHeight) >= window.innerHeight) {
-							console.log("reset top")
+							// console.log("reset top")
 							thumbBox.style.top = (
 							window.innerHeight - thumbBox.clientHeight
 							)+"px";
@@ -409,7 +409,7 @@ el.on("load", function(){
 		document.addEventListener('keyup',function(evt){
 
 			keystate[evt.keyCode] = false;
-			console.log("keystate:",keystate);
+			// console.log("keystate:",keystate);
 		});
 
 		preview.addEventListener("did-start-loading", function(){

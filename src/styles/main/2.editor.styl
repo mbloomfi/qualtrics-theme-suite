@@ -683,12 +683,12 @@ section#editor {
 									}
 									&.deleteFile {
 										background-color rgba(0,0,0,0)
-										cursor url('local/images/delete-cursor.svg'), auto
+										cursor not-allowed
 										&:hover, &:focus {
 											outline 1px solid $negative-red
 											background rgb(30, 30, 30)
 											color white
-											cursor url('local/images/delete-cursor.svg'), auto
+											cursor not-allowed
 										}
 										
 									}
@@ -756,7 +756,7 @@ section#editor {
 								
 								&#dropdownBody-files {
 									&.deleteFile {
-										cursor url('local/images/delete-cursor.svg'), auto
+										cursor not-allowed
 										
 									}
 									&.renameFile {

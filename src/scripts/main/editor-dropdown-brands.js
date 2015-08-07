@@ -28,7 +28,7 @@ editorCore.dropdowns.brands = {
 		var self = this;
 
 		function selectBrand(){
-			console.log("selecting:",_brandName);
+			// console.log("selecting:",_brandName);
 			core.brands.exists(_brandName, function(exists){
 				ipc.send('asynchronous-message', 'disablePreviewModes');
 
@@ -46,7 +46,7 @@ editorCore.dropdowns.brands = {
 
 						self.close();
 					} else {
-						console.log("brand ",_brandName,"does not exists")
+						// console.log("brand ",_brandName,"does not exists")
 						self.close();
 						// refresh last open file
 						core.localData.rmFromRecentBrands(_brandName, function(){
@@ -197,7 +197,7 @@ editorCore.dropdowns.brands = {
 		maxAmount: 15,
 
 		populate: function(){
-			console.log("start populating recent brands:",core.localData.brands.recent);
+			// console.log("start populating recent brands:",core.localData.brands.recent);
 			var self = this;
 			baton(function(next){
 				editorCore.dropdowns.brands.search.newBrandBtn.remove();
@@ -207,7 +207,7 @@ editorCore.dropdowns.brands = {
 
 				var recentBrandsArray = core.localData.brands.recent;
 
-				console.log("recentBrandsArray::", recentBrandsArray);
+				// console.log("recentBrandsArray::", recentBrandsArray);
 
 				var recentBrandsCont = el("+div#recentBrandsCont");
 
@@ -262,7 +262,7 @@ editorCore.dropdowns.brands = {
 				self.prepareInputListener();
 				// SAVE BRANDS TO LOCAL PERSISTENT DATA
 				brandSearchInput.on("focus", function(){
-					console.log("reloading brands?");
+					// console.log("reloading brands?");
 					core.localData.updateBrandsList();
 				});
 

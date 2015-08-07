@@ -50,7 +50,7 @@ core.preview = {
 
 
 			disable: function(){
-				console.log("disabling preview");
+				// console.log("disabling preview");
 				preview.src = __dirname+"/local/no-preview.html";
 				this.hidden = true;
 			},
@@ -79,7 +79,7 @@ core.preview = {
 			},
 
 			clearWatchers: function(){
-				console.log("Clearing Watchers");
+				// console.log("Clearing Watchers");
 				var self = this;
 				if(self.cssFileWatcher !== null){
 					self.cssFileWatcher.close();
@@ -93,17 +93,17 @@ core.preview = {
 			},
 
 			setWatchers: function(_callback){
-				console.log("Setting Watchers:",_callback);
+				// console.log("Setting Watchers:",_callback);
 
 				var self = this;
 				self.watchCssFile(function(_err){
 
 					if(_err && _callback) {
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch css file error\n"+_err+"\n\n", function(){});
-						console.log("watch css file error");
+						// console.log("watch css file error");
 						return _callback(_err);
 					} else {
-						console.log("no css error :)");
+						// console.log("no css error :)");
 					}
 
 					self.watchSkinFile(function(_err){
@@ -111,7 +111,7 @@ core.preview = {
 							if(_err){
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch skin file error\n"+_err+"\n\n", function(){});
 							}
-							console.log("running set watcher callback");
+							// console.log("running set watcher callback");
 							return _callback(_err);
 						}
 					});
@@ -124,20 +124,20 @@ core.preview = {
 			watchCssFile: function(_callback){
 				var self = this;
 				var path = core.localData.currentProject.path+"/StyleSheet.css";
-				console.log("ok, we are in the watch css");
+				// console.log("ok, we are in the watch css");
 				// try{
 					fs.stat(path,function(_ERR){
 						if(_ERR) {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 							console.warn("error watching CSS File:",_ERR);
-							console.log("");
+							// console.log("");
 							self.disable();
 							if(_callback) _callback(true);
 						}
 						else {
 							// console.log("path",core.localData.currentProject.path);
 							self.cssFileWatcher = fs.watch(path, function(){
-								console.log("css changed!!!!");
+								// console.log("css changed!!!!");
 								self.update(function(){
 									setTimeout(function(){
 										self.reload();
@@ -145,7 +145,7 @@ core.preview = {
 								});
 								
 							});
-							console.log("no problemo with css");
+							// console.log("no problemo with css");
 							if(_callback) _callback(false);
 							
 						}
@@ -171,7 +171,7 @@ core.preview = {
 					if(_ERR) {
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_ERR+"\n\n", function(){});
 						console.warn("error watching CSS File:",_ERR);
-						console.log("");
+						// console.log("");
 						self.disable();
 						if(_callback) _callback(true);
 					}
@@ -184,7 +184,7 @@ core.preview = {
 									}, 0);
 								});
 						});
-						console.log("no problemo with skin");
+						// console.log("no problemo with skin");
 						if(_callback) _callback(false);
 					}
 				});
@@ -196,7 +196,7 @@ core.preview = {
 
 
 			reload: function(){
-				console.log("===runing reload===");
+				// console.log("===runing reload===");
 				function reloadPreview(){
 					if(this.hasClass("active") && core.localData.currentProject.name !== null){
 						var self = this;
@@ -225,20 +225,20 @@ core.preview = {
 
 			update: function(_callback){
 				// to run, use:  core.preview.update();
-				console.log("===runing update===");
+				// console.log("===runing update===");
 				var self = this;
-				console.log("Updating current project:",core.localData.currentProject.name);
+				// console.log("Updating current project:",core.localData.currentProject.name);
 				fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 					if(_errHtml){ 
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
-						console.log("ERR",_errHtml);
+						console.error("ERR",_errHtml);
 					}
 					else {
 
 						fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 							if(_errPreviewQuestions){ 
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
-								console.log("ERR",_errPreviewQuestions);
+								console.error("ERR",_errPreviewQuestions);
 							}
 							else {
 
@@ -260,21 +260,21 @@ core.preview = {
 									).replace(
 										"{~SKIN.HTML~}", _html
 									);
-									console.log("")
-									console.log("")
-									console.log("new cuurentPreview.html (PRE-WRITE)::")
-									console.log("")
-									console.log(newPreview);
+									// console.log("")
+									// console.log("")
+									// console.log("new cuurentPreview.html (PRE-WRITE)::")
+									// console.log("")
+									// console.log(newPreview);
 
 									setTimeout(function(){
 										fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
 											if(err) alert("ERROR!");
-											console.log("")
-											console.log("")
-											console.log("")
-											console.log("new cuurentPreview.html (POST-WRITE)::")
-											console.log("")
-											console.log(fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+											// console.log("")
+											// console.log("")
+											// console.log("")
+											// console.log("new cuurentPreview.html (POST-WRITE)::")
+											// console.log("")
+											// console.log(fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
 											if(typeof _callback !== "undefined") _callback();
 										});
 									},0);
@@ -319,17 +319,17 @@ core.preview = {
 					fs.readFile(core.localData.currentProject.path+"/Skin.html", "utf-8", function(_errHtml, _html){
 						if(_errHtml){ 
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errHtml+"\n\n", function(){});
-							console.log("ERR",_errHtml);
+							console.error("ERR",_errHtml);
 						}
 						else {
 
 							fs.readFile(core.localData.previewQuestionFiles.current.path, "utf-8", function(_errPreviewQuestions, _previewQuestions){
 								if(_errPreviewQuestions){ 
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_errPreviewQuestions+"\n\n", function(){});
-									console.log("ERR",_errPreviewQuestions);
+									console.error("ERR",_errPreviewQuestions);
 								}
 								else {
-									console.log("HARD REFRESH, rewriting preview file");
+									// console.log("HARD REFRESH, rewriting preview file");
 
 									fs.readFile(__dirname+"/local/previewTemplate.html", "utf-8", function(err,data){
 										var newPreview = data.replace(
@@ -349,16 +349,16 @@ core.preview = {
 										).replace(
 											"{~SKIN.HTML~}", _html
 										);
-										console.log("")
-										console.log("new cuurentPreview.html (pre-write)::", newPreview);
+										// console.log("")
+										// console.log("new cuurentPreview.html (pre-write)::", newPreview);
 											
 
 										setTimeout(function(){
 
 											fs.writeFile(__dirname+"/local/currentPreview.html", newPreview, function(err){
 												if(err) alert("ERROR!");
-												console.log("")
-												console.log("new cuurentPreview.html (POST-write)::", fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
+												// console.log("")
+												// console.log("new cuurentPreview.html (POST-write)::", fs.readFileSync(__dirname+"/local/currentPreview.html", "utf-8")); 
 
 												setTimeout(function(){
 													core.preview.init();
@@ -502,7 +502,7 @@ core.preview = {
 								_image.writeFile(core.localData.currentProject.path+"/Thumb.gif", "png", function(err){
 									if(err) {
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-										return console.log("ERR:",err);
+										return console.error("ERR:",err);
 									}
 								});
 							});
@@ -708,7 +708,7 @@ core.preview = {
 
 				var _interface = this.interface.create();
 				this.interface.init(_interface);
-				console.log("enabled screenshot mode");
+				// console.log("enabled screenshot mode");
 				editorCore.deactivate();
 
 			},
@@ -724,7 +724,7 @@ core.preview = {
 				var self = this;
 				
 				setTimeout(function(){
-					console.log("pre-snapshot");
+					// console.log("pre-snapshot");
 
 					function getX(){
 						return (window.innerWidth - preview.clientWidth);
@@ -746,20 +746,20 @@ core.preview = {
 						width: getW(), 
 						height: getH()
 					},function(_img){
-						console.log("pre-flash");
+						// console.log("pre-flash");
 						var pngImgBuff = _img.toPng();
-						console.log("pre-flash 2");
+						// console.log("pre-flash 2");
 						core.flash(function(){
 							// el("#thumbBox").rmClass("screenshot-in-progress");
 						});
-						console.log("mid-snapshot");
+						// console.log("mid-snapshot");
 						fs.outputFile(core.localData.currentProject.path+"/assets/"+core.localData.currentBrand+"-"+Date.now()+".png", pngImgBuff, function(err){
 							if(err) {
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-								return console.log("ERR:",err);
+								return console.error("ERR:",err);
 							} 
 								
-							console.log("post-snapshot");
+							// console.log("post-snapshot");
 						});
 
 					});
@@ -789,7 +789,7 @@ core.preview = {
 				},
 
 				update: function(){
-					console.log("resizing");
+					// console.log("resizing");
 					if(core.preview.mode.currentMode === "screenshot"){
 						el("#screenshotBox").style.left = (editor.clientWidth)+"px";
 					}

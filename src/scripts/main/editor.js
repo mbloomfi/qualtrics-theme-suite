@@ -59,12 +59,12 @@ var editorCore = {
 		},
 
 		activate: function(){
-			console.log("activating refreesh btn");
+			// console.log("activating refreesh btn");
 			el("#refreshPreviewBtn").addClass("active");
 		},
 
 		deactivate: function(){
-			console.log("deactivating refreesh btn");
+			// console.log("deactivating refreesh btn");
 			el("#refreshPreviewBtn").rmClass("active");
 		}
 
@@ -76,7 +76,7 @@ var editorCore = {
 		var codeMirrorElement = document.querySelector(".CodeMirror");
 		var currentSize = parseInt(codeMirrorElement.style.fontSize);
 		if( currentSize < 24 ){
-			console.log("increasing");
+			// console.log("increasing");
 			codeMirrorElement.style.fontSize = (++currentSize)+"px";
 		}
 	},
@@ -85,7 +85,7 @@ var editorCore = {
 		var codeMirrorElement = document.querySelector(".CodeMirror");
 		var currentSize = parseInt(codeMirrorElement.style.fontSize);
 		if( currentSize > 10 ){
-			console.log("decreasing");
+			// console.log("decreasing");
 			codeMirrorElement.style.fontSize = (--currentSize)+"px";
 		}
 	}

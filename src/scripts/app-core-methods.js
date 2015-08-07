@@ -12,7 +12,7 @@ var core = Global.coreMethods = {
 				}
 				else {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					console.log("readPersistantData ERROR:",_err);
+					// console.log("readPersistantData ERROR:",_err);
 				}
 			});
 		},
@@ -49,7 +49,7 @@ var core = Global.coreMethods = {
 				}
 				else {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					console.log("User Settings READ ERROR:", _err);
+					// console.log("User Settings READ ERROR:", _err);
 				}
 			});
 		},
@@ -191,7 +191,7 @@ var core = Global.coreMethods = {
 
 		exists: function(_brandName, _callback){
 			var self = this;
-			console.log(typeof core.localData.brands.path);
+			// console.log(typeof core.localData.brands.path);
 			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
@@ -219,7 +219,7 @@ var core = Global.coreMethods = {
 			})
 			.then(function(){
 				//check if brand has file
-				console.log(typeof core.brands.getFullPathToBrands());
+				// console.log(typeof core.brands.getFullPathToBrands());
 				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
 					if(err) {
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
@@ -264,11 +264,11 @@ var core = Global.coreMethods = {
 				})
 				.then(function(next, path){
 					var projectList = [];
-					console.log(typeof path);
+					// console.log(typeof path);
 					fs.readdir(path, function(_err, _projects){
 						if(_err) {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							console.log("error listing projects");
+							// console.log("error listing projects");
 						}
 						for(var i = 0, ii = _projects.length; i < ii; i++){
 							var stats = fs.statSync(path+"/"+_projects[i]);
@@ -293,7 +293,7 @@ var core = Global.coreMethods = {
 				.then(function(next, exists){
 
 					if(exists) {
-						console.log(typeof core.brands.getFullPathToBrands());
+						// console.log(typeof core.brands.getFullPathToBrands());
 						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 							if(!err) {
 								next();
@@ -318,8 +318,8 @@ var core = Global.coreMethods = {
 			showInFinder: function(){
 				if(core.localData.currentProject.name !== null){
 					shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
-						console.log('Exit status:', status);
-						console.log('Program output:', output);
+						// console.log('Exit status:', status);
+						// console.log('Program output:', output);
 					});
 				}
 			},
@@ -336,9 +336,9 @@ var core = Global.coreMethods = {
 					fs.readdir(path+"/assets", function(_err, _files){
 						if(_err) {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							console.log("error listing project assets");
+							// console.log("error listing project assets");
 						}
-						console.log("the files",_files);
+						// console.log("the files",_files);
 						for(var i = 0, ii = _files.length; i < ii; i++){
 							var stats = fs.statSync(path+"/assets/"+_files[i]);
 							if(stats.isFile()) fileList.push(_files[i]);
@@ -402,7 +402,7 @@ var core = Global.coreMethods = {
 
 					imagePreview.render({path:path}, document.body);
 					// shelljs.exec('open '+path, function(status, output) {
-					// 	console.log('Exit status:', status);
+						// console.log('Exit status:', status);
 					// 	console.log('Program output:', output);
 					// });
 				},
@@ -416,13 +416,13 @@ var core = Global.coreMethods = {
 					fs.readdir(path, function(_err, _files){
 						if(_err) {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							console.log("error listing projects");
+							// console.log("error listing projects");
 						}
 						for(var i = 0, ii = _files.length; i < ii; i++){
 							var stats = fs.statSync(path+"/"+_files[i]);
 							if(stats.isFile()) fileList.push(_files[i]);
 							if(stats.isDirectory() && _files[i] === "assets"){
-								console.log("has assets folder!!!");
+								// console.log("has assets folder!!!");
 							}
 						}
 						// currentBrand.projects = projectsList // ADD this
@@ -486,7 +486,7 @@ var core = Global.coreMethods = {
 				// if local data is null
 				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0){
 					core.persistentDataFile.read(function(_persistent_data){
-						console.log("persistent-data recent brands", _persistent_data.snippets)
+						// console.log("persistent-data recent brands", _persistent_data.snippets)
 						core.localData.snippets.list = _persistent_data.snippets;
 						// console.log("1a) recentbrands:",core.localData.brands.recent);
 						if(_callback) _callback();
@@ -498,7 +498,7 @@ var core = Global.coreMethods = {
 				core.persistentDataFile.read(function(_persistent_data){
 					_persistent_data.snippets = core.localData.snippets.list;
 
-					console.log("new persistent-data"), _persistent_data;
+					// console.log("new persistent-data"), _persistent_data;
 
 					var _persistent_data = JSON.stringify(_persistent_data);
 
@@ -548,7 +548,7 @@ var core = Global.coreMethods = {
 				}
 				else {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					console.log("User Settings READ ERROR:", _err);
+					// console.log("User Settings READ ERROR:", _err);
 				}
 			});
 			if(_callback) _callback();
@@ -564,12 +564,12 @@ var core = Global.coreMethods = {
 			var brandList = [];
 
 
-			console.log(typeof core.localData.brands.path);
-			console.log("path",pathToBrands);
+			// console.log(typeof core.localData.brands.path);
+			// console.log("path",pathToBrands);
 			fs.readdir(pathToBrands, function(_err, _files){
 				if(_err) {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					console.log("error");
+					// console.log("error");
 				}
 				for(var i = 0, ii = _files.length; i < ii; i++) {
 					var stats = fs.statSync(pathToBrands+"/"+_files[i]);
@@ -597,9 +597,9 @@ var core = Global.coreMethods = {
 			// if local data is null
 			if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
 				core.persistentDataFile.read(function(_persistent_data){
-					console.log("persistent-data recent brands", _persistent_data.recentBrands)
+					// console.log("persistent-data recent brands", _persistent_data.recentBrands)
 					core.localData.brands.recent = _persistent_data.recentBrands;
-					console.log("1a) recentbrands:",core.localData.brands.recent);
+					// console.log("1a) recentbrands:",core.localData.brands.recent);
 					_CALLBACK();
 				})
 			} 
@@ -610,7 +610,7 @@ var core = Global.coreMethods = {
 				if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
 					core.localData.brands.recent.unshift(core.localData.currentBrand);
 					core.persistentDataFile.update(function(){
-						console.log("1b) recentbrands:",core.localData.brands.recent);
+						// console.log("1b) recentbrands:",core.localData.brands.recent);
 						_CALLBACK();
 					});
 					
@@ -618,7 +618,7 @@ var core = Global.coreMethods = {
 
 				// local recent brands is up to date
 				else {
-					console.log("1c) recentbrands:",core.localData.brands.recent);
+					// console.log("1c) recentbrands:",core.localData.brands.recent);
 					_CALLBACK();
 				}
 			}
@@ -640,7 +640,7 @@ var core = Global.coreMethods = {
 		},
 
 		setCurrentPreviewQuestionsFile: function(_fileName){
-			console.log("filename:",_fileName);
+			// console.log("filename:",_fileName);
 			var path = __dirname+"/local/preview-files";
 			this.previewQuestionFiles.current.name = _fileName;
 			this.previewQuestionFiles.current.path = path+"/"+_fileName;
@@ -658,7 +658,7 @@ var core = Global.coreMethods = {
 		fs.readdir(path, function(_err, _files){
 			if(_err) {
 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-				console.log("error getting files");
+				// console.log("error getting files");
 			}
 			for(var i = 0, ii = _files.length; i < ii; i++){
 				var stats = fs.statSync(path+"/"+_files[i]);
@@ -696,7 +696,7 @@ var core = Global.coreMethods = {
 		fs.readFile(core.localData.currentFile.path, "utf-8", function(err, data){
 			if(err){ 
 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-				console.log("ERR",err);
+				// console.log("ERR",err);
 			}
 			else {
 				myCodeMirror.setValue(data);
@@ -753,7 +753,7 @@ var core = Global.coreMethods = {
 				fs.writeFile(core.localData.currentFile.path, myCodeMirror.getValue(), function(err){
 					if(err){ 
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-						console.log("ERR",err);
+						// console.log("ERR",err);
 				}
 					else {
 						
