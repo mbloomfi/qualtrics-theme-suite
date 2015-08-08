@@ -55,7 +55,7 @@ app.on("ready", function(){
 		// Run Gulp Listening
 
 	  // runGulp(); // This will only be run when project is loaded
-	  runGulp_Dev(); // comment-out for production
+	  // runGulp_Dev(); // comment-out for production
 	});
 
 	  
