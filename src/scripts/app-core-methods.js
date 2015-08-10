@@ -69,16 +69,17 @@ var core = Global.coreMethods = {
 				});
 			}
 		},
+
+
 		promptUpdate: function(){
 			var self = this;
 			Prompter.hide();
 
 			if(self.processAborted){
 				self.inProgress = false;
+				self.processAborted = false;
 				return console.log("Process was aborted");
 			}
-
-				
 
 			//this timeout gives the Prompter time to hide before re-prompting
 			setTimeout(function(){
@@ -160,6 +161,8 @@ var core = Global.coreMethods = {
 			  	catch(e){
 			  		console.error("uh-oh::",e);
 			  		self.processAborted = true;
+			  		Prompter.hide();
+			  		alert("There was a minor hiccup with GitHub. Try again a a minute.")
 			  	}
 				  	
 			    // console.log("Body: ", );

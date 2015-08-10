@@ -16769,6 +16769,14 @@
 			
 			
 			
+			
+			
+			
+			
+			
+			
+			
+			
 					promptUpdate: function(){
 			
 			
@@ -16793,19 +16801,15 @@
 			
 			
 			
+							self.processAborted = false;
+			
+			
+			
 							return console.log("Process was aborted");
 			
 			
 			
 						}
-			
-			
-			
-			
-			
-			
-			
-							
 			
 			
 			
@@ -17130,6 +17134,14 @@
 			
 			
 						  		self.processAborted = true;
+			
+			
+			
+						  		Prompter.hide();
+			
+			
+			
+						  		alert("There was a minor hiccup with GitHub. Try again a a minute.")
 			
 			
 			
