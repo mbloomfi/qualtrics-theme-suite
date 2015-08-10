@@ -36,7 +36,7 @@ var core = Global.coreMethods = {
 			self.processAborted = false;
 
 			Prompter.prompt({
-					message: "Checking GitHub for changes. Hold your horses...",
+					message: "Checking GitHub for changes...",
 					mainBtn: {
 						text: "Click to abort",
 						onClick: function(){
@@ -100,8 +100,8 @@ var core = Global.coreMethods = {
 								Prompter.hide();
 								setTimeout(function(){
 									self.inProgress = false;
-									alert("Update Cancelled. You're a real jerk for not cancelling sooner...  \n\nI mean... uhhh... carry on!");
-								}, 300);
+								// 	alert("Update Cancelled. You're a real jerk for not cancelling sooner...  \n\nI mean... uhhh... carry on!");
+								// }, 300);
 									
 							}
 						},
