@@ -448,13 +448,13 @@ var menuTemplate = [
       {
         label: 'Open Preview in Browser',
         click: function(){
-          shelljs.exec(
-            'open -a "Google Chrome" '+ __dirname+'/local/currentPreview.html', function(code, res){
+          console.log("__dirname:",__dirname);
+          var filePath = __dirname+"/local/currentPreview.html";
+          console.log("filePath:", filePath)
+          shelljs.exec('open -a "Google Chrome" '+ filePath, function(code, res){
               console.log("code:",code);
               console.log("res:",res);
-
-            }
-          );
+          });
         }
       },
 
