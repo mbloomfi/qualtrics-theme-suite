@@ -307,8 +307,8 @@ var menuTemplate = [
         click: function(){
           shelljs.exec(
             'open -a "Google Chrome" '+ __dirname+'/local/currentPreview.html', function(code, res){
-
-              
+              console.log("code:",code);
+              console.log("res:",res);
 
             }
           );
