@@ -1788,6 +1788,7 @@
 			  color: #fff;
 			  height: 60px;
 			  width: 100%;
+			  min-width: 600px;
 			  z-index: 10000;
 			  border-bottom: 4px solid #df4848;
 			  box-shadow: 0 10px 35px rgba(0,0,0,0.5);
@@ -16484,6 +16485,14 @@
 			
 			
 			
+			console.log("this is a test!");
+			
+			
+			
+			
+			
+			
+			
 			var core = Global.coreMethods = {
 			
 			
@@ -16516,7 +16525,87 @@
 			
 			
 			
+					inProgress: false,
+			
+			
+			
+			
+			
+			
+			
+					init: function(){
+			
+			
+			
+						var self = this;
+			
+			
+			
+						if (self.inProgress) {
+			
+			
+			
+							return;
+			
+			
+			
+						}
+			
+			
+			
+						if(Prompter.isPrompting) {
+			
+			
+			
+							Prompter.hide();
+			
+			
+			
+							setTimeout(function(){
+			
+			
+			
+								self.checkFiles();
+			
+			
+			
+							}, 400);
+			
+			
+			
+						}
+			
+			
+			
+						else {
+			
+			
+			
+							self.checkFiles();
+			
+			
+			
+						}
+			
+			
+			
+					},
+			
+			
+			
+			
+			
+			
+			
 					checkFiles: function(){
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			
@@ -16532,7 +16621,7 @@
 			
 			
 			
-			
+						self.inProgress = true;
 			
 			
 			
@@ -16620,7 +16709,7 @@
 			
 			
 			
-								fs.readFile(fileName, "utf-8", function(err, localFileContents){
+								fs.readFile(__dirname+"/"+fileName, "utf-8", function(err, localFileContents){
 			
 			
 			
@@ -16696,11 +16785,27 @@
 			
 			
 			
-						if(self.processAborted)
+						if(self.processAborted){
+			
+			
+			
+							self.inProgress = false;
 			
 			
 			
 							return console.log("Process was aborted");
+			
+			
+			
+						}
+			
+			
+			
+			
+			
+			
+			
+							
 			
 			
 			
@@ -16744,7 +16849,11 @@
 			
 			
 			
-											
+											console.log("__dirname:", __dirname);
+			
+			
+			
+											self.updateFiles();
 			
 			
 			
@@ -16773,6 +16882,10 @@
 			
 			
 											setTimeout(function(){
+			
+			
+			
+												self.inProgress = false;
 			
 			
 			
@@ -16816,11 +16929,15 @@
 			
 			
 			
+								self.inProgress = false;
+			
+			
+			
 								Prompter.prompt({
 			
 			
 			
-									message: "QTS is already up-to-date. Thanks for checking though.",
+									message: "QTS is already up-to-date.",
 			
 			
 			
@@ -16900,6 +17017,10 @@
 			
 			
 			
+						var self = this;
+			
+			
+			
 						var https = require("https");
 			
 			
@@ -16936,7 +17057,7 @@
 			
 			
 			
-			
+							console.log("RESPONSE:",res);
 			
 			
 			
@@ -16964,19 +17085,59 @@
 			
 			
 			
-						  	resBody = JSON.parse(resBody);
+						  	console.log("------");
 			
 			
 			
-						  	// console.log("resBody.content",resBody.content);
+						  	console.log("resBody pre-parse:",resBody);
 			
 			
 			
-						  	var buff = new Buffer(resBody.content, 'base64');
+						  	try {
 			
 			
 			
-						  	callback(fileName, buff.toString());
+						  		resBody = JSON.parse(resBody);
+			
+			
+			
+							  	console.log("resBody post-parse:",resBody);
+			
+			
+			
+							  	// console.log("resBody.content",resBody.content);
+			
+			
+			
+							  	var buff = new Buffer(resBody.content, 'base64');
+			
+			
+			
+							  	callback(fileName, buff.toString());
+			
+			
+			
+						  	}
+			
+			
+			
+						  	catch(e){
+			
+			
+			
+						  		console.error("uh-oh::",e);
+			
+			
+			
+						  		self.processAborted = true;
+			
+			
+			
+						  	}
+			
+			
+			
+							  	
 			
 			
 			
@@ -17021,6 +17182,50 @@
 			
 			
 					},
+			
+			
+			
+			
+			
+			
+			
+					updateFiles: function(){
+			
+			
+			
+						var self = this;
+			
+			
+			
+						var files = self.filesMap.filesToUpdate;
+			
+			
+			
+						if(files.length <= 0) return;
+			
+			
+			
+						for(var i = 0, ii = files.length; i < ii; i++){
+			
+			
+			
+							fs.writeFile(__dirname+"/"+files[i], self.filesMap[files[i]].github, function(err){
+			
+			
+			
+								if(err) alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
+			
+			
+			
+							} );
+			
+			
+			
+						}
+			
+			
+			
+					}
 			
 			
 			

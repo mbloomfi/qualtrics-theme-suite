@@ -1,3 +1,5 @@
+console.log("this is a test!");
+
 var core = Global.coreMethods = {
 	updateApp: {
 		pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
@@ -6,11 +8,31 @@ var core = Global.coreMethods = {
 			filesToUpdate:[]
 		},
 		processAborted: false,
+		inProgress: false,
+
+		init: function(){
+			var self = this;
+			if (self.inProgress) {
+				return;
+			}
+			if(Prompter.isPrompting) {
+				Prompter.hide();
+				setTimeout(function(){
+					self.checkFiles();
+				}, 400);
+			}
+			else {
+				self.checkFiles();
+			}
+		},
+
 		checkFiles: function(){
+
+
 			var self = this;
 			var files = this.filesToCheck;
 			var numFilesChecked = 0;
-
+			self.inProgress = true;
 			self.processAborted = false;
 
 			Prompter.prompt({
@@ -32,7 +54,7 @@ var core = Global.coreMethods = {
 				
 				self.getRemote(files[i], function(fileName, githubFileContents){
 					self.filesMap[fileName] = {};
-					fs.readFile(fileName, "utf-8", function(err, localFileContents){
+					fs.readFile(__dirname+"/"+fileName, "utf-8", function(err, localFileContents){
 						if(err) return console.log("local read error:", err);
 						console.log(" ");
 						console.log(" ");
@@ -51,8 +73,12 @@ var core = Global.coreMethods = {
 			var self = this;
 			Prompter.hide();
 
-			if(self.processAborted)
+			if(self.processAborted){
+				self.inProgress = false;
 				return console.log("Process was aborted");
+			}
+
+				
 
 			//this timeout gives the Prompter time to hide before re-prompting
 			setTimeout(function(){
@@ -63,7 +89,8 @@ var core = Global.coreMethods = {
 							text: "Proceed with update",
 							onClick: function(){
 								Prompter.hide();
-								
+								console.log("__dirname:", __dirname);
+								self.updateFiles();
 							}
 						},
 						btn2: {
@@ -71,6 +98,7 @@ var core = Global.coreMethods = {
 							onClick: function(){
 								Prompter.hide();
 								setTimeout(function(){
+									self.inProgress = false;
 									alert("Update Cancelled. You're a real jerk for not cancelling sooner...  \n\nI mean... uhhh... carry on!");
 								}, 300);
 									
@@ -81,8 +109,9 @@ var core = Global.coreMethods = {
 
 				}
 				else {
+					self.inProgress = false;
 					Prompter.prompt({
-						message: "QTS is already up-to-date. Thanks for checking though.",
+						message: "QTS is already up-to-date.",
 						mainBtn: {
 							text: "Click to kill this message",
 							onClick: function(){
@@ -102,6 +131,7 @@ var core = Global.coreMethods = {
 				
 		},
 		getRemote: function(fileName, callback){
+			var self = this;
 			var https = require("https");
 			var requestOptions = {
 				hostname:"api.github.com",
@@ -111,17 +141,27 @@ var core = Global.coreMethods = {
 			};
 			var req = https.request(requestOptions, function(res){
 				var resBody = '';
-
+				console.log("RESPONSE:",res);
 				res.on('data', function(chunk) {
 					resBody += chunk.toString();
 			  });
 
 
 			  res.on("end", function(){
-			  	resBody = JSON.parse(resBody);
-			  	// console.log("resBody.content",resBody.content);
-			  	var buff = new Buffer(resBody.content, 'base64');
-			  	callback(fileName, buff.toString());
+			  	console.log("------");
+			  	console.log("resBody pre-parse:",resBody);
+			  	try {
+			  		resBody = JSON.parse(resBody);
+				  	console.log("resBody post-parse:",resBody);
+				  	// console.log("resBody.content",resBody.content);
+				  	var buff = new Buffer(resBody.content, 'base64');
+				  	callback(fileName, buff.toString());
+			  	}
+			  	catch(e){
+			  		console.error("uh-oh::",e);
+			  		self.processAborted = true;
+			  	}
+				  	
 			    // console.log("Body: ", );
 			    // console.log("File Contents:", buff.toString());
 		    });
@@ -133,6 +173,17 @@ var core = Global.coreMethods = {
 			});
 			req.end();
 		},
+
+		updateFiles: function(){
+			var self = this;
+			var files = self.filesMap.filesToUpdate;
+			if(files.length <= 0) return;
+			for(var i = 0, ii = files.length; i < ii; i++){
+				fs.writeFile(__dirname+"/"+files[i], self.filesMap[files[i]].github, function(err){
+					if(err) alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
+				} );
+			}
+		}
 
 	},
 	
