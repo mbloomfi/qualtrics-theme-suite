@@ -1,3 +1,27 @@
+var dimmer = {
+	on: function() {
+		var _dimmer = el("+div").addClass("dimmer");
+		el("body").append(_dimmer);
+		setTimeout(function(){
+			el(".dimmer")[0].addClass("show");
+		},10);
+	},
+	off: function(){
+		core.localData.updateUserSettings(function(){
+			var _dimmer = el(".dimmer").rmClass("show");
+
+			// if dropdowns are open, close them
+			if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+			if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+
+			setTimeout(function(){
+				_dimmer.rm();
+				_dimmer = null;
+			},500);
+		});
+	}
+};
+
 (function(){
 	window.Prompter = {
 		isPrompting: false,

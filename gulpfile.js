@@ -76,7 +76,7 @@ gulp.task("mainScripts", function(){
 	.pipe(include())
 	.pipe(concat("_.js"))
 	.pipe(gulpif( production, uglify() ))
-	.pipe(gulp.dest("src/scripts/main/"));
+	.pipe(gulp.dest("src/scripts/main"));
 });
 
 

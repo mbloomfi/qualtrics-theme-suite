@@ -2298,6 +2298,359 @@
 				}
 			
 			};
+			var loca = (function(){
+			
+				var fs = require("fs");
+				var path = require("path");
+			
+				var _events = {};
+				var _localData = {};
+			
+			
+				function emit(eventName, data){
+					if (_events[eventName]) {
+						_events[eventName].forEach(function(fn) {
+							if(typeof data !== "undefined") fn(data);
+							else fn(undefined);
+						});
+					}
+				};
+			
+			
+				function parseJson(fileData){
+					var parsedFile;
+					try {
+						parsedFile = JSON.parse(fileData);
+					}
+					catch(e){
+						emit("error", "JSON file not valid | "+e);
+						parsedFile = null;
+					}
+					return parsedFile;
+				}
+			
+				function getDataFromPath(obj, path, callback){
+					if(typeof path === "undefined" || path === null) return obj;
+					var queryArr = path.trim().split(".");
+					var dbObject = obj;
+					for(var i = 0, ii = queryArr.length; i < ii; i++){
+						if( dbObject[queryArr[i]] ){
+							dbObject =  dbObject[ queryArr[i] ];
+						} else {
+							// emit("error", "query path not found "+path+" | Error at ("+queryArr[i]+")");
+							return (typeof callback === "function") ? callback(true, null) : undefined ;
+						}
+					}
+					return callback(false, dbObject);
+				}
+			
+			
+				function getParentPath(Obj) { 
+			
+					var self = _localData[Obj.__name__];
+			
+					if(!self[isProperty]) return "";
+			
+					var parent = _localData[ self[propertyOf] ];
+			
+					return (parent[isProperty]) 
+						?
+						(getParentPath(parent) +"."+ self["path"] )
+						:
+						self["path"]
+						;
+				}
+			
+				function triggerEmitter(propertyName, triggerName, triggerData){
+			
+					emit(propertyName+" "+triggerName, triggerData);
+			
+					if(_localData[propertyName]["isProperty"]) {
+						var ParentName = _localData[propertyName]["propertyOf"];
+						console.log("ParentName",ParentName);
+						console.log("_localData",_localData);
+						triggerEmitter(ParentName, triggerName, _localData[ParentName].data);
+					}
+			
+				}
+			
+			
+			
+				function mkdirp (_p, cb){
+					
+					var p = path.reslove( path.normalize(_p) );
+					fs.mkdir (p, function (error){
+			
+						if (error && error.code !== "ENOENT" && error.code !== "EEXIST")
+							return cb (error);
+			
+						if (error && error.code === "EEXIST")
+							return cb (null);
+			
+						if (!error)
+							return cb (null);
+			
+				    //ENOENT
+						var parent = path.dirname(p);
+						if (parent === p) 
+							return cb (null);
+			
+						mkdirp (parent, function (error){
+							fs.mkdir (p, function (error){
+								//Ignore EEXIST error in asynchronous calls to mkdirp
+								if (error && error.code !== "EEXIST") 
+									return cb (error);
+								cb (null);
+							});
+						});
+			
+				  });
+			
+				};
+			
+			
+				
+			
+				
+			
+				var dbMethods = {
+					commit: function(callback, force){
+						if(_localData[this.__name__].data) {
+							var self = this;
+							fs.writeFile(_localData[this.__name__]["path"], JSON.stringify(this.get()), function(err){
+								if(err) {
+			
+									if(force){
+			
+										mkdirp( 
+											path.dirname( _localData[self.__name__].path ) 
+										);
+			
+										fs.writeFile(dbPath, JSON.stringify(self.get()), function(err){
+											if(err)emit("error", "tried to write to file, but failed");
+											else {
+												triggerEmitter(self.__name__, "committed", self.get());
+												if(typeof callback === "function") callback();
+											}
+										});
+			
+									} 
+									else {
+										emit("error", "error committing local data to file");
+									}
+									
+								}
+								if(typeof callback === "function") {
+									triggerEmitter(self.__name__, "committed", self.get());
+									callback();
+								}
+							});
+			
+						}
+					},
+			
+					get: function(getterPath){
+						if(typeof getterPath === "undefined" || getterPath === null) return _localData[this.__name__].data;
+						else if(typeof getterPath !== "string") return emit("error", this.__name__+".get only takes a paramter of type 'string', 'undefined', or 'null'. You passed a parameter of type '"+typeof getterPath+"'.");
+			
+						var queryArr = getterPath.trim().split(".");
+						var dbObject = _localData[this.__name__].data;
+						for(var i = 0, ii = queryArr.length; i < ii; i++){
+							if( dbObject[queryArr[i]] ){
+								dbObject = dbObject[queryArr[i]];
+							} else {
+								return emit("error", "query path not found "+getterPath+" | Error occured at: "+queryArr[i]);
+							}
+						}
+			
+						return dbObject;
+					},
+			
+					set: function(queryPath, value){
+						if(typeof queryPath === "undefined") return;
+						if(queryPath === null) return _localData[this.__name__].data = value;
+						// console.log("queryPath:",queryPath);
+			
+						var queryArr = queryPath.trim().split(".");
+						var dbObject = _localData[this.__name__].data;
+			
+						for(var i = 0, ii = queryArr.length; i < ii; i++){
+							if( dbObject[queryArr[i]] ){
+								if(i === queryArr.length-1){
+									dbObject[queryArr[i]] = value;
+									// emit(this.__name__+" set", this.get());
+									triggerEmitter(this.__name__, "set", this.get());
+									return;
+								}
+							} else {
+								return emit("error", this.__name__+".set error  |  Query path not found: "+queryPath+"  |  Error occured at: "+queryArr[i]);
+							}
+							dbObject = dbObject[queryArr[i]];
+						}
+						
+					},
+			
+			
+			
+					reset: function(queryPath, callback){
+						var self = this;
+			
+						function getFilePath(Obj){
+							if(_localData[Obj.__name__][isProperty]) 
+								return getFilePath(_localData[ _localData[Obj.__name__][propertyOf] ]);
+							// else 
+							return _localData[Obj.__name__]["path"];
+						}
+			
+						fs.readFile(getFilePath(this), "utf-8", function(err, data){
+							if(err) return emit("error", err);
+			
+							var jsonData = parseJson(data);
+							if(!jsonData) return;
+			
+							if(typeof queryPath === "undefined" || queryPath === null) {
+								if(!_localData[self.__name__][isProperty]) {
+									_localData[self.__name__].data = jsonData;
+								}
+								else {
+									self.set(null, getDataFromPath(jsonData, getParentPath(self)));
+								}
+								triggerEmitter(self.__name__, "reset", self.get());
+								return (typeof callback === "function") ? callback() : undefined ;
+							}	
+			
+							else if(typeof queryPath === "string") {
+								var fullQueryPath = (_localData[self.__name__][isProperty]) ? getParentPath(self)+"."+queryPath : queryPath;
+								getDataFromPath(jsonData, fullQueryPath, function(err, newData){
+									if(err) return emit("error", "error message");
+									self.set(queryPath, newData);
+									triggerEmitter(self.__name__, "reset", self.get());
+									return (typeof callback === "function") ? callback() : undefined ;
+								});
+							}
+			
+							else if(typeof queryPath !== "string"){
+								return emit("error", self.__name__+".reset's first paramter only takes a paramter of type 'string', 'undefined', or 'null'. You passed a parameter of type '"+typeof queryPath+"'.");
+							} 
+							
+						});
+					},
+			
+			
+					createProperty: function(propName, propPath, propConfig){
+						if(typeof propName !== "string") return emit("error", "Property name (1st param) passed to "+this.__name__+".createProperty is not of type 'string'.");
+						if(typeof propPath !== "string") return emit("error", "Query Path (2nd param) passed to "+this.__name__+".createProperty is not of type 'string'.");
+			
+						var queryArr = propPath.trim().split(".");
+						var dbObject = _localData[this.__name__].data;
+						for(var i = 0, ii = queryArr.length; i < ii; i++){
+							if( dbObject[queryArr[i]] ){
+								dbObject = dbObject[queryArr[i]];
+							} else {
+								return emit("error", "query path not found "+propPath);
+							}
+						}
+			
+						this[propName] = Object.create(dbMethods);
+						this[propName].__name__ = propName;
+						
+						_localData[propName] = {
+							data: dbObject,
+							path : propPath,
+							isProperty: true,
+							propertyOf: this.__name__
+						};
+			
+						this[propName].config(propConfig);
+			
+					},
+			
+					setPath: function(newPath){
+						_localData[this.__name__].path = newPath;
+					},
+			
+			
+					config: function(configObj){
+						_localData[this.__name__].onSet = (configObj && typeof configObj.onSet === "string") 
+							? configObj.onSet : _localData[this.__name__].onSet ;
+			
+						_localData[this.__name__].onReset = (configObj && typeof configObj.onReset === "string") 
+							? configObj.onReset : _localData[this.__name__].onReset;
+					}
+				};
+						
+			
+			
+				var locaCoreMethods = {
+					on: function(eventName, fn){
+						_events[eventName] = _events[eventName] || [];
+						_events[eventName].push(fn);
+					},
+					off: function(eventName, fn){
+						if (_events[eventName]) {
+							for (var i = 0; i < _events[eventName].length; i++) {
+								if (_events[eventName][i] === fn) {
+									_events[eventName].splice(i, 1);
+									break;
+								}
+							};
+						}
+					},
+					init: function(dbName, dbPath, callback){
+						if(typeof this[dbName] === "undefined") {
+							var self = this;
+			
+							fs.readFile(dbPath, "utf-8", function(err, data){
+								if(err) {
+									emit("error", err);
+									if(typeof callback === "function") return callback(true);
+								}
+			
+								var jsonData = parseJson(data);
+								if(!jsonData) return;
+			
+								self[dbName] = Object.create(dbMethods);
+								self[dbName].__name__ = dbName;
+			
+								_localData[dbName] = {
+									data: jsonData,
+									path : dbPath,
+									isProperty: false,
+									propertyOf: null,
+								};
+			
+								// self[dbName].config(dbConfig);
+			
+								emit("init "+dbName);
+								if(typeof callback === "function") return callback(false);
+							});
+			
+						} else {
+							if(err) return emit("error", err);
+						}
+			
+					},
+					
+					initLocal: function(dbName, dbTemplate){
+						var jsonData = dbTemplate;
+						var self = this;
+						self[dbName] = Object.create(dbMethods);
+						self[dbName].__name__ = dbName;
+			
+						_localData[dbName] = {
+							data: jsonData,
+							// path : dbPath, // add a way to 
+							isProperty: false,
+							propertyOf: null,
+						};
+			
+						emit("init "+dbName);
+					}
+				}
+				return Object.create(locaCoreMethods);
+			})();
+			
+			
 			// CodeMirror, copyright (c) by Marijn Haverbeke and others
 			// Distributed under an MIT license: http://codemirror.net/LICENSE
 			
@@ -16126,19 +16479,8 @@
 			// == Custom ==
 			var Global = remote.getGlobal("sharedObject"); //see index.js
 			var appRoot = Global.appRoot;
-			
 			var template = etc.template;
-			
-			
-			
 			var menu; // see core.codeMirror.activate()
-			
-				
-			
-			// context menu (right click)
-			
-			
-			
 			
 			
 			
@@ -16146,9 +16488,235 @@
 			
 			
 			
+				updateApp: {
 			
 			
 			
+					pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
+			
+			
+			
+					filesToCheck: ["index.html", "index.js", "preferences.html"],
+			
+			
+			
+					checkFiles: function(){
+			
+			
+			
+						var self = this;
+			
+			
+			
+						var files = this.filesToCheck;
+			
+			
+			
+						for(var i = 0, ii = files.length; i < ii; i++ ){
+			
+			
+			
+							self.getRemote(files[i], function(fileName, githubFileContents){
+			
+			
+			
+								
+			
+			
+			
+								// console.log("fileName:", fileName);
+			
+			
+			
+								// console.log("githubFile Contents:", githubFileContents);
+			
+			
+			
+								fs.readFile(fileName, "utf-8", function(err, localFileContents){
+			
+			
+			
+									if(err) return console.log("local read error:", err);
+			
+			
+			
+									console.log(" ");
+			
+			
+			
+									console.log(" ");
+			
+			
+			
+									console.log(fileName+" is the same as github repo? =>"+(localFileContents === githubFileContents));
+			
+			
+			
+								});
+			
+			
+			
+							})
+			
+			
+			
+						}
+			
+			
+			
+					},
+			
+			
+			
+					compareFiles: function(localFile, githubFile){
+			
+			
+			
+			
+			
+			
+			
+					},
+			
+			
+			
+					getRemote: function(fileName, callback){
+			
+			
+			
+						var https = require("https");
+			
+			
+			
+						var requestOptions = {
+			
+			
+			
+							hostname:"api.github.com",
+			
+			
+			
+							path:this.pathToRepo+fileName,
+			
+			
+			
+							method:'GET',
+			
+			
+			
+							headers: {'user-agent': 'electron-iojs'}
+			
+			
+			
+						};
+			
+			
+			
+						var req = https.request(requestOptions, function(res){
+			
+			
+			
+							var resBody = '';
+			
+			
+			
+			
+			
+			
+			
+							res.on('data', function(chunk) {
+			
+			
+			
+								resBody += chunk.toString();
+			
+			
+			
+						  });
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+						  res.on("end", function(){
+			
+			
+			
+						  	resBody = JSON.parse(resBody);
+			
+			
+			
+						  	// console.log("resBody.content",resBody.content);
+			
+			
+			
+						  	var buff = new Buffer(resBody.content, 'base64');
+			
+			
+			
+						  	callback(fileName, buff.toString());
+			
+			
+			
+						    // console.log("Body: ", );
+			
+			
+			
+						    // console.log("File Contents:", buff.toString());
+			
+			
+			
+					    });
+			
+			
+			
+					
+			
+			
+			
+						});
+			
+			
+			
+						
+			
+			
+			
+						req.on('error', function(e) {
+			
+			
+			
+						  console.error('github error:',e);
+			
+			
+			
+						});
+			
+			
+			
+						req.end();
+			
+			
+			
+					},
+			
+			
+			
+			
+			
+			
+			
+				},
+			
+			
+			
+				
 			
 			
 			
@@ -16157,9 +16725,6 @@
 			
 			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16167,13 +16732,7 @@
 			
 			
 			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16185,16 +16744,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					read: function (_successCallback){
-			
-			
-			
 			
 			
 			
@@ -16202,13 +16752,7 @@
 			
 			
 			
-			
-			
-			
 							if(!_err) {
-			
-			
-			
 			
 			
 			
@@ -16216,13 +16760,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16230,13 +16768,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -16244,13 +16776,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16258,16 +16784,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -16279,13 +16796,7 @@
 			
 			
 			
-			
-			
-			
 						var _DATA = {};
-			
-			
-			
 			
 			
 			
@@ -16293,13 +16804,7 @@
 			
 			
 			
-			
-			
-			
 						_DATA.snippets = core.localData.snippets.list;
-			
-			
-			
 			
 			
 			
@@ -16307,13 +16812,7 @@
 			
 			
 			
-			
-			
-			
 						fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
-			
-			
-			
 			
 			
 			
@@ -16321,13 +16820,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -16335,13 +16828,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16349,13 +16836,7 @@
 			
 			
 			
-			
-			
-			
 								var args = Array.prototype.splice.call(arguments, 1);
-			
-			
-			
 			
 			
 			
@@ -16363,13 +16844,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16377,20 +16852,11 @@
 			
 			
 			
-			
-			
-			
 					}
 			
 			
 			
-			
-			
-			
 					
-			
-			
-			
 			
 			
 			
@@ -16402,16 +16868,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16419,13 +16876,7 @@
 			
 			
 			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16437,16 +16888,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					read: function(_successCallback){
-			
-			
-			
 			
 			
 			
@@ -16454,13 +16896,7 @@
 			
 			
 			
-			
-			
-			
 							if(!_err){ 
-			
-			
-			
 			
 			
 			
@@ -16468,20 +16904,11 @@
 			
 			
 			
-			
-			
-			
 								if(typeof _successCallback === "function") _successCallback(_data);
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16489,13 +16916,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -16503,20 +16924,11 @@
 			
 			
 			
-			
-			
-			
 							}
 			
 			
 			
-			
-			
-			
 						});
-			
-			
-			
 			
 			
 			
@@ -16528,16 +16940,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					update: function(_successCallback){
-			
-			
-			
 			
 			
 			
@@ -16549,16 +16952,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						if(core.localData.userSettings === null){
-			
-			
-			
 			
 			
 			
@@ -16566,20 +16960,11 @@
 			
 			
 			
-			
-			
-			
 							alert("Error with settings, sucks to be you.");
 			
 			
 			
-			
-			
-			
 							return;
-			
-			
-			
 			
 			
 			
@@ -16591,16 +16976,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						self.read(function(_data){
-			
-			
-			
 			
 			
 			
@@ -16612,16 +16988,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
-			
-			
-			
 			
 			
 			
@@ -16629,13 +16996,7 @@
 			
 			
 			
-			
-			
-			
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -16643,13 +17004,7 @@
 			
 			
 			
-			
-			
-			
 									} 
-			
-			
-			
 			
 			
 			
@@ -16657,13 +17012,7 @@
 			
 			
 			
-			
-			
-			
 									else _successCallback();
-			
-			
-			
 			
 			
 			
@@ -16675,16 +17024,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -16696,12 +17036,6 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						
 			
 			
@@ -16710,16 +17044,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						
-			
-			
-			
 			
 			
 			
@@ -16727,16 +17052,7 @@
 			
 			
 			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -16756,19 +17072,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 					// Sync call to exec()
-			
-			
-			
 			
 			
 			
@@ -16780,16 +17084,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					// Async call to exec()
-			
-			
-			
 			
 			
 			
@@ -16797,20 +17092,11 @@
 			
 			
 			
-			
-			
-			
 					//   console.log('Exit status:', status);
 			
 			
 			
-			
-			
-			
 					//   console.log('Program output:', output);
-			
-			
-			
 			
 			
 			
@@ -16830,22 +17116,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 					// function run_cmd(cmd, args, callBack ) {
-			
-			
-			
 			
 			
 			
@@ -16853,13 +17124,7 @@
 			
 			
 			
-			
-			
-			
 					// 	var child = spawn(cmd, args);
-			
-			
-			
 			
 			
 			
@@ -16871,16 +17136,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					// 	child.stdout.on('data', function (buffer) { resp += buffer.toString() });
-			
-			
-			
 			
 			
 			
@@ -16888,20 +17144,11 @@
 			
 			
 			
-			
-			
-			
 					// }
 			
 			
 			
-			
-			
-			
 					// run_cmd( "open Finder", ["-a"], function(text) { console.log (text) });
-			
-			
-			
 			
 			
 			
@@ -16917,19 +17164,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16937,13 +17172,7 @@
 			
 			
 			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -16955,16 +17184,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					getFullPathToBrands: function(){
-			
-			
-			
 			
 			
 			
@@ -16972,16 +17192,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -16993,13 +17204,7 @@
 			
 			
 			
-			
-			
-			
 						
-			
-			
-			
 			
 			
 			
@@ -17007,13 +17212,7 @@
 			
 			
 			
-			
-			
-			
 						core.brands.setCurrentBrand(_brandName);
-			
-			
-			
 			
 			
 			
@@ -17021,16 +17220,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17042,13 +17232,7 @@
 			
 			
 			
-			
-			
-			
 						var self = this;
-			
-			
-			
 			
 			
 			
@@ -17056,13 +17240,7 @@
 			
 			
 			
-			
-			
-			
 						baton(function(next){
-			
-			
-			
 			
 			
 			
@@ -17070,13 +17248,7 @@
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -17088,16 +17260,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							if(exists) {
-			
-			
-			
 			
 			
 			
@@ -17105,13 +17268,7 @@
 			
 			
 			
-			
-			
-			
 							} else {
-			
-			
-			
 			
 			
 			
@@ -17119,13 +17276,7 @@
 			
 			
 			
-			
-			
-			
 									if(!err) {
-			
-			
-			
 			
 			
 			
@@ -17133,13 +17284,7 @@
 			
 			
 			
-			
-			
-			
 										next();
-			
-			
-			
 			
 			
 			
@@ -17147,13 +17292,7 @@
 			
 			
 			
-			
-			
-			
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -17161,13 +17300,7 @@
 			
 			
 			
-			
-			
-			
 								});
-			
-			
-			
 			
 			
 			
@@ -17175,20 +17308,11 @@
 			
 			
 			
-			
-			
-			
 							
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -17200,16 +17324,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							// editorCore.dropdowns.brands.close();
-			
-			
-			
 			
 			
 			
@@ -17217,20 +17332,11 @@
 			
 			
 			
-			
-			
-			
 							_CALLBACK();
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -17242,19 +17348,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17266,13 +17360,7 @@
 			
 			
 			
-			
-			
-			
 						ext: ".qtheme",
-			
-			
-			
 			
 			
 			
@@ -17284,23 +17372,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							
 			
 			
 			
-			
-			
-			
 						},
-			
-			
-			
 			
 			
 			
@@ -17312,26 +17388,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						}
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17343,13 +17404,7 @@
 			
 			
 			
-			
-			
-			
 					/*
-			
-			
-			
 			
 			
 			
@@ -17357,13 +17412,7 @@
 			
 			
 			
-			
-			
-			
 					*/
-			
-			
-			
 			
 			
 			
@@ -17371,13 +17420,7 @@
 			
 			
 			
-			
-			
-			
 						var brand = core.localData.currentBrand;
-			
-			
-			
 			
 			
 			
@@ -17385,13 +17428,7 @@
 			
 			
 			
-			
-			
-			
 						if(i !== -1) {
-			
-			
-			
 			
 			
 			
@@ -17399,13 +17436,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -17413,13 +17444,7 @@
 			
 			
 			
-			
-			
-			
 						core.persistentDataFile.update();
-			
-			
-			
 			
 			
 			
@@ -17431,16 +17456,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					setCurrentBrand: function(_brandName){
-			
-			
-			
 			
 			
 			
@@ -17448,26 +17464,11 @@
 			
 			
 			
-			
-			
-			
 						core.brands.updateRecentBrands();
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17483,13 +17484,7 @@
 			
 			
 			
-			
-			
-			
 						var self = this;
-			
-			
-			
 			
 			
 			
@@ -17497,13 +17492,7 @@
 			
 			
 			
-			
-			
-			
 						fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
-			
-			
-			
 			
 			
 			
@@ -17511,13 +17500,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -17525,20 +17508,11 @@
 			
 			
 			
-			
-			
-			
 								return _callback(false);
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -17546,13 +17520,7 @@
 			
 			
 			
-			
-			
-			
 								return _callback(stats.isDirectory());
-			
-			
-			
 			
 			
 			
@@ -17560,26 +17528,11 @@
 			
 			
 			
-			
-			
-			
 						});
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17595,13 +17548,7 @@
 			
 			
 			
-			
-			
-			
 						var self = this;
-			
-			
-			
 			
 			
 			
@@ -17609,13 +17556,7 @@
 			
 			
 			
-			
-			
-			
 							//check if brand exists
-			
-			
-			
 			
 			
 			
@@ -17623,13 +17564,7 @@
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -17637,13 +17572,7 @@
 			
 			
 			
-			
-			
-			
 							if(_exists){
-			
-			
-			
 			
 			
 			
@@ -17651,13 +17580,7 @@
 			
 			
 			
-			
-			
-			
 							} 
-			
-			
-			
 			
 			
 			
@@ -17665,13 +17588,7 @@
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -17679,13 +17596,7 @@
 			
 			
 			
-			
-			
-			
 							//check if brand has file
-			
-			
-			
 			
 			
 			
@@ -17693,13 +17604,7 @@
 			
 			
 			
-			
-			
-			
 							fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
-			
-			
-			
 			
 			
 			
@@ -17707,13 +17612,7 @@
 			
 			
 			
-			
-			
-			
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -17721,13 +17620,7 @@
 			
 			
 			
-			
-			
-			
 								}
-			
-			
-			
 			
 			
 			
@@ -17735,13 +17628,7 @@
 			
 			
 			
-			
-			
-			
 									return _callback(stats.isFile());
-			
-			
-			
 			
 			
 			
@@ -17749,13 +17636,7 @@
 			
 			
 			
-			
-			
-			
 							});
-			
-			
-			
 			
 			
 			
@@ -17763,13 +17644,7 @@
 			
 			
 			
-			
-			
-			
 						.run();
-			
-			
-			
 			
 			
 			
@@ -17777,16 +17652,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17802,16 +17668,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						setCurrentProject: function(_projectName){
-			
-			
-			
 			
 			
 			
@@ -17819,13 +17676,7 @@
 			
 			
 			
-			
-			
-			
 							core.localData.currentProject.path = (_projectName !== null)
-			
-			
-			
 			
 			
 			
@@ -17833,13 +17684,7 @@
 			
 			
 			
-			
-			
-			
 							(core.brands.getFullPathToBrands()+"/"+
-			
-			
-			
 			
 			
 			
@@ -17847,13 +17692,7 @@
 			
 			
 			
-			
-			
-			
 							core.localData.currentProject.name)
-			
-			
-			
 			
 			
 			
@@ -17861,13 +17700,7 @@
 			
 			
 			
-			
-			
-			
 							null
-			
-			
-			
 			
 			
 			
@@ -17879,19 +17712,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -17903,20 +17724,11 @@
 			
 			
 			
-			
-			
-			
 						list: function(_brandName, _callback){
 			
 			
 			
-			
-			
-			
 							
-			
-			
-			
 			
 			
 			
@@ -17924,13 +17736,7 @@
 			
 			
 			
-			
-			
-			
 								
-			
-			
-			
 			
 			
 			
@@ -17938,13 +17744,7 @@
 			
 			
 			
-			
-			
-			
 							})
-			
-			
-			
 			
 			
 			
@@ -17952,13 +17752,7 @@
 			
 			
 			
-			
-			
-			
 								if(exists){
-			
-			
-			
 			
 			
 			
@@ -17966,13 +17760,7 @@
 			
 			
 			
-			
-			
-			
 									next(pathToBrand);
-			
-			
-			
 			
 			
 			
@@ -17980,13 +17768,7 @@
 			
 			
 			
-			
-			
-			
 							})
-			
-			
-			
 			
 			
 			
@@ -17994,13 +17776,7 @@
 			
 			
 			
-			
-			
-			
 								var projectList = [];
-			
-			
-			
 			
 			
 			
@@ -18008,13 +17784,7 @@
 			
 			
 			
-			
-			
-			
 								fs.readdir(path, function(_err, _projects){
-			
-			
-			
 			
 			
 			
@@ -18022,13 +17792,7 @@
 			
 			
 			
-			
-			
-			
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -18036,13 +17800,7 @@
 			
 			
 			
-			
-			
-			
 									}
-			
-			
-			
 			
 			
 			
@@ -18050,13 +17808,7 @@
 			
 			
 			
-			
-			
-			
 										var stats = fs.statSync(path+"/"+_projects[i]);
-			
-			
-			
 			
 			
 			
@@ -18064,13 +17816,7 @@
 			
 			
 			
-			
-			
-			
 									}
-			
-			
-			
 			
 			
 			
@@ -18078,13 +17824,7 @@
 			
 			
 			
-			
-			
-			
 									if(_callback!==undefined) _callback(projectList);
-			
-			
-			
 			
 			
 			
@@ -18092,13 +17832,11 @@
 			
 			
 			
-			
-			
-			
 							}).run();
 			
 			
 			
+							
 			
 			
 			
@@ -18106,23 +17844,7 @@
 			
 			
 			
-			
-			
-			
 							
-			
-			
-			
-			
-			
-			
-							
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18131,12 +17853,6 @@
 			
 			
 						},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18148,13 +17864,7 @@
 			
 			
 			
-			
-			
-			
 							var self = this;
-			
-			
-			
 			
 			
 			
@@ -18162,13 +17872,7 @@
 			
 			
 			
-			
-			
-			
 							baton(function(next){
-			
-			
-			
 			
 			
 			
@@ -18176,13 +17880,7 @@
 			
 			
 			
-			
-			
-			
 							})
-			
-			
-			
 			
 			
 			
@@ -18194,16 +17892,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								if(exists) {
-			
-			
-			
 			
 			
 			
@@ -18211,13 +17900,7 @@
 			
 			
 			
-			
-			
-			
 									fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
-			
-			
-			
 			
 			
 			
@@ -18225,13 +17908,7 @@
 			
 			
 			
-			
-			
-			
 											next();
-			
-			
-			
 			
 			
 			
@@ -18239,13 +17916,7 @@
 			
 			
 			
-			
-			
-			
 											fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -18253,13 +17924,7 @@
 			
 			
 			
-			
-			
-			
 									});
-			
-			
-			
 			
 			
 			
@@ -18267,13 +17932,7 @@
 			
 			
 			
-			
-			
-			
 									alert("Brand doesn't exists. Nice try though.");
-			
-			
-			
 			
 			
 			
@@ -18281,20 +17940,11 @@
 			
 			
 			
-			
-			
-			
 								
 			
 			
 			
-			
-			
-			
 							})
-			
-			
-			
 			
 			
 			
@@ -18302,13 +17952,7 @@
 			
 			
 			
-			
-			
-			
 								editorCore.dropdowns.projects.close();
-			
-			
-			
 			
 			
 			
@@ -18316,13 +17960,7 @@
 			
 			
 			
-			
-			
-			
 								if(_callback!==undefined) _callback();
-			
-			
-			
 			
 			
 			
@@ -18330,13 +17968,7 @@
 			
 			
 			
-			
-			
-			
 							})
-			
-			
-			
 			
 			
 			
@@ -18344,16 +17976,7 @@
 			
 			
 			
-			
-			
-			
 						},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18365,13 +17988,7 @@
 			
 			
 			
-			
-			
-			
 							if(core.localData.currentProject.name !== null){
-			
-			
-			
 			
 			
 			
@@ -18379,13 +17996,7 @@
 			
 			
 			
-			
-			
-			
 									// console.log('Exit status:', status);
-			
-			
-			
 			
 			
 			
@@ -18393,20 +18004,11 @@
 			
 			
 			
-			
-			
-			
 								});
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -18418,16 +18020,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						files: {
-			
-			
-			
 			
 			
 			
@@ -18435,13 +18028,7 @@
 			
 			
 			
-			
-			
-			
 								path: null,
-			
-			
-			
 			
 			
 			
@@ -18449,16 +18036,7 @@
 			
 			
 			
-			
-			
-			
 							},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18470,13 +18048,7 @@
 			
 			
 			
-			
-			
-			
 								var path = core.localData.currentProject.path;
-			
-			
-			
 			
 			
 			
@@ -18484,13 +18056,7 @@
 			
 			
 			
-			
-			
-			
 								fs.readdir(path+"/assets", function(_err, _files){
-			
-			
-			
 			
 			
 			
@@ -18498,13 +18064,7 @@
 			
 			
 			
-			
-			
-			
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -18512,13 +18072,7 @@
 			
 			
 			
-			
-			
-			
 									}
-			
-			
-			
 			
 			
 			
@@ -18526,13 +18080,7 @@
 			
 			
 			
-			
-			
-			
 									for(var i = 0, ii = _files.length; i < ii; i++){
-			
-			
-			
 			
 			
 			
@@ -18540,13 +18088,7 @@
 			
 			
 			
-			
-			
-			
 										if(stats.isFile()) fileList.push(_files[i]);
-			
-			
-			
 			
 			
 			
@@ -18554,13 +18096,7 @@
 			
 			
 			
-			
-			
-			
 									// currentBrand.projects = projectsList // ADD this
-			
-			
-			
 			
 			
 			
@@ -18568,23 +18104,11 @@
 			
 			
 			
-			
-			
-			
 								});
 			
 			
 			
-			
-			
-			
 							},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18600,16 +18124,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								window.imagePreview = etc.template(function(){
-			
-			
-			
 			
 			
 			
@@ -18617,13 +18132,7 @@
 			
 			
 			
-			
-			
-			
 										var imgCont = document.getElementById("image_preview_container");
-			
-			
-			
 			
 			
 			
@@ -18631,13 +18140,7 @@
 			
 			
 			
-			
-			
-			
 										return;
-			
-			
-			
 			
 			
 			
@@ -18649,16 +18152,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 									var container = etc.el("div", {
-			
-			
-			
 			
 			
 			
@@ -18666,13 +18160,7 @@
 			
 			
 			
-			
-			
-			
 										className:"light"
-			
-			
-			
 			
 			
 			
@@ -18692,22 +18180,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 									container.append(
-			
-			
-			
 			
 			
 			
@@ -18715,13 +18188,7 @@
 			
 			
 			
-			
-			
-			
 											className: "change-image-bg-cont dark",
-			
-			
-			
 			
 			
 			
@@ -18729,13 +18196,7 @@
 			
 			
 			
-			
-			
-			
 												click: function(e){
-			
-			
-			
 			
 			
 			
@@ -18743,13 +18204,7 @@
 			
 			
 			
-			
-			
-			
 													var imgCont = document.getElementById("image_preview_container");
-			
-			
-			
 			
 			
 			
@@ -18757,13 +18212,7 @@
 			
 			
 			
-			
-			
-			
 														this.classList.add("dark");
-			
-			
-			
 			
 			
 			
@@ -18771,13 +18220,7 @@
 			
 			
 			
-			
-			
-			
 														imgCont.classList.remove("dark");
-			
-			
-			
 			
 			
 			
@@ -18789,16 +18232,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 													} else {
-			
-			
-			
 			
 			
 			
@@ -18806,13 +18240,7 @@
 			
 			
 			
-			
-			
-			
 														this.classList.add("light");
-			
-			
-			
 			
 			
 			
@@ -18820,13 +18248,7 @@
 			
 			
 			
-			
-			
-			
 														imgCont.classList.remove("light");
-			
-			
-			
 			
 			
 			
@@ -18834,13 +18256,7 @@
 			
 			
 			
-			
-			
-			
 												}
-			
-			
-			
 			
 			
 			
@@ -18848,13 +18264,7 @@
 			
 			
 			
-			
-			
-			
 										})
-			
-			
-			
 			
 			
 			
@@ -18866,16 +18276,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 									container.append(
-			
-			
-			
 			
 			
 			
@@ -18883,13 +18284,7 @@
 			
 			
 			
-			
-			
-			
 											src: this.props.path,
-			
-			
-			
 			
 			
 			
@@ -18897,13 +18292,7 @@
 			
 			
 			
-			
-			
-			
 												maxHeight:'500px',
-			
-			
-			
 			
 			
 			
@@ -18911,13 +18300,7 @@
 			
 			
 			
-			
-			
-			
 											}
-			
-			
-			
 			
 			
 			
@@ -18925,13 +18308,7 @@
 			
 			
 			
-			
-			
-			
 									);
-			
-			
-			
 			
 			
 			
@@ -18939,16 +18316,7 @@
 			
 			
 			
-			
-			
-			
 								});
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -18960,13 +18328,7 @@
 			
 			
 			
-			
-			
-			
 								// shelljs.exec('open '+path, function(status, output) {
-			
-			
-			
 			
 			
 			
@@ -18974,20 +18336,11 @@
 			
 			
 			
-			
-			
-			
 								// 	console.log('Program output:', output);
 			
 			
 			
-			
-			
-			
 								// });
-			
-			
-			
 			
 			
 			
@@ -18999,16 +18352,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							/*Returns array of file names at current project path path*/
-			
-			
-			
 			
 			
 			
@@ -19020,16 +18364,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								var path = core.localData.currentProject.path;
-			
-			
-			
 			
 			
 			
@@ -19037,13 +18372,7 @@
 			
 			
 			
-			
-			
-			
 								var fileList = [];
-			
-			
-			
 			
 			
 			
@@ -19051,13 +18380,7 @@
 			
 			
 			
-			
-			
-			
 									if(_err) {
-			
-			
-			
 			
 			
 			
@@ -19065,20 +18388,11 @@
 			
 			
 			
-			
-			
-			
 										// console.log("error listing projects");
 			
 			
 			
-			
-			
-			
 									}
-			
-			
-			
 			
 			
 			
@@ -19086,13 +18400,7 @@
 			
 			
 			
-			
-			
-			
 										var stats = fs.statSync(path+"/"+_files[i]);
-			
-			
-			
 			
 			
 			
@@ -19100,13 +18408,7 @@
 			
 			
 			
-			
-			
-			
 										if(stats.isDirectory() && _files[i] === "assets"){
-			
-			
-			
 			
 			
 			
@@ -19114,13 +18416,7 @@
 			
 			
 			
-			
-			
-			
 										}
-			
-			
-			
 			
 			
 			
@@ -19128,20 +18424,11 @@
 			
 			
 			
-			
-			
-			
 									// currentBrand.projects = projectsList // ADD this
 			
 			
 			
-			
-			
-			
 									if(_callback!==undefined) _callback(fileList);
-			
-			
-			
 			
 			
 			
@@ -19153,16 +18440,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -19174,19 +18452,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					}
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19206,19 +18472,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -19226,13 +18480,7 @@
 			
 			
 			
-			
-			
-			
 				// ----------------------------
-			
-			
-			
 			
 			
 			
@@ -19240,13 +18488,7 @@
 			
 			
 			
-			
-			
-			
 					brands: {
-			
-			
-			
 			
 			
 			
@@ -19254,13 +18496,7 @@
 			
 			
 			
-			
-			
-			
 						current: {
-			
-			
-			
 			
 			
 			
@@ -19268,13 +18504,7 @@
 			
 			
 			
-			
-			
-			
 						},
-			
-			
-			
 			
 			
 			
@@ -19282,20 +18512,11 @@
 			
 			
 			
-			
-			
-			
 						recent: []
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
 			
 			
 			
@@ -19303,13 +18524,7 @@
 			
 			
 			
-			
-			
-			
 					currentBrand: null,
-			
-			
-			
 			
 			
 			
@@ -19317,13 +18532,7 @@
 			
 			
 			
-			
-			
-			
 						name: null,
-			
-			
-			
 			
 			
 			
@@ -19331,19 +18540,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19359,13 +18556,7 @@
 			
 			
 			
-			
-			
-			
 						name: null,
-			
-			
-			
 			
 			
 			
@@ -19373,13 +18564,7 @@
 			
 			
 			
-			
-			
-			
 						dirty: null,
-			
-			
-			
 			
 			
 			
@@ -19387,13 +18572,7 @@
 			
 			
 			
-			
-			
-			
 						watch: null,
-			
-			
-			
 			
 			
 			
@@ -19401,13 +18580,7 @@
 			
 			
 			
-			
-			
-			
 							var self = this;
-			
-			
-			
 			
 			
 			
@@ -19415,23 +18588,11 @@
 			
 			
 			
-			
-			
-			
 						}
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19443,13 +18604,7 @@
 			
 			
 			
-			
-			
-			
 						list: [],
-			
-			
-			
 			
 			
 			
@@ -19457,13 +18612,7 @@
 			
 			
 			
-			
-			
-			
 							name: null,
-			
-			
-			
 			
 			
 			
@@ -19471,19 +18620,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19503,16 +18640,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					snippets: {
-			
-			
-			
 			
 			
 			
@@ -19524,16 +18652,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						readFromPersistentData: function(_callback){
-			
-			
-			
 			
 			
 			
@@ -19541,13 +18660,7 @@
 			
 			
 			
-			
-			
-			
 							if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0){
-			
-			
-			
 			
 			
 			
@@ -19555,13 +18668,7 @@
 			
 			
 			
-			
-			
-			
 									// console.log("persistent-data recent brands", _persistent_data.snippets)
-			
-			
-			
 			
 			
 			
@@ -19569,13 +18676,7 @@
 			
 			
 			
-			
-			
-			
 									// console.log("1a) recentbrands:",core.localData.brands.recent);
-			
-			
-			
 			
 			
 			
@@ -19583,20 +18684,11 @@
 			
 			
 			
-			
-			
-			
 								})
 			
 			
 			
-			
-			
-			
 							} 
-			
-			
-			
 			
 			
 			
@@ -19608,16 +18700,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						writeToPersitentData: function(_callback){
-			
-			
-			
 			
 			
 			
@@ -19625,16 +18708,7 @@
 			
 			
 			
-			
-			
-			
 								_persistent_data.snippets = core.localData.snippets.list;
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19650,19 +18724,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								var _persistent_data = JSON.stringify(_persistent_data);
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19674,13 +18736,7 @@
 			
 			
 			
-			
-			
-			
 									if(err) {
-			
-			
-			
 			
 			
 			
@@ -19688,13 +18744,7 @@
 			
 			
 			
-			
-			
-			
 										alert("Error Saving Changes");
-			
-			
-			
 			
 			
 			
@@ -19702,13 +18752,7 @@
 			
 			
 			
-			
-			
-			
 									if(_callback) _callback();
-			
-			
-			
 			
 			
 			
@@ -19720,23 +18764,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								
 			
 			
 			
-			
-			
-			
 							});
-			
-			
-			
 			
 			
 			
@@ -19748,19 +18780,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						updateContextMenu: function(){
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19780,22 +18800,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19811,16 +18816,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					updateUserSettings: function(_callback){ // should only be run on app init
-			
-			
-			
 			
 			
 			
@@ -19828,13 +18824,7 @@
 			
 			
 			
-			
-			
-			
 						core.userSettingsFile.read(function(_data){
-			
-			
-			
 			
 			
 			
@@ -19842,23 +18832,11 @@
 			
 			
 			
-			
-			
-			
 								self.userSettings = _data;
 			
 			
 			
-			
-			
-			
 								self.brands.path = self.userSettings.files.brands.path;
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19874,16 +18852,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								if(_callback) _callback();
-			
-			
-			
 			
 			
 			
@@ -19891,13 +18860,7 @@
 			
 			
 			
-			
-			
-			
 							
-			
-			
-			
 			
 			
 			
@@ -19905,22 +18868,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -19940,13 +18888,7 @@
 			
 			
 			
-			
-			
-			
 						fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
-			
-			
-			
 			
 			
 			
@@ -19954,13 +18896,7 @@
 			
 			
 			
-			
-			
-			
 								
-			
-			
-			
 			
 			
 			
@@ -19968,13 +18904,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -19982,13 +18912,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -19996,13 +18920,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -20010,29 +18928,11 @@
 			
 			
 			
-			
-			
-			
 						if(_callback) _callback();
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20056,26 +18956,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						// var pathToBrands = core.localData.brands.path;
 			
 			
 			
-			
-			
-			
 						var pathToBrands = core.brands.getFullPathToBrands();
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20095,19 +18980,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 						// console.log(typeof core.localData.brands.path);
-			
-			
-			
 			
 			
 			
@@ -20115,13 +18988,7 @@
 			
 			
 			
-			
-			
-			
 						fs.readdir(pathToBrands, function(_err, _files){
-			
-			
-			
 			
 			
 			
@@ -20129,13 +18996,7 @@
 			
 			
 			
-			
-			
-			
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-			
-			
-			
 			
 			
 			
@@ -20143,13 +19004,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -20157,13 +19012,7 @@
 			
 			
 			
-			
-			
-			
 								var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-			
-			
-			
 			
 			
 			
@@ -20171,13 +19020,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -20185,13 +19028,7 @@
 			
 			
 			
-			
-			
-			
 							if(_CALLBACK!==undefined) _CALLBACK();
-			
-			
-			
 			
 			
 			
@@ -20199,16 +19036,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20220,13 +19048,7 @@
 			
 			
 			
-			
-			
-			
 						var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
-			
-			
-			
 			
 			
 			
@@ -20234,13 +19056,7 @@
 			
 			
 			
-			
-			
-			
 							core.localData.brands.recent.splice(brandNameIndex, 1);
-			
-			
-			
 			
 			
 			
@@ -20248,13 +19064,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -20262,16 +19072,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20283,20 +19084,11 @@
 			
 			
 			
-			
-			
-			
 						/* Main purpose of this method is to: (1) Set the local recent brands 
 			
 			
 			
-			
-			
-			
 						in case its null, and (2) Add the current brand to the front of recent 
-			
-			
-			
 			
 			
 			
@@ -20308,16 +19100,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						// if local data is null
-			
-			
-			
 			
 			
 			
@@ -20325,13 +19108,7 @@
 			
 			
 			
-			
-			
-			
 							core.persistentDataFile.read(function(_persistent_data){
-			
-			
-			
 			
 			
 			
@@ -20339,13 +19116,7 @@
 			
 			
 			
-			
-			
-			
 								core.localData.brands.recent = _persistent_data.recentBrands;
-			
-			
-			
 			
 			
 			
@@ -20353,13 +19124,7 @@
 			
 			
 			
-			
-			
-			
 								_CALLBACK();
-			
-			
-			
 			
 			
 			
@@ -20367,20 +19132,11 @@
 			
 			
 			
-			
-			
-			
 						} 
 			
 			
 			
-			
-			
-			
 						
-			
-			
-			
 			
 			
 			
@@ -20392,16 +19148,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							// if current brand is not the most recent brand
-			
-			
-			
 			
 			
 			
@@ -20409,13 +19156,7 @@
 			
 			
 			
-			
-			
-			
 								core.localData.brands.recent.unshift(core.localData.currentBrand);
-			
-			
-			
 			
 			
 			
@@ -20423,13 +19164,7 @@
 			
 			
 			
-			
-			
-			
 									// console.log("1b) recentbrands:",core.localData.brands.recent);
-			
-			
-			
 			
 			
 			
@@ -20437,20 +19172,11 @@
 			
 			
 			
-			
-			
-			
 								});
 			
 			
 			
-			
-			
-			
 								
-			
-			
-			
 			
 			
 			
@@ -20462,16 +19188,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							// local recent brands is up to date
-			
-			
-			
 			
 			
 			
@@ -20479,13 +19196,7 @@
 			
 			
 			
-			
-			
-			
 								// console.log("1c) recentbrands:",core.localData.brands.recent);
-			
-			
-			
 			
 			
 			
@@ -20493,13 +19204,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -20507,16 +19212,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20528,13 +19224,7 @@
 			
 			
 			
-			
-			
-			
 						var matches = [];
-			
-			
-			
 			
 			
 			
@@ -20542,13 +19232,7 @@
 			
 			
 			
-			
-			
-			
 							if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
-			
-			
-			
 			
 			
 			
@@ -20556,13 +19240,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -20570,16 +19248,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20591,23 +19260,11 @@
 			
 			
 			
-			
-			
-			
 						core.localData.currentFile.name = _fileName;
 			
 			
 			
-			
-			
-			
 						core.localData.currentFile.path = core.localData.currentProject.path+"/"+core.localData.currentFile.name;
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20623,16 +19280,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					setCurrentPreviewQuestionsFile: function(_fileName){
-			
-			
-			
 			
 			
 			
@@ -20640,13 +19288,7 @@
 			
 			
 			
-			
-			
-			
 						var path = __dirname+"/local/preview-files";
-			
-			
-			
 			
 			
 			
@@ -20654,13 +19296,7 @@
 			
 			
 			
-			
-			
-			
 						this.previewQuestionFiles.current.path = path+"/"+_fileName;
-			
-			
-			
 			
 			
 			
@@ -20668,13 +19304,7 @@
 			
 			
 			
-			
-			
-			
 							core.preview.mode.regular.hardRefresh();
-			
-			
-			
 			
 			
 			
@@ -20686,32 +19316,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					}
 			
 			
 			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20731,13 +19340,7 @@
 			
 			
 			
-			
-			
-			
 					var fileList = [];
-			
-			
-			
 			
 			
 			
@@ -20745,13 +19348,7 @@
 			
 			
 			
-			
-			
-			
 						if(_err) {
-			
-			
-			
 			
 			
 			
@@ -20759,20 +19356,11 @@
 			
 			
 			
-			
-			
-			
 							// console.log("error getting files");
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -20780,13 +19368,7 @@
 			
 			
 			
-			
-			
-			
 							var stats = fs.statSync(path+"/"+_files[i]);
-			
-			
-			
 			
 			
 			
@@ -20794,13 +19376,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -20808,13 +19384,7 @@
 			
 			
 			
-			
-			
-			
 						if(_callback!==undefined) _callback(fileList);
-			
-			
-			
 			
 			
 			
@@ -20822,16 +19392,7 @@
 			
 			
 			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20847,16 +19408,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					var ext = path.extname(core.localData.currentFile.name);
-			
-			
-			
 			
 			
 			
@@ -20864,13 +19416,7 @@
 			
 			
 			
-			
-			
-			
 					var extMap = {
-			
-			
-			
 			
 			
 			
@@ -20878,13 +19424,7 @@
 			
 			
 			
-			
-			
-			
 						".css": "css",
-			
-			
-			
 			
 			
 			
@@ -20892,13 +19432,7 @@
 			
 			
 			
-			
-			
-			
 						".styl": "text/x-styl",
-			
-			
-			
 			
 			
 			
@@ -20906,13 +19440,7 @@
 			
 			
 			
-			
-			
-			
 						".qtheme": "application/json",
-			
-			
-			
 			
 			
 			
@@ -20920,23 +19448,11 @@
 			
 			
 			
-			
-			
-			
 						".md": "markdown",
 			
 			
 			
-			
-			
-			
 					}
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -20948,13 +19464,7 @@
 			
 			
 			
-			
-			
-			
 						if(myCodeMirror.getOption("mode") !== extMap[ext]){
-			
-			
-			
 			
 			
 			
@@ -20962,20 +19472,11 @@
 			
 			
 			
-			
-			
-			
 						}	
 			
 			
 			
-			
-			
-			
 					}
-			
-			
-			
 			
 			
 			
@@ -20983,23 +19484,11 @@
 			
 			
 			
-			
-			
-			
 						myCodeMirror.setOption("mode", "");
 			
 			
 			
-			
-			
-			
 					}
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21011,13 +19500,7 @@
 			
 			
 			
-			
-			
-			
 						if(err){ 
-			
-			
-			
 			
 			
 			
@@ -21025,20 +19508,11 @@
 			
 			
 			
-			
-			
-			
 							// console.log("ERR",err);
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -21046,13 +19520,7 @@
 			
 			
 			
-			
-			
-			
 							myCodeMirror.setValue(data);
-			
-			
-			
 			
 			
 			
@@ -21060,13 +19528,7 @@
 			
 			
 			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -21078,19 +19540,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21110,25 +19560,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21144,13 +19576,7 @@
 			
 			
 			
-			
-			
-			
 					active: false,
-			
-			
-			
 			
 			
 			
@@ -21158,16 +19584,7 @@
 			
 			
 			
-			
-			
-			
 						this.resetContextMenu();
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21183,16 +19600,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							var codeMirrorCover = el("#codeMirror-cover");
-			
-			
-			
 			
 			
 			
@@ -21200,20 +19608,11 @@
 			
 			
 			
-			
-			
-			
 							setTimeout(function(){
 			
 			
 			
-			
-			
-			
 								codeMirrorCover.addClass("remove");
-			
-			
-			
 			
 			
 			
@@ -21225,16 +19624,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							this.active = true;
-			
-			
-			
 			
 			
 			
@@ -21246,16 +19636,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 						}
-			
-			
-			
 			
 			
 			
@@ -21263,20 +19644,11 @@
 			
 			
 			
-			
-			
-			
 					
 			
 			
 			
-			
-			
-			
 					deactivate: function(){
-			
-			
-			
 			
 			
 			
@@ -21288,16 +19660,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							var codeMirrorCover = el("#codeMirror-cover");
-			
-			
-			
 			
 			
 			
@@ -21305,20 +19668,11 @@
 			
 			
 			
-			
-			
-			
 							setTimeout(function(){
 			
 			
 			
-			
-			
-			
 								codeMirrorCover.rmClass("hide");
-			
-			
-			
 			
 			
 			
@@ -21334,19 +19688,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 							this.active = false;
-			
-			
-			
 			
 			
 			
@@ -21354,13 +19696,7 @@
 			
 			
 			
-			
-			
-			
 							core.localData.currentFile.clear();
-			
-			
-			
 			
 			
 			
@@ -21368,19 +19704,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21396,13 +19720,7 @@
 			
 			
 			
-			
-			
-			
 						if(core.localData.currentFile.path !== null){
-			
-			
-			
 			
 			
 			
@@ -21410,13 +19728,7 @@
 			
 			
 			
-			
-			
-			
 								if(err){ 
-			
-			
-			
 			
 			
 			
@@ -21424,13 +19736,7 @@
 			
 			
 			
-			
-			
-			
 									// console.log("ERR",err);
-			
-			
-			
 			
 			
 			
@@ -21438,20 +19744,11 @@
 			
 			
 			
-			
-			
-			
 								else {
 			
 			
 			
-			
-			
-			
 									
-			
-			
-			
 			
 			
 			
@@ -21459,13 +19756,7 @@
 			
 			
 			
-			
-			
-			
 									myCodeMirror.markClean();
-			
-			
-			
 			
 			
 			
@@ -21473,13 +19764,7 @@
 			
 			
 			
-			
-			
-			
 										core.preview.mode.regular.compileSass();
-			
-			
-			
 			
 			
 			
@@ -21487,13 +19772,7 @@
 			
 			
 			
-			
-			
-			
 									
-			
-			
-			
 			
 			
 			
@@ -21501,13 +19780,7 @@
 			
 			
 			
-			
-			
-			
 							});
-			
-			
-			
 			
 			
 			
@@ -21515,26 +19788,11 @@
 			
 			
 			
-			
-			
-			
 							
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21550,13 +19808,7 @@
 			
 			
 			
-			
-			
-			
 						myCodeMirror.on("change", function(){
-			
-			
-			
 			
 			
 			
@@ -21564,13 +19816,7 @@
 			
 			
 			
-			
-			
-			
 								core.localData.currentFile.isNew = false;
-			
-			
-			
 			
 			
 			
@@ -21578,13 +19824,7 @@
 			
 			
 			
-			
-			
-			
 								if(!myCodeMirror.isClean()){
-			
-			
-			
 			
 			
 			
@@ -21592,13 +19832,7 @@
 			
 			
 			
-			
-			
-			
 								} else {
-			
-			
-			
 			
 			
 			
@@ -21606,13 +19840,7 @@
 			
 			
 			
-			
-			
-			
 								}
-			
-			
-			
 			
 			
 			
@@ -21620,13 +19848,7 @@
 			
 			
 			
-			
-			
-			
 						})
-			
-			
-			
 			
 			
 			
@@ -21638,16 +19860,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					resetContextMenu: function(){
-			
-			
-			
 			
 			
 			
@@ -21655,13 +19868,7 @@
 			
 			
 			
-			
-			
-			
 						menu = new Menu();
-			
-			
-			
 			
 			
 			
@@ -21669,20 +19876,11 @@
 			
 			
 			
-			
-			
-			
 						fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 			
 			
 			
-			
-			
-			
 							if(!_err) {
-			
-			
-			
 			
 			
 			
@@ -21694,16 +19892,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 								menu.append( new MenuItem({ label: 'Insert Snippet', enabled: false }) );
-			
-			
-			
 			
 			
 			
@@ -21711,13 +19900,7 @@
 			
 			
 			
-			
-			
-			
 									menu.append( new MenuItem({ 
-			
-			
-			
 			
 			
 			
@@ -21725,13 +19908,7 @@
 			
 			
 			
-			
-			
-			
 										thisSnippet: recentSnippetsList[i],
-			
-			
-			
 			
 			
 			
@@ -21739,13 +19916,7 @@
 			
 			
 			
-			
-			
-			
 											var index = i;
-			
-			
-			
 			
 			
 			
@@ -21753,13 +19924,7 @@
 			
 			
 			
-			
-			
-			
 												myCodeMirror.replaceSelection(recentSnippetsList[index].code);
-			
-			
-			
 			
 			
 			
@@ -21767,13 +19932,7 @@
 			
 			
 			
-			
-			
-			
 										})(i)
-			
-			
-			
 			
 			
 			
@@ -21781,20 +19940,11 @@
 			
 			
 			
-			
-			
-			
 								}
 			
 			
 			
-			
-			
-			
 								menu.append( new MenuItem({ type: 'separator' }) );
-			
-			
-			
 			
 			
 			
@@ -21806,16 +19956,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 							} else {
-			
-			
-			
 			
 			
 			
@@ -21823,13 +19964,7 @@
 			
 			
 			
-			
-			
-			
 							}
-			
-			
-			
 			
 			
 			
@@ -21837,16 +19972,7 @@
 			
 			
 			
-			
-			
-			
 					}
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21866,26 +19992,11 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 				flash: function(pinnacleCallback){
 			
 			
 			
-			
-			
-			
 					var flash = el("+div").attr("style", "height:100%; width:100%; background:white; position:absolute; top:0; left:0; z-index:1000000; opacity:0; transition:opacity .1s ease;");
-			
-			
-			
 			
 			
 			
@@ -21901,19 +20012,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 					var flashBaton = baton(function(next){
-			
-			
-			
 			
 			
 			
@@ -21921,23 +20020,11 @@
 			
 			
 			
-			
-			
-			
 						setTimeout(next, 100);
 			
 			
 			
-			
-			
-			
 					})
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21949,13 +20036,7 @@
 			
 			
 			
-			
-			
-			
 						flash.style.transition = "opacity .4s ease";
-			
-			
-			
 			
 			
 			
@@ -21963,13 +20044,7 @@
 			
 			
 			
-			
-			
-			
 						if(typeof pinnacleCallback === "function") pinnacleCallback();
-			
-			
-			
 			
 			
 			
@@ -21977,16 +20052,7 @@
 			
 			
 			
-			
-			
-			
 					})
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -21998,13 +20064,7 @@
 			
 			
 			
-			
-			
-			
 						flash.rm();
-			
-			
-			
 			
 			
 			
@@ -22016,19 +20076,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
 					flashBaton.run();
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -22048,25 +20096,7 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 				},
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			
@@ -22082,13 +20112,7 @@
 			
 			
 			
-			
-			
-			
 				core project modes (edit/preview, release manager, ??ticket view)
-			
-			
-			
 			
 			
 			
@@ -22096,13 +20120,7 @@
 			
 			
 			
-			
-			
-			
 				mode: {
-			
-			
-			
 			
 			
 			
@@ -22110,13 +20128,7 @@
 			
 			
 			
-			
-			
-			
 					releaseManager: function(){
-			
-			
-			
 			
 			
 			
@@ -22124,13 +20136,7 @@
 			
 			
 			
-			
-			
-			
 						core.preview.active = false;
-			
-			
-			
 			
 			
 			
@@ -22138,13 +20144,7 @@
 			
 			
 			
-			
-			
-			
 					},
-			
-			
-			
 			
 			
 			
@@ -22152,13 +20152,7 @@
 			
 			
 			
-			
-			
-			
 						// console.log("switching to edit/preview mode");
-			
-			
-			
 			
 			
 			
@@ -22166,13 +20160,7 @@
 			
 			
 			
-			
-			
-			
 						this.currentMode  = "edit/preview";
-			
-			
-			
 			
 			
 			
@@ -22180,13 +20168,7 @@
 			
 			
 			
-			
-			
-			
 				}
-			
-			
-			
 			
 			
 			
@@ -22216,23 +20198,56 @@
 			
 			
 			
+			loca.on("error", function(err){
+				console.error("loca err: ",err);
+			});
+			
+			loca.init("persistentData", process.env.HOME+"/Library/QTS/persistent-data.json", function(err){
+				if(err){
+					loca.initLocal("persistentData", persistentDataTemplate);
+					loca.persistentData.setPath(process.env.HOME+"/Library/QTS/persistent-data.json");
+					loca.persistentData.commit(function(){}, true);
+				}
+			});
+			
+			loca.init("userSettings", process.env.HOME+"/Library/QTS/user-settings.json", function(err){
+				if(err){
+					loca.initLocal("userSettings", userSettingsTemplate);
+					loca.userSettings.setPath(process.env.HOME+"/Library/QTS/user-settings.json");
+					loca.userSettings.commit(function(){}, true);
+				}
+			});
 			
 			
 			
 			
+			// file templates
+			var persistentDataTemplate = {
+			  "recentBrands": [],
+			  "snippets": []
+			};
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			var userSettingsTemplate = {
+				"files":{
+					"brands": {
+						"path":"Desktop"
+					},
+					"defaultPreviewFile":"preview-file-4.html",
+					"previewFiles":[
+						{"fileName":"preview-file-1.html", "verboseName":"V4-Single"},
+						{"fileName": "preview-file-2.html","verboseName": "V4-Full"},
+						{"fileName":"preview-file-3.html","verboseName":"V4-Single-Dropdown-Matrix"},
+						{"fileName":"preview-file-4.html","verboseName":"V4-Single-with-Matrix"}
+					],
+					"lastPreviewFileIndex":3
+				},
+				"preview":{
+					"refreshPreview":"onSave",
+					"defaultThumbnailName":"Thumb",
+					"defaultThumbnailExt":".gif",
+					"thumbnailExtensions":[".gif",".png",".jpg"]
+				}
+			}
 			
 			core.preview = {
 				active: false,
@@ -23081,70 +21096,6 @@
 			
 			}
 			
-			
-			
-			var dimmer = {
-				on: function() {
-					var _dimmer = el("+div").addClass("dimmer");
-					el("body").append(_dimmer);
-					setTimeout(function(){
-						el(".dimmer")[0].addClass("show");
-					},10);
-				},
-				off: function(){
-					core.localData.updateUserSettings(function(){
-						var _dimmer = el(".dimmer").rmClass("show");
-			
-						// if dropdowns are open, close them
-						if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-						if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
-			
-						setTimeout(function(){
-							_dimmer.rm();
-							_dimmer = null;
-						},500);
-					});
-				}
-			};
-			
-			
-			var editorPreviewBar = {
-				editorWidth: "40%",
-				previewWidth: "60%",
-				set: function(_index){
-					var self = this;
-			
-					if(_index === 0){ self.editorWidth = "10%"; self.previewWidth = "90%"; }
-					else if(_index === 1){ self.editorWidth = "20%"; self.previewWidth = "80%"; }
-					else if(_index === 2){ self.editorWidth = "30%"; self.previewWidth = "70%"; }
-					else if(_index === 3){ self.editorWidth = "40%"; self.previewWidth = "60%"; }
-					else if(_index === 4){ self.editorWidth = "50%"; self.previewWidth = "50%"; }
-					else if(_index === 5){ self.editorWidth = "60%"; self.previewWidth = "40%"; }
-					else if(_index === 6){ self.editorWidth = "70%"; self.previewWidth = "30%"; }
-					else if(_index === 7){ self.editorWidth = "75%"; self.previewWidth = "25%"; }
-					else if(_index === 8){ self.editorWidth = "80%"; self.previewWidth = "20%"; }
-					else if(_index === 9){ self.editorWidth = "85%"; self.previewWidth = "15%"; }
-					else if(_index === 10){ self.editorWidth = "90%"; self.previewWidth = "10%"; }
-			
-					el("#editor_preview_ratio").purge() // purge the style tag
-						.text( // add text to the style tag
-							"section#editor{ width:"+self.editorWidth+"; } "+
-							"webview#preview{ width:"+self.previewWidth+"; }"+
-							"webview#preview + #previewLoader{ width:"+self.previewWidth+"; }"
-						);
-			
-					if(core.preview.mode.screenshot.active){
-						core.preview.mode.screenshot.box.update();
-					} else {
-						// console.log("not active")
-					}
-				}
-			
-			
-			
-			};
-			
-			
 			// Init CodeMirror
 			function codemirrorInit() {
 				window.codemirrorContainer = el("#codemirror-wrapper");
@@ -23180,6 +21131,40 @@
 					autoCloseBrackets: true
 				});
 			}
+			
+			var editorPreviewBar = {
+				editorWidth: "40%",
+				previewWidth: "60%",
+				set: function(_index){
+					var self = this;
+			
+					if(_index === 0){ self.editorWidth = "10%"; self.previewWidth = "90%"; }
+					else if(_index === 1){ self.editorWidth = "20%"; self.previewWidth = "80%"; }
+					else if(_index === 2){ self.editorWidth = "30%"; self.previewWidth = "70%"; }
+					else if(_index === 3){ self.editorWidth = "40%"; self.previewWidth = "60%"; }
+					else if(_index === 4){ self.editorWidth = "50%"; self.previewWidth = "50%"; }
+					else if(_index === 5){ self.editorWidth = "60%"; self.previewWidth = "40%"; }
+					else if(_index === 6){ self.editorWidth = "70%"; self.previewWidth = "30%"; }
+					else if(_index === 7){ self.editorWidth = "75%"; self.previewWidth = "25%"; }
+					else if(_index === 8){ self.editorWidth = "80%"; self.previewWidth = "20%"; }
+					else if(_index === 9){ self.editorWidth = "85%"; self.previewWidth = "15%"; }
+					else if(_index === 10){ self.editorWidth = "90%"; self.previewWidth = "10%"; }
+			
+					el("#editor_preview_ratio").purge() // purge the style tag
+						.text( // add text to the style tag
+							"section#editor{ width:"+self.editorWidth+"; } "+
+							"webview#preview{ width:"+self.previewWidth+"; }"+
+							"webview#preview + #previewLoader{ width:"+self.previewWidth+"; }"
+						);
+			
+					if(core.preview.mode.screenshot.active){
+						core.preview.mode.screenshot.box.update();
+					} else {
+						// console.log("not active")
+					}
+				}
+			};
+			
 			
 			// ----------------------------
 			//  Editor Core Methods
@@ -23318,6 +21303,10 @@
 			
 			
 			
+			
+			
+			
+				// prepares click listener and behavior
 			
 			
 			
@@ -24477,7 +22466,7 @@
 			
 			
 			
-			
+						console.log("no Results!")
 			
 			
 			
@@ -26044,6 +24033,30 @@
 				};
 			})();
 			
+			var dimmer = {
+				on: function() {
+					var _dimmer = el("+div").addClass("dimmer");
+					el("body").append(_dimmer);
+					setTimeout(function(){
+						el(".dimmer")[0].addClass("show");
+					},10);
+				},
+				off: function(){
+					core.localData.updateUserSettings(function(){
+						var _dimmer = el(".dimmer").rmClass("show");
+			
+						// if dropdowns are open, close them
+						if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+						if(editorCore.dropdowns.brands.status === "opened") editorCore.dropdowns.brands.close();
+			
+						setTimeout(function(){
+							_dimmer.rm();
+							_dimmer = null;
+						},500);
+					});
+				}
+			};
+			
 			(function(){
 				window.Prompter = {
 					isPrompting: false,
@@ -26101,9 +24114,6 @@
 				
 				
 			})();
-			
-			
-			
 			
 			// INIT app
 			el.on("load", function(){
@@ -26410,7 +24420,6 @@
 				})
 				.run();
 			});
-			
 			
 			
 			

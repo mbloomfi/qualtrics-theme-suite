@@ -9,6 +9,7 @@ editorCore.dropdowns.brands = {
 
 	status: "closed",
 
+	// prepares click listener and behavior
 	init: function(){
 			var self = this;
 			brandName.on("click", function(evt){
@@ -298,7 +299,7 @@ editorCore.dropdowns.brands = {
 		},
 
 		noResults: function(_brandName){
-
+			console.log("no Results!")
 			var nameSize;
 			if(_brandName.length < 8) nameSize = "small";
 			else if(_brandName.length < 14) nameSize = "medium";

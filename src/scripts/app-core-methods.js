@@ -1,4 +1,62 @@
 var core = Global.coreMethods = {
+	updateApp: {
+		pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
+		filesToCheck: ["index.html", "index.js", "preferences.html"],
+		checkFiles: function(){
+			var self = this;
+			var files = this.filesToCheck;
+			for(var i = 0, ii = files.length; i < ii; i++ ){
+				self.getRemote(files[i], function(fileName, githubFileContents){
+					
+					// console.log("fileName:", fileName);
+					// console.log("githubFile Contents:", githubFileContents);
+					fs.readFile(fileName, "utf-8", function(err, localFileContents){
+						if(err) return console.log("local read error:", err);
+						console.log(" ");
+						console.log(" ");
+						console.log(fileName+" is the same as github repo? =>"+(localFileContents === githubFileContents));
+					});
+				})
+			}
+		},
+		compareFiles: function(localFile, githubFile){
+
+		},
+		getRemote: function(fileName, callback){
+			var https = require("https");
+			var requestOptions = {
+				hostname:"api.github.com",
+				path:this.pathToRepo+fileName,
+				method:'GET',
+				headers: {'user-agent': 'electron-iojs'}
+			};
+			var req = https.request(requestOptions, function(res){
+				var resBody = '';
+
+				res.on('data', function(chunk) {
+					resBody += chunk.toString();
+			  });
+
+
+			  res.on("end", function(){
+			  	resBody = JSON.parse(resBody);
+			  	// console.log("resBody.content",resBody.content);
+			  	var buff = new Buffer(resBody.content, 'base64');
+			  	callback(fileName, buff.toString());
+			    // console.log("Body: ", );
+			    // console.log("File Contents:", buff.toString());
+		    });
+		
+			});
+			
+			req.on('error', function(e) {
+			  console.error('github error:',e);
+			});
+			req.end();
+		},
+
+	},
+	
 
 	// ----------------------------
 	//  Persistent Data File
