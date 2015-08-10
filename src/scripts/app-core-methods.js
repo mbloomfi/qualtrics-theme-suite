@@ -2,25 +2,104 @@ var core = Global.coreMethods = {
 	updateApp: {
 		pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
 		filesToCheck: ["index.html", "index.js", "preferences.html"],
+		filesMap: {
+			filesToUpdate:[]
+		},
+		processAborted: false,
 		checkFiles: function(){
 			var self = this;
 			var files = this.filesToCheck;
+			var numFilesChecked = 0;
+
+			self.processAborted = false;
+
+			Prompter.prompt({
+					message: "Checking GitHub for changes. Hold your horses...",
+					mainBtn: {
+						text: "Click to abort",
+						onClick: function(){
+							self.processAborted = true;
+							Prompter.hide();
+						}
+					},
+					btn2: null,
+					btn3: null,
+				});
+
+			
+
 			for(var i = 0, ii = files.length; i < ii; i++ ){
+				
 				self.getRemote(files[i], function(fileName, githubFileContents){
-					
-					// console.log("fileName:", fileName);
-					// console.log("githubFile Contents:", githubFileContents);
+					self.filesMap[fileName] = {};
 					fs.readFile(fileName, "utf-8", function(err, localFileContents){
 						if(err) return console.log("local read error:", err);
 						console.log(" ");
 						console.log(" ");
-						console.log(fileName+" is the same as github repo? =>"+(localFileContents === githubFileContents));
+						self.filesMap[fileName].local = localFileContents;
+						self.filesMap[fileName].github = githubFileContents;
+						if(localFileContents !== githubFileContents) self.filesMap.filesToUpdate.push(fileName);
+						numFilesChecked++;
+						if(numFilesChecked === files.length){
+							self.promptUpdate();
+						}
 					});
-				})
+				});
 			}
 		},
-		compareFiles: function(localFile, githubFile){
+		promptUpdate: function(){
+			var self = this;
+			Prompter.hide();
 
+			if(self.processAborted)
+				return console.log("Process was aborted");
+
+			//this timeout gives the Prompter time to hide before re-prompting
+			setTimeout(function(){
+				if(self.filesMap.filesToUpdate.length > 0){
+					Prompter.prompt({
+						message: "Update available...",
+						mainBtn: {
+							text: "Proceed with update",
+							onClick: function(){
+								Prompter.hide();
+								
+							}
+						},
+						btn2: {
+							text: "Cancel",
+							onClick: function(){
+								Prompter.hide();
+								setTimeout(function(){
+									alert("Update Cancelled. You're a real jerk for not cancelling sooner...  \n\nI mean... uhhh... carry on!");
+								}, 300);
+									
+							}
+						},
+						btn3: null,
+					});
+
+				}
+				else {
+					Prompter.prompt({
+						message: "QTS is already up-to-date. Thanks for checking though.",
+						mainBtn: {
+							text: "Click to kill this message",
+							onClick: function(){
+								Prompter.hide();
+								setTimeout(function(){
+									alert("You just killed that poor message. He had a wife and kids. But let me guess... it was just \"business\". Pshh. You're heartless.");
+								}, 400);
+								
+								
+							}
+						},
+						btn2: null,
+						btn3: null,
+					});
+				}
+			}, 500);
+				
 		},
 		getRemote: function(fileName, callback){
 			var https = require("https");

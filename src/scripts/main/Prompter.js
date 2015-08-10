@@ -25,7 +25,9 @@ var dimmer = {
 (function(){
 	window.Prompter = {
 		isPrompting: false,
+
 		prompt: function(_promptObj){
+
 			if(Prompter.isPrompting) return;
 			Prompter.isPrompting = true;
 			//show Prompter
@@ -61,13 +63,13 @@ var dimmer = {
 		},
 
 		hide: function(){
+			if(!Prompter.isPrompting) return null;
 			Prompter.container.rmClass("show");
 			dimmer.off();
 			Prompter.isPrompting = false;
 			setTimeout(function(){
 				Prompter.container.rm();
-
-			}, 500);
+			}, 300);
 		},
 
 		setBtn: function(){
