@@ -189,7 +189,7 @@ var core = Global.coreMethods = {
 							alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
 							return; 
 						}
-						alert("You're all set! Knock 'em dead out there kiddo.");
+						alert("You're all set! Knock 'em dead out there kiddo. \n\nNow please give the system about 3-4 hours for th change to be visible. \n\n just kidding. That's just some Theme Humor™. \n\nJokes aside, RESTART THE APP.");
 					}
 				});
 				
