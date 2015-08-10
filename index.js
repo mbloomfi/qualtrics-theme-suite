@@ -441,23 +441,7 @@ var menuTemplate = [
         }
       },
 
-      {
-        type: 'separator'
-      },
 
-      {
-        label: 'Open Preview in Browser',
-        accelerator: 'Command+Shift+P',
-        click: function(){
-          console.log("__dirname:",__dirname);
-          var filePath = __dirname+"/local/currentPreview.html";
-          console.log("filePath:", filePath)
-          shelljs.exec('open -a "Google Chrome" '+ filePath, function(code, res){
-              console.log("code:",code);
-              console.log("res:",res);
-          });
-        }
-      },
 
       {
         type: 'separator'
@@ -545,6 +529,23 @@ var menuTemplate = [
         accelerator: 'Command+Shift+R',
         click: function(){
           mainWindow.webContents.executeJavaScript("core.preview.mode.regular.hardRefresh();");
+        }
+      },
+      {
+        type: 'separator'
+      },
+
+      {
+        label: 'Open Preview in Browser',
+        accelerator: 'Command+Shift+P',
+        click: function(){
+          console.log("__dirname:",__dirname);
+          var filePath = __dirname+"/local/currentPreview.html";
+          console.log("filePath:", filePath)
+          shelljs.exec('open -a "Google Chrome" '+ filePath, function(code, res){
+              console.log("code:",code);
+              console.log("res:",res);
+          });
         }
       },
     ]
