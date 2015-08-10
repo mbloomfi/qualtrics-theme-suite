@@ -187,6 +187,7 @@ var core = Global.coreMethods = {
 					if(err) {
 						errors = true;
 					}
+					updatedFiles++;
 					if(updatedFiles === files.length){
 						self.inProgress = false;
 						if(errors) {

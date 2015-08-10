@@ -29,7 +29,6 @@ var menu; // see core.codeMirror.activate()
 
 
 //= include ../app-core-methods.js
-//= include ./local-files-interface.js
 //= include ./modes/edit-preview/edit-preview.js
 //= include ./codemirror-init.js
 //= include ./editor.js
