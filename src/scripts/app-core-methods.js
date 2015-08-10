@@ -178,18 +178,19 @@ var core = Global.coreMethods = {
 			var self = this;
 			var files = self.filesMap.filesToUpdate;
 			var errors = false;
+			var updatedFiles = 0;
 			if(files.length <= 0) return;
 			for(var i = 0, ii = files.length; i < ii; i++){
 				fs.writeFile(__dirname+"/"+files[i], self.filesMap[files[i]].github, function(err){
 					if(err) {
 						errors = true;
 					}
-					if(i === files.length){
+					if(updateFiles === files.length){
 						if(errors) {
 							alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
 							return; 
 						}
-						alert("You're all set! Knock 'em dead out there kiddo. \n\nNow please give the system about 3-4 hours for th change to be visible. \n\n just kidding. That's just some Theme Humor™. \n\nJokes aside, RESTART THE APP.");
+						alert("You're all set! Knock 'em dead out there kiddo. \n\nNow please give the system about 3-4 hours for the change to be visible. \n\nJust kidding! \n\nJokes aside, RESTART THE APP.");
 					}
 				});
 				
