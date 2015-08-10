@@ -156,6 +156,15 @@ var menuTemplate = [
         type: 'separator'
       },
       {
+        label: "Check for Updates...",
+        click: function(){
+          mainWindow.webContents.executeJavaScript("core.updateApp.init();");
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: "Preferences...",
         accelerator: "Command+,",
         click: function(){
