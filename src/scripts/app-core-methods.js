@@ -188,7 +188,7 @@ var core = Global.coreMethods = {
 					if(err) {
 						errors = true;
 					}
-					if(updateFiles === files.length){
+					if(updatedFiles === files.length){
 						self.inProgress = false;
 						if(errors) {
 							alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
