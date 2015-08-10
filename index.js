@@ -13,6 +13,8 @@ var gulp = require("gulp");
 var Menu = require("menu");
 var ipc = require("ipc");
 var shelljs = require('shelljs');
+var path = require('path');
+
 
 
 global.sharedObject = {
@@ -439,6 +441,22 @@ var menuTemplate = [
         }
       },
 
+      {
+        type: 'separator'
+      },
+
+      {
+        label: 'Open Preview in Browser',
+        click: function(){
+          shelljs.exec(
+            'open -a "Google Chrome" '+ __dirname+'/local/currentPreview.html', function(code, res){
+
+              
+
+            }
+          );
+        }
+      },
 
       {
         type: 'separator'

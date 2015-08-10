@@ -244,7 +244,7 @@ core.preview = {
 
 								fs.readFile(__dirname+"/local/previewTemplate.html", "utf-8", function(err,data){
 									var newPreview = data.replace(
-										"{~StyleSheet.css~}", core.localData.currentProject.path+"/StyleSheet.css"
+										"{~StyleSheet.css~}", path.resolve(core.localData.currentProject.path+"/StyleSheet.css")
 									).replace(
 										"{~SKIN.HTML~}", _html
 									).replace(

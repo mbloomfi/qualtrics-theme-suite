@@ -298,6 +298,22 @@ var menuTemplate = [
         }
       },
 
+      {
+        type: 'separator'
+      },
+
+      {
+        label: 'Open Preview in Browser',
+        click: function(){
+          shelljs.exec(
+            'open -a "Google Chrome" '+ __dirname+'/local/currentPreview.html', function(code, res){
+
+              
+
+            }
+          );
+        }
+      },
 
       {
         type: 'separator'

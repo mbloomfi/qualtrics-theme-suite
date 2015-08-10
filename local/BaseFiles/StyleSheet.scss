@@ -567,73 +567,73 @@ $readable-hover-color: rgba(0,0,0,.05);
 // Add Custom CSS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @if $logo-image-position == "Left" {
-// 	$logo-image-position: left;
-// }
-// @if $logo-image-position == "Center" {
-// 	$logo-image-position: center;
-// }
-// @if $logo-image-position == "Right" {
-// 	$logo-image-position: right;
-// }
+@if $logo-image-position == "Left" {
+	$logo-image-position: left;
+}
+@if $logo-image-position == "Center" {
+	$logo-image-position: center;
+}
+@if $logo-image-position == "Right" {
+	$logo-image-position: right;
+}
 
 
-// .Skin .SkinInner {
-// 	padding-top:0;
-// }
-// .Skin #LogoContainer{
-// 	width:100%;
-// 	height:auto;
-// 	padding:0;
-// 	margin:20px auto;
-// 	position: relative;
-// }
+.Skin .SkinInner {
+	padding-top:0;
+}
+.Skin #LogoContainer{
+	width:100%;
+	height:auto;
+	padding:0;
+	margin:20px auto;
+	position: relative;
+}
 
-// .Skin #Logo {
-// 	height: $logo-image-height;
-// 	background-size:contain;
-// 	background-position:$logo-image-position center;
-// 	background-repeat:no-repeat;
-// 	padding: 0;
-// }
+.Skin #Logo {
+	height: $logo-image-height;
+	background-size:contain;
+	background-position:$logo-image-position center;
+	background-repeat:no-repeat;
+	padding: 0;
+}
 
-// .Skin #HeaderContainer{
-// 	width:100%;
-// 	padding: 0;
-// }
-// .Skin #Header {
-// 	padding:10px 0 10px 1%;
-// 	width: 100%;
-// 	text-align:left;
-// }
+.Skin #HeaderContainer{
+	width:100%;
+	padding: 0;
+}
+.Skin #Header {
+	padding:10px 0 10px 1%;
+	width: 100%;
+	text-align:left;
+}
 
 
-// .Skin .SkinInner {
-// 	padding-top:5px;
-// }
+.Skin .SkinInner {
+	padding-top:5px;
+}
 
-// .Skin .ProgressBarContainer {
-// 	position: relative;
-// }
+.Skin .ProgressBarContainer {
+	position: relative;
+}
 
-// @media screen and (max-width:767px){
-// 	.Skin .QuestionText {
-// 		font-size:16px;
-// 	}
-// 	.Skin .QuestionBody {
-// 		font-size: 14px;
-// 	}
-// 	.Skin #Buttons #NextButton, .Skin #Buttons #PreviousButton {
-// 		font-size: 14px;
-// 	}
-// 	.Skin #LogoContainer{
-// 		margin:0px auto 10px;
-// 	}
-// 	.Skin #Logo {
-// 		height:$logo-image-height*.8;
-// 		background-position:$logo-image-position center;
-// 	}
-// 	.Skin #Header {
-// 		padding:10px 0 10px 2%;
-// 	}
-// }
+@media screen and (max-width:767px){
+	.Skin .QuestionText {
+		font-size:16px;
+	}
+	.Skin .QuestionBody {
+		font-size: 14px;
+	}
+	.Skin #Buttons #NextButton, .Skin #Buttons #PreviousButton {
+		font-size: 14px;
+	}
+	.Skin #LogoContainer{
+		margin:0px auto 10px;
+	}
+	.Skin #Logo {
+		height:$logo-image-height*.8;
+		background-position:$logo-image-position center;
+	}
+	.Skin #Header {
+		padding:10px 0 10px 2%;
+	}
+}
