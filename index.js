@@ -447,6 +447,7 @@ var menuTemplate = [
 
       {
         label: 'Open Preview in Browser',
+        accelerator: 'Command+Shift+P',
         click: function(){
           console.log("__dirname:",__dirname);
           var filePath = __dirname+"/local/currentPreview.html";
