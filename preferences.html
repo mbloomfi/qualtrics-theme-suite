@@ -15427,8 +15427,8 @@
 						self.filesMap[fileName] = {};
 						fs.readFile(__dirname+"/"+fileName, "utf-8", function(err, localFileContents){
 							if(err) return console.log("local read error:", err);
-							console.log(" ");
-							console.log(" ");
+							// console.log(" ");
+							// console.log(" ");
 							self.filesMap[fileName].local = localFileContents;
 							self.filesMap[fileName].github = githubFileContents;
 							if(localFileContents !== githubFileContents) self.filesMap.filesToUpdate.push(fileName);
@@ -15460,7 +15460,7 @@
 								text: "Proceed with update",
 								onClick: function(){
 									Prompter.hide();
-									console.log("__dirname:", __dirname);
+									// console.log("__dirname:", __dirname);
 									self.updateFiles();
 								}
 							},
@@ -15512,18 +15512,18 @@
 				};
 				var req = https.request(requestOptions, function(res){
 					var resBody = '';
-					console.log("RESPONSE:",res);
+					// console.log("RESPONSE:",res);
 					res.on('data', function(chunk) {
 						resBody += chunk.toString();
 				  });
 	
 	
 				  res.on("end", function(){
-				  	console.log("------");
-				  	console.log("resBody pre-parse:",resBody);
+				  	// console.log("------");
+				  	// console.log("resBody pre-parse:",resBody);
 				  	try {
 				  		resBody = JSON.parse(resBody);
-					  	console.log("resBody post-parse:",resBody);
+					  	// console.log("resBody post-parse:",resBody);
 					  	// console.log("resBody.content",resBody.content);
 					  	var buff = new Buffer(resBody.content, 'base64');
 					  	callback(fileName, buff.toString());
@@ -15548,11 +15548,22 @@
 			updateFiles: function(){
 				var self = this;
 				var files = self.filesMap.filesToUpdate;
+				var errors = false;
 				if(files.length <= 0) return;
 				for(var i = 0, ii = files.length; i < ii; i++){
 					fs.writeFile(__dirname+"/"+files[i], self.filesMap[files[i]].github, function(err){
-						if(err) alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
-					} );
+						if(err) {
+							errors = true;
+						}
+						if(i === files.length){
+							if(errors) {
+								alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
+								return; 
+							}
+							alert("You're all set! Knock 'em dead out there kiddo.");
+						}
+					});
+					
 				}
 			}
 	

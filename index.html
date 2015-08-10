@@ -16717,11 +16717,11 @@
 			
 			
 			
-									console.log(" ");
+									// console.log(" ");
 			
 			
 			
-									console.log(" ");
+									// console.log(" ");
 			
 			
 			
@@ -16849,7 +16849,7 @@
 			
 			
 			
-											console.log("__dirname:", __dirname);
+											// console.log("__dirname:", __dirname);
 			
 			
 			
@@ -17057,7 +17057,7 @@
 			
 			
 			
-							console.log("RESPONSE:",res);
+							// console.log("RESPONSE:",res);
 			
 			
 			
@@ -17085,11 +17085,11 @@
 			
 			
 			
-						  	console.log("------");
+						  	// console.log("------");
 			
 			
 			
-						  	console.log("resBody pre-parse:",resBody);
+						  	// console.log("resBody pre-parse:",resBody);
 			
 			
 			
@@ -17101,7 +17101,7 @@
 			
 			
 			
-							  	console.log("resBody post-parse:",resBody);
+							  	// console.log("resBody post-parse:",resBody);
 			
 			
 			
@@ -17201,6 +17201,10 @@
 			
 			
 			
+						var errors = false;
+			
+			
+			
 						if(files.length <= 0) return;
 			
 			
@@ -17213,11 +17217,51 @@
 			
 			
 			
-								if(err) alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
+								if(err) {
 			
 			
 			
-							} );
+									errors = true;
+			
+			
+			
+								}
+			
+			
+			
+								if(i === files.length){
+			
+			
+			
+									if(errors) {
+			
+			
+			
+										alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
+			
+			
+			
+										return; 
+			
+			
+			
+									}
+			
+			
+			
+									alert("You're all set! Knock 'em dead out there kiddo.");
+			
+			
+			
+								}
+			
+			
+			
+							});
+			
+			
+			
+							
 			
 			
 			
