@@ -404,7 +404,7 @@ var core = Global.coreMethods = {
 			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					console.error("brand exists error",err)
+					console.warn("brand does not exist:",err)
 					return _callback(false);
 				}
 

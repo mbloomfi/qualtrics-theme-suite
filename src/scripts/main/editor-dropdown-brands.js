@@ -4,6 +4,17 @@ editorCore.dropdowns.brands = {
 
 	setGlobalVariables: function(){
 		window.brandSearchInput = el("#searchBrands");
+			brandSearchInput.on("keyup", function(e){
+				if(e.keyCode === 13 || e.keyIdentifier === "Enter"){
+					
+					if(this.value.length > 0 && this.value.slice(0,1) !== " "){
+						if(document.getElementById("createBrand")){
+							document.getElementById("createBrand").dispatchEvent(new MouseEvent("click"));
+						}
+					}
+				}
+			});
+
 		window.brandsListCont = el("#brandsListCont");
 	},
 
@@ -108,6 +119,10 @@ editorCore.dropdowns.brands = {
 			brandName.addClass("dropdown-active");
 
 			brandsDropdown.el(".arrow")[0].rmClass("hide");
+
+			setTimeout(function(){
+				brandSearchInput.focus();
+			},0);
 			
 		},0);
 
@@ -137,6 +152,7 @@ editorCore.dropdowns.brands = {
 	},
 
 	populate: function(){
+		console.log("populating brands dropdown");
 		brandName.append(
 			el("+div").addClass(["dropdown", "hide"]).append(
 
@@ -168,6 +184,7 @@ editorCore.dropdowns.brands = {
 	},
 
 	refill: function(){
+		console.log("refilling brands dropdown");
 		brandsDropdown.append(
 			el.join([
 				el("+div").addClass("arrow"),

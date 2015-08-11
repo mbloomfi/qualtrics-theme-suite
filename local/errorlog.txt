@@ -134,3 +134,15 @@ Mon Aug 10 2015 14:15:39 GMT-0600 (MDT)
 Mon Aug 10 2015 14:15:46 GMT-0600 (MDT)
 	TypeError: Path must be a string. Received [Function]
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:30:41 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/test3'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:31:01 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/newtest'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:32:17 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/test4'
+

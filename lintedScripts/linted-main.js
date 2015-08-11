@@ -528,7 +528,7 @@ var core = Global.coreMethods = {
 							alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
 							return; 
 						}
-						alert("You're all set! Knock 'em dead out there kiddo. \n\nNow please give the system about 3-4 hours for the change to be visible. \n\nJust kidding! \n\nJokes aside, RESTART THE APP.");
+						alert("You're all set! Knock 'em dead out there kiddo.\n\nRESTART THE APP!");
 					}
 				});
 			}
@@ -737,7 +737,7 @@ var core = Global.coreMethods = {
 			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
 				if(err) {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					console.error("brand exists error",err)
+					console.warn("brand does not exist:",err)
 					return _callback(false);
 				}
 
@@ -1352,8 +1352,7 @@ var core = Global.coreMethods = {
 							})(i)
 						}) );
 					}
-					menu.append( new MenuItem({ type: 'separator' }) );
-					menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+
 
 				} else {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
@@ -2436,6 +2435,17 @@ editorCore.dropdowns.brands = {
 
 	setGlobalVariables: function(){
 		window.brandSearchInput = el("#searchBrands");
+			brandSearchInput.on("keyup", function(e){
+				if(e.keyCode === 13 || e.keyIdentifier === "Enter"){
+					
+					if(this.value.length > 0 && this.value.slice(0,1) !== " "){
+						if(document.getElementById("createBrand")){
+							document.getElementById("createBrand").dispatchEvent(new MouseEvent("click"));
+						}
+					}
+				}
+			});
+
 		window.brandsListCont = el("#brandsListCont");
 	},
 
@@ -2540,6 +2550,10 @@ editorCore.dropdowns.brands = {
 			brandName.addClass("dropdown-active");
 
 			brandsDropdown.el(".arrow")[0].rmClass("hide");
+
+			setTimeout(function(){
+				brandSearchInput.focus();
+			},0);
 			
 		},0);
 
@@ -2569,6 +2583,7 @@ editorCore.dropdowns.brands = {
 	},
 
 	populate: function(){
+		console.log("populating brands dropdown");
 		brandName.append(
 			el("+div").addClass(["dropdown", "hide"]).append(
 
@@ -2600,6 +2615,7 @@ editorCore.dropdowns.brands = {
 	},
 
 	refill: function(){
+		console.log("refilling brands dropdown");
 		brandsDropdown.append(
 			el.join([
 				el("+div").addClass("arrow"),
