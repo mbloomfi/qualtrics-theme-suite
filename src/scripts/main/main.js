@@ -24,18 +24,3 @@ var Global = remote.getGlobal("sharedObject"); //see index.js
 var appRoot = Global.appRoot;
 var template = etc.template;
 var menu; // see core.codeMirror.activate()
-
-
-
-
-//= include ../app-core-methods.js
-//= include ./modes/edit-preview/edit-preview.js
-//= include ./codemirror-init.js
-//= include ./editor.js
-//= include ./brand-search.js
-//= include ./Quitter.js
-//= include ./Saver.js
-//= include ./Prompter.js
-//= include ./app-ready.js
-
-

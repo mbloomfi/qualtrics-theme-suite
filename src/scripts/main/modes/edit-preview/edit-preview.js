@@ -207,7 +207,7 @@ core.preview = {
 						setTimeout(function(){
 							core.preview.init();
 							setTimeout(function(){
-								preview.reload();
+								preview.reloadIgnoringCache();
 							}, 50);
 						}, 50);
 							
@@ -362,6 +362,7 @@ core.preview = {
 
 												setTimeout(function(){
 													core.preview.init();
+
 													ipc.send('asynchronous-message', 'enablePreviewModes');
 												},300);
 											});

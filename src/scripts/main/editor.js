@@ -43,6 +43,8 @@ var editorCore = {
 	active: true,
 	deactivate: function(){
 		editor.addClass("inactive");
+		preview.focus();
+		preview.blur();
 	},
 	activate: function(){
 		editor.rmClass("inactive");
@@ -125,13 +127,6 @@ var editorCore = {
 
 	
 };
-
-
-
-
-//= include editor-dropdown-brands.js
-//= include editor-dropdown-projects.js
-//= include editor-dropdown-files.js
 
 editorCore.init();
 	

@@ -6,7 +6,7 @@ el.on("load", function(){
 
 	baton(function(next){
 		
-		
+		console.log("app init");
 		core.localData.updateUserSettings(next);
 
 	})
@@ -62,16 +62,16 @@ el.on("load", function(){
 		// console.log("e",e);
 			// enter key
 			if(e.keyCode === 13) {
+				
 				if(core.preview.mode.currentMode === "thumbnail"){
-					var clickEvent = new MouseEvent("click");
-					document.getElementById("thumbCamera").dispatchEvent(clickEvent);
+					document.getElementById("thumbCamera").dispatchEvent(new MouseEvent("click"));
 				}
 				else if(core.preview.mode.currentMode === "screenshot"){
-					var clickEvent = new MouseEvent("click");
-					document.getElementById("screenshotCamera").dispatchEvent(clickEvent);
-					// console.log("take screenshot");
+					document.getElementById("screenshotCamera").dispatchEvent(new MouseEvent("click"));
 				}
 			}
+
+			
 
 		});
 
@@ -80,6 +80,17 @@ el.on("load", function(){
 
 
 		document.addEventListener('keydown',function(evt){
+
+			if(evt.keyCode === 27) {
+
+				if(core.preview.mode.currentMode === "thumbnail" || core.preview.mode.currentMode === "screenshot"){
+					evt.preventDefault();
+					core.preview.mode.regular.enable();
+					myCodeMirror.focus();
+				}
+
+			}
+
 			keystate[evt.keyCode] = true;
 			if (evt.keyCode === 38 || evt.keyCode === 40 || evt.keyCode === 39 || evt.keyCode === 37 || evt.keyCode === 32) {
 				// evt.preventDefault();
@@ -92,9 +103,9 @@ el.on("load", function(){
 
 				//if 'COMMAND'
 				if(keystate[91]){
+					
 					if(core.preview.mode.currentMode === "thumbnail"){
-						var clickEvent = new MouseEvent("click");
-						document.getElementById("decrease-thumb-size").dispatchEvent(clickEvent);
+						document.getElementById("decrease-thumb-size").dispatchEvent(new MouseEvent("click"));
 					}
 				}
 			}
@@ -105,9 +116,9 @@ el.on("load", function(){
 
 				//if 'COMMAND'
 				if(keystate[91]){
+					
 					if(core.preview.mode.currentMode === "thumbnail"){
-						var clickEvent = new MouseEvent("click");
-						document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+						document.getElementById("increase-thumb-size").dispatchEvent(new MouseEvent("click"));
 					}
 				}
 			}
@@ -124,18 +135,14 @@ el.on("load", function(){
 					if(core.preview.mode.currentMode === "thumbnail"){
 						var thumbBox = document.getElementById("thumbBox");
 						if(keystate[91]){
-							thumbBox.style.left = (parseInt(thumbBox.style.left) + (50))+"px";
+							thumbBox.style.left = parseInt(thumbBox.style.left) + 50 + "px";
 						} else {
-							thumbBox.style.left = (parseInt(thumbBox.style.left) + (10))+"px";
+							thumbBox.style.left = parseInt(thumbBox.style.left) + 10 + "px";
 						}
 
-						if( (parseInt(thumbBox.style.left) + thumbBox.clientWidth) > window.innerWidth ) thumbBox.style.left = (
-							window.innerWidth - thumbBox.clientWidth
-							)+"px";
-						
-						// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
-						// var clickEvent = new MouseEvent("click");
-						// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+						if( parseInt(thumbBox.style.left) + thumbBox.clientWidth > window.innerWidth ) {
+							thumbBox.style.left = window.innerWidth - thumbBox.clientWidth + "px";
+						}
 					}
 				
 			}
@@ -153,18 +160,18 @@ el.on("load", function(){
 						var thumbBox = document.getElementById("thumbBox");
 						if(keystate[91]){
 
-							if(parseInt(thumbBox.style.left) - (50) < 0){
+							if(parseInt(thumbBox.style.left) - 50 < 0){
 								thumbBox.style.left = "0px";
 							} else {
-								thumbBox.style.left = (parseInt(thumbBox.style.left) - (50))+"px";
+								thumbBox.style.left = parseInt(thumbBox.style.left) - 50 + "px";
 							}
 							
 						} else {
 
-							if(parseInt(thumbBox.style.left) - (10) < 0){
+							if(parseInt(thumbBox.style.left) - 10 < 0){
 								thumbBox.style.left = "0px";
 							} else {
-								thumbBox.style.left = (parseInt(thumbBox.style.left) - (10))+"px";
+								thumbBox.style.left = parseInt(thumbBox.style.left) - 10 + "px";
 							}
 
 						}
@@ -186,26 +193,20 @@ el.on("load", function(){
 						var thumbBox = document.getElementById("thumbBox");
 						
 						if(keystate[91]){
-							thumbBox.style.top = (parseInt(thumbBox.style.top) + (50))+"px";
+							thumbBox.style.top = parseInt(thumbBox.style.top) + 50 + "px";
 						} else {
-							thumbBox.style.top = (parseInt(thumbBox.style.top) + (10))+"px";
+							thumbBox.style.top = parseInt(thumbBox.style.top) + 10 + "px";
 						}
 						// console.log("top",parseInt(thumbBox.style.top));
 						// console.log("box height",thumbBox.clientHeight);
 						// console.log("window height",window.innerHeight);
 
 
-						if( (parseInt(thumbBox.style.top) + thumbBox.clientHeight) >= window.innerHeight) {
+						if( parseInt(thumbBox.style.top) + thumbBox.clientHeight >= window.innerHeight) {
 							// console.log("reset top")
-							thumbBox.style.top = (
-							window.innerHeight - thumbBox.clientHeight
-							)+"px";
+							thumbBox.style.top = window.innerHeight - thumbBox.clientHeight + "px";
 						}
-							
-						
-						// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
-						// var clickEvent = new MouseEvent("click");
-						// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+
 					}
 				
 			}
@@ -223,27 +224,27 @@ el.on("load", function(){
 						var thumbBox = document.getElementById("thumbBox");
 						if(keystate[91]){
 
-							if(parseInt(thumbBox.style.top) - (50) < 0){
+							if(parseInt(thumbBox.style.top) - 50 < 0){
 								thumbBox.style.top = "0px";
 							} else {
-								thumbBox.style.top = (parseInt(thumbBox.style.top) - (50))+"px";
+								thumbBox.style.top = parseInt(thumbBox.style.top) - 50 + "px";
 							}
 
 
 						} else {
 
-							if(parseInt(thumbBox.style.top) - (10) < 0){
+							if(parseInt(thumbBox.style.top) - 10 < 0){
 								thumbBox.style.top = "0px";
 							} else {
-								thumbBox.style.top = (parseInt(thumbBox.style.top) - (10))+"px";
+								thumbBox.style.top = parseInt(thumbBox.style.top) - 10 + "px";
 							}
 							
 						}
 
 						
 						// thumbBox.style.top = (parseInt(thumbBox.style.top) + (evt.clientY - self.prevClientY))+"px";
-						// var clickEvent = new MouseEvent("click");
-						// document.getElementById("increase-thumb-size").dispatchEvent(clickEvent);
+						// 
+						// document.getElementById("increase-thumb-size").dispatchEvent(new MouseEvent("click"));
 					}
 				
 			}

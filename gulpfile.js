@@ -9,7 +9,9 @@ var stylus = require("gulp-stylus");
 var autoprefixer = require("gulp-autoprefixer");
 var uglify = require("gulp-uglify");
 var replace = require("gulp-replace");
+var eslint = require("gulp-eslint");
 var gulpif = require("gulp-if");
+
 
 //ENVIRONMENT - Change to TRUE when using for production
 var production = false;
@@ -33,7 +35,7 @@ gulp.task("main-process", function(){
 //MAIN RENDERER
 //====================
 //HTML ==
-gulp.task("mainView", ["mainStyles", "mainScripts"], function(){
+gulp.task("mainView", ["mainStyles", "combineAllScripts"], function(){
 	return gulp.src("src/view/main/index.html")
 	.pipe(plumber())
 	.pipe(include())
@@ -60,18 +62,53 @@ gulp.task("compile-stylus", function(){
 
 
 //JavaScript ==
-gulp.task("mainScripts", function(){
+gulp.task("mainLint", ["userScripts"], function(){
+	return gulp.src("src/scripts/main/_.js")
+	.pipe(plumber())
+	.pipe(eslint({"configFile":".eslintrc"}))
+	.pipe(eslint.format())
+	.pipe(rename("linted-main.js"))
+	.pipe(gulp.dest("./lintedScripts"))
+	.pipe(eslint.failOnError());
+});
+
+gulp.task("userScripts", function(){
+	return gulp.src([
+		//include
+		"src/scripts/main/main.js",
+		"src/scripts/main/app-ready.js",
+		"src/scripts/app-core-methods.js",
+		"src/scripts/main/modes/edit-preview/edit-preview.js",
+		"src/scripts/main/codemirror-init.js",
+		"src/scripts/main/editor.js",
+		"src/scripts/main/editor-dropdown-brands.js",
+		"src/scripts/main/editor-dropdown-projects.js",
+		"src/scripts/main/editor-dropdown-files.js",
+		"src/scripts/main/brand-search.js",
+		"src/scripts/main/Quitter.js",
+		"src/scripts/main/Saver.js",
+		"src/scripts/main/Prompter.js"
+		
+		//exclude
+		// "!src/scripts/main/_.js"
+		])
+	.pipe(plumber())
+	.pipe(concat("_.js"))
+	.pipe(gulpif( production, uglify() ))
+	.pipe(gulp.dest("src/scripts/main"));
+});
+
+gulp.task("combineAllScripts", ["mainLint"], function(){
 	return gulp.src([
 		//include
 		"src/scripts/libs/*.js",
 		"src/scripts/libs/codemirror/codemirror.js",
 		"src/scripts/libs/codemirror/modes/*",
 		"src/scripts/libs/codemirror/**",
-		"src/scripts/main/main.js"
+		"src/scripts/main/_.js"
 		//exclude
 		// "!src/scripts/main/_.js"
 		])
-
 	.pipe(plumber())
 	.pipe(include())
 	.pipe(concat("_.js"))

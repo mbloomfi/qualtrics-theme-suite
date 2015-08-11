@@ -278,7 +278,7 @@ editorCore.dropdowns.brands = {
 			// batch the keystrokes into a single search
 
 			brandSearchInput.on("keyup", function(){
-				if(timeout != undefined) {
+				if(timeout !== undefined) {
 				 clearTimeout(timeout);
 				}
 				timeout = setTimeout(function() {

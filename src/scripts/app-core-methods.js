@@ -45,28 +45,27 @@ var core = Global.coreMethods = {
 						}
 					},
 					btn2: null,
-					btn3: null,
+					btn3: null
 				});
 
-			
+			function processRemoteGihtubFile(fileName, githubFileContents){
+				self.filesMap[fileName] = {};
+				fs.readFile(__dirname+"/"+fileName, "utf-8", function(err, localFileContents){
+					if(err) return console.log("local read error:", err);
+					// console.log(" ");
+					// console.log(" ");
+					self.filesMap[fileName].local = localFileContents;
+					self.filesMap[fileName].github = githubFileContents;
+					if(localFileContents !== githubFileContents) self.filesMap.filesToUpdate.push(fileName);
+					numFilesChecked++;
+					if(numFilesChecked === files.length){
+						self.promptUpdate();
+					}
+				});
+			}
 
 			for(var i = 0, ii = files.length; i < ii; i++ ){
-				
-				self.getRemote(files[i], function(fileName, githubFileContents){
-					self.filesMap[fileName] = {};
-					fs.readFile(__dirname+"/"+fileName, "utf-8", function(err, localFileContents){
-						if(err) return console.log("local read error:", err);
-						// console.log(" ");
-						// console.log(" ");
-						self.filesMap[fileName].local = localFileContents;
-						self.filesMap[fileName].github = githubFileContents;
-						if(localFileContents !== githubFileContents) self.filesMap.filesToUpdate.push(fileName);
-						numFilesChecked++;
-						if(numFilesChecked === files.length){
-							self.promptUpdate();
-						}
-					});
-				});
+				self.getRemote(files[i], processRemoteGihtubFile);
 			}
 		},
 
@@ -104,7 +103,7 @@ var core = Global.coreMethods = {
 								}, 300);
 							}
 						},
-						btn3: null,
+						btn3: null
 					});
 
 				}
@@ -124,7 +123,7 @@ var core = Global.coreMethods = {
 							}
 						},
 						btn2: null,
-						btn3: null,
+						btn3: null
 					});
 				}
 			}, 500);
@@ -182,8 +181,10 @@ var core = Global.coreMethods = {
 			var errors = false;
 			var updatedFiles = 0;
 			if(files.length <= 0) return;
-			for(var i = 0, ii = files.length; i < ii; i++){
-				fs.writeFile(__dirname+"/"+files[i], self.filesMap[files[i]].github, function(err){
+
+
+			function writeGithubFileToLocal(files, index){
+				fs.writeFile(__dirname+"/"+files[index], self.filesMap[files[i]].github, function(err){
 					if(err) {
 						errors = true;
 					}
@@ -194,10 +195,14 @@ var core = Global.coreMethods = {
 							alert("Uh-oh... Looks like there was a minor hiccup. You may need to do this one manually");
 							return; 
 						}
-						alert("You're all set! Knock 'em dead out there kiddo. \n\nNow please give the system about 3-4 hours for the change to be visible. \n\nJust kidding! \n\nJokes aside, RESTART THE APP.");
+						alert("You're all set! Knock 'em dead out there kiddo.\n\nRESTART THE APP!");
 					}
 				});
-				
+			}
+
+
+			for(var i = 0, ii = files.length; i < ii; i++){
+				writeGithubFileToLocal(files, i);
 			}
 		}
 
@@ -402,9 +407,9 @@ var core = Global.coreMethods = {
 					console.error("brand exists error",err)
 					return _callback(false);
 				}
-				else {
-					return _callback(stats.isDirectory());
-				}
+
+				return _callback(stats.isDirectory());
+
 			});
 		},
 
@@ -429,9 +434,9 @@ var core = Global.coreMethods = {
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						return _callback(false);
 					}
-					else {
-						return _callback(stats.isFile());
-					}
+
+					return _callback(stats.isFile());
+
 				});
 			})
 			.run();
@@ -590,7 +595,7 @@ var core = Global.coreMethods = {
 									}
 								}
 							})
-						)
+						);
 
 						container.append(
 							etc.el("img", {
@@ -601,7 +606,11 @@ var core = Global.coreMethods = {
 								}
 							})
 						);
+
+						/*eslint-disable consistent-return */
 						return container;
+						/*eslint-enable consistent-return */
+
 					});
 
 					imagePreview.render({path:path}, document.body);
@@ -831,8 +840,9 @@ var core = Global.coreMethods = {
 		filterBrands: function(criteria){
 			var matches = [];
 			for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
-				if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase())
+				if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase()) {
 					matches.push(core.localData.brandList[i]);
+				}
 			}
 			return matches;
 		},
@@ -1009,8 +1019,7 @@ var core = Global.coreMethods = {
 							})(i)
 						}) );
 					}
-					menu.append( new MenuItem({ type: 'separator' }) );
-					menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+
 
 				} else {
 					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
