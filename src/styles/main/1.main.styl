@@ -131,14 +131,14 @@ div.dimmer {
   position absolute
   top 50%
   left 50%
-  transform  translate(-50%, -50%)
-  padding 45px 10px 10px
-  min-width 100px
-  min-height 50px
+  transform  translate(-50%, -45%)
+  padding 60px 15px 15px
+  min-width 250px
+  min-height 80px
   borderRadius 2px
   user-select none
   pointer-events none
-  box-shadow 0 4px 20px rgba(0,0,0,.5) 
+  box-shadow 0 4px 20px rgba(0,0,0,.4)
   &.light {
     background-color rgb(240,240,240)
     border 1px solid rgb(200,200,200)
@@ -147,23 +147,86 @@ div.dimmer {
     background-color rgb(50,50,50)
     border 1px solid rgb(20,20,20)
   }
-}
-.change-image-bg-cont {
-  height 25px
-  width 25px
-  border-radius 50%
-  position absolute
-  top 10px
-  right 10px
-  display block
-  margin 0 auto
-  cursor pointer
-  pointer-events all
-  &.light {
-    background-color rgb(240,240,240)
+  img {
+    display block
+    margin 0 auto
+    outline 1px solid rgba(150,150,150, .4)
   }
-  &.dark {
-    background-color rgb(50,50,50)
+  #resizeImgForm {
+    height 30px
+    width 200px
+    position absolute
+    top 10px
+    left 10px
+    display block
+    // background-color orange
+    pointer-events all
+    #previewImgWidth {
+      height 100%
+      width 50px
+      margin-right 6px
+      padding 0 0 0 2px
+      outline 1px solid rgb(210,210,210)
+    }
+    .x {
+      margin-right 6px
+    }
+    #previewImgHeight{
+      height 100%
+      width 50px
+      margin-right 6px
+      padding 0 0 0 2px
+      outline 1px solid rgb(210,210,210)
+    }
+    #resizePreviewImgBtn {
+      height 100%
+      margin-left 10px
+      padding 0 5px
+      background $affirmative-green
+      outline 1px solid darken($affirmative-green, 10%)
+      color white
+    }
+  }
+  .change-image-bg-cont {
+    height 30px
+    width 30px
+    border-radius 50%
+    position absolute
+    top 10px
+    right 10px
+    display block
+    cursor pointer
+    pointer-events all
+    &.light {
+      background-color rgb(240,240,240)
+    }
+    &.dark {
+      background-color rgb(50,50,50)
+    }
+  }
+  .close-img-preview {
+    height 30px
+    width 100%
+    // border-radius 50%
+    position absolute
+    top -50px
+    left 0
+    display block
+    margin 0 auto
+    cursor pointer
+    pointer-events all
+    background red
+    text-align center
+    line-height 30px
+    color white
+    background-color $primaryColor
+    border 1px solid darken($primaryColor, 25%)
+    box-shadow 0 0px 20px rgba(0,0,0,.35) 
+    transition background-color .3s ease
+    &:hover {
+      background-color lighten($primaryColor, 10%)
+    }
   }
 }
+
 

@@ -86,7 +86,7 @@ editorCore.dropdowns.brands = {
 									selectBrand();
 								}
 							},
-							btn3: null,
+							btn3: null
 						}) ;
 
 				}	else {

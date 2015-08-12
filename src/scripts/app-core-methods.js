@@ -558,6 +558,7 @@ var core = Global.coreMethods = {
 				},
 
 				viewImage: function(path){
+					// image preview is removed at `editorCore.dropdowns.bodyClick`
 
 					window.imagePreview = etc.template(function(){
 						if(document.getElementById("image_preview_container")){
@@ -571,8 +572,6 @@ var core = Global.coreMethods = {
 							className:"light"
 						});
 
-
-
 						container.append(
 							etc.el("div", {
 								className: "change-image-bg-cont dark",
@@ -585,7 +584,6 @@ var core = Global.coreMethods = {
 											this.classList.remove("light");
 											imgCont.classList.remove("dark");
 											imgCont.classList.add("light");
-
 										} else {
 											this.classList.remove("dark");
 											this.classList.add("light");
@@ -598,11 +596,63 @@ var core = Global.coreMethods = {
 						);
 
 						container.append(
+							etc.el("div", {
+								className: "close-img-preview",
+								events: {
+									click: function(e){
+										e.stopPropagation();
+										var cont = document.getElementById("image_preview_container");
+										if(cont) {cont.rm();}										
+									}
+								}
+							}, "Close")
+						);
+
+						var resizeImgForm = etc.el("form", {
+							id: "resizeImgForm",
+							events: {
+								click: function(e){
+									e.stopPropagation();	
+								}
+							}
+						})
+						.append([
+							etc.el("input", {
+								id: "previewImgWidth"
+							})
+						])
+						.append([
+							etc.el("span", {
+								className: "x"
+							}, "X")
+						])
+						.append([
+							etc.el("input", {
+								id: "previewImgHeight"
+							})
+						])
+						.append([
+							etc.el("input", {
+								type: "submit",
+								value: "Resize",
+								id: "resizePreviewImgBtn",
+								events: {
+									click: function(e){
+										e.preventDefault();
+									}
+								}
+							})
+						])
+
+						// UNCOMMENT TO SEE RESIZING ***
+						// container.append(resizeImgForm);
+
+						container.append(
 							etc.el("img", {
 								src: this.props.path,
 								style: {
-									maxHeight:'500px',
-									maxWidth:'500px'
+									maxHeight:'600px',
+									maxWidth:'600px'
 								}
 							})
 						);
@@ -895,7 +945,7 @@ var core = Global.coreMethods = {
 			".js": "javascript",
 			".qtheme": "application/json",
 			".json": "application/json",
-			".md": "markdown",
+			".md": "markdown"
 		}
 
 		if(extMap.hasOwnProperty(ext.toLowerCase())){
@@ -1004,19 +1054,23 @@ var core = Global.coreMethods = {
 			var recentSnippetsList = [];
 			fs.readFile(__dirname+"/local/persistent-data.json", function(_err, _data){
 				if(!_err) {
-					recentSnippetsList = JSON.parse(_data).snippets.slice(0,10);
+					recentSnippetsList = JSON.parse(_data).snippets.slice(0,15);
 
 					menu.append( new MenuItem({ label: 'Insert Snippet', enabled: false }) );
 					for(var i = 0, ii = recentSnippetsList.length; i < ii; i++){
 						menu.append( new MenuItem({ 
 							label: recentSnippetsList[i].name ,
 							thisSnippet: recentSnippetsList[i],
+
+							/*eslint-disable no-loop-func */
 							click: (function(i){
 								var index = i;
 								return function(){
 									myCodeMirror.replaceSelection(recentSnippetsList[index].code);
 								}
 							})(i)
+							/*eslint-disable no-loop-func */
+
 						}) );
 					}
 

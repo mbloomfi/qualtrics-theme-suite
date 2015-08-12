@@ -61,19 +61,7 @@ gulp.task("compile-stylus", function(){
 });
 
 
-//JavaScript ==
-gulp.task("mainLint", ["userScripts"], function(){
-	return gulp.src("src/scripts/main/_.js")
-	.pipe(plumber())
-	.pipe(eslint({"configFile":".eslintrc"}))
-	.pipe(eslint.format())
-	.pipe(rename("linted-main.js"))
-	.pipe(gulp.dest("./lintedScripts"))
-	.pipe(eslint.failOnError());
-});
-
-gulp.task("userScripts", function(){
-	return gulp.src([
+var scriptFiles = [
 		//include
 		"src/scripts/main/main.js",
 		"src/scripts/main/app-ready.js",
@@ -91,7 +79,21 @@ gulp.task("userScripts", function(){
 		
 		//exclude
 		// "!src/scripts/main/_.js"
-		])
+		];
+
+//JavaScript ==
+gulp.task("mainLint", ["userScripts"], function(){
+	return gulp.src(scriptFiles)
+	.pipe(plumber())
+	.pipe(eslint({"configFile":".eslintrc"}))
+	.pipe(eslint.format())
+	.pipe(rename("linted-main.js"))
+	// .pipe(gulp.dest("./lintedScripts"))
+	.pipe(eslint.failOnError());
+});
+
+gulp.task("userScripts", function(){
+	return gulp.src(scriptFiles)
 	.pipe(plumber())
 	.pipe(concat("_.js"))
 	.pipe(gulpif( production, uglify() ))

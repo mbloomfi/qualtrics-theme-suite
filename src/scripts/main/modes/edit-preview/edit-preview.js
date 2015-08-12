@@ -102,8 +102,6 @@ core.preview = {
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\twatch css file error\n"+_err+"\n\n", function(){});
 						// console.log("watch css file error");
 						return _callback(_err);
-					} else {
-						// console.log("no css error :)");
 					}
 
 					self.watchSkinFile(function(_err){
@@ -415,11 +413,7 @@ core.preview = {
 				}
 				core.preview.init();	
 				core.preview.mode.currentMode = "regular";
-			},
-
-			disable: function(){
-
-			},
+			}
 
 		},
 

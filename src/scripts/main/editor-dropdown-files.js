@@ -26,10 +26,12 @@ editorCore.dropdowns.files = {
 
 		fileName.on("click", function(evt){
 
-			if(editorCore.dropdowns.brands.status === "opened")
+			if(editorCore.dropdowns.brands.status === "opened") {
 				editorCore.dropdowns.brands.close();
-			if(editorCore.dropdowns.projects.status === "opened")
+			}
+			if(editorCore.dropdowns.projects.status === "opened") {
 				editorCore.dropdowns.projects.close();
+			}
 			
 			// console.log("status:",editorCore.dropdowns.files.status);
 			// console.log("active:",!this.hasClass("inactive"));
@@ -284,7 +286,7 @@ editorCore.dropdowns.files = {
 		var pathToProj = core.localData.currentProject.path+"/";
 		fs.unlink(pathToProj+_fileName, function(err){
 			if(err){ 
-				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 				alert("Error Deleting File:\n"+err); 
 		}
 			else {
@@ -303,7 +305,7 @@ editorCore.dropdowns.files = {
 		var pathToProj = core.localData.currentProject.path+"/";
 		fs.rename(pathToProj+_prevFileName, pathToProj+_newFileName, function(err){
 			if(err){ 
-				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 				alert("Error Renaming File:\n"+err); 
 			}
 			else {
@@ -377,6 +379,7 @@ editorCore.dropdowns.files = {
 		// if filename is null, return
 		if(_fileName === null) return;
 
+
 		function selectFile() {
 			// console.log("Selecting File: ", _fileName);
 			el("#fileNameText").purge().text(_fileName);
@@ -387,6 +390,18 @@ editorCore.dropdowns.files = {
 
 			core.updateEditor();
 			core.preview.mode.regular.update();
+		}
+
+		function isImage(fileName){
+			var ext = path.extname(fileName).toUpperCase();
+			var imageExtensions = {
+				".PNG":true,
+				".JPG":true,
+				".JPEG":true,
+				".GIF":true,
+				".SVG":true
+			};
+			return imageExtensions[ext];
 		}
 
 			
@@ -407,19 +422,18 @@ editorCore.dropdowns.files = {
 							selectFile();
 						}
 					},
-					btn3: null,
+					btn3: null
 				}) ;
 
 		}	else if(_fileName !== core.localData.currentFile.name){
-			if(path.extname(_fileName).toUpperCase() === ".PNG" || path.extname(_fileName).toUpperCase() === ".JPG" || path.extname(_fileName).toUpperCase() === ".GIF" || path.extname(_fileName).toUpperCase() === ".JPEG"){
 
-				core.brands.projects.files.viewImage(core.localData.currentProject.path+"/"+_fileName);
-				// self.close();
-
+			if(isImage(_fileName)) {
+				var imagePath = core.localData.currentProject.path+"/"+_fileName;
+				imagePath = path.resolve(imagePath);
+				core.brands.projects.files.viewImage(imagePath);
 			} else {
 				selectFile();
 			}
-			
 		} else {
 			self.close();
 		}
@@ -544,24 +558,24 @@ editorCore.dropdowns.files = {
 
 			var filesTotal = files.length;
 			var filesCopied = 0;
+
+			function copyFile(_file) {
+				fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
+					if(err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+						return console.log("ERR copying:",_file.name, err);
+					}
+					// console.log("copied:", _file.name);
+					filesCopied++;
+					if(filesCopied === filesTotal){
+						// console.log("All Files Copied");
+					}
+				});
+			}
 			
 
 			for(var i = 0, ii = files.length; i<ii; i++){
-					
-				(function(_file){
-					fs.copy(_file.path, core.localData.currentProject.path+"/"+_file.name, function(err){
-						if(err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-							return console.log("ERR copying:",_file.name, err);
-						}
-						// console.log("copied:", _file.name);
-						filesCopied++;
-						if(filesCopied === filesTotal){
-							// console.log("All Files Copied");
-						}
-					});
-				})(files[i]);
-				
+				copyFile(files[i]);
 			}
 
 		}
