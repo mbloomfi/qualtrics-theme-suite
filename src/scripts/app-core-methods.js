@@ -561,8 +561,10 @@ var core = Global.coreMethods = {
 				viewImage: function(path){
 
 					function updateImageDimensionsField(_image){
-						document.getElementById("previewImgWidth").value = _image.width;
-						document.getElementById("previewImgHeight").value = _image.height;
+						var imgWidth = _image.width >= 700 ? "700+" : _image.width;
+						var imgHeight = _image.height >= 650 ? "650+" : _image.height;
+						document.getElementById("previewImgWidth").value = imgWidth;
+						document.getElementById("previewImgHeight").value = imgHeight;
 					}
 					// image preview is removed at `editorCore.dropdowns.bodyClick`
 
@@ -625,7 +627,11 @@ var core = Global.coreMethods = {
 						})
 						.append([
 							etc.el("input", {
-								id: "previewImgWidth"
+								id: "previewImgWidth",
+								className: "readonly",
+								attr: {
+									readonly:"",
+								}
 							})
 						])
 						.append([
@@ -635,13 +641,16 @@ var core = Global.coreMethods = {
 						])
 						.append([
 							etc.el("input", {
-								id: "previewImgHeight"
+								id: "previewImgHeight",
+								attr: {
+									readonly:"",// REMOVE THIS LINE!!!
+								}
 							})
 						])
 						.append([
 							etc.el("input", {
 								type: "submit",
-								value: "Resize",
+								value: "Save Changes",
 								id: "resizePreviewImgBtn",
 								events: {
 									click: function(e){
@@ -652,7 +661,7 @@ var core = Global.coreMethods = {
 						])
 
 						// UNCOMMENT TO SEE RESIZING ***
-						// container.append(resizeImgForm);
+						container.append(resizeImgForm);
 
 
 						container.append(
@@ -660,13 +669,13 @@ var core = Global.coreMethods = {
 								events: {
 									load: function(){
 										// UNCOMMENT TO SEE RESIZING ***
-										// updateImageDimensionsField(this);
+										updateImageDimensionsField(this);
 									}
 								},
 								src: this.props.path,
 								style: {
-									maxHeight:'600px',
-									maxWidth:'600px'
+									maxHeight:'650px',
+									maxWidth:'700px'
 								}
 							})
 						);

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Preview</title>
+	<style>
+		@font-face {
+		  font-family: 'Source Sans Proz';
+		  font-style: normal;
+		  font-weight: 800;
+		  src: url(fonts/SourceSansPro-Black.otf);
+		}
+		html,body {
+			margin: 0;
+			padding: 0;
+			background-color: rgb(235,235,235);
+		}
+		#logo {
+			height: 90px;
+			width: auto;
+			position: absolute;
+			top: -2px;
+			left:5%;
+		}
+
+		#logo #QUALTRICS-LOGO{
+			fill: rgb(180,180,180);
+		}
+		h1 {
+			font-family: 'Source Sans Proz';
+			width:90%;
+			text-align:center;
+			font-weight: 800;
+			color: rgb(180,180,180);
+			font-size: 50px;
+			position: absolute;
+			top: 48%;
+			left:50%;
+			padding:0;
+			margin:0;
+			transform: translate(-50%, -50%);
+/*			-webkit-transform: translateY(-50%);
+			transform: -webkit-translateY(-50%);*/
+
+		}
+		@media screen and (max-width:700px) {
+			h1 {
+				font-size: 35px;
+			}
+			#logo {
+				height: 90px;
+				left:50%;
+				transform:translateX(-50%);
+			}
+		}
+		@media screen and (max-width:400px) {
+			#logo {
+				height: 70px;
+				left:50%;
+				transform:translateX(-50%);
+			}
+			h1 {
+				font-size: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="logo" class="logo hide" width="100%" height="100%" viewBox="0 0 126 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+	<path id="QUALTRICS-LOGO" d="M37.9173,74.0432c6.68848,7.68458 14.6885,11.6327 22.3897,11.5751c4.95345,-0.0370611 9.73569,-1.1885 14.1609,-3.46098c-5.19244,-13.0908 -10.8007,-25.3777 -23.872,-25.0034c-14.299,0.409384 -14.9891,12.3154 -12.6785,16.8893ZM91.9689,82.6168c8.95474,13.2447 17.0121,23.8614 31.322,15.7607c0.770884,1.17637 1.56866,2.03767 2.3827,3.81007c-31.4887,21.409 -40.8065,5.72587 -48.3271,-12.7698c-5.38387,1.62777 -11.0441,2.46135 -16.8531,2.41178c-38.2982,-0.326807 -70.2451,-39.0309 -57.2274,-91.3621c0,0 12.7673,-0.0503319 20.2662,-7.81597e-14c-4.03189,27.9679 0.0501284,49.5572 7.82732,63.9869c1.20683,-5.03507 5.66846,-13.712 19.2363,-13.6796c16.4375,0.0392013 26.6013,10.8233 34.9112,22.4071c11.2196,-13.3616 17.395,-37.5431 13.0168,-72.7144c5.49535,-0.00530837 20.2633,-2.34479e-13 20.2633,-2.34479e-13c9.15318,37.0042 -4.33444,67.575 -26.8182,82.1494Z"/>
+</svg>
+
+<h1>Qualtrics Theme Suite</h1>
+
+</body>
+</html>

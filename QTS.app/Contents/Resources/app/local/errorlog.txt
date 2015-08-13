@@ -1,0 +1,152 @@
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 03 2015 13:15:39 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/github/gh4/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 03 2015 13:15:39 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 03 2015 13:15:39 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 03 2015 20:27:42 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/ibbt'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 11:05:16 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/qualtrics'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:26:40 GMT-0600 (MDT)
+	SyntaxError: Unexpected token <
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/facebook/facebook1/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 19:28:26 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/tester/tester2/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:17 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/tester/tester3/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:11:19 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:14:54 GMT-0600 (MDT)
+	Error in plugin 'gulp-sass'
+Message:
+    ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+Details:
+    column: 9
+    line: 63
+    file: stdin
+    status: 1
+    messageFormatted: ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Thu Aug 06 2015 21:15:17 GMT-0600 (MDT)
+	Error in plugin 'gulp-sass'
+Message:
+    ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+Details:
+    column: 9
+    line: 63
+    file: stdin
+    status: 1
+    messageFormatted: ../../../../brands/tester/tester1/StyleSheet.scss
+  63:9  file to import not found or unreadable: wysiwygConditionals
+Current dir: 
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Sat Aug 08 2015 21:09:38 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Sat Aug 08 2015 21:13:44 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Sat Aug 08 2015 21:14:07 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 12:34:13 GMT-0600 (MDT)
+	TypeError: first argument must be a string or Buffer
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 12:35:39 GMT-0600 (MDT)
+	Error: write after end
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 12:35:40 GMT-0600 (MDT)
+	Error: write after end
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 12:36:18 GMT-0600 (MDT)
+	Error: write after end
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 12:36:18 GMT-0600 (MDT)
+	Error: write after end
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 14:15:39 GMT-0600 (MDT)
+	TypeError: Path must be a string. Received [Function]
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Mon Aug 10 2015 14:15:46 GMT-0600 (MDT)
+	TypeError: Path must be a string. Received [Function]
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:30:41 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/test3'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:31:01 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/newtest'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 11 2015 16:32:17 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/test4'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 12 2015 09:35:36 GMT-0600 (MDT)
+	Error: Calling a callback of released renderer view
+

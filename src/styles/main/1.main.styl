@@ -133,7 +133,7 @@ div.dimmer {
   left 50%
   transform  translate(-50%, -45%)
   padding 60px 15px 15px
-  min-width 250px
+  min-width 300px
   min-height 80px
   borderRadius 2px
   user-select none
@@ -154,7 +154,7 @@ div.dimmer {
   }
   #resizeImgForm {
     height 30px
-    width 200px
+    width 250px
     position absolute
     top 10px
     left 10px
@@ -170,6 +170,7 @@ div.dimmer {
     }
     .x {
       margin-right 6px
+      color rgb(150,150,150)
     }
     #previewImgHeight{
       height 100%
@@ -185,6 +186,10 @@ div.dimmer {
       background $affirmative-green
       outline 1px solid darken($affirmative-green, 10%)
       color white
+    }
+    .readonly {
+      background-color rgb(230,230,230)
+      color rgb(120,120,120)
     }
   }
   .change-image-bg-cont {

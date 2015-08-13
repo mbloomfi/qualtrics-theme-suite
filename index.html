@@ -583,7 +583,7 @@
 			      -ms-transform: translate(-50%, -45%);
 			          transform: translate(-50%, -45%);
 			  padding: 60px 15px 15px;
-			  min-width: 250px;
+			  min-width: 300px;
 			  min-height: 80px;
 			  borderRadius: 2px;
 			  -webkit-user-select: none;
@@ -608,7 +608,7 @@
 			}
 			#image_preview_container #resizeImgForm {
 			  height: 30px;
-			  width: 200px;
+			  width: 250px;
 			  position: absolute;
 			  top: 10px;
 			  left: 10px;
@@ -624,6 +624,7 @@
 			}
 			#image_preview_container #resizeImgForm .x {
 			  margin-right: 6px;
+			  color: #969696;
 			}
 			#image_preview_container #resizeImgForm #previewImgHeight {
 			  height: 100%;
@@ -639,6 +640,10 @@
 			  background: #27b04b;
 			  outline: 1px solid #239e44;
 			  color: #fff;
+			}
+			#image_preview_container #resizeImgForm .readonly {
+			  background-color: #e6e6e6;
+			  color: #787878;
 			}
 			#image_preview_container .change-image-bg-cont {
 			  height: 30px;
@@ -17060,8 +17065,10 @@
 							viewImage: function(path){
 			
 								function updateImageDimensionsField(_image){
-									document.getElementById("previewImgWidth").value = _image.width;
-									document.getElementById("previewImgHeight").value = _image.height;
+									var imgWidth = _image.width >= 700 ? "700+" : _image.width;
+									var imgHeight = _image.height >= 650 ? "650+" : _image.height;
+									document.getElementById("previewImgWidth").value = imgWidth;
+									document.getElementById("previewImgHeight").value = imgHeight;
 								}
 								// image preview is removed at `editorCore.dropdowns.bodyClick`
 			
@@ -17124,7 +17131,11 @@
 									})
 									.append([
 										etc.el("input", {
-											id: "previewImgWidth"
+											id: "previewImgWidth",
+											className: "readonly",
+											attr: {
+												readonly:"",
+											}
 										})
 									])
 									.append([
@@ -17134,13 +17145,16 @@
 									])
 									.append([
 										etc.el("input", {
-											id: "previewImgHeight"
+											id: "previewImgHeight",
+											attr: {
+												readonly:"",// REMOVE THIS LINE!!!
+											}
 										})
 									])
 									.append([
 										etc.el("input", {
 											type: "submit",
-											value: "Resize",
+											value: "Save Changes",
 											id: "resizePreviewImgBtn",
 											events: {
 												click: function(e){
@@ -17151,7 +17165,7 @@
 									])
 			
 									// UNCOMMENT TO SEE RESIZING ***
-									// container.append(resizeImgForm);
+									container.append(resizeImgForm);
 			
 			
 									container.append(
@@ -17159,13 +17173,13 @@
 											events: {
 												load: function(){
 													// UNCOMMENT TO SEE RESIZING ***
-													// updateImageDimensionsField(this);
+													updateImageDimensionsField(this);
 												}
 											},
 											src: this.props.path,
 											style: {
-												maxHeight:'600px',
-												maxWidth:'600px'
+												maxHeight:'650px',
+												maxWidth:'700px'
 											}
 										})
 									);
