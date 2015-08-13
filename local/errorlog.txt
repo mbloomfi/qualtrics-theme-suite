@@ -146,3 +146,7 @@ Tue Aug 11 2015 16:31:01 GMT-0600 (MDT)
 Tue Aug 11 2015 16:32:17 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, stat '/Users/same/brands/test4'
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 12 2015 09:35:36 GMT-0600 (MDT)
+	Error: Calling a callback of released renderer view
+
