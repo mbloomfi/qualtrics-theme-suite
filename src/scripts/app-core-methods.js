@@ -557,13 +557,20 @@ var core = Global.coreMethods = {
 					});
 				},
 
+
 				viewImage: function(path){
+
+					function updateImageDimensionsField(_image){
+						document.getElementById("previewImgWidth").value = _image.width;
+						document.getElementById("previewImgHeight").value = _image.height;
+					}
 					// image preview is removed at `editorCore.dropdowns.bodyClick`
 
 					window.imagePreview = etc.template(function(){
 						if(document.getElementById("image_preview_container")){
 							var imgCont = document.getElementById("image_preview_container");
-							imgCont.getElementsByTagName('img')[0].src = path;
+							var img = imgCont.getElementsByTagName('img')[0];
+							img.src = path;
 							return;
 						}
 
@@ -647,8 +654,15 @@ var core = Global.coreMethods = {
 						// UNCOMMENT TO SEE RESIZING ***
 						// container.append(resizeImgForm);
 
+
 						container.append(
 							etc.el("img", {
+								events: {
+									load: function(){
+										// UNCOMMENT TO SEE RESIZING ***
+										// updateImageDimensionsField(this);
+									}
+								},
 								src: this.props.path,
 								style: {
 									maxHeight:'600px',
@@ -664,6 +678,8 @@ var core = Global.coreMethods = {
 					});
 
 					imagePreview.render({path:path}, document.body);
+
+					
 					// shelljs.exec('open '+path, function(status, output) {
 						// console.log('Exit status:', status);
 					// 	console.log('Program output:', output);
