@@ -565,6 +565,7 @@ var core = Global.coreMethods = {
 						var imgHeight = _image.height >= 650 ? "650+" : _image.height;
 						document.getElementById("previewImgWidth").value = imgWidth;
 						document.getElementById("previewImgHeight").value = imgHeight;
+						console.log("updateImageDimensionsField");
 					}
 
 					function resizePreviewImage(imageElement) {
@@ -591,9 +592,10 @@ var core = Global.coreMethods = {
 									image.resize(newWidth, newHeight, function(err, img){
 										img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
 											if(err) return console.error("lwip write error:",err);
-											console.log("resized image");
-											var cont = document.getElementById("image_preview_container");
-											if(cont) {cont.rm();}		
+											console.log("resized image!");
+											imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+											// var cont = document.getElementById("image_preview_container");
+											// if(cont) {cont.rm();}		
 										});
 									});
 
@@ -605,9 +607,10 @@ var core = Global.coreMethods = {
 								image.resize(newWidth, newHeight, function(err, img){
 									img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
 										if(err) return console.error("lwip write error:",err);
-										console.log("resized image");
-										var cont = document.getElementById("image_preview_container");
-										if(cont) {cont.rm();}		
+										console.log("resized image!");
+										imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+										// var cont = document.getElementById("image_preview_container");
+										// if(cont) {cont.rm();}		
 
 									});
 								});
