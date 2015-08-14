@@ -581,43 +581,56 @@ var core = Global.coreMethods = {
 						var newWidth = currentWidth*ratio;
 						console.log("path",imageElement.dataset.path);
 
+						var greaterValue = newHeight >= newWidth ? newHeight : newWidth;
+						greaterValue = Math.round(greaterValue);
 
-						lwip.open(imageElement.dataset.path, function(err, image){
 
-
-							if(err) {
-
-								lwip.open(imageElement.dataset.path, 'png', function(err, image){
-									if(err) return console.error("lwip write error:",err);
-									image.resize(newWidth, newHeight, function(err, img){
-										img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
-											if(err) return console.error("lwip write error:",err);
-											console.log("resized image!");
-											imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
-											// var cont = document.getElementById("image_preview_container");
-											// if(cont) {cont.rm();}		
-										});
-									});
-
-								});
-
-							} 
-							else {
-
-								image.resize(newWidth, newHeight, function(err, img){
-									img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
-										if(err) return console.error("lwip write error:",err);
-										console.log("resized image!");
-										imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
-										// var cont = document.getElementById("image_preview_container");
-										// if(cont) {cont.rm();}		
-
-									});
-								});
-
+							function sipsCallback(code, output){
+								console.log("test")
+								imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
 							}
+
+							shelljs.exec("sips -Z "+greaterValue+" "+imageElement.dataset.path, sipsCallback);
+
+							
+
+
+						// lwip.open(imageElement.dataset.path, function(err, image){
+
+
+						// 	if(err) {
+
+						// 		lwip.open(imageElement.dataset.path, 'png', function(err, image){
+						// 			if(err) return console.error("lwip write error:",err);
+						// 			image.resize(newWidth, newHeight, function(err, img){
+						// 				img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+						// 					if(err) return console.error("lwip write error:",err);
+						// 					console.log("resized image!");
+						// 					imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+						// 					// var cont = document.getElementById("image_preview_container");
+						// 					// if(cont) {cont.rm();}		
+						// 				});
+						// 			});
+
+						// 		});
+
+						// 	} 
+						// 	else {
+
+						// 		image.resize(newWidth, newHeight, function(err, img){
+						// 			img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+						// 				if(err) return console.error("lwip write error:",err);
+						// 				console.log("resized image!");
+						// 				imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+						// 				// var cont = document.getElementById("image_preview_container");
+						// 				// if(cont) {cont.rm();}		
+
+						// 			});
+						// 		});
+
+						// 	}
 								
-						});						
+						// });						
 
 					}
 					// image preview is removed at `editorCore.dropdowns.bodyClick`
