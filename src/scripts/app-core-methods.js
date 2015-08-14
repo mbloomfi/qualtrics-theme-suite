@@ -558,7 +558,7 @@ var core = Global.coreMethods = {
 				},
 
 
-				viewImage: function(path){
+				viewImage: function(imgPath){
 
 					function updateImageDimensionsField(_image){
 						var imgWidth = _image.width >= 700 ? "700+" : _image.width;
@@ -566,13 +566,65 @@ var core = Global.coreMethods = {
 						document.getElementById("previewImgWidth").value = imgWidth;
 						document.getElementById("previewImgHeight").value = imgHeight;
 					}
+
+					function resizePreviewImage(imageElement) {
+						var currentWidth = imageElement.width;
+						var currentHeight = imageElement.height;
+						var newHeight = parseFloat(document.getElementById("previewImgHeight").value);
+
+						if( typeof newHeight !== "number" || isNaN(newHeight)){ 
+							return; 
+						}
+
+						var ratio = newHeight/currentHeight;
+						var newWidth = currentWidth*ratio;
+						console.log("path",imageElement.dataset.path);
+
+
+						lwip.open(imageElement.dataset.path, function(err, image){
+
+
+							if(err) {
+
+								lwip.open(imageElement.dataset.path, 'png', function(err, image){
+									if(err) return console.error("lwip write error:",err);
+									image.resize(newWidth, newHeight, function(err, img){
+										img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+											if(err) return console.error("lwip write error:",err);
+											console.log("resized image");
+											var cont = document.getElementById("image_preview_container");
+											if(cont) {cont.rm();}		
+										});
+									});
+
+								});
+
+							} 
+							else {
+
+								image.resize(newWidth, newHeight, function(err, img){
+									img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+										if(err) return console.error("lwip write error:",err);
+										console.log("resized image");
+										var cont = document.getElementById("image_preview_container");
+										if(cont) {cont.rm();}		
+
+									});
+								});
+
+							}
+								
+						});						
+
+					}
 					// image preview is removed at `editorCore.dropdowns.bodyClick`
 
 					window.imagePreview = etc.template(function(){
 						if(document.getElementById("image_preview_container")){
 							var imgCont = document.getElementById("image_preview_container");
 							var img = imgCont.getElementsByTagName('img')[0];
-							img.src = path;
+							img.src = imgPath+"?"+(Date.now()+"");
+							img.dataset.path = imgPath;
 							return;
 						}
 
@@ -630,7 +682,7 @@ var core = Global.coreMethods = {
 								id: "previewImgWidth",
 								className: "readonly",
 								attr: {
-									readonly:"",
+									readonly:""
 								}
 							})
 						])
@@ -641,10 +693,10 @@ var core = Global.coreMethods = {
 						])
 						.append([
 							etc.el("input", {
-								id: "previewImgHeight",
-								attr: {
-									readonly:"",// REMOVE THIS LINE!!!
-								}
+								id: "previewImgHeight"
+								// attr: {
+								// 	// readonly:"",// REMOVE THIS LINE!!!
+								// }
 							})
 						])
 						.append([
@@ -655,6 +707,8 @@ var core = Global.coreMethods = {
 								events: {
 									click: function(e){
 										e.preventDefault();
+										var previewImage = document.getElementById("previewImage");
+										resizePreviewImage(previewImage);
 									}
 								}
 							})
@@ -666,13 +720,17 @@ var core = Global.coreMethods = {
 
 						container.append(
 							etc.el("img", {
+								id: "previewImage",
 								events: {
 									load: function(){
 										// UNCOMMENT TO SEE RESIZING ***
 										updateImageDimensionsField(this);
 									}
 								},
-								src: this.props.path,
+								dataset: {
+									path: this.props.path
+								},
+								src: this.props.path+"?"+(Date.now()+""),
 								style: {
 									maxHeight:'650px',
 									maxWidth:'700px'
@@ -686,7 +744,7 @@ var core = Global.coreMethods = {
 
 					});
 
-					imagePreview.render({path:path}, document.body);
+					imagePreview.render({path:imgPath}, document.body);
 
 					
 					// shelljs.exec('open '+path, function(status, output) {
