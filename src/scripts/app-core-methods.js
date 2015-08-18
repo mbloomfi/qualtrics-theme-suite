@@ -568,6 +568,8 @@ var core = Global.coreMethods = {
 						console.log("updateImageDimensionsField");
 					}
 
+					
+
 					function resizePreviewImage(imageElement) {
 						var currentWidth = imageElement.width;
 						var currentHeight = imageElement.height;
