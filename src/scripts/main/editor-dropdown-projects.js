@@ -246,9 +246,6 @@ editorCore.dropdowns.projects = {
 			});
 				
 
-
-			// var addBaseFilesCheck = el("+div#addBaseFilesCheck_custom").attr("type","checkbox").attr("checked","true");
-
 			var addBaseFilesCheck = el("+input#addBaseFilesCheck").attr("type","checkbox").attr("checked","true");
 			var addBaseFilesCheck_label = el("+label#addBaseFilesCheck_label").attr("for","addBaseFilesCheck").text("Add Base Files");
 			addBaseFilesCheck_label.on("click", function(){
@@ -331,6 +328,10 @@ editorCore.dropdowns.projects = {
 
 							if(document.getElementById('addBaseFilesCheck').checked){
 								editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
+
+									
+
+
 									editorCore.dropdowns.projects.select(inputVal);
 								});
 							} else {

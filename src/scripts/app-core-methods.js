@@ -368,13 +368,12 @@ var core = Global.coreMethods = {
 		},
 
 		infoFile: {
-			ext: ".qtheme",
-			create: function(_brandName){
+			update: function(pathToFile, key, value, callback){
+				fs.readFile(pathToFile, "utf-8", function(err, data){
+					if(err, data){
 
-				
-			},
-			update: function(_brandName, _key, _value){
-
+					}
+				});
 			}
 		},
 
@@ -516,6 +515,7 @@ var core = Global.coreMethods = {
 					
 				})
 				.then(function(next){
+
 					editorCore.dropdowns.projects.close();
 					
 					if(_callback!==undefined) _callback();
@@ -523,6 +523,7 @@ var core = Global.coreMethods = {
 				})
 				.run();
 			},
+
 
 			showInFinder: function(){
 				if(core.localData.currentProject.name !== null){
@@ -844,9 +845,9 @@ var core = Global.coreMethods = {
 		snippets: {
 			list: null,
 
-			readFromPersistentData: function(_callback){
+			readFromPersistentData: function(_callback, force){
 				// if local data is null
-				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0){
+				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0 || force === true){
 					core.persistentDataFile.read(function(_persistent_data){
 						// console.log("persistent-data recent brands", _persistent_data.snippets)
 						core.localData.snippets.list = _persistent_data.snippets;
