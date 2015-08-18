@@ -102,7 +102,7 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND'
-				if(keystate[91]){
+				if(keystate[91]||keystate[93]){
 					
 					if(core.preview.mode.currentMode === "thumbnail"){
 						document.getElementById("decrease-thumb-size").dispatchEvent(new MouseEvent("click"));
@@ -115,7 +115,7 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND'
-				if(keystate[91]){
+				if(keystate[91]||keystate[93]){
 					
 					if(core.preview.mode.currentMode === "thumbnail"){
 						document.getElementById("increase-thumb-size").dispatchEvent(new MouseEvent("click"));
@@ -128,13 +128,13 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND' and 'OPTION' keys not pressed
-				if(keystate[91] && keystate[18]){
+				if((keystate[91]||keystate[93]) && keystate[18]){
 					return;
 				}	
 
 					if(core.preview.mode.currentMode === "thumbnail"){
 						var thumbBox = document.getElementById("thumbBox");
-						if(keystate[91]){
+						if(keystate[91]||keystate[93]){
 							thumbBox.style.left = parseInt(thumbBox.style.left) + 50 + "px";
 						} else {
 							thumbBox.style.left = parseInt(thumbBox.style.left) + 10 + "px";
@@ -152,13 +152,13 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND' and 'OPTION' keys not pressed
-				if(keystate[91] && keystate[18]){
+				if((keystate[91]||keystate[93]) && keystate[18]){
 					return;
 				}	
 
 					if(core.preview.mode.currentMode === "thumbnail"){
 						var thumbBox = document.getElementById("thumbBox");
-						if(keystate[91]){
+						if((keystate[91]||keystate[93])){
 
 							if(parseInt(thumbBox.style.left) - 50 < 0){
 								thumbBox.style.left = "0px";
@@ -185,14 +185,14 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND' and 'OPTION' keys not pressed
-				if(keystate[91] && keystate[18]){
+				if((keystate[91]||keystate[93]) && keystate[18]){
 					return;
 				}	
 
 					if(core.preview.mode.currentMode === "thumbnail"){
 						var thumbBox = document.getElementById("thumbBox");
 						
-						if(keystate[91]){
+						if((keystate[91]||keystate[93])){
 							thumbBox.style.top = parseInt(thumbBox.style.top) + 50 + "px";
 						} else {
 							thumbBox.style.top = parseInt(thumbBox.style.top) + 10 + "px";
@@ -216,13 +216,13 @@ el.on("load", function(){
 				keystate[evt.keyCode] = false;
 
 				//if 'COMMAND' and 'OPTION' keys not pressed
-				if(keystate[91] && keystate[18]){
+				if((keystate[91]||keystate[93]) && keystate[18]){
 					return;
 				}	
 
 					if(core.preview.mode.currentMode === "thumbnail"){
 						var thumbBox = document.getElementById("thumbBox");
-						if(keystate[91]){
+						if(keystate[91]||keystate[93]){
 
 							if(parseInt(thumbBox.style.top) - 50 < 0){
 								thumbBox.style.top = "0px";

@@ -54,7 +54,7 @@ var Data = (function(){
 
 								document.getElementById('Q-logo').classList.add("saved");
 								setTimeout(function(){
-									Global.mainWindow.webContents.executeJavaScript("core.codeMirror.resetContextMenu();");
+									Global.mainWindow.webContents.executeJavaScript("core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);");
 									Global.preferencesWindow.close();
 								}, 450);
 

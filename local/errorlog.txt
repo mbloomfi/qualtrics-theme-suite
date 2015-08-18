@@ -162,3 +162,29 @@ Thu Aug 13 2015 22:23:16 GMT-0600 (MDT)
 Thu Aug 13 2015 22:23:21 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, stat '/Users/samueleaton/brands/test4'
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:16:48 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/tester/tester1/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:16:49 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:16:49 GMT-0600 (MDT)
+	true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:22:33 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, stat '/Users/same/brands/tester/tester1/StyleSheet.css'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:22:33 GMT-0600 (MDT)
+	watch css file error
+true
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Fri Aug 14 2015 07:22:33 GMT-0600 (MDT)
+	true
+

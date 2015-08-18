@@ -368,13 +368,12 @@ var core = Global.coreMethods = {
 		},
 
 		infoFile: {
-			ext: ".qtheme",
-			create: function(_brandName){
+			update: function(pathToFile, key, value, callback){
+				fs.readFile(pathToFile, "utf-8", function(err, data){
+					if(err, data){
 
-				
-			},
-			update: function(_brandName, _key, _value){
-
+					}
+				});
 			}
 		},
 
@@ -516,6 +515,7 @@ var core = Global.coreMethods = {
 					
 				})
 				.then(function(next){
+
 					editorCore.dropdowns.projects.close();
 					
 					if(_callback!==undefined) _callback();
@@ -523,6 +523,7 @@ var core = Global.coreMethods = {
 				})
 				.run();
 			},
+
 
 			showInFinder: function(){
 				if(core.localData.currentProject.name !== null){
@@ -583,43 +584,56 @@ var core = Global.coreMethods = {
 						var newWidth = currentWidth*ratio;
 						console.log("path",imageElement.dataset.path);
 
+						var greaterValue = newHeight >= newWidth ? newHeight : newWidth;
+						greaterValue = Math.round(greaterValue);
 
-						lwip.open(imageElement.dataset.path, function(err, image){
 
-
-							if(err) {
-
-								lwip.open(imageElement.dataset.path, 'png', function(err, image){
-									if(err) return console.error("lwip write error:",err);
-									image.resize(newWidth, newHeight, function(err, img){
-										img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
-											if(err) return console.error("lwip write error:",err);
-											console.log("resized image!");
-											imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
-											// var cont = document.getElementById("image_preview_container");
-											// if(cont) {cont.rm();}		
-										});
-									});
-
-								});
-
-							} 
-							else {
-
-								image.resize(newWidth, newHeight, function(err, img){
-									img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
-										if(err) return console.error("lwip write error:",err);
-										console.log("resized image!");
-										imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
-										// var cont = document.getElementById("image_preview_container");
-										// if(cont) {cont.rm();}		
-
-									});
-								});
-
+							function sipsCallback(code, output){
+								console.log("test")
+								imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
 							}
+
+							shelljs.exec("sips -Z "+greaterValue+" "+imageElement.dataset.path, sipsCallback);
+
+							
+
+
+						// lwip.open(imageElement.dataset.path, function(err, image){
+
+
+						// 	if(err) {
+
+						// 		lwip.open(imageElement.dataset.path, 'png', function(err, image){
+						// 			if(err) return console.error("lwip write error:",err);
+						// 			image.resize(newWidth, newHeight, function(err, img){
+						// 				img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+						// 					if(err) return console.error("lwip write error:",err);
+						// 					console.log("resized image!");
+						// 					imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+						// 					// var cont = document.getElementById("image_preview_container");
+						// 					// if(cont) {cont.rm();}		
+						// 				});
+						// 			});
+
+						// 		});
+
+						// 	} 
+						// 	else {
+
+						// 		image.resize(newWidth, newHeight, function(err, img){
+						// 			img.writeFile(path.normalize(imageElement.dataset.path), function(err, img){
+						// 				if(err) return console.error("lwip write error:",err);
+						// 				console.log("resized image!");
+						// 				imageElement.src = imageElement.dataset.path+"?"+(Date.now()+"");
+						// 				// var cont = document.getElementById("image_preview_container");
+						// 				// if(cont) {cont.rm();}		
+
+						// 			});
+						// 		});
+
+						// 	}
 								
-						});						
+						// });						
 
 					}
 					// image preview is removed at `editorCore.dropdowns.bodyClick`
@@ -833,9 +847,9 @@ var core = Global.coreMethods = {
 		snippets: {
 			list: null,
 
-			readFromPersistentData: function(_callback){
+			readFromPersistentData: function(_callback, force){
 				// if local data is null
-				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0){
+				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0 || force === true){
 					core.persistentDataFile.read(function(_persistent_data){
 						// console.log("persistent-data recent brands", _persistent_data.snippets)
 						core.localData.snippets.list = _persistent_data.snippets;
