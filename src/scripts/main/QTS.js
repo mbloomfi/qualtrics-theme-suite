@@ -73,7 +73,7 @@ var QTS = (function(){
 	}
 
 	function updateLocalUserPrefrences(optionalCallback){
-		fs.readFile("local/user-settings.json", "utf-8", function(err, data){
+		fs.readFile(__dirname+"/local/user-settings.json", "utf-8", function(err, data){
 			if(err) return Eve.emit("error", err);
 
 			_userPreferences = JSON.parse(data);
@@ -102,7 +102,7 @@ var QTS = (function(){
 	}
 
 	function writeUserPrefrences(optionalCallback){
-		fs.writeFile("local/user-settings.json", JSON.stringify(_userPreferences), function(err){
+		fs.writeFile(__dirname+"/local/user-settings.json", JSON.stringify(_userPreferences), function(err){
 			if(err) {
 				Eve.emit("error", err);
 			}
