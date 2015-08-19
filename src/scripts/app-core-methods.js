@@ -1,4 +1,3 @@
-console.log("this is a test!");
 
 var core = Global.coreMethods = {
 	updateApp: {
@@ -367,15 +366,7 @@ var core = Global.coreMethods = {
 
 		},
 
-		infoFile: {
-			update: function(pathToFile, key, value, callback){
-				fs.readFile(pathToFile, "utf-8", function(err, data){
-					if(err, data){
-
-					}
-				});
-			}
-		},
+		
 
 			
 		/*
@@ -455,6 +446,16 @@ var core = Global.coreMethods = {
 				null
 				;
 
+			},
+
+			infoFile: {
+				update: function(pathToFile, key, value, callback){
+					fs.readFile(pathToFile, "utf-8", function(err, data){
+						if(err, data){
+
+						}
+					});
+				}
 			},
 
 			/*Runs a callback, passing it an array of the names of the projects*/
@@ -1120,14 +1121,11 @@ var core = Global.coreMethods = {
 					if(err){ 
 						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						// console.log("ERR",err);
-				}
+					}
 					else {
 						
-						editorCore.dropdowns.files.setClean();
-						myCodeMirror.markClean();
-						if(core.localData.currentFile.name === "StyleSheet.scss"){
-							core.preview.mode.regular.compileSass();
-						}
+						Eve.emit("Code Editor Saved");
+						
 						
 					}
 				});

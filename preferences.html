@@ -15369,7 +15369,6 @@
 			}
 		}
 	};
-	console.log("this is a test!");
 	
 	var core = Global.coreMethods = {
 		updateApp: {
@@ -15738,15 +15737,7 @@
 	
 			},
 	
-			infoFile: {
-				update: function(pathToFile, key, value, callback){
-					fs.readFile(pathToFile, "utf-8", function(err, data){
-						if(err, data){
-	
-						}
-					});
-				}
-			},
+			
 	
 				
 			/*
@@ -15826,6 +15817,16 @@
 					null
 					;
 	
+				},
+	
+				infoFile: {
+					update: function(pathToFile, key, value, callback){
+						fs.readFile(pathToFile, "utf-8", function(err, data){
+							if(err, data){
+	
+							}
+						});
+					}
 				},
 	
 				/*Runs a callback, passing it an array of the names of the projects*/
@@ -15939,6 +15940,8 @@
 							document.getElementById("previewImgHeight").value = imgHeight;
 							console.log("updateImageDimensionsField");
 						}
+	
+						
 	
 						function resizePreviewImage(imageElement) {
 							var currentWidth = imageElement.width;
@@ -16489,14 +16492,11 @@
 						if(err){ 
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 							// console.log("ERR",err);
-					}
+						}
 						else {
 							
-							editorCore.dropdowns.files.setClean();
-							myCodeMirror.markClean();
-							if(core.localData.currentFile.name === "StyleSheet.scss"){
-								core.preview.mode.regular.compileSass();
-							}
+							Eve.emit("Code Editor Saved");
+							
 							
 						}
 					});
@@ -17550,7 +17550,7 @@
 	
 									document.getElementById('Q-logo').classList.add("saved");
 									setTimeout(function(){
-										Global.mainWindow.webContents.executeJavaScript("core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);");
+										Global.mainWindow.webContents.executeJavaScript("Eve.emit('Preferences Saved');");
 										Global.preferencesWindow.close();
 									}, 450);
 	

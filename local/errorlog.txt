@@ -188,3 +188,7 @@ true
 Fri Aug 14 2015 07:22:33 GMT-0600 (MDT)
 	true
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Tue Aug 18 2015 22:07:57 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, open '/Users/samueleaton/brands/tester/testy1/Skin.html'
+

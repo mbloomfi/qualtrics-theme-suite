@@ -218,10 +218,21 @@ editorCore.dropdowns.files = {
 								el("+button").addClass("renameFile-btn").text("Rename").attr("type", "submit")
 							])
 						);
+
+
 						renameFile_form.on("submit", function(e){
+
 							e.preventDefault();
-							var newFileName = this.el("input")[0].value;
-							self.renameFile(currentName, newFileName);
+
+							Eve.emit("Rename File", {
+								path: core.localData.currentProject.path+"/",
+								oldName: currentName,
+								newName: this.el("input")[0].value
+							}, function(){
+								editorCore.dropdowns.files.close();
+								Eve.emit("Menu Bar ~ File Renamed");
+							});
+
 						});
 						this.addClass("renaming");
 						this.append(renameFile_form);

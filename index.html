@@ -2365,6 +2365,7 @@
 				}
 			
 			};
+			var Eve=function(){function r(r,e){var n={fn:e};n.caller=(new Error).stack.split("\n");for(var a=n.caller.length;a--;)"ERROR"===n.caller[a].toUpperCase()?n.caller.splice(a,1):-1!==n.caller[a].indexOf("addEventObserver")&&n.caller.splice(a,1);l[r]=l[r]||[],l[r].push(n)}function e(r,e){if(l[r])for(var n=0;n<l[r].length;n++)if(l[r][n].fn===e){l[r].splice(n,1);break}}function n(){for(var r=[],e=0,n=arguments.length;n>e;e++)r[e]=arguments[e];var a=r.splice(0,1);l[a]&&l[a].forEach(function(e){e.fn.apply(null,r)})}var l={};return{on:r,remove:e,emit:n,probeListeners:function(r){var e=[];return l[r]&&l[r].forEach(function(r){e.push(r.caller)}),e}}}();
 			// CodeMirror, copyright (c) by Marijn Haverbeke and others
 			// Distributed under an MIT license: http://codemirror.net/LICENSE
 			
@@ -16196,6 +16197,111 @@
 			var template = etc.template;
 			var menu; // see core.codeMirror.activate()
 			
+			var QTS = (function(){
+			
+			
+				// ----------
+				// Menu Bar
+				// ----------
+			
+				Eve.on("Menu Bar ~ File Renamed", function(){
+					el("#editorBar").addClass("renamed_file");
+					setTimeout(function(){
+						el("#editorBar").rmClass("renamed_file");
+					},300);
+				})
+			
+			
+			
+			
+			
+				// ----------
+				// Brands
+				// ----------
+				_brands = {};
+			
+				_currentBrand = {
+					name: null,
+					path: null
+				};
+			
+			
+				Eve.on("Brand Selected", function(){
+			
+				});
+			
+			
+			
+			
+				// ----------
+				// Projects
+				// ----------
+				_projects = {};
+			
+				_currentProject = {
+					name: null,
+					path: null,
+					files: null,
+					currentFile: {
+						name: null,
+						path: null
+					}
+				};
+			
+				Eve.on("Rename File", function(data, callback){
+					if(!data.path || !data.newName || !data.oldName) {
+						return Eve.emit("error", "Rename File Error");
+					}
+					fs.rename(data.path + data.oldName, data.path + data.newName, function(err){
+						if(err){ 
+							return Eve.emit("error", "Rename File Error");
+						}
+						else {
+							if(typeof callback === "function") {
+								callback();
+							}
+						}
+					});
+				});
+			
+			
+			
+				// ----------
+				// info.qthemne
+				// ----------
+				Eve.on("Brand Selected", function(){
+			
+				});
+			
+				Eve.on("Code Editor Saved", function(){
+			
+				});
+				
+			
+			})();
+			
+			
+			Eve.on("Preferences Saved", function(){
+				console.log("prefs saved!");
+				core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);
+			});
+			
+			
+			Eve.on("Code Editor Saved", function(){
+				editorCore.dropdowns.files.setClean();
+				myCodeMirror.markClean();
+				if(core.localData.currentFile.name === "StyleSheet.scss"){
+					core.preview.mode.regular.compileSass();
+				}
+			
+			});
+			
+			Eve.on("error", function(message){
+			
+				console.error("ERROR:", message);
+				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			
+			})
 			// INIT app
 			el.on("load", function(){
 				//add global reference to editor and preview
@@ -16502,7 +16608,6 @@
 				})
 				.run();
 			});
-			console.log("this is a test!");
 			
 			var core = Global.coreMethods = {
 				updateApp: {
@@ -16871,15 +16976,7 @@
 			
 					},
 			
-					infoFile: {
-						update: function(pathToFile, key, value, callback){
-							fs.readFile(pathToFile, "utf-8", function(err, data){
-								if(err, data){
-			
-								}
-							});
-						}
-					},
+					
 			
 						
 					/*
@@ -16959,6 +17056,16 @@
 							null
 							;
 			
+						},
+			
+						infoFile: {
+							update: function(pathToFile, key, value, callback){
+								fs.readFile(pathToFile, "utf-8", function(err, data){
+									if(err, data){
+			
+									}
+								});
+							}
 						},
 			
 						/*Runs a callback, passing it an array of the names of the projects*/
@@ -17072,6 +17179,8 @@
 									document.getElementById("previewImgHeight").value = imgHeight;
 									console.log("updateImageDimensionsField");
 								}
+			
+								
 			
 								function resizePreviewImage(imageElement) {
 									var currentWidth = imageElement.width;
@@ -17622,14 +17731,11 @@
 								if(err){ 
 									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 									// console.log("ERR",err);
-							}
+								}
 								else {
 									
-									editorCore.dropdowns.files.setClean();
-									myCodeMirror.markClean();
-									if(core.localData.currentFile.name === "StyleSheet.scss"){
-										core.preview.mode.regular.compileSass();
-									}
+									Eve.emit("Code Editor Saved");
+									
 									
 								}
 							});
@@ -19817,10 +19923,21 @@
 											el("+button").addClass("renameFile-btn").text("Rename").attr("type", "submit")
 										])
 									);
+			
+			
 									renameFile_form.on("submit", function(e){
+			
 										e.preventDefault();
-										var newFileName = this.el("input")[0].value;
-										self.renameFile(currentName, newFileName);
+			
+										Eve.emit("Rename File", {
+											path: core.localData.currentProject.path+"/",
+											oldName: currentName,
+											newName: this.el("input")[0].value
+										}, function(){
+											editorCore.dropdowns.files.close();
+											Eve.emit("Menu Bar ~ File Renamed");
+										});
+			
 									});
 									this.addClass("renaming");
 									this.append(renameFile_form);

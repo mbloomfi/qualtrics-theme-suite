@@ -54,7 +54,7 @@ var Data = (function(){
 
 								document.getElementById('Q-logo').classList.add("saved");
 								setTimeout(function(){
-									Global.mainWindow.webContents.executeJavaScript("core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);");
+									Global.mainWindow.webContents.executeJavaScript("Eve.emit('Preferences Saved');");
 									Global.preferencesWindow.close();
 								}, 450);
 
