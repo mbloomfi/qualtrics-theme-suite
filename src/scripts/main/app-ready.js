@@ -6,9 +6,14 @@ el.on("load", function(){
 
 	baton(function(next){
 		
+		Eve.emit("Prepare App",next);
+	
+
+	})
+
+	.then(function(next){
 		console.log("app init");
 		core.localData.updateUserSettings(next);
-
 	})
 
 	.then(function(next){
@@ -26,7 +31,7 @@ el.on("load", function(){
 		core.localData.snippets.readFromPersistentData(next);
 
 	})
-	.then(function(next){
+	.then(function(next) {
 
 		editorCore.dropdowns.setDropdownGlobals();
 
@@ -301,6 +306,11 @@ el.on("load", function(){
 			// core.preview.init();
 		  // preview.src = "local/currentPreview.html";
 		});
+
+		Eve.emit("App Init");
+
+
+
 	})
 	.run();
 });

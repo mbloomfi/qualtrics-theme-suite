@@ -93,7 +93,7 @@ editorCore.dropdowns.brands = {
 					selectBrand();
 				}
 
-		
+		Eve.emit("Select Brand", _brandName);
 		
 		
 	},

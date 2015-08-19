@@ -4,6 +4,7 @@ var app = remote.require("app");
 var ipc = require("ipc");
 var Menu = remote.require('menu');
 var MenuItem = remote.require('menu-item');
+var dialog = remote.require('dialog');
 
 // == Node Natives ==
 var path = require("path");

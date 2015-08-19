@@ -95,6 +95,8 @@ editorCore.dropdowns.projects = {
 			self.close();
 		}
 
+		Eve.emit("Select Project", _projectName);
+
 	},
 
 
@@ -329,7 +331,7 @@ editorCore.dropdowns.projects = {
 							if(document.getElementById('addBaseFilesCheck').checked){
 								editorCore.dropdowns.projects.copyBaseFilesToProject(inputVal, function(){
 
-									
+
 
 
 									editorCore.dropdowns.projects.select(inputVal);

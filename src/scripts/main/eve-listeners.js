@@ -16,6 +16,10 @@ Eve.on("Code Editor Saved", function(){
 Eve.on("error", function(message){
 
 	console.error("ERROR:", message);
-	fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+	fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+message+"\n\n", function(){});
 
 })
+
+window.addEventListener("focus", function(){
+	Eve.emit("Window Focused");
+});

@@ -907,6 +907,7 @@ var core = Global.coreMethods = {
 
 
 		updatePreviewFilesList: function(_callback){
+
 			fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
 				if(!_err){ 
 					
@@ -925,25 +926,58 @@ var core = Global.coreMethods = {
 		updateBrandsList: function(_CALLBACK){
 
 			// var pathToBrands = core.localData.brands.path;
-			var pathToBrands = core.brands.getFullPathToBrands();
+		
+			// if(!core.localData.userSettings.files.brands.path) {
+			// 	setTimeout(function(){
+			// 		Prompter.prompt({
+			// 			message:"Brands File Path: "+process.env.HOME+"/",
+			// 			type: "question",
+			// 			input: {
+			// 				placeholder: "Desktop"
+			// 			},
+			// 			mainBtn:{
+			// 				text:"Ok",
+			// 				onClick: function(){
+			// 					var prompterInput = document.getElementById("prompterInput");
 
-			var brandList = [];
+			// 					if(prompterInput.value.length > 0){
 
+			// 						Prompter.hide();
+			// 						core.localData.userSettings.files.brands.path = prompterInput.value;
+			// 						core.localData.brands.path = prompterInput.value;
+			// 						console.log("core.localData.userSettings",core.localData.userSettings)
+			// 						core.userSettingsFile.update(function(){
+			// 							if(_CALLBACK) _CALLBACK();
+			// 						});
+									
 
-			// console.log(typeof core.localData.brands.path);
-			// console.log("path",pathToBrands);
-			fs.readdir(pathToBrands, function(_err, _files){
-				if(_err) {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					// console.log("error");
-				}
-				for(var i = 0, ii = _files.length; i < ii; i++) {
-					var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-					if(stats.isDirectory()) brandList.push(_files[i]);
-				}
-				core.localData.brandList = brandList;
-				if(_CALLBACK!==undefined) _CALLBACK();
-			});
+			// 					}
+			// 				}
+			// 			}
+			// 		});
+			// 	}, 350);
+
+			// } 
+			// else {
+				var pathToBrands = core.brands.getFullPathToBrands();
+				var brandList = [];
+
+				fs.readdir(pathToBrands, function(_err, _files){
+					if(_err) {
+						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+						// console.log("error");
+					}
+					for(var i = 0, ii = _files.length; i < ii; i++) {
+						var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+						if(stats.isDirectory()) brandList.push(_files[i]);
+					}
+					core.localData.brandList = brandList;
+					if(_CALLBACK!==undefined) _CALLBACK();
+				});
+
+			// }
+
+				
 		},
 
 		rmFromRecentBrands: function(_brandName, _CALLBACK){

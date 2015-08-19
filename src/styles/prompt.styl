@@ -13,6 +13,20 @@ section#Prompter {
 	transform translateY(-150%)
 	transition transform .5s ease
 	
+	#prompterInput {
+		display block
+		height 48px
+		position relative
+		top 6px
+		float left
+		line-height 48px
+		background white
+		margin 0 20px 0 10px
+		padding 0 15px
+		font-size 1.25em
+		min-width 50px
+		transition background-color .3s ease
+	}
 	
 	&.show {
 		transform translateY(0%)
@@ -26,7 +40,7 @@ section#Prompter {
 		position relative
 		float left
 		line-height 60px
-		margin 0 30px 0 30px
+		margin 0 25px 0 25px
 		font-size 1.75em
 	}
 	

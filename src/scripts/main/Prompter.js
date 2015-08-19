@@ -38,6 +38,17 @@ var dimmer = {
 			if(_promptObj.message !== null && _promptObj.message !== undefined){
 				Prompter.messageCont = Prompter.container.append( el("+div").addClass("message").text(_promptObj["message"]) );
 			}
+
+			if(typeof _promptObj.type !== "undefined" && _promptObj.type === "question"){
+				var prompterInput = el("+input#prompterInput").addClass("prompterInput");
+
+				if(_promptObj.input && _promptObj.input.placeholder) {
+					prompterInput.setAttribute("placeholder", _promptObj.input.placeholder);
+				}
+				
+				Prompter.container.append( prompterInput );
+			}
+
 			if(_promptObj.btn3 !== null && _promptObj.btn3 !== undefined){
 				Prompter.container.append( el("+div").addClass(["btn", "btn3"]).text(_promptObj.btn3.text) );
 				Prompter.container.el(".btn3")[0].onclick = _promptObj.btn3.onClick;
@@ -59,6 +70,9 @@ var dimmer = {
 			// el("body")[0].append( el("+div").addClass("overlay") )
 			setTimeout(function(){
 				Prompter.container.addClass("show");
+				if(_promptObj.type === "question") {
+					document.getElementById("prompterInput").focus();
+				}
 			}, 150);
 		},
 

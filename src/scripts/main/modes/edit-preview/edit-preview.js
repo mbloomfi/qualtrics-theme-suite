@@ -60,7 +60,7 @@ core.preview = {
 
 				"{~Header~}":"",
 
-				"{~Buttons~}": '<input id="PreviousButton" type="button" value="Previous" name=""><input id="NextButton" onkeypress="if(!this.disabled){Qualtrics.SurveyEngine.navEnter(arguments[0],this, "NextButton"); };  " onclick="Qualtrics.SurveyEngine.navClick(event, "NextButton")" title=" Next " type="submit" name="NextButton" value="Next">',
+				"{~Buttons~}": '<input id="PreviousButton" type="button" value="Back" name=""><input id="NextButton" onkeypress="if(!this.disabled){Qualtrics.SurveyEngine.navEnter(arguments[0],this, "NextButton"); };  " onclick="Qualtrics.SurveyEngine.navClick(event, "NextButton")" title=" Next " type="submit" name="NextButton" value="Next">',
 
 				"{~Footer~}":""
 			},

@@ -1,9 +1,129 @@
 var QTS = (function(){
 
 
-	// ----------
+	// ---------------------------------------
+	// User Preferences
+	// 
+	var _userPreferences = {};
+	var _pathToBrands = null;
+
+	function checkUsername(callback) {
+		if(!_userPreferences.username) {
+			Prompter.prompt({
+				message:"What is your name?",
+				type: "question",
+				input: {
+					placeholder: "John Doe"
+				},
+				mainBtn:{
+					text:"Ok",
+					onClick: function(){
+						var prompterInput = document.getElementById("prompterInput");
+
+						if(prompterInput.value.length > 0){
+
+							Prompter.hide();
+							_userPreferences.username = prompterInput.value;
+							if(callback) callback();
+
+						}
+					}
+				}
+			});
+		} else {
+			if(callback) callback();
+		}
+		
+	}
+
+	function checkBrandLocation(callback) {
+		console.log("username", _userPreferences.username);
+		if(!_userPreferences.files.brands.path) {
+
+			setTimeout(function(){
+				Prompter.prompt({
+					message:"Brands File Path: "+process.env.HOME+"/",
+					type: "question",
+					input: {
+						placeholder: "John Doe"
+					},
+					mainBtn:{
+						text:"Ok",
+						onClick: function(){
+							var prompterInput = document.getElementById("prompterInput");
+
+							if(prompterInput.value.length > 0){
+
+								Prompter.hide();
+								_userPreferences.files.brands.path = prompterInput.value;
+								if(callback) callback();
+
+							}
+						}
+					}
+				});
+			}, 350);
+
+		} else {
+			_pathToBrands = process.env.HOME + "/" + _userPreferences.files.brands.path;
+			if(callback) callback();
+		}
+			
+
+	}
+
+	function updateLocalUserPrefrences(optionalCallback){
+		fs.readFile("local/user-settings.json", "utf-8", function(err, data){
+			if(err) return Eve.emit("error", err);
+
+			_userPreferences = JSON.parse(data);
+
+			checkUsername(function(){
+				checkBrandLocation(function(){
+					if(optionalCallback) {
+						// console.log("username check 2:", _userPreferences.username);
+						writeUserPrefrences(optionalCallback);
+					}
+					else Eve.emit("Local Preferences Updated");
+				});
+			});
+
+			
+
+		
+
+				
+
+
+				
+
+
+		});
+	}
+
+	function writeUserPrefrences(optionalCallback){
+		fs.writeFile("local/user-settings.json", JSON.stringify(_userPreferences), function(err){
+			if(err) {
+				Eve.emit("error", err);
+			}
+			else {
+				Eve.emit("Preferences File Updated");
+				if(optionalCallback) optionalCallback();
+			}
+		});
+	}
+
+	Eve.on("Prepare App",function(next){
+		updateLocalUserPrefrences(next);
+	});
+	Eve.on("Local Preferences Updated", writeUserPrefrences);
+	Eve.on("App Init", updateLocalUserPrefrences);
+	Eve.on("Window Focused", updateLocalUserPrefrences);
+
+
+	// ---------------------------------------
 	// Menu Bar
-	// ----------
+	// 
 
 	Eve.on("Menu Bar ~ File Renamed", function(){
 		el("#editorBar").addClass("renamed_file");
@@ -15,28 +135,160 @@ var QTS = (function(){
 
 
 
+	// ---------------------------------------
+	// info.qthemne
+	// 
+	function getInfoQTheme(pathToProject, callback){
+		fs.readFile(pathToProject, "utf-8", function(err, data){
+			if(err) {
+				Eve.emit("error", err);
+				return callback(true, null);
+			}
 
-	// ----------
-	// Brands
-	// ----------
-	_brands = {};
+			var jsonData;
 
-	_currentBrand = {
-		name: null,
-		path: null
-	};
+			try {
+				jsonData = JSON.parse(data);
+			} catch(e) {
+				Eve.emit("error", err);
+				jsonData = {};
+			}
+
+			callback(false, jsonData);
+		});
+	}
 
 
-	Eve.on("Brand Selected", function(){
+	function resetLocalInfoQtheme(){
+		_currentProject.infoQTheme = {
+			"author": null,
+			"lastModifiedFile": null,
+			"LastModified": {
+				"author": "",
+				"date": ""
+			},
+			"version": "V4",
+			"variables":"numberOfQuestions=-1 legacySQ=0 AnyDeviceSupport=1 CSS=BaseStylesV4.css Transitions=Slide,Fade,Flip,Barrel DefaultTransition=Fade"
+		}
+	}
+
+	function writeInfoQTheme(pathToFile, jsonData){
+		fs.writeFile(pathToFile, JSON.stringify(jsonData));
+	}
+
+
+
+
+	Eve.on("Brand Selected", function(brandName, pathToBrand){
+		if(!brandName || !pathToBrand) return;
+	});
+
+
+	Eve.on("Project Selected", function(projectName){
+		if(!projectName) {
+			Eve.emit("error", "Prameters Missing");
+			return;
+		}
+
+
+		return console.log("project selected check!");
+		
+
+		getInfoQTheme(pathToProject, function(missingFile, json){
+			if(missingFile){
+				resetLocalInfoQtheme();
+
+				writeInfoQTheme(
+					_currentProject.path+"/info.qtheme",
+					_currentProject.infoQTheme
+				);
+
+			}
+			if(json.author === null) json.author = "Sam Eaton";
+		});
+	});
+
+
+
+	Eve.on("Code Editor Saved", function(){
 
 	});
 
 
 
+	/* return
+	*/
+	return {
 
-	// ----------
-	// Projects
-	// ----------
+		getPathToBrands: function(){
+			return _pathToBrands;
+		}
+
+	}
+
+})();
+
+
+
+// ------------------
+// Brands
+// ------------------
+var Brands = (function(){
+	_brands = {};
+
+	_currentBrand = {
+		name: null,
+		path: null,
+		projectsList: null
+	};
+
+	function setCurrentBrand(brandName) {
+		_currentBrand.name = brandName;
+		_currentBrand.path = QTS.getPathToBrands() + "/" + brandName;
+		fs.readdir(_currentBrand.path, function(err, files){
+			if(err) return Eve.emit("error",err);
+
+			_currentBrand.projectsList = [];
+			for(var i = 0, ii = files.length; i < ii; i++) {
+				var fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
+				if(fsStats.isDirectory()){
+					_currentBrand.projectsList.push(files[i]);
+				}
+			}
+			Eve.emit("Current Brand Updated", _currentBrand);
+
+		});
+	}
+
+
+	Eve.on("Select Brand", function(brandName){
+		console.log("selecting brand =>",brandName);
+		setCurrentBrand(brandName);
+	});
+
+
+
+	Eve.on("Current Brand Updated", function(_currentBrand){
+		console.log("SELECTED:",_currentBrand);
+		console.log("files in brand:",_currentBrand.projectsList);
+	});
+
+	
+
+	/* return
+	*/
+	return {
+		current: _currentBrand
+	};
+
+})();
+
+
+
+// ------------------
+// Projects
+// ------------------
+var Projects = (function(){
 	_projects = {};
 
 	_currentProject = {
@@ -46,8 +298,59 @@ var QTS = (function(){
 		currentFile: {
 			name: null,
 			path: null
+		},
+		infoQTheme: {
+			"author": null,
+			"lastModifiedFile": null,
+			"LastModified": {
+				"author": "",
+				"date": ""
+			},
+			"version": "V4",
+			"variables":"numberOfQuestions=-1 legacySQ=0 AnyDeviceSupport=1 CSS=BaseStylesV4.css Transitions=Slide,Fade,Flip,Barrel DefaultTransition=Fade"
 		}
 	};
+
+
+	function setCurrentProject(projectName) {
+		_currentProject.name = projectName;
+		_currentProject.path = Brands.current.path + "/" + projectName;
+		fs.readdir(_currentProject.path, function(err, files){
+			_currentProject.files = [];
+			for(var i = 0, ii = files.length; i < ii; i++) {
+				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+				if(fsStats.isFile() && files[i].charAt(0) !== "."){
+					_currentProject.files.push(files[i]);
+				}
+			}
+			Eve.emit("Current Project Updated", projectName);
+		});
+	}
+
+	function updateCurrentProjectFiles() {
+		fs.readdir(_currentProject.path, function(err, files){
+			_currentProject.files = [];
+			for(var i = 0, ii = files.length; i < ii; i++) {
+				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+				if(fsStats.isFile() && files[i].charAt(0) !== "."){
+					_currentProject.files.push(files[i]);
+				}
+			}
+			Eve.emit("Current Project Updated", projectName);
+		});
+	}
+
+
+	Eve.on("Select Project", function(projectName){
+		setCurrentProject(projectName);
+	});
+
+	Eve.on("Current Project Updated", function(){
+		console.log("current project has been set, good sir.");
+		console.log("_currentProject =>",_currentProject);
+	});
+
+	Eve.on("Update Current Project Files List", updateCurrentProjectFiles);
 
 	Eve.on("Rename File", function(data, callback){
 		if(!data.path || !data.newName || !data.oldName) {
@@ -64,20 +367,21 @@ var QTS = (function(){
 			}
 		});
 	});
+})();
+
+// ------------------
+// Code Editor
+// ------------------
+var codeEditor = (function(){
 
 
 
-	// ----------
-	// info.qthemne
-	// ----------
-	Eve.on("Brand Selected", function(){
-
-	});
-
-	Eve.on("Code Editor Saved", function(){
-
-	});
-	
 
 })();
+
+
+
+
+
+
 
