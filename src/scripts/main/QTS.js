@@ -37,7 +37,7 @@ var QTS = (function(){
 	}
 
 	function checkBrandLocation(callback) {
-		console.log("username", _userPreferences.username);
+		// console.log("username", _userPreferences.username);
 		if(!_userPreferences.files.brands.path) {
 
 			setTimeout(function(){
@@ -191,7 +191,7 @@ var QTS = (function(){
 		}
 
 
-		return console.log("project selected check!");
+		// return console.log("project selected check!");
 		
 
 		getInfoQTheme(pathToProject, function(missingFile, json){
@@ -262,15 +262,15 @@ var Brands = (function(){
 
 
 	Eve.on("Select Brand", function(brandName){
-		console.log("selecting brand =>",brandName);
+		// console.log("selecting brand =>",brandName);
 		setCurrentBrand(brandName);
 	});
 
 
 
 	Eve.on("Current Brand Updated", function(_currentBrand){
-		console.log("SELECTED:",_currentBrand);
-		console.log("files in brand:",_currentBrand.projectsList);
+		// console.log("SELECTED:",_currentBrand);
+		// console.log("files in brand:",_currentBrand.projectsList);
 	});
 
 	
@@ -346,8 +346,8 @@ var Projects = (function(){
 	});
 
 	Eve.on("Current Project Updated", function(){
-		console.log("current project has been set, good sir.");
-		console.log("_currentProject =>",_currentProject);
+		// console.log("current project has been set, good sir.");
+		// console.log("_currentProject =>",_currentProject);
 	});
 
 	Eve.on("Update Current Project Files List", updateCurrentProjectFiles);
