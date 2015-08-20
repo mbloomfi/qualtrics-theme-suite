@@ -131,24 +131,24 @@ editorCore.dropdowns.brands = {
 	close: function(){
 		var self = this;
 		self.status = "closed";
-		baton(function(next){
+
+		baton(function(){
 			brandsDropdown.addClass("hide");
 			self.search.activated = false;
 			brandName.rmClass("dropdown-active");
 			brandsDropdown.el(".arrow")[0].addClass("hide");
-			setTimeout(next, 200);
+			setTimeout(this.next, 200);
 		})
-		.then(function(next){
+		.then(function(){
 			editorCore.dropdowns.brands.search.newBrandBtn.remove();
 			self.purge();
-
-			next();
+			this.next();
 		})
 		.then(function(){
 			self.refill();
 			brandsDropdown.el(".arrow")[0].addClass("hide");
-		})
-		.run();
+		})();
+
 	},
 
 	populate: function(){
@@ -217,11 +217,11 @@ editorCore.dropdowns.brands = {
 		populate: function(){
 			// console.log("start populating recent brands:",core.localData.brands.recent);
 			var self = this;
-			baton(function(next){
+			baton(function(){
 				editorCore.dropdowns.brands.search.newBrandBtn.remove();
-				core.localData.updateRecentBrands(next);
+				core.localData.updateRecentBrands(this.next);
 			})
-			.then(function(next){
+			.then(function(){
 
 				var recentBrandsArray = core.localData.brands.recent;
 
@@ -259,8 +259,7 @@ editorCore.dropdowns.brands = {
 				});
 
 
-			})
-			.run();
+			})();
 		}
 
 	},
@@ -272,11 +271,11 @@ editorCore.dropdowns.brands = {
 
 		prepare:	function() {
 			var self = this;
-			baton(function(next, inputValue){
+			baton(function(inputValue){
 				editorCore.dropdowns.brands.setGlobalVariables();
-				next();
+				this.next();
 			})
-			.then(function(next){
+			.then(function(){
 				self.prepareInputListener();
 				// SAVE BRANDS TO LOCAL PERSISTENT DATA
 				brandSearchInput.on("focus", function(){
@@ -284,7 +283,7 @@ editorCore.dropdowns.brands = {
 					core.localData.updateBrandsList();
 				});
 
-			}).run();
+			})();
 		},
 
 		prepareInputListener: function(){

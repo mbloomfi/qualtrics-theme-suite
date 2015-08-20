@@ -165,16 +165,16 @@ editorCore.dropdowns.projects = {
 		var self = this;
 		self.status = "closed";
 
-		baton(function(next){
+		baton(function(){
 			projectDropdown.addClass("hide");
 			projectDropdownBody.rmClass("dim");
 			projectName.rmClass("dropdown-active");
 			projectDropdown.el(".arrow")[0].addClass("hide");
-			setTimeout(next, 200);
+			setTimeout(this.next, 200);
 		})
-		.then(function(next){
+		.then(function(){
 			self.purge();
-			setTimeout(next, 10);
+			setTimeout(this.next, 10);
 		})
 		.then(function(){
 			// self.refill();

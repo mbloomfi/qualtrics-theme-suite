@@ -9,40 +9,9 @@ var QTS = (function(){
 
 	function checkUsername(callback) {
 		if(!_userPreferences.username) {
-			Prompter.prompt({
-				message:"What is your name?",
-				type: "question",
-				input: {
-					placeholder: "John Doe"
-				},
-				mainBtn:{
-					text:"Ok",
-					onClick: function(){
-						var prompterInput = document.getElementById("prompterInput");
-
-						if(prompterInput.value.length > 0){
-
-							Prompter.hide();
-							_userPreferences.username = prompterInput.value;
-							if(callback) callback();
-
-						}
-					}
-				}
-			});
-		} else {
-			if(callback) callback();
-		}
-		
-	}
-
-	function checkBrandLocation(callback) {
-		// console.log("username", _userPreferences.username);
-		if(!_userPreferences.files.brands.path) {
-
 			setTimeout(function(){
 				Prompter.prompt({
-					message:"Brands File Path: "+process.env.HOME+"/",
+					message:"What is your name?",
 					type: "question",
 					input: {
 						placeholder: "John Doe"
@@ -55,8 +24,43 @@ var QTS = (function(){
 							if(prompterInput.value.length > 0){
 
 								Prompter.hide();
+								_userPreferences.username = prompterInput.value;
+								if(typeof callback === "function") callback();
+
+							}
+						}
+					}
+				});
+			}, 350);
+				
+		} 
+		else {
+			if(typeof callback === "function") callback();
+		}
+	}
+
+
+	function checkBrandLocation(callback) {
+		// console.log("username", _userPreferences.username);
+		if(!_userPreferences.files.brands.path) {
+
+			setTimeout(function(){
+				Prompter.prompt({
+					message:"Brands File Path: "+process.env.HOME+"/",
+					type: "question",
+					input: {
+						placeholder: "Desktop"
+					},
+					mainBtn:{
+						text:"Ok",
+						onClick: function(){
+							var prompterInput = document.getElementById("prompterInput");
+
+							if(prompterInput.value.length > 0){
+
+								Prompter.hide();
 								_userPreferences.files.brands.path = prompterInput.value;
-								if(callback) callback();
+								if(typeof callback === "function") callback();
 
 							}
 						}
@@ -66,13 +70,12 @@ var QTS = (function(){
 
 		} else {
 			_pathToBrands = process.env.HOME + "/" + _userPreferences.files.brands.path;
-			if(callback) callback();
+			if(typeof callback === "function") callback();
 		}
-			
-
 	}
 
-	function updateLocalUserPrefrences(optionalCallback){
+
+	function updateLocalUserPrefrences(callback){
 		fs.readFile(__dirname+"/local/user-settings.json", "utf-8", function(err, data){
 			if(err) return Eve.emit("error", err);
 
@@ -80,46 +83,36 @@ var QTS = (function(){
 
 			checkUsername(function(){
 				checkBrandLocation(function(){
-					if(optionalCallback) {
-						// console.log("username check 2:", _userPreferences.username);
-						writeUserPrefrences(optionalCallback);
-					}
-					else Eve.emit("Local Preferences Updated");
+					Eve.emit("Local Preferences Updated");
+					if(typeof callback === "function") callback();
 				});
 			});
-
-			
-
-		
-
-				
-
-
-				
-
 
 		});
 	}
 
-	function writeUserPrefrences(optionalCallback){
+	function writeUserPrefrences(){
 		fs.writeFile(__dirname+"/local/user-settings.json", JSON.stringify(_userPreferences), function(err){
 			if(err) {
 				Eve.emit("error", err);
 			}
 			else {
 				Eve.emit("Preferences File Updated");
-				if(optionalCallback) optionalCallback();
 			}
 		});
 	}
 
-	Eve.on("Prepare App",function(next){
-		updateLocalUserPrefrences(next);
+	Eve.on("Prepare App",function(){
+		updateLocalUserPrefrences(function(){
+			writeUserPrefrences();
+			Eve.emit("App Init");
+		});
 	});
-	Eve.on("Local Preferences Updated", writeUserPrefrences);
-	Eve.on("App Init", updateLocalUserPrefrences);
-	Eve.on("Window Focused", updateLocalUserPrefrences);
 
+	Eve.on("Init App", function(){
+		Eve.on("Local Preferences Updated", writeUserPrefrences);
+		Eve.on("Window Focused", updateLocalUserPrefrences);
+	});
 
 	// ---------------------------------------
 	// Menu Bar

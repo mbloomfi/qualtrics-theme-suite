@@ -360,15 +360,15 @@ editorCore.dropdowns.files = {
 		if(self.status === "closed") return;
 
 		self.status = "closed";
-		baton(function(next){
+		baton(function(){
 			filesDropdown.addClass("hide");
 			filesDropdown.el(".arrow")[0].addClass("hide");
 			fileName.rmClass("dropdown-active");
-			setTimeout(next, 200);
+			setTimeout(this.next, 200);
 		})
-		.then(function(next){
+		.then(function(){
 			// self.purge();
-			setTimeout(next, 10);
+			setTimeout(this.next, 10);
 		})
 		.then(function(){
 			// self.refill();

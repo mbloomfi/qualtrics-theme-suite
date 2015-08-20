@@ -2094,7 +2094,7 @@
 			
 				return b.run.bind(b);
 			}
-			function baton(u){var _={run:function(){var u=Array.prototype.splice.call(arguments,0);return _.__utils__.i=-1,_["yield"].apply(null,u)},then:function(u){return"function"==typeof u&&_.__utils__.queue.push(u),_},"yield":function(u){var t=Array.prototype.splice.call(arguments,0);return t.unshift(_["yield"]),"undefined"!=typeof _.__utils__.queue[_.__utils__.i+1]?(_.__utils__.i++,_.__utils__.queue[_.__utils__.i].apply(null,t)):u},__utils__:{queue:[],i:-1}};return Object.create(_).then(u)}
+			function baton(t){"use strict";var u=function(){for(var t=[],e=0,_=arguments.length;_>e;e++)t.push(arguments[e]);return u.__utils__.i=-1,u.next.apply(null,t)};return u.then=function(t){return"function"==typeof t&&u.__utils__.queue.push(t),u},u.next=function(){var t=Array.prototype.splice.call(arguments,0);return"undefined"!=typeof u.__utils__.queue[u.__utils__.i+1]?(u.__utils__.i++,u.__utils__.queue[u.__utils__.i].apply({next:u.next},t)):void 0},u.__utils__={queue:[],i:-1},Object.create(u).then(t)}
 			
 			function pause(time, _callback) {
 				var args = Array.prototype.splice.call(arguments, 2);
@@ -2380,7 +2380,7 @@
 				}
 			
 			};
-			var Eve=function(){function r(r,e){var n={fn:e};n.caller=(new Error).stack.split("\n");for(var a=n.caller.length;a--;)"ERROR"===n.caller[a].toUpperCase()?n.caller.splice(a,1):-1!==n.caller[a].indexOf("addEventObserver")&&n.caller.splice(a,1);l[r]=l[r]||[],l[r].push(n)}function e(r,e){if(l[r])for(var n=0;n<l[r].length;n++)if(l[r][n].fn===e){l[r].splice(n,1);break}}function n(){for(var r=[],e=0,n=arguments.length;n>e;e++)r[e]=arguments[e];var a=r.splice(0,1);l[a]&&l[a].forEach(function(e){e.fn.apply(null,r)})}var l={};return{on:r,remove:e,emit:n,probeListeners:function(r){var e=[];return l[r]&&l[r].forEach(function(r){e.push(r.caller)}),e}}}();
+			var Eve=function(){function e(e,n){var r={fn:n};r.caller=(new Error).stack.split("\n");for(var t=r.caller.length;t--;)"ERROR"===r.caller[t].toUpperCase()?r.caller.splice(t,1):-1!==r.caller[t].indexOf("addEventObserver")&&r.caller.splice(t,1);c[e]=c[e]||[],c[e].push(r)}function n(e,n){if(c[e])for(var r=0;r<c[e].length;r++)if(c[e][r].fn===n||c[e][r].fn.toString()===n.toString()){c[e].splice(r,1);break}}function r(e){delete c[e],delete i[e]}function t(){for(var e=[],n=0,r=arguments.length;r>n;n++)e[n]=arguments[n];var t=e.splice(0,1);i[t]||c[t]&&c[t].forEach(function(n){n.fn.apply(null,e)})}function l(e){i[e]=!0}function o(e){delete i[e]}var c={},i={};return{on:e,remove:n,removeAll:r,emit:t,ignore:l,observe:o,probeListeners:function(e){var n=[];return c[e]&&c[e].forEach(function(e){n.push(e.caller)}),n},getEventList:function(){return c}}}();
 			// CodeMirror, copyright (c) by Marijn Haverbeke and others
 			// Distributed under an MIT license: http://codemirror.net/LICENSE
 			
@@ -16224,40 +16224,9 @@
 			
 				function checkUsername(callback) {
 					if(!_userPreferences.username) {
-						Prompter.prompt({
-							message:"What is your name?",
-							type: "question",
-							input: {
-								placeholder: "John Doe"
-							},
-							mainBtn:{
-								text:"Ok",
-								onClick: function(){
-									var prompterInput = document.getElementById("prompterInput");
-			
-									if(prompterInput.value.length > 0){
-			
-										Prompter.hide();
-										_userPreferences.username = prompterInput.value;
-										if(callback) callback();
-			
-									}
-								}
-							}
-						});
-					} else {
-						if(callback) callback();
-					}
-					
-				}
-			
-				function checkBrandLocation(callback) {
-					// console.log("username", _userPreferences.username);
-					if(!_userPreferences.files.brands.path) {
-			
 						setTimeout(function(){
 							Prompter.prompt({
-								message:"Brands File Path: "+process.env.HOME+"/",
+								message:"What is your name?",
 								type: "question",
 								input: {
 									placeholder: "John Doe"
@@ -16270,8 +16239,43 @@
 										if(prompterInput.value.length > 0){
 			
 											Prompter.hide();
+											_userPreferences.username = prompterInput.value;
+											if(typeof callback === "function") callback();
+			
+										}
+									}
+								}
+							});
+						}, 350);
+							
+					} 
+					else {
+						if(typeof callback === "function") callback();
+					}
+				}
+			
+			
+				function checkBrandLocation(callback) {
+					// console.log("username", _userPreferences.username);
+					if(!_userPreferences.files.brands.path) {
+			
+						setTimeout(function(){
+							Prompter.prompt({
+								message:"Brands File Path: "+process.env.HOME+"/",
+								type: "question",
+								input: {
+									placeholder: "Desktop"
+								},
+								mainBtn:{
+									text:"Ok",
+									onClick: function(){
+										var prompterInput = document.getElementById("prompterInput");
+			
+										if(prompterInput.value.length > 0){
+			
+											Prompter.hide();
 											_userPreferences.files.brands.path = prompterInput.value;
-											if(callback) callback();
+											if(typeof callback === "function") callback();
 			
 										}
 									}
@@ -16281,13 +16285,12 @@
 			
 					} else {
 						_pathToBrands = process.env.HOME + "/" + _userPreferences.files.brands.path;
-						if(callback) callback();
+						if(typeof callback === "function") callback();
 					}
-						
-			
 				}
 			
-				function updateLocalUserPrefrences(optionalCallback){
+			
+				function updateLocalUserPrefrences(callback){
 					fs.readFile(__dirname+"/local/user-settings.json", "utf-8", function(err, data){
 						if(err) return Eve.emit("error", err);
 			
@@ -16295,46 +16298,36 @@
 			
 						checkUsername(function(){
 							checkBrandLocation(function(){
-								if(optionalCallback) {
-									// console.log("username check 2:", _userPreferences.username);
-									writeUserPrefrences(optionalCallback);
-								}
-								else Eve.emit("Local Preferences Updated");
+								Eve.emit("Local Preferences Updated");
+								if(typeof callback === "function") callback();
 							});
 						});
-			
-						
-			
-					
-			
-							
-			
-			
-							
-			
 			
 					});
 				}
 			
-				function writeUserPrefrences(optionalCallback){
+				function writeUserPrefrences(){
 					fs.writeFile(__dirname+"/local/user-settings.json", JSON.stringify(_userPreferences), function(err){
 						if(err) {
 							Eve.emit("error", err);
 						}
 						else {
 							Eve.emit("Preferences File Updated");
-							if(optionalCallback) optionalCallback();
 						}
 					});
 				}
 			
-				Eve.on("Prepare App",function(next){
-					updateLocalUserPrefrences(next);
+				Eve.on("Prepare App",function(){
+					updateLocalUserPrefrences(function(){
+						writeUserPrefrences();
+						Eve.emit("App Init");
+					});
 				});
-				Eve.on("Local Preferences Updated", writeUserPrefrences);
-				Eve.on("App Init", updateLocalUserPrefrences);
-				Eve.on("Window Focused", updateLocalUserPrefrences);
 			
+				Eve.on("Init App", function(){
+					Eve.on("Local Preferences Updated", writeUserPrefrences);
+					Eve.on("Window Focused", updateLocalUserPrefrences);
+				});
 			
 				// ---------------------------------------
 				// Menu Bar
@@ -16627,40 +16620,45 @@
 				Eve.emit("Window Focused");
 			});
 			// INIT app
-			el.on("load", function(){
+			window.addEventListener("load", function(){
 				//add global reference to editor and preview
 				window.editor = el("#editor");
 				window.preview = el("#preview");
 			
-				baton(function(next){
+			
+			
+			
+			
+			
+				// baton(function(next){
 					
-					Eve.emit("Prepare App",next);
+					Eve.emit("Prepare App");
 				
+				// })
 			
-				})
+				// .then(function(next){
+				// 	console.log("app init");
+				// 	core.localData.updateUserSettings(next);
+				// })
 			
-				.then(function(next){
-					console.log("app init");
-					core.localData.updateUserSettings(next);
-				})
+				// .then(function(next){
+				// 	// console.log("reloading?");
+				// 	core.localData.updateBrandsList(next);
 			
-				.then(function(next){
-					// console.log("reloading?");
-					core.localData.updateBrandsList(next);
+				// })
+				// .then(function(next){
 			
-				})
-				.then(function(next){
+				// 	core.localData.updateRecentBrands(next);
 			
-					core.localData.updateRecentBrands(next);
+				// })
+				// .then(function(next){
 			
-				})
-				.then(function(next){
+				// 	core.localData.snippets.readFromPersistentData(next);
 			
-					core.localData.snippets.readFromPersistentData(next);
+				// })
+				// .then(function(next) {
 			
-				})
-				.then(function(next) {
-			
+				Eve.on("App Init", function(){
 					editorCore.dropdowns.setDropdownGlobals();
 			
 					editorCore.dropdowns.bodyClick();
@@ -16681,6 +16679,9 @@
 					core.preview.init();
 					//un-hide page // show editor and webview
 					el.join( [editor, preview] ).rmClass("hide");
+				})
+			
+					
 			
 			
 			
@@ -16935,12 +16936,10 @@
 					  // preview.src = "local/currentPreview.html";
 					});
 			
-					Eve.emit("App Init");
 			
 			
-			
-				})
-				.run();
+				// })
+				// .run();
 			});
 			
 			var core = Global.coreMethods = {
@@ -17281,18 +17280,18 @@
 					create: function(_brandName, _CALLBACK){
 						var self = this;
 						// create folder with brands name
-						baton(function(next){
-							self.exists(_brandName, next);
+						baton(function(){
+							self.exists(_brandName, this.next);
 						})
-						.then(function(next, exists){
-			
+						.then(function(exists){
+							var self = this;
 							if(exists) {
 								alert("Brand already exists. Nice try though.");
 							} else {
 								fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
 									if(!err) {
 										core.resetFinder();
-										next();
+										self.next();
 									} else {
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 									}
@@ -17300,13 +17299,12 @@
 							}
 							
 						})
-						.then(function(next){
+						.then(function(){
 			
 							// editorCore.dropdowns.brands.close();
 							self.infoFile.create(_brandName);
 							_CALLBACK();
-						})
-						.run();
+						})();
 			
 					},
 			
@@ -17350,13 +17348,13 @@
 			
 					hasInfoFile: function(_callback, _brandName){
 						var self = this;
-						baton(function(next){
+						baton(function(){
 							//check if brand exists
-							self.exists(_brandName, next);
+							self.exists(_brandName, this.next);
 						})
-						.then(function(next, _exists){
+						.then(function(_exists){
 							if(_exists){
-								next();
+								this.next();
 							} 
 							else _callback(false);
 						})
@@ -17372,8 +17370,7 @@
 								return _callback(stats.isFile());
 			
 							});
-						})
-						.run();
+						})();
 						
 					},
 			
@@ -17405,17 +17402,17 @@
 						/*Runs a callback, passing it an array of the names of the projects*/
 						list: function(_brandName, _callback){
 							
-							baton(function(next){
+							baton(function(){
 								
-								core.brands.exists(_brandName, next);
+								core.brands.exists(_brandName, this.next);
 							})
-							.then(function(next, exists){
+							.then(function(exists){
 								if(exists){
 									var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
-									next(pathToBrand);
+									this.next(pathToBrand);
 								}
 							})
-							.then(function(next, path){
+							.then(function(path){
 								var projectList = [];
 								// console.log(typeof path);
 								fs.readdir(path, function(_err, _projects){
@@ -17430,7 +17427,7 @@
 									// currentBrand.projects = projectsList // ADD this
 									if(_callback!==undefined) _callback(projectList);
 								});
-							}).run();
+							})();
 							
 							
 							
@@ -17440,16 +17437,17 @@
 						create: function(_brandName, _projectName, _callback){
 							var self = this;
 							// create folder with brands name
-							baton(function(next){
-								core.brands.exists(_brandName, next);
+							baton(function(){
+								core.brands.exists(_brandName, this.next);
 							})
-							.then(function(next, exists){
-			
+							.then(function(exists){
+								var self = this;
 								if(exists) {
+			
 									// console.log(typeof core.brands.getFullPathToBrands());
 									fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 										if(!err) {
-											next();
+											self.next();
 										} else {
 											fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 										}
@@ -17459,14 +17457,11 @@
 								}
 								
 							})
-							.then(function(next){
-			
+							.then(function(){
 								editorCore.dropdowns.projects.close();
-								
 								if(_callback!==undefined) _callback();
 								// self.infoFile.create(_brandName);
-							})
-							.run();
+							})();
 						},
 			
 			
@@ -17751,33 +17746,33 @@
 				//  Local Temp Data
 				// ----------------------------
 				localData: {
-					brands: {
-						path: null,
-						current: {
-							name: null
-						},
-						list: [],
-						recent: []
-					},
-					userSettings: null,
-					currentBrand: null,
-					currentProject: {
-						name: null,
-						path: null
-					},
+					// brands: {
+					// 	path: null,
+					// 	current: {
+					// 		name: null
+					// 	},
+					// 	list: [],
+					// 	recent: []
+					// },
+					// userSettings: null,
+					// currentBrand: null,
+					// currentProject: {
+					// 	name: null,
+					// 	path: null
+					// },
 			
 			
-					currentFile:{
-						name: null,
-						path: null,
-						dirty: null,
-						isNew: true,
-						watch: null,
-						clear: function(){
-							var self = this;
-							self.name = self.path = self.dirty = null;
-						}
-					},
+					// currentFile:{
+					// 	name: null,
+					// 	path: null,
+					// 	dirty: null,
+					// 	isNew: true,
+					// 	watch: null,
+					// 	clear: function(){
+					// 		var self = this;
+					// 		self.name = self.path = self.dirty = null;
+					// 	}
+					// },
 			
 					previewQuestionFiles: {
 						list: [],
@@ -18167,12 +18162,12 @@
 					el("#body").append(flash);
 			
 			
-					var flashBaton = baton(function(next){
+					var flashBaton = baton(function(){
 						flash.style.opacity = 1;
-						setTimeout(next, 100);
+						setTimeout(this.next, 100);
 					})
 			
-					.then(function(next){
+					.then(function(){
 						flash.style.transition = "opacity .4s ease";
 						setTimeout(function(){ flash.style.opacity = 0; } ,0);
 						if(typeof pinnacleCallback === "function") pinnacleCallback();
@@ -18183,7 +18178,7 @@
 						flash.rm();
 					})
 			
-					flashBaton.run();
+					flashBaton();
 			
 					
 			
@@ -19355,24 +19350,24 @@
 				close: function(){
 					var self = this;
 					self.status = "closed";
-					baton(function(next){
+			
+					baton(function(){
 						brandsDropdown.addClass("hide");
 						self.search.activated = false;
 						brandName.rmClass("dropdown-active");
 						brandsDropdown.el(".arrow")[0].addClass("hide");
-						setTimeout(next, 200);
+						setTimeout(this.next, 200);
 					})
-					.then(function(next){
+					.then(function(){
 						editorCore.dropdowns.brands.search.newBrandBtn.remove();
 						self.purge();
-			
-						next();
+						this.next();
 					})
 					.then(function(){
 						self.refill();
 						brandsDropdown.el(".arrow")[0].addClass("hide");
-					})
-					.run();
+					})();
+			
 				},
 			
 				populate: function(){
@@ -19441,11 +19436,11 @@
 					populate: function(){
 						// console.log("start populating recent brands:",core.localData.brands.recent);
 						var self = this;
-						baton(function(next){
+						baton(function(){
 							editorCore.dropdowns.brands.search.newBrandBtn.remove();
-							core.localData.updateRecentBrands(next);
+							core.localData.updateRecentBrands(this.next);
 						})
-						.then(function(next){
+						.then(function(){
 			
 							var recentBrandsArray = core.localData.brands.recent;
 			
@@ -19483,8 +19478,7 @@
 							});
 			
 			
-						})
-						.run();
+						})();
 					}
 			
 				},
@@ -19496,11 +19490,11 @@
 			
 					prepare:	function() {
 						var self = this;
-						baton(function(next, inputValue){
+						baton(function(inputValue){
 							editorCore.dropdowns.brands.setGlobalVariables();
-							next();
+							this.next();
 						})
-						.then(function(next){
+						.then(function(){
 							self.prepareInputListener();
 							// SAVE BRANDS TO LOCAL PERSISTENT DATA
 							brandSearchInput.on("focus", function(){
@@ -19508,7 +19502,7 @@
 								core.localData.updateBrandsList();
 							});
 			
-						}).run();
+						})();
 					},
 			
 					prepareInputListener: function(){
@@ -19843,16 +19837,16 @@
 					var self = this;
 					self.status = "closed";
 			
-					baton(function(next){
+					baton(function(){
 						projectDropdown.addClass("hide");
 						projectDropdownBody.rmClass("dim");
 						projectName.rmClass("dropdown-active");
 						projectDropdown.el(".arrow")[0].addClass("hide");
-						setTimeout(next, 200);
+						setTimeout(this.next, 200);
 					})
-					.then(function(next){
+					.then(function(){
 						self.purge();
-						setTimeout(next, 10);
+						setTimeout(this.next, 10);
 					})
 					.then(function(){
 						// self.refill();
@@ -20435,15 +20429,15 @@
 					if(self.status === "closed") return;
 			
 					self.status = "closed";
-					baton(function(next){
+					baton(function(){
 						filesDropdown.addClass("hide");
 						filesDropdown.el(".arrow")[0].addClass("hide");
 						fileName.rmClass("dropdown-active");
-						setTimeout(next, 200);
+						setTimeout(this.next, 200);
 					})
-					.then(function(next){
+					.then(function(){
 						// self.purge();
-						setTimeout(next, 10);
+						setTimeout(this.next, 10);
 					})
 					.then(function(){
 						// self.refill();

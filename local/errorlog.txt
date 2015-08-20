@@ -269,3 +269,23 @@ Wed Aug 19 2015 14:50:12 GMT-0600 (MDT)
 Wed Aug 19 2015 14:50:12 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, scandir '/Users/same/Users/same/Brands'
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 19 2015 19:58:56 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 19 2015 20:34:39 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 19 2015 20:34:44 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 19 2015 20:40:12 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+Wed Aug 19 2015 20:49:27 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
+

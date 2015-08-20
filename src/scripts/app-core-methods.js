@@ -337,18 +337,18 @@ var core = Global.coreMethods = {
 		create: function(_brandName, _CALLBACK){
 			var self = this;
 			// create folder with brands name
-			baton(function(next){
-				self.exists(_brandName, next);
+			baton(function(){
+				self.exists(_brandName, this.next);
 			})
-			.then(function(next, exists){
-
+			.then(function(exists){
+				var self = this;
 				if(exists) {
 					alert("Brand already exists. Nice try though.");
 				} else {
 					fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
 						if(!err) {
 							core.resetFinder();
-							next();
+							self.next();
 						} else {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 						}
@@ -356,13 +356,12 @@ var core = Global.coreMethods = {
 				}
 				
 			})
-			.then(function(next){
+			.then(function(){
 
 				// editorCore.dropdowns.brands.close();
 				self.infoFile.create(_brandName);
 				_CALLBACK();
-			})
-			.run();
+			})();
 
 		},
 
@@ -406,13 +405,13 @@ var core = Global.coreMethods = {
 
 		hasInfoFile: function(_callback, _brandName){
 			var self = this;
-			baton(function(next){
+			baton(function(){
 				//check if brand exists
-				self.exists(_brandName, next);
+				self.exists(_brandName, this.next);
 			})
-			.then(function(next, _exists){
+			.then(function(_exists){
 				if(_exists){
-					next();
+					this.next();
 				} 
 				else _callback(false);
 			})
@@ -428,8 +427,7 @@ var core = Global.coreMethods = {
 					return _callback(stats.isFile());
 
 				});
-			})
-			.run();
+			})();
 			
 		},
 
@@ -461,17 +459,17 @@ var core = Global.coreMethods = {
 			/*Runs a callback, passing it an array of the names of the projects*/
 			list: function(_brandName, _callback){
 				
-				baton(function(next){
+				baton(function(){
 					
-					core.brands.exists(_brandName, next);
+					core.brands.exists(_brandName, this.next);
 				})
-				.then(function(next, exists){
+				.then(function(exists){
 					if(exists){
 						var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
-						next(pathToBrand);
+						this.next(pathToBrand);
 					}
 				})
-				.then(function(next, path){
+				.then(function(path){
 					var projectList = [];
 					// console.log(typeof path);
 					fs.readdir(path, function(_err, _projects){
@@ -486,7 +484,7 @@ var core = Global.coreMethods = {
 						// currentBrand.projects = projectsList // ADD this
 						if(_callback!==undefined) _callback(projectList);
 					});
-				}).run();
+				})();
 				
 				
 				
@@ -496,16 +494,17 @@ var core = Global.coreMethods = {
 			create: function(_brandName, _projectName, _callback){
 				var self = this;
 				// create folder with brands name
-				baton(function(next){
-					core.brands.exists(_brandName, next);
+				baton(function(){
+					core.brands.exists(_brandName, this.next);
 				})
-				.then(function(next, exists){
-
+				.then(function(exists){
+					var self = this;
 					if(exists) {
+
 						// console.log(typeof core.brands.getFullPathToBrands());
 						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
 							if(!err) {
-								next();
+								self.next();
 							} else {
 								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 							}
@@ -515,14 +514,11 @@ var core = Global.coreMethods = {
 					}
 					
 				})
-				.then(function(next){
-
+				.then(function(){
 					editorCore.dropdowns.projects.close();
-					
 					if(_callback!==undefined) _callback();
 					// self.infoFile.create(_brandName);
-				})
-				.run();
+				})();
 			},
 
 
@@ -807,33 +803,33 @@ var core = Global.coreMethods = {
 	//  Local Temp Data
 	// ----------------------------
 	localData: {
-		brands: {
-			path: null,
-			current: {
-				name: null
-			},
-			list: [],
-			recent: []
-		},
-		userSettings: null,
-		currentBrand: null,
-		currentProject: {
-			name: null,
-			path: null
-		},
+		// brands: {
+		// 	path: null,
+		// 	current: {
+		// 		name: null
+		// 	},
+		// 	list: [],
+		// 	recent: []
+		// },
+		// userSettings: null,
+		// currentBrand: null,
+		// currentProject: {
+		// 	name: null,
+		// 	path: null
+		// },
 
 
-		currentFile:{
-			name: null,
-			path: null,
-			dirty: null,
-			isNew: true,
-			watch: null,
-			clear: function(){
-				var self = this;
-				self.name = self.path = self.dirty = null;
-			}
-		},
+		// currentFile:{
+		// 	name: null,
+		// 	path: null,
+		// 	dirty: null,
+		// 	isNew: true,
+		// 	watch: null,
+		// 	clear: function(){
+		// 		var self = this;
+		// 		self.name = self.path = self.dirty = null;
+		// 	}
+		// },
 
 		previewQuestionFiles: {
 			list: [],
@@ -1223,12 +1219,12 @@ var core = Global.coreMethods = {
 		el("#body").append(flash);
 
 
-		var flashBaton = baton(function(next){
+		var flashBaton = baton(function(){
 			flash.style.opacity = 1;
-			setTimeout(next, 100);
+			setTimeout(this.next, 100);
 		})
 
-		.then(function(next){
+		.then(function(){
 			flash.style.transition = "opacity .4s ease";
 			setTimeout(function(){ flash.style.opacity = 0; } ,0);
 			if(typeof pinnacleCallback === "function") pinnacleCallback();
@@ -1239,7 +1235,7 @@ var core = Global.coreMethods = {
 			flash.rm();
 		})
 
-		flashBaton.run();
+		flashBaton();
 
 		
 

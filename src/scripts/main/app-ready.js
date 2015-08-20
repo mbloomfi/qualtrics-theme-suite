@@ -1,38 +1,43 @@
 // INIT app
-el.on("load", function(){
+window.addEventListener("load", function(){
 	//add global reference to editor and preview
 	window.editor = el("#editor");
 	window.preview = el("#preview");
 
-	baton(function(next){
+
+
+
+
+
+	// baton(function(next){
 		
-		Eve.emit("Prepare App",next);
+		Eve.emit("Prepare App");
 	
+	// })
 
-	})
+	// .then(function(next){
+	// 	console.log("app init");
+	// 	core.localData.updateUserSettings(next);
+	// })
 
-	.then(function(next){
-		console.log("app init");
-		core.localData.updateUserSettings(next);
-	})
+	// .then(function(next){
+	// 	// console.log("reloading?");
+	// 	core.localData.updateBrandsList(next);
 
-	.then(function(next){
-		// console.log("reloading?");
-		core.localData.updateBrandsList(next);
+	// })
+	// .then(function(next){
 
-	})
-	.then(function(next){
+	// 	core.localData.updateRecentBrands(next);
 
-		core.localData.updateRecentBrands(next);
+	// })
+	// .then(function(next){
 
-	})
-	.then(function(next){
+	// 	core.localData.snippets.readFromPersistentData(next);
 
-		core.localData.snippets.readFromPersistentData(next);
+	// })
+	// .then(function(next) {
 
-	})
-	.then(function(next) {
-
+	Eve.on("App Init", function(){
 		editorCore.dropdowns.setDropdownGlobals();
 
 		editorCore.dropdowns.bodyClick();
@@ -53,6 +58,9 @@ el.on("load", function(){
 		core.preview.init();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
+	})
+
+		
 
 
 
@@ -307,10 +315,8 @@ el.on("load", function(){
 		  // preview.src = "local/currentPreview.html";
 		});
 
-		Eve.emit("App Init");
 
 
-
-	})
-	.run();
+	// })
+	// .run();
 });
