@@ -227,7 +227,9 @@ var QTS = (function(){
 // Brands
 // ------------------
 var Brands = (function(){
-	_brands = {};
+	_brands = {
+		recent: null
+	};
 
 	_currentBrand = {
 		name: null,
@@ -271,7 +273,12 @@ var Brands = (function(){
 	/* return
 	*/
 	return {
-		current: _currentBrand
+		getCurrent: function(){
+			return _currentBrand;
+		},
+		getRecent: function(){
+
+		}
 	};
 
 })();
@@ -360,6 +367,13 @@ var Projects = (function(){
 			}
 		});
 	});
+
+	return {
+		getCurrent: function(){
+			return _currentProject;
+		}
+	}
+
 })();
 
 // ------------------

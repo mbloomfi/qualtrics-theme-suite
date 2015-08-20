@@ -2381,6 +2381,66 @@
 			
 			};
 			var Eve=function(){function e(e,n){var r={fn:n};r.caller=(new Error).stack.split("\n");for(var t=r.caller.length;t--;)"ERROR"===r.caller[t].toUpperCase()?r.caller.splice(t,1):-1!==r.caller[t].indexOf("addEventObserver")&&r.caller.splice(t,1);c[e]=c[e]||[],c[e].push(r)}function n(e,n){if(c[e])for(var r=0;r<c[e].length;r++)if(c[e][r].fn===n||c[e][r].fn.toString()===n.toString()){c[e].splice(r,1);break}}function r(e){delete c[e],delete i[e]}function t(){for(var e=[],n=0,r=arguments.length;r>n;n++)e[n]=arguments[n];var t=e.splice(0,1);i[t]||c[t]&&c[t].forEach(function(n){n.fn.apply(null,e)})}function l(e){i[e]=!0}function o(e){delete i[e]}var c={},i={};return{on:e,remove:n,removeAll:r,emit:t,ignore:l,observe:o,probeListeners:function(e){var n=[];return c[e]&&c[e].forEach(function(e){n.push(e.caller)}),n},getEventList:function(){return c}}}();
+			var fang = (function(){
+				
+				// "use strict";
+			
+				// Initiates Fang Series
+				var _fang = {
+					// Adds Function to Fang Series
+					then: function(_callback){
+						if(typeof _callback === "function") _fang.utils.queue.push(_callback);
+						return _fang;
+					},
+			
+					// Runs the Next Function in the Series
+					next: function(){
+						// converts all incoming arguments into array
+						var args = Array.prototype.splice.call(arguments, 0);
+			
+						// if a proceeding function has been defined (using the 'then' method)
+						if(typeof _fang.utils.queue[_fang.utils.i+1] !== "undefined"){
+			
+							// increment the current call index
+							_fang.utils.i++;
+			
+							// run the next function
+							return _fang.utils.queue[_fang.utils.i].apply({next:_fang.next}, args);
+						}
+					},
+			
+					utils: {
+						// the queue that will hold all of the function in the series
+						queue:[], 
+			
+						// index starts at -1 so that the first item is index zero
+						i:-1 
+					}
+				};
+				
+			
+				return function(){
+			
+					var newFang = Object.create(_fang);
+					
+					for(var i = 0, ii = arguments.length; i < ii; i++){
+						if(typeof arguments[i] === "function") newFang.then(arguments[i]);
+					}
+			
+					function run(){
+						var args = [];
+						for(var i = 0, ii = arguments.length; i < ii; i++){
+							args.push(arguments[i]);
+						}
+						newFang.utils.i = -1;
+						return newFang.next.apply(null, args);
+					}
+			
+					// run.append = newFang.then;
+			
+					return run;
+				};
+			})();
 			// CodeMirror, copyright (c) by Marijn Haverbeke and others
 			// Distributed under an MIT license: http://codemirror.net/LICENSE
 			
@@ -16442,7 +16502,9 @@
 			// Brands
 			// ------------------
 			var Brands = (function(){
-				_brands = {};
+				_brands = {
+					recent: null
+				};
 			
 				_currentBrand = {
 					name: null,
@@ -16486,7 +16548,12 @@
 				/* return
 				*/
 				return {
-					current: _currentBrand
+					getCurrent: function(){
+						return _currentBrand;
+					},
+					getRecent: function(){
+			
+					}
 				};
 			
 			})();
@@ -16575,6 +16642,13 @@
 						}
 					});
 				});
+			
+				return {
+					getCurrent: function(){
+						return _currentProject;
+					}
+				}
+			
 			})();
 			
 			// ------------------
@@ -17466,7 +17540,7 @@
 			
 			
 						showInFinder: function(){
-							if(core.localData.currentProject.name !== null){
+							if(Projects.getCurrent().name !== null){
 								shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
 									// console.log('Exit status:', status);
 									// console.log('Program output:', output);
@@ -17481,16 +17555,16 @@
 							},
 			
 							assets: function(_callback){
-								var path = core.localData.currentProject.path;
+								var projPath = Projects.getCurrent().path;
 								var fileList = [];
-								fs.readdir(path+"/assets", function(_err, _files){
+								fs.readdir(projPath+"/assets", function(_err, _files){
 									if(_err) {
 										fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 										// console.log("error listing project assets");
 									}
 									// console.log("the files",_files);
 									for(var i = 0, ii = _files.length; i < ii; i++){
-										var stats = fs.statSync(path+"/assets/"+_files[i]);
+										var stats = fs.statSync(projPath+"/assets/"+_files[i]);
 										if(stats.isFile()) fileList.push(_files[i]);
 									}
 									// currentBrand.projects = projectsList // ADD this
@@ -18215,7 +18289,7 @@
 			
 				init: function(){
 					// console.log("init edit_preview => regular mode")
-					if(core.localData.currentProject.name !== null){
+					if(Projects.getCurrent().name !== null){
 						preview.src = __dirname+"/local/currentPreview.html";
 						this.active = true;
 					} else {

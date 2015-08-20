@@ -523,7 +523,7 @@ var core = Global.coreMethods = {
 
 
 			showInFinder: function(){
-				if(core.localData.currentProject.name !== null){
+				if(Projects.getCurrent().name !== null){
 					shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
 						// console.log('Exit status:', status);
 						// console.log('Program output:', output);
@@ -538,16 +538,16 @@ var core = Global.coreMethods = {
 				},
 
 				assets: function(_callback){
-					var path = core.localData.currentProject.path;
+					var projPath = Projects.getCurrent().path;
 					var fileList = [];
-					fs.readdir(path+"/assets", function(_err, _files){
+					fs.readdir(projPath+"/assets", function(_err, _files){
 						if(_err) {
 							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
 							// console.log("error listing project assets");
 						}
 						// console.log("the files",_files);
 						for(var i = 0, ii = _files.length; i < ii; i++){
-							var stats = fs.statSync(path+"/assets/"+_files[i]);
+							var stats = fs.statSync(projPath+"/assets/"+_files[i]);
 							if(stats.isFile()) fileList.push(_files[i]);
 						}
 						// currentBrand.projects = projectsList // ADD this

@@ -4,7 +4,7 @@ core.preview = {
 
 	init: function(){
 		// console.log("init edit_preview => regular mode")
-		if(core.localData.currentProject.name !== null){
+		if(Projects.getCurrent().name !== null){
 			preview.src = __dirname+"/local/currentPreview.html";
 			this.active = true;
 		} else {
