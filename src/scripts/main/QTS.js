@@ -277,7 +277,7 @@ var Brands = (function(){
 			return _currentBrand;
 		},
 		getRecent: function(){
-
+			return _brands.recent;
 		}
 	};
 

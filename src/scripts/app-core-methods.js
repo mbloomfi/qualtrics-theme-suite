@@ -227,7 +227,7 @@ var core = Global.coreMethods = {
 
 		update: function (_successCallback){
 			var _DATA = {};
-			_DATA.recentBrands = core.localData.brands.recent;
+			_DATA.recentBrands = Brands.getRecent();
 			_DATA.snippets = core.localData.snippets.list;
 			//_DATA.x = core.localData.x;
 			fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
@@ -373,11 +373,11 @@ var core = Global.coreMethods = {
 		*/
 		updateRecentBrands: function(){
 			var brand = core.localData.currentBrand;
-			var i = core.localData.brands.recent.indexOf(brand);
+			var i = Brands.getRecent().indexOf(brand);
 			if(i !== -1) {
-				core.localData.brands.recent.splice(i, 1);
+				Brands.getRecent().splice(i, 1);
 			}
-			core.localData.brands.recent.unshift(brand);
+			Brands.getRecent().unshift(brand);
 			core.persistentDataFile.update();
 		},	
 
@@ -846,11 +846,11 @@ var core = Global.coreMethods = {
 
 			readFromPersistentData: function(_callback, force){
 				// if local data is null
-				if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0 || force === true){
+				if(core.localData.snippets.list === null || Brands.getRecent().length === 0 || force === true){
 					core.persistentDataFile.read(function(_persistent_data){
 						// console.log("persistent-data recent brands", _persistent_data.snippets)
 						core.localData.snippets.list = _persistent_data.snippets;
-						// console.log("1a) recentbrands:",core.localData.brands.recent);
+						// console.log("1a) recentbrands:",Brands.getRecent());
 						if(_callback) _callback();
 					})
 				} 
@@ -977,9 +977,9 @@ var core = Global.coreMethods = {
 		},
 
 		rmFromRecentBrands: function(_brandName, _CALLBACK){
-			var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
+			var brandNameIndex = Brands.getRecent().indexOf(_brandName)
 			if(brandNameIndex !== -1){
-				core.localData.brands.recent.splice(brandNameIndex, 1);
+				Brands.getRecent().splice(brandNameIndex, 1);
 				core.persistentDataFile.update();
 			}
 			_CALLBACK();
@@ -991,11 +991,11 @@ var core = Global.coreMethods = {
 			brands if its not already there */
 
 			// if local data is null
-			if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
+			if(Brands.getRecent() === null || Brands.getRecent().length === 0){
 				core.persistentDataFile.read(function(_persistent_data){
 					// console.log("persistent-data recent brands", _persistent_data.recentBrands)
-					core.localData.brands.recent = _persistent_data.recentBrands;
-					// console.log("1a) recentbrands:",core.localData.brands.recent);
+					Brands.getRecent() = _persistent_data.recentBrands;
+					// console.log("1a) recentbrands:",Brands.getRecent());
 					_CALLBACK();
 				})
 			} 
@@ -1003,10 +1003,10 @@ var core = Global.coreMethods = {
 			else {
 
 				// if current brand is not the most recent brand
-				if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
-					core.localData.brands.recent.unshift(core.localData.currentBrand);
+				if(core.localData.brands.current.name !== null && Brands.getRecent()[0] !== core.localData.brands.current.name){
+					Brands.getRecent().unshift(core.localData.currentBrand);
 					core.persistentDataFile.update(function(){
-						// console.log("1b) recentbrands:",core.localData.brands.recent);
+						// console.log("1b) recentbrands:",Brands.getRecent());
 						_CALLBACK();
 					});
 					
@@ -1014,7 +1014,7 @@ var core = Global.coreMethods = {
 
 				// local recent brands is up to date
 				else {
-					// console.log("1c) recentbrands:",core.localData.brands.recent);
+					// console.log("1c) recentbrands:",Brands.getRecent());
 					_CALLBACK();
 				}
 			}
