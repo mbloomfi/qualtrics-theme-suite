@@ -217,49 +217,47 @@ editorCore.dropdowns.brands = {
 		populate: function(){
 			// console.log("start populating recent brands:",core.localData.brands.recent);
 			var self = this;
-			baton(function(){
-				editorCore.dropdowns.brands.search.newBrandBtn.remove();
-				core.localData.updateRecentBrands(this.next);
-			})
-			.then(function(){
 
-				var recentBrandsArray = core.localData.brands.recent;
+			editorCore.dropdowns.brands.search.newBrandBtn.remove();
 
-				// console.log("recentBrandsArray::", recentBrandsArray);
 
-				var recentBrandsCont = el("+div#recentBrandsCont");
+			var recentBrandsArray = Brands.getRecent();
 
-				// header
-				recentBrandsCont.append(
-					el("+div").addClass("header").text("Recent Brands")
-				)
+			// console.log("recentBrandsArray::", recentBrandsArray);
 
-				// add each result
-				if(recentBrandsArray.length > 0){
+			var recentBrandsCont = el("+div#recentBrandsCont");
 
-					var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
+			// header
+			recentBrandsCont.append(
+				el("+div").addClass("header").text("Recent Brands")
+			)
 
-					for(var i = 0; i < brandLimit; i++){
-						recentBrandsCont.append(
-							el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
-						)
-					}
+			// add each result
+			if(recentBrandsArray.length > 0){
 
-				} 
+				var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
 
-				else {
-					recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
+				for(var i = 0; i < brandLimit; i++){
+					recentBrandsCont.append(
+						el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
+					)
 				}
 
+			} 
 
-				brandsListCont.purge().append( recentBrandsCont );
-
-				el(".brand-item").on("click", function(){
-					editorCore.dropdowns.brands.select(this.dataset.brandname);
-				});
+			else {
+				recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
+			}
 
 
-			})();
+			brandsListCont.purge().append( recentBrandsCont );
+
+			el(".brand-item").on("click", function(){
+				editorCore.dropdowns.brands.select(this.dataset.brandname);
+			});
+
+
+			
 		}
 
 	},

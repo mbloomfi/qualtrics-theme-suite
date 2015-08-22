@@ -289,3 +289,7 @@ Wed Aug 19 2015 20:40:12 GMT-0600 (MDT)
 Wed Aug 19 2015 20:49:27 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, scandir '/Users/samueleaton/null'
 
+~~~~~~~~~
+Fri Aug 21 2015 21:30:17 GMT-0600 (MDT)
+	Error: ENOENT: no such file or directory, open '/Users/samueleaton/Sites/Github/qualtrics-themes-team/theme-suite/local/persistend-data.json'
+

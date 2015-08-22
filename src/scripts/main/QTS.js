@@ -102,18 +102,25 @@ var QTS = (function(){
 		});
 	}
 
-	Eve.on("Prepare App",function(){
+
+
+	Eve.on("app-started",function(){
 		updateLocalUserPrefrences(function(){
 			writeUserPrefrences();
-			Eve.emit("App Init");
+			Eve.emit("app-loaded");
 		});
 	});
 
 	Eve.on("Init App", function(){
-		Eve.on("Local Preferences Updated", writeUserPrefrences);
-		Eve.on("Window Focused", updateLocalUserPrefrences);
+		
+		
 	});
 
+	Eve.on("window-focused", updateLocalUserPrefrences);
+	Eve.ignore("window-focused").until("app-loaded");
+
+	Eve.on("Local Preferences Updated", writeUserPrefrences);
+	Eve.ignore("Local Preferences Updated").until("app-loaded");
 	// ---------------------------------------
 	// Menu Bar
 	// 
@@ -123,7 +130,7 @@ var QTS = (function(){
 		setTimeout(function(){
 			el("#editorBar").rmClass("renamed_file");
 		},300);
-	})
+	});
 
 
 
@@ -223,6 +230,62 @@ var QTS = (function(){
 
 
 
+
+
+
+
+// ------------------
+// Persistent Data
+// ------------------
+var PersistentData = (function(){
+	var _pdLocal = {};
+	var _pdPath = __dirname+"/local/persistent-data.json";
+
+	function updateLocalPersistentData() {
+		
+		fs.readFile(_pdPath, "utf-8", function(err, data){
+			if(err) return Eve.emit("error",err);
+
+			var pd = JSON.parse(data);
+			_pdLocal = pd;
+
+			Eve.emit("Local Persistent Data Updated");
+
+		})
+	}
+
+	function updatePersistentDataFile() {
+		fs.writeFile(_pdPath, JSON.stringify(_pdLocal), function(err){
+			if(err) Eve.emit("err", err);
+		});
+	}
+
+
+	Eve.on("app-started", updateLocalPersistentData);
+
+	Eve.on("window-focused", updateLocalPersistentData);
+
+	Eve.on("Recent Brands Changed", function(recentBrands){
+		_pdLocal.recentBrands = recentBrands;
+		updatePersistentDataFile();
+	});
+
+
+
+	return {
+		getLocal: function(){
+			return _pdLocal;
+		}
+	}
+
+})();
+
+
+
+
+
+
+
 // ------------------
 // Brands
 // ------------------
@@ -266,6 +329,17 @@ var Brands = (function(){
 	Eve.on("Current Brand Updated", function(_currentBrand){
 		// console.log("SELECTED:",_currentBrand);
 		// console.log("files in brand:",_currentBrand.projectsList);
+	}); 
+	Eve.ignore("Current Brand Updated").until("app-loaded")
+
+	Eve.on("Update Local Recent Brands", function(){
+
+	});
+
+	Eve.on("Local Persistent Data Updated", function(){
+		console.log("local pd updated");
+		_brands.recent = PersistentData.getLocal().recentBrands;
+		Eve.emit("Local Recent Brands Updated");
 	});
 
 	

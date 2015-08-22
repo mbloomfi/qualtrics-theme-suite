@@ -1214,59 +1214,6 @@
 			_callback.apply(null, args);
 		}, time);
 	}
-	function ace (_func){
-		"use strict";
-		// These b methods should be extracted (except for the utils). 
-		// That way each ace doesnt have to reproduce the same base code over and over.
-		var b = {
-			run : function(){
-				var args = [];
-	          
-	            for(var i = 0, ii = arguments.length; i < ii; i++){
-	              args.push(arguments[i]);  
-	            }
-	          
-				b.utils.i = -1;
-				return b.next.apply(this, args);
-			},
-			block : function(_callback){
-				if(typeof _callback === "function") this.utils.queue.push(_callback.bind(this));
-				return this;
-			},
-			next : function(){
-				// converts all incoming arguments into array
-	            var args = [];
-	          
-	            for(var i = 0, ii = arguments.length; i < ii; i++){
-	              args.push(arguments[i]);  
-	            }
-				// if a proceeding function has been defined (using the 'then' method)
-				if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
-	
-					// increment the current call index
-					b.utils.i++;
-	
-					// run the next function
-					return b.utils.queue[b.utils.i].apply(b, args);
-				}
-			},
-			utils : { 
-				// the queue that will hold all of the blocks in the series
-				queue:[], 
-				// index starts at -1 so that the first item is index zero
-				i:-1
-			}
-	
-		};
-	
-		// this allows them to us this.*method* inside of their callback, and then run it
-		window.block = b.block;
-		window.block = window.block.bind(b);
-		_func.bind(b)(_func.arguments);
-		window.block = undefined;
-	
-		return b.run.bind(b);
-	}
 	var etc = {
 	
 		template: function(_callback){
@@ -15613,7 +15560,7 @@
 	
 			update: function (_successCallback){
 				var _DATA = {};
-				_DATA.recentBrands = core.localData.brands.recent;
+				_DATA.recentBrands = Brands.getRecent();
 				_DATA.snippets = core.localData.snippets.list;
 				//_DATA.x = core.localData.x;
 				fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
@@ -15710,7 +15657,8 @@
 		brands: {
 	
 			getFullPathToBrands: function(){
-				return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
+				console.error("Do not use this method to get path to brands.");
+				// return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
 			},
 	
 			select: function(_brandName){
@@ -15759,11 +15707,11 @@
 			*/
 			updateRecentBrands: function(){
 				var brand = core.localData.currentBrand;
-				var i = core.localData.brands.recent.indexOf(brand);
+				var i = Brands.getRecent().indexOf(brand);
 				if(i !== -1) {
-					core.localData.brands.recent.splice(i, 1);
+					Brands.getRecent().splice(i, 1);
 				}
-				core.localData.brands.recent.unshift(brand);
+				Brands.getRecent().unshift(brand);
 				core.persistentDataFile.update();
 			},	
 	
@@ -16232,11 +16180,11 @@
 	
 				readFromPersistentData: function(_callback, force){
 					// if local data is null
-					if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0 || force === true){
+					if(core.localData.snippets.list === null || Brands.getRecent().length === 0 || force === true){
 						core.persistentDataFile.read(function(_persistent_data){
 							// console.log("persistent-data recent brands", _persistent_data.snippets)
 							core.localData.snippets.list = _persistent_data.snippets;
-							// console.log("1a) recentbrands:",core.localData.brands.recent);
+							// console.log("1a) recentbrands:",Brands.getRecent());
 							if(_callback) _callback();
 						})
 					} 
@@ -16306,7 +16254,7 @@
 	
 	
 			updateBrandsList: function(_CALLBACK){
-	
+				console.error("Do not use this method `updateBrandsList`");
 				// var pathToBrands = core.localData.brands.path;
 			
 				// if(!core.localData.userSettings.files.brands.path) {
@@ -16341,21 +16289,21 @@
 	
 				// } 
 				// else {
-					var pathToBrands = core.brands.getFullPathToBrands();
-					var brandList = [];
+					// var pathToBrands = core.brands.getFullPathToBrands();
+					// var brandList = [];
 	
-					fs.readdir(pathToBrands, function(_err, _files){
-						if(_err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							// console.log("error");
-						}
-						for(var i = 0, ii = _files.length; i < ii; i++) {
-							var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-							if(stats.isDirectory()) brandList.push(_files[i]);
-						}
-						core.localData.brandList = brandList;
-						if(_CALLBACK!==undefined) _CALLBACK();
-					});
+					// fs.readdir(pathToBrands, function(_err, _files){
+					// 	if(_err) {
+					// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+					// 		// console.log("error");
+					// 	}
+					// 	for(var i = 0, ii = _files.length; i < ii; i++) {
+					// 		var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+					// 		if(stats.isDirectory()) brandList.push(_files[i]);
+					// 	}
+					// 	core.localData.brandList = brandList;
+					// 	if(_CALLBACK!==undefined) _CALLBACK();
+					// });
 	
 				// }
 	
@@ -16363,50 +16311,53 @@
 			},
 	
 			rmFromRecentBrands: function(_brandName, _CALLBACK){
-				var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
+				var brandNameIndex = Brands.getRecent().indexOf(_brandName)
 				if(brandNameIndex !== -1){
-					core.localData.brands.recent.splice(brandNameIndex, 1);
+					Brands.getRecent().splice(brandNameIndex, 1);
 					core.persistentDataFile.update();
 				}
 				_CALLBACK();
 			},
 	
 			updateRecentBrands: function(_CALLBACK){
+				console.warn("Should not being using this method, use Eve.('Update Local Recent Brands');");
 				/* Main purpose of this method is to: (1) Set the local recent brands 
 				in case its null, and (2) Add the current brand to the front of recent 
 				brands if its not already there */
 	
 				// if local data is null
-				if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
-					core.persistentDataFile.read(function(_persistent_data){
-						// console.log("persistent-data recent brands", _persistent_data.recentBrands)
-						core.localData.brands.recent = _persistent_data.recentBrands;
-						// console.log("1a) recentbrands:",core.localData.brands.recent);
-						_CALLBACK();
-					})
-				} 
+				// if(Brands.getRecent() === null || Brands.getRecent().length === 0){
+				// 	core.persistentDataFile.read(function(_persistent_data){
+				// 		// console.log("persistent-data recent brands", _persistent_data.recentBrands)
+				// 		Brands.getRecent() = _persistent_data.recentBrands;
+				// 		// console.log("1a) recentbrands:",Brands.getRecent());
+				// 		_CALLBACK();
+				// 	})
+				// } 
 				
-				else {
+				// else {
 	
-					// if current brand is not the most recent brand
-					if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
-						core.localData.brands.recent.unshift(core.localData.currentBrand);
-						core.persistentDataFile.update(function(){
-							// console.log("1b) recentbrands:",core.localData.brands.recent);
-							_CALLBACK();
-						});
+				// 	// if current brand is not the most recent brand
+				// 	if(core.localData.brands.current.name !== null && Brands.getRecent()[0] !== core.localData.brands.current.name){
+				// 		Brands.getRecent().unshift(core.localData.currentBrand);
+				// 		core.persistentDataFile.update(function(){
+				// 			// console.log("1b) recentbrands:",Brands.getRecent());
+				// 			_CALLBACK();
+				// 		});
 						
-					} 
+				// 	} 
 	
-					// local recent brands is up to date
-					else {
-						// console.log("1c) recentbrands:",core.localData.brands.recent);
-						_CALLBACK();
-					}
-				}
+				// 	// local recent brands is up to date
+				// 	else {
+				// 		// console.log("1c) recentbrands:",Brands.getRecent());
+				// 		_CALLBACK();
+				// 	}
+				// }
 			},
 	
 			filterBrands: function(criteria){
+				console.log("criteria:",criteria);
+				console.warn("this method is cursed!");
 				var matches = [];
 				for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
 					if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase()) {

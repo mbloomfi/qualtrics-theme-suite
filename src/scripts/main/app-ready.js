@@ -1,8 +1,7 @@
 // INIT app
 window.addEventListener("load", function(){
 	//add global reference to editor and preview
-	window.editor = el("#editor");
-	window.preview = el("#preview");
+	
 
 
 
@@ -11,7 +10,7 @@ window.addEventListener("load", function(){
 
 	// baton(function(next){
 		
-		Eve.emit("Prepare App");
+		Eve.emit("app-started");
 	
 	// })
 
@@ -37,7 +36,10 @@ window.addEventListener("load", function(){
 	// })
 	// .then(function(next) {
 
-	Eve.on("App Init", function(){
+	Eve.on("app-loaded", function(){
+		window.editor = el("#editor");
+		window.preview = el("#preview");
+
 		editorCore.dropdowns.setDropdownGlobals();
 
 		editorCore.dropdowns.bodyClick();
@@ -58,15 +60,11 @@ window.addEventListener("load", function(){
 		core.preview.init();
 		//un-hide page // show editor and webview
 		el.join( [editor, preview] ).rmClass("hide");
-	})
-
-		
-
 
 
 		window.addEventListener("resize", function(){
 			core.preview.mode.screenshot.box.update();
-		})
+		});
 
 
 
@@ -314,6 +312,15 @@ window.addEventListener("load", function(){
 			// core.preview.init();
 		  // preview.src = "local/currentPreview.html";
 		});
+
+
+	});
+
+		
+
+
+
+		
 
 
 

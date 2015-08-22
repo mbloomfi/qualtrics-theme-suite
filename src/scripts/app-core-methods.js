@@ -324,7 +324,8 @@ var core = Global.coreMethods = {
 	brands: {
 
 		getFullPathToBrands: function(){
-			return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
+			console.error("Do not use this method to get path to brands.");
+			// return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
 		},
 
 		select: function(_brandName){
@@ -920,7 +921,7 @@ var core = Global.coreMethods = {
 
 
 		updateBrandsList: function(_CALLBACK){
-
+			console.error("Do not use this method `updateBrandsList`");
 			// var pathToBrands = core.localData.brands.path;
 		
 			// if(!core.localData.userSettings.files.brands.path) {
@@ -955,21 +956,21 @@ var core = Global.coreMethods = {
 
 			// } 
 			// else {
-				var pathToBrands = core.brands.getFullPathToBrands();
-				var brandList = [];
+				// var pathToBrands = core.brands.getFullPathToBrands();
+				// var brandList = [];
 
-				fs.readdir(pathToBrands, function(_err, _files){
-					if(_err) {
-						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-						// console.log("error");
-					}
-					for(var i = 0, ii = _files.length; i < ii; i++) {
-						var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-						if(stats.isDirectory()) brandList.push(_files[i]);
-					}
-					core.localData.brandList = brandList;
-					if(_CALLBACK!==undefined) _CALLBACK();
-				});
+				// fs.readdir(pathToBrands, function(_err, _files){
+				// 	if(_err) {
+				// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+				// 		// console.log("error");
+				// 	}
+				// 	for(var i = 0, ii = _files.length; i < ii; i++) {
+				// 		var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+				// 		if(stats.isDirectory()) brandList.push(_files[i]);
+				// 	}
+				// 	core.localData.brandList = brandList;
+				// 	if(_CALLBACK!==undefined) _CALLBACK();
+				// });
 
 			// }
 
@@ -986,41 +987,44 @@ var core = Global.coreMethods = {
 		},
 
 		updateRecentBrands: function(_CALLBACK){
+			console.warn("Should not being using this method, use Eve.('Update Local Recent Brands');");
 			/* Main purpose of this method is to: (1) Set the local recent brands 
 			in case its null, and (2) Add the current brand to the front of recent 
 			brands if its not already there */
 
 			// if local data is null
-			if(Brands.getRecent() === null || Brands.getRecent().length === 0){
-				core.persistentDataFile.read(function(_persistent_data){
-					// console.log("persistent-data recent brands", _persistent_data.recentBrands)
-					Brands.getRecent() = _persistent_data.recentBrands;
-					// console.log("1a) recentbrands:",Brands.getRecent());
-					_CALLBACK();
-				})
-			} 
+			// if(Brands.getRecent() === null || Brands.getRecent().length === 0){
+			// 	core.persistentDataFile.read(function(_persistent_data){
+			// 		// console.log("persistent-data recent brands", _persistent_data.recentBrands)
+			// 		Brands.getRecent() = _persistent_data.recentBrands;
+			// 		// console.log("1a) recentbrands:",Brands.getRecent());
+			// 		_CALLBACK();
+			// 	})
+			// } 
 			
-			else {
+			// else {
 
-				// if current brand is not the most recent brand
-				if(core.localData.brands.current.name !== null && Brands.getRecent()[0] !== core.localData.brands.current.name){
-					Brands.getRecent().unshift(core.localData.currentBrand);
-					core.persistentDataFile.update(function(){
-						// console.log("1b) recentbrands:",Brands.getRecent());
-						_CALLBACK();
-					});
+			// 	// if current brand is not the most recent brand
+			// 	if(core.localData.brands.current.name !== null && Brands.getRecent()[0] !== core.localData.brands.current.name){
+			// 		Brands.getRecent().unshift(core.localData.currentBrand);
+			// 		core.persistentDataFile.update(function(){
+			// 			// console.log("1b) recentbrands:",Brands.getRecent());
+			// 			_CALLBACK();
+			// 		});
 					
-				} 
+			// 	} 
 
-				// local recent brands is up to date
-				else {
-					// console.log("1c) recentbrands:",Brands.getRecent());
-					_CALLBACK();
-				}
-			}
+			// 	// local recent brands is up to date
+			// 	else {
+			// 		// console.log("1c) recentbrands:",Brands.getRecent());
+			// 		_CALLBACK();
+			// 	}
+			// }
 		},
 
 		filterBrands: function(criteria){
+			console.log("criteria:",criteria);
+			console.warn("this method is cursed!");
 			var matches = [];
 			for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
 				if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase()) {

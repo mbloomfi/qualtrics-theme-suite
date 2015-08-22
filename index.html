@@ -2041,59 +2041,6 @@
 		</section>
 
 		<script>
-			function ace (_func){
-				"use strict";
-				// These b methods should be extracted (except for the utils). 
-				// That way each ace doesnt have to reproduce the same base code over and over.
-				var b = {
-					run : function(){
-						var args = [];
-			          
-			            for(var i = 0, ii = arguments.length; i < ii; i++){
-			              args.push(arguments[i]);  
-			            }
-			          
-						b.utils.i = -1;
-						return b.next.apply(this, args);
-					},
-					block : function(_callback){
-						if(typeof _callback === "function") this.utils.queue.push(_callback.bind(this));
-						return this;
-					},
-					next : function(){
-						// converts all incoming arguments into array
-			            var args = [];
-			          
-			            for(var i = 0, ii = arguments.length; i < ii; i++){
-			              args.push(arguments[i]);  
-			            }
-						// if a proceeding function has been defined (using the 'then' method)
-						if(typeof b.utils.queue[b.utils.i+1] !== "undefined"){
-			
-							// increment the current call index
-							b.utils.i++;
-			
-							// run the next function
-							return b.utils.queue[b.utils.i].apply(b, args);
-						}
-					},
-					utils : { 
-						// the queue that will hold all of the blocks in the series
-						queue:[], 
-						// index starts at -1 so that the first item is index zero
-						i:-1
-					}
-			
-				};
-			
-				// this allows them to us this.*method* inside of their callback, and then run it
-				window.block = b.block;
-				window.block = window.block.bind(b);
-				_func.bind(b)(_func.arguments);
-				window.block = undefined;
-			
-				return b.run.bind(b);
-			}
 			function baton(t){"use strict";var u=function(){for(var t=[],e=0,_=arguments.length;_>e;e++)t.push(arguments[e]);return u.__utils__.i=-1,u.next.apply(null,t)};return u.then=function(t){return"function"==typeof t&&u.__utils__.queue.push(t),u},u.next=function(){var t=Array.prototype.splice.call(arguments,0);return"undefined"!=typeof u.__utils__.queue[u.__utils__.i+1]?(u.__utils__.i++,u.__utils__.queue[u.__utils__.i].apply({next:u.next},t)):void 0},u.__utils__={queue:[],i:-1},Object.create(u).then(t)}
 			
 			function pause(time, _callback) {
@@ -2380,7 +2327,142 @@
 				}
 			
 			};
-			var Eve=function(){function e(e,n){var r={fn:n};r.caller=(new Error).stack.split("\n");for(var t=r.caller.length;t--;)"ERROR"===r.caller[t].toUpperCase()?r.caller.splice(t,1):-1!==r.caller[t].indexOf("addEventObserver")&&r.caller.splice(t,1);c[e]=c[e]||[],c[e].push(r)}function n(e,n){if(c[e])for(var r=0;r<c[e].length;r++)if(c[e][r].fn===n||c[e][r].fn.toString()===n.toString()){c[e].splice(r,1);break}}function r(e){delete c[e],delete i[e]}function t(){for(var e=[],n=0,r=arguments.length;r>n;n++)e[n]=arguments[n];var t=e.splice(0,1);i[t]||c[t]&&c[t].forEach(function(n){n.fn.apply(null,e)})}function l(e){i[e]=!0}function o(e){delete i[e]}var c={},i={};return{on:e,remove:n,removeAll:r,emit:t,ignore:l,observe:o,probeListeners:function(e){var n=[];return c[e]&&c[e].forEach(function(e){n.push(e.caller)}),n},getEventList:function(){return c}}}();
+			// Eve.js by Sam Eaton (samueleaton)
+			// Source Code
+			// MIT License
+			
+			var Eve = (function() {
+				var _events = {};
+			
+				var _inactive = {
+					ignoredEvents: {},
+					deferredEvents: {}
+				};
+			
+				var _triggers = {
+					ignoreEvent: {},
+					deferEvent: {}
+				};
+				
+				var eventObserver = {
+					add: function(evtName, fn) {
+						var eventObject = {
+							fn: fn
+						};
+						_events[evtName] = _events[evtName] || [];
+						_events[evtName].push(eventObject);
+					},
+			
+					remove: function(evtName, fn) {
+						if (_events[evtName]) {
+							for (var i = 0; i < _events[evtName].length; i++) {
+								if (_events[evtName][i].fn === fn || _events[evtName][i].fn.toString() === fn.toString()) {
+									_events[evtName].splice(i, 1);
+									break;
+								}
+							}
+						}
+					},
+			
+					removeAll: function(evtName) {
+						delete _events[evtName];
+						delete _inactive.ignoredEvents[evtName];
+					}
+				};
+			
+			
+				var eventEmitter = {
+			
+					checkTriggers: function(evtName, triggerObj, inactiveEvt, isDeferred) {
+						if (triggerObj[evtName] && triggerObj[evtName].length) {
+							while (triggerObj[evtName].length) {
+								var emitter = triggerObj[evtName].shift();
+								if (inactiveEvt[emitter]) {
+									delete inactiveEvt[emitter];
+									if (isDeferred) Eve.emit(emitter);
+								}
+							}
+							delete triggerObj[evtName];
+						}
+					},
+			
+					emit: function() {
+						var args = [];
+						for (var i = 0, ii = arguments.length; i < ii; i++) {
+							args[i] = arguments[i];
+						}
+						var evtName = args.shift();
+						
+						if (_inactive.ignoredEvents[evtName] || _inactive.deferredEvents[evtName]) return;
+			
+						function regularEmitter() {
+							if (_events[evtName]) {
+								for (var j = 0, jj = _events[evtName].length; j < jj; j++) {
+									_events[evtName][j].fn.apply(null, args);
+								}
+							}
+						}
+			
+						if (_events[evtName]) regularEmitter();
+						eventEmitter.checkTriggers(evtName, _triggers.deferEvent, _inactive.deferredEvents, true);
+						eventEmitter.checkTriggers(evtName, _triggers.ignoreEvent, _inactive.ignoredEvents, false);
+					},
+			
+			
+			
+					ignore: function(evtName) {
+						_inactive.ignoredEvents[evtName] = true;
+						var _evtName = evtName;
+			
+						return {
+							getEvt: function() {
+								return _evtName;
+							},
+							until: function(ignoreUntil) {
+								_triggers.ignoreEvent[ignoreUntil] = _triggers.ignoreEvent[ignoreUntil] ? _triggers.ignoreEvent[ignoreUntil] : [] ;
+								_triggers.ignoreEvent[ignoreUntil].push(this.getEvt());
+							}
+						};
+					},
+			
+			
+			
+					defer: function(evtName) {
+						_inactive.deferredEvents[evtName] = true;
+						var _evtName = evtName;
+			
+						return {
+							getEvt: function() {
+								return _evtName;
+							},
+							until: function(deferUntil) {
+								_triggers.deferEvent[deferUntil] = _triggers.deferEvent[deferUntil] ? _triggers.deferEvent[deferUntil] : [] ;
+								_triggers.deferEvent[deferUntil].push(this.getEvt());
+							}
+						};
+					},
+			
+			
+					/*
+					Removes an event from _inactive.ignoredEvents and _inactive.deferredEvents
+					*/
+					observe: function(evtName) {
+						delete _inactive.ignoredEvents[evtName];
+						delete _inactive.deferredEvents[evtName];
+					}
+				};
+			
+				return {
+					on: eventObserver.add,
+					remove: eventObserver.remove,
+					removeAll: eventObserver.removeAll,
+					emit: eventEmitter.emit,
+					ignore: eventEmitter.ignore,
+					observe: eventEmitter.observe,
+					defer: eventEmitter.defer
+				};
+			})();
+			
 			var fang = (function(){
 				
 				// "use strict";
@@ -16377,18 +16459,25 @@
 					});
 				}
 			
-				Eve.on("Prepare App",function(){
+			
+			
+				Eve.on("app-started",function(){
 					updateLocalUserPrefrences(function(){
 						writeUserPrefrences();
-						Eve.emit("App Init");
+						Eve.emit("app-loaded");
 					});
 				});
 			
 				Eve.on("Init App", function(){
-					Eve.on("Local Preferences Updated", writeUserPrefrences);
-					Eve.on("Window Focused", updateLocalUserPrefrences);
+					
+					
 				});
 			
+				Eve.on("window-focused", updateLocalUserPrefrences);
+				Eve.ignore("window-focused").until("app-loaded");
+			
+				Eve.on("Local Preferences Updated", writeUserPrefrences);
+				Eve.ignore("Local Preferences Updated").until("app-loaded");
 				// ---------------------------------------
 				// Menu Bar
 				// 
@@ -16398,7 +16487,7 @@
 					setTimeout(function(){
 						el("#editorBar").rmClass("renamed_file");
 					},300);
-				})
+				});
 			
 			
 			
@@ -16498,6 +16587,62 @@
 			
 			
 			
+			
+			
+			
+			
+			// ------------------
+			// Persistent Data
+			// ------------------
+			var PersistentData = (function(){
+				var _pdLocal = {};
+				var _pdPath = __dirname+"/local/persistent-data.json";
+			
+				function updateLocalPersistentData() {
+					
+					fs.readFile(_pdPath, "utf-8", function(err, data){
+						if(err) return Eve.emit("error",err);
+			
+						var pd = JSON.parse(data);
+						_pdLocal = pd;
+			
+						Eve.emit("Local Persistent Data Updated");
+			
+					})
+				}
+			
+				function updatePersistentDataFile() {
+					fs.writeFile(_pdPath, JSON.stringify(_pdLocal), function(err){
+						if(err) Eve.emit("err", err);
+					});
+				}
+			
+			
+				Eve.on("app-started", updateLocalPersistentData);
+			
+				Eve.on("window-focused", updateLocalPersistentData);
+			
+				Eve.on("Recent Brands Changed", function(recentBrands){
+					_pdLocal.recentBrands = recentBrands;
+					updatePersistentDataFile();
+				});
+			
+			
+			
+				return {
+					getLocal: function(){
+						return _pdLocal;
+					}
+				}
+			
+			})();
+			
+			
+			
+			
+			
+			
+			
 			// ------------------
 			// Brands
 			// ------------------
@@ -16541,6 +16686,17 @@
 				Eve.on("Current Brand Updated", function(_currentBrand){
 					// console.log("SELECTED:",_currentBrand);
 					// console.log("files in brand:",_currentBrand.projectsList);
+				}); 
+				Eve.ignore("Current Brand Updated").until("app-loaded")
+			
+				Eve.on("Update Local Recent Brands", function(){
+			
+				});
+			
+				Eve.on("Local Persistent Data Updated", function(){
+					console.log("local pd updated");
+					_brands.recent = PersistentData.getLocal().recentBrands;
+					Eve.emit("Local Recent Brands Updated");
 				});
 			
 				
@@ -16668,6 +16824,10 @@
 			
 			
 			
+			// --------------
+			// Global Eve Listeners
+			// --------------
+			
 			Eve.on("Preferences Saved", function(){
 				console.log("prefs saved!");
 				core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);
@@ -16684,20 +16844,17 @@
 			});
 			
 			Eve.on("error", function(message){
-			
 				console.error("ERROR:", message);
 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+message+"\n\n", function(){});
-			
-			})
+			});
 			
 			window.addEventListener("focus", function(){
-				Eve.emit("Window Focused");
+				Eve.emit("window-focused");
 			});
 			// INIT app
 			window.addEventListener("load", function(){
 				//add global reference to editor and preview
-				window.editor = el("#editor");
-				window.preview = el("#preview");
+				
 			
 			
 			
@@ -16706,7 +16863,7 @@
 			
 				// baton(function(next){
 					
-					Eve.emit("Prepare App");
+					Eve.emit("app-started");
 				
 				// })
 			
@@ -16732,7 +16889,10 @@
 				// })
 				// .then(function(next) {
 			
-				Eve.on("App Init", function(){
+				Eve.on("app-loaded", function(){
+					window.editor = el("#editor");
+					window.preview = el("#preview");
+			
 					editorCore.dropdowns.setDropdownGlobals();
 			
 					editorCore.dropdowns.bodyClick();
@@ -16753,15 +16913,11 @@
 					core.preview.init();
 					//un-hide page // show editor and webview
 					el.join( [editor, preview] ).rmClass("hide");
-				})
-			
-					
-			
 			
 			
 					window.addEventListener("resize", function(){
 						core.preview.mode.screenshot.box.update();
-					})
+					});
 			
 			
 			
@@ -17011,6 +17167,15 @@
 					});
 			
 			
+				});
+			
+					
+			
+			
+			
+					
+			
+			
 			
 				// })
 				// .run();
@@ -17244,7 +17409,7 @@
 			
 					update: function (_successCallback){
 						var _DATA = {};
-						_DATA.recentBrands = core.localData.brands.recent;
+						_DATA.recentBrands = Brands.getRecent();
 						_DATA.snippets = core.localData.snippets.list;
 						//_DATA.x = core.localData.x;
 						fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
@@ -17341,7 +17506,8 @@
 				brands: {
 			
 					getFullPathToBrands: function(){
-						return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
+						console.error("Do not use this method to get path to brands.");
+						// return path.normalize(process.env.HOME+"/"+core.localData.brands.path);
 					},
 			
 					select: function(_brandName){
@@ -17390,11 +17556,11 @@
 					*/
 					updateRecentBrands: function(){
 						var brand = core.localData.currentBrand;
-						var i = core.localData.brands.recent.indexOf(brand);
+						var i = Brands.getRecent().indexOf(brand);
 						if(i !== -1) {
-							core.localData.brands.recent.splice(i, 1);
+							Brands.getRecent().splice(i, 1);
 						}
-						core.localData.brands.recent.unshift(brand);
+						Brands.getRecent().unshift(brand);
 						core.persistentDataFile.update();
 					},	
 			
@@ -17863,11 +18029,11 @@
 			
 						readFromPersistentData: function(_callback, force){
 							// if local data is null
-							if(core.localData.snippets.list === null || core.localData.brands.recent.length === 0 || force === true){
+							if(core.localData.snippets.list === null || Brands.getRecent().length === 0 || force === true){
 								core.persistentDataFile.read(function(_persistent_data){
 									// console.log("persistent-data recent brands", _persistent_data.snippets)
 									core.localData.snippets.list = _persistent_data.snippets;
-									// console.log("1a) recentbrands:",core.localData.brands.recent);
+									// console.log("1a) recentbrands:",Brands.getRecent());
 									if(_callback) _callback();
 								})
 							} 
@@ -17937,7 +18103,7 @@
 			
 			
 					updateBrandsList: function(_CALLBACK){
-			
+						console.error("Do not use this method `updateBrandsList`");
 						// var pathToBrands = core.localData.brands.path;
 					
 						// if(!core.localData.userSettings.files.brands.path) {
@@ -17972,21 +18138,21 @@
 			
 						// } 
 						// else {
-							var pathToBrands = core.brands.getFullPathToBrands();
-							var brandList = [];
+							// var pathToBrands = core.brands.getFullPathToBrands();
+							// var brandList = [];
 			
-							fs.readdir(pathToBrands, function(_err, _files){
-								if(_err) {
-									fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-									// console.log("error");
-								}
-								for(var i = 0, ii = _files.length; i < ii; i++) {
-									var stats = fs.statSync(pathToBrands+"/"+_files[i]);
-									if(stats.isDirectory()) brandList.push(_files[i]);
-								}
-								core.localData.brandList = brandList;
-								if(_CALLBACK!==undefined) _CALLBACK();
-							});
+							// fs.readdir(pathToBrands, function(_err, _files){
+							// 	if(_err) {
+							// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+							// 		// console.log("error");
+							// 	}
+							// 	for(var i = 0, ii = _files.length; i < ii; i++) {
+							// 		var stats = fs.statSync(pathToBrands+"/"+_files[i]);
+							// 		if(stats.isDirectory()) brandList.push(_files[i]);
+							// 	}
+							// 	core.localData.brandList = brandList;
+							// 	if(_CALLBACK!==undefined) _CALLBACK();
+							// });
 			
 						// }
 			
@@ -17994,50 +18160,53 @@
 					},
 			
 					rmFromRecentBrands: function(_brandName, _CALLBACK){
-						var brandNameIndex = core.localData.brands.recent.indexOf(_brandName)
+						var brandNameIndex = Brands.getRecent().indexOf(_brandName)
 						if(brandNameIndex !== -1){
-							core.localData.brands.recent.splice(brandNameIndex, 1);
+							Brands.getRecent().splice(brandNameIndex, 1);
 							core.persistentDataFile.update();
 						}
 						_CALLBACK();
 					},
 			
 					updateRecentBrands: function(_CALLBACK){
+						console.warn("Should not being using this method, use Eve.('Update Local Recent Brands');");
 						/* Main purpose of this method is to: (1) Set the local recent brands 
 						in case its null, and (2) Add the current brand to the front of recent 
 						brands if its not already there */
 			
 						// if local data is null
-						if(core.localData.brands.recent === null || core.localData.brands.recent.length === 0){
-							core.persistentDataFile.read(function(_persistent_data){
-								// console.log("persistent-data recent brands", _persistent_data.recentBrands)
-								core.localData.brands.recent = _persistent_data.recentBrands;
-								// console.log("1a) recentbrands:",core.localData.brands.recent);
-								_CALLBACK();
-							})
-						} 
+						// if(Brands.getRecent() === null || Brands.getRecent().length === 0){
+						// 	core.persistentDataFile.read(function(_persistent_data){
+						// 		// console.log("persistent-data recent brands", _persistent_data.recentBrands)
+						// 		Brands.getRecent() = _persistent_data.recentBrands;
+						// 		// console.log("1a) recentbrands:",Brands.getRecent());
+						// 		_CALLBACK();
+						// 	})
+						// } 
 						
-						else {
+						// else {
 			
-							// if current brand is not the most recent brand
-							if(core.localData.brands.current.name !== null && core.localData.brands.recent[0] !== core.localData.brands.current.name){
-								core.localData.brands.recent.unshift(core.localData.currentBrand);
-								core.persistentDataFile.update(function(){
-									// console.log("1b) recentbrands:",core.localData.brands.recent);
-									_CALLBACK();
-								});
+						// 	// if current brand is not the most recent brand
+						// 	if(core.localData.brands.current.name !== null && Brands.getRecent()[0] !== core.localData.brands.current.name){
+						// 		Brands.getRecent().unshift(core.localData.currentBrand);
+						// 		core.persistentDataFile.update(function(){
+						// 			// console.log("1b) recentbrands:",Brands.getRecent());
+						// 			_CALLBACK();
+						// 		});
 								
-							} 
+						// 	} 
 			
-							// local recent brands is up to date
-							else {
-								// console.log("1c) recentbrands:",core.localData.brands.recent);
-								_CALLBACK();
-							}
-						}
+						// 	// local recent brands is up to date
+						// 	else {
+						// 		// console.log("1c) recentbrands:",Brands.getRecent());
+						// 		_CALLBACK();
+						// 	}
+						// }
 					},
 			
 					filterBrands: function(criteria){
+						console.log("criteria:",criteria);
+						console.warn("this method is cursed!");
 						var matches = [];
 						for(var i = 0, ii = core.localData.brandList.length; i < ii; i++){
 							if(core.localData.brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase()) {
@@ -19510,49 +19679,47 @@
 					populate: function(){
 						// console.log("start populating recent brands:",core.localData.brands.recent);
 						var self = this;
-						baton(function(){
-							editorCore.dropdowns.brands.search.newBrandBtn.remove();
-							core.localData.updateRecentBrands(this.next);
-						})
-						.then(function(){
 			
-							var recentBrandsArray = core.localData.brands.recent;
+						editorCore.dropdowns.brands.search.newBrandBtn.remove();
 			
-							// console.log("recentBrandsArray::", recentBrandsArray);
 			
-							var recentBrandsCont = el("+div#recentBrandsCont");
+						var recentBrandsArray = Brands.getRecent();
 			
-							// header
-							recentBrandsCont.append(
-								el("+div").addClass("header").text("Recent Brands")
-							)
+						// console.log("recentBrandsArray::", recentBrandsArray);
 			
-							// add each result
-							if(recentBrandsArray.length > 0){
+						var recentBrandsCont = el("+div#recentBrandsCont");
 			
-								var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
+						// header
+						recentBrandsCont.append(
+							el("+div").addClass("header").text("Recent Brands")
+						)
 			
-								for(var i = 0; i < brandLimit; i++){
-									recentBrandsCont.append(
-										el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
-									)
-								}
+						// add each result
+						if(recentBrandsArray.length > 0){
 			
-							} 
+							var brandLimit = (recentBrandsArray.length > self.maxAmount) ? self.maxAmount : recentBrandsArray.length;
 			
-							else {
-								recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
+							for(var i = 0; i < brandLimit; i++){
+								recentBrandsCont.append(
+									el("+button").addClass("brand-item").attr("data-brandname",recentBrandsArray[i]).text(recentBrandsArray[i])
+								)
 							}
 			
+						} 
 			
-							brandsListCont.purge().append( recentBrandsCont );
-			
-							el(".brand-item").on("click", function(){
-								editorCore.dropdowns.brands.select(this.dataset.brandname);
-							});
+						else {
+							recentBrandsCont.addClass("no-recent").text("No recent brands to display.");
+						}
 			
 			
-						})();
+						brandsListCont.purge().append( recentBrandsCont );
+			
+						el(".brand-item").on("click", function(){
+							editorCore.dropdowns.brands.select(this.dataset.brandname);
+						});
+			
+			
+						
 					}
 			
 				},
