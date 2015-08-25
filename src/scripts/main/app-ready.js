@@ -37,6 +37,7 @@ window.addEventListener("load", function(){
 	// .then(function(next) {
 
 	Eve.on("app-loaded", function(){
+		console.log("app loaded!");
 		window.editor = el("#editor");
 		window.preview = el("#preview");
 

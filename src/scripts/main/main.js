@@ -20,6 +20,9 @@ var minifyCss = require('gulp-minify-css');
 var autoprefixer = require("gulp-autoprefixer");
 var shelljs = require("shelljs");
 
+// == Local == 
+var Loca = require("./local/modules/loca");
+
 // == Custom ==
 var Global = remote.getGlobal("sharedObject"); //see index.js
 var appRoot = Global.appRoot;

@@ -24,6 +24,7 @@ editorCore.dropdowns.brands = {
 	init: function(){
 			var self = this;
 			brandName.on("click", function(evt){
+				Eve.emit("Brands Menu Btn Clicked");
 				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
 				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
 				if(!this.hasClass("inactive")){
@@ -93,12 +94,13 @@ editorCore.dropdowns.brands = {
 					selectBrand();
 				}
 
-		Eve.emit("Select Brand", _brandName);
+		Eve.emit("Brand Selected", _brandName);
 		
 		
 	},
 
 	toggle: function(){
+
 		if(this.status === "opened") {
 			this.close();
 		}
@@ -269,19 +271,19 @@ editorCore.dropdowns.brands = {
 
 		prepare:	function() {
 			var self = this;
-			baton(function(inputValue){
-				editorCore.dropdowns.brands.setGlobalVariables();
-				this.next();
-			})
-			.then(function(){
-				self.prepareInputListener();
-				// SAVE BRANDS TO LOCAL PERSISTENT DATA
-				brandSearchInput.on("focus", function(){
-					// console.log("reloading brands?");
-					core.localData.updateBrandsList();
-				});
-
-			})();
+			fang(
+				function(){
+					editorCore.dropdowns.brands.setGlobalVariables();
+					this.next();
+				},
+				function(){
+					self.prepareInputListener();
+					// SAVE BRANDS TO LOCAL PERSISTENT DATA
+					brandSearchInput.on("focus", function(){
+						Eve.emit("Brand Input Focused");
+					});
+				}
+			)();
 		},
 
 		prepareInputListener: function(){
@@ -329,8 +331,15 @@ editorCore.dropdowns.brands = {
 
 		updateResults: function(criteria){
 			var self = this;
-			var matches = core.localData.filterBrands(criteria);
 
+			// filter brands by criteria
+			var matches = [];
+			var brandList = Brands.getList()
+			for(var i = 0, ii = brandList.length; i < ii; i++){
+				if(brandList[i].slice(0,criteria.length).toUpperCase() === criteria.toUpperCase()) {
+					matches.push(brandList[i]);
+				}
+			}
 			
 			if(matches.length > 0){
 

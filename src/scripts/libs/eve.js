@@ -5,15 +5,7 @@
 var Eve = (function() {
 	var _events = {};
 
-	var _inactive = {
-		ignoredEvents: {},
-		deferredEvents: {}
-	};
-
-	var _triggers = {
-		ignoreEvent: {},
-		deferEvent: {}
-	};
+	var _eventInfo = {};
 	
 	var eventObserver = {
 		add: function(evtName, fn) {
@@ -22,6 +14,26 @@ var Eve = (function() {
 			};
 			_events[evtName] = _events[evtName] || [];
 			_events[evtName].push(eventObject);
+
+			return {
+				evt: evtName,
+				fn: fn,
+				ignore: function() {
+					return Eve.ignore(this.evt);
+				},
+				remove: function() {
+					return Eve.remove(this.evt, this.fn);
+				},
+				removeAll: function() {
+					return Eve.removeAll(this.evt);
+				},
+				defer: function() {
+					return Eve.defer(this.evt);
+				},
+				observe: function() {
+					Eve.observe(this.evt);
+				}
+			};
 		},
 
 		remove: function(evtName, fn) {
@@ -37,23 +49,45 @@ var Eve = (function() {
 
 		removeAll: function(evtName) {
 			delete _events[evtName];
-			delete _inactive.ignoredEvents[evtName];
+			_eventInfo[evtName] = _eventInfo[evtName] || {};
+			delete _eventInfo[evtName];
 		}
 	};
 
 
 	var eventEmitter = {
+		count: function(evtName) {
+			return (_eventInfo[evtName] && _eventInfo[evtName].emitCount) || 0;
+		},
 
-		checkTriggers: function(evtName, triggerObj, inactiveEvt, isDeferred) {
-			if (triggerObj[evtName] && triggerObj[evtName].length) {
-				while (triggerObj[evtName].length) {
-					var emitter = triggerObj[evtName].shift();
-					if (inactiveEvt[emitter]) {
-						delete inactiveEvt[emitter];
-						if (isDeferred) Eve.emit(emitter);
-					}
+		checkInactive: function(evtName) {
+			if (!_eventInfo[evtName]) return;
+
+			if (_eventInfo[evtName].ignore) {
+				delete _eventInfo[evtName].ignore;
+			}
+			if (_eventInfo[evtName].defer) {
+				delete _eventInfo[evtName].defer;
+				Eve.emit(evtName);
+			}
+		},
+
+		checkTriggers: function(evtName) {
+			if (!_eventInfo[evtName]) return;
+
+			function ifIsTrigger(triggerObj) {
+				while (triggerObj.length) {
+					var emitter = triggerObj.shift();
+					eventEmitter.checkInactive(emitter);
 				}
-				delete triggerObj[evtName];
+				triggerObj = null;
+			}
+
+			if (_eventInfo[evtName].ignoreTrigger) {
+				ifIsTrigger(_eventInfo[evtName].ignoreTrigger);
+			}
+			if (_eventInfo[evtName].deferTrigger) {
+				ifIsTrigger(_eventInfo[evtName].deferTrigger);
 			}
 		},
 
@@ -64,7 +98,11 @@ var Eve = (function() {
 			}
 			var evtName = args.shift();
 			
-			if (_inactive.ignoredEvents[evtName] || _inactive.deferredEvents[evtName]) return;
+			_eventInfo[evtName] = _eventInfo[evtName] || {};
+			if (_eventInfo[evtName].ignore || _eventInfo[evtName].defer) return;
+
+			_eventInfo[evtName].emitCount = _eventInfo[evtName].emitCount || 0;
+			_eventInfo[evtName].emitCount++;
 
 			function regularEmitter() {
 				if (_events[evtName]) {
@@ -75,23 +113,25 @@ var Eve = (function() {
 			}
 
 			if (_events[evtName]) regularEmitter();
-			eventEmitter.checkTriggers(evtName, _triggers.deferEvent, _inactive.deferredEvents, true);
-			eventEmitter.checkTriggers(evtName, _triggers.ignoreEvent, _inactive.ignoredEvents, false);
+			eventEmitter.checkTriggers(evtName);
 		},
 
 
 
 		ignore: function(evtName) {
-			_inactive.ignoredEvents[evtName] = true;
+			_eventInfo[evtName] = _eventInfo[evtName] || {};
+			_eventInfo[evtName].ignore = true;
+			// _eventInfo[evtName].ignore = true;
 			var _evtName = evtName;
 
 			return {
 				getEvt: function() {
 					return _evtName;
 				},
-				until: function(ignoreUntil) {
-					_triggers.ignoreEvent[ignoreUntil] = _triggers.ignoreEvent[ignoreUntil] ? _triggers.ignoreEvent[ignoreUntil] : [] ;
-					_triggers.ignoreEvent[ignoreUntil].push(this.getEvt());
+				until: function(triggerName) {
+					_eventInfo[triggerName] = _eventInfo[triggerName] || {};
+					_eventInfo[triggerName].ignoreTrigger = _eventInfo[triggerName].ignoreTrigger || [];
+					_eventInfo[triggerName].ignoreTrigger.push(this.getEvt());
 				}
 			};
 		},
@@ -99,16 +139,18 @@ var Eve = (function() {
 
 
 		defer: function(evtName) {
-			_inactive.deferredEvents[evtName] = true;
+			_eventInfo[evtName] = _eventInfo[evtName] || {};
+			_eventInfo[evtName].defer = true;
 			var _evtName = evtName;
 
 			return {
 				getEvt: function() {
 					return _evtName;
 				},
-				until: function(deferUntil) {
-					_triggers.deferEvent[deferUntil] = _triggers.deferEvent[deferUntil] ? _triggers.deferEvent[deferUntil] : [] ;
-					_triggers.deferEvent[deferUntil].push(this.getEvt());
+				until: function(triggerName) {
+					_eventInfo[triggerName] = _eventInfo[triggerName] || {};
+					_eventInfo[triggerName].deferTrigger = _eventInfo[triggerName].deferTrigger || [];
+					_eventInfo[triggerName].deferTrigger.push(this.getEvt());
 				}
 			};
 		},
@@ -118,9 +160,13 @@ var Eve = (function() {
 		Removes an event from _inactive.ignoredEvents and _inactive.deferredEvents
 		*/
 		observe: function(evtName) {
-			delete _inactive.ignoredEvents[evtName];
-			delete _inactive.deferredEvents[evtName];
+			_eventInfo[evtName] = _eventInfo[evtName] || {};
+			delete _eventInfo[evtName].ignore;
+			delete _eventInfo[evtName].defer;
 		}
+
+
+
 	};
 
 	return {
@@ -128,6 +174,7 @@ var Eve = (function() {
 		remove: eventObserver.remove,
 		removeAll: eventObserver.removeAll,
 		emit: eventEmitter.emit,
+		emitCount: eventEmitter.count,
 		ignore: eventEmitter.ignore,
 		observe: eventEmitter.observe,
 		defer: eventEmitter.defer

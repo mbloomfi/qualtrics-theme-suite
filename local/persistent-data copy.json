@@ -1,151 +1,55 @@
 {
   "recentBrands": [
-    "github",
     "tester",
-    "gbsviewpoints",
-    "tester5",
-    "uafieldtesting",
-    "thesportsauthority",
-    "paypal360",
-    "tester4",
-    "gadventures",
-    "gamestop",
-    "bart",
-    "wmsas",
-    "arcelormittal",
-    "travelocity",
-    "hotwire",
-    "csxoptm360",
-    "csx360",
-    "ericsson360",
-    "ibbt",
-    "omainsurance",
-    "fandm",
-    "mitresearch",
-    "optumsurveys",
-    "travelpn",
-    "lds",
-    "soa",
-    "wintec",
-    "wiley",
-    "avannis",
-    "testbrand",
-    "test",
-    "nde",
-    "landsend",
-    "workiva",
-    "ulstersocialsciences",
-    "rac",
+    "qualtricsei",
+    "facebookaudience",
+    "nielsonmerksamer",
     "facebook",
-    "wsubusiness",
-    "kennesaw",
-    "alliancedata",
-    "zillow",
-    "testa",
-    "amazon10",
-    "macomb",
-    "idstats",
-    "synopsys",
-    "thinkingphones",
-    "healthcareindustry",
-    "research1",
-    "teachforamerica",
-    "ubayreuthmarketing",
+    "github",
+    "test",
+    "apple",
+    "tester4",
     "tervis",
-    "biorx",
-    "sands",
-    "fmrtraining",
-    "ferrarispa",
-    "nvm",
-    "wellsfargosurvey",
-    "toyotasurvey",
-    "brassagency",
-    "fake"
+    "newtest",
+    "test3",
+    "workiva",
+    "mercer",
+    "wiley",
+    "workiva",
+    "qualtrics",
+    "lds",
+    "uafieldtesting"
   ],
   "snippets": [
     {
-      "name": "Lion",
+      "name": "progress bar 1",
       "type": "css",
-      "id": "ud2zoj35-lxlc",
-      "code": "//Lion (new)"
+      "id": "jrq21tab-oumh",
+      "code": "/// code here for pb1\n\n// cool right?"
     },
     {
-      "name": "Lime Header",
+      "name": "pb2",
       "type": "css",
-      "id": "nz3gwsa0-o5t8",
-      "code": "\tbackground-color: lime;\n\tfont-size:30px;"
+      "id": "kct33329-uqg1",
+      "code": "//pb2"
     },
     {
-      "name": "Dog",
+      "name": "test",
       "type": "css",
-      "id": "w8sy7p05-v2e6",
-      "code": "/*dog*/"
+      "id": "ke7nxue0-j6s0",
+      "code": "//test"
     },
     {
-      "name": "Penguin",
+      "name": "test2",
       "type": "css",
-      "id": "ybxm8mxy-tg6n",
-      "code": "//penguin"
+      "id": "suogat9m-v7fl",
+      "code": "//test2"
     },
     {
-      "name": "Progress Bar",
-      "id": "uxi253n5-ur36",
+      "name": "test3",
       "type": "css",
-      "code": ".Skin #ProgressBarContainer {\n\tcolor: red;\n}"
-    },
-    {
-      "name": "Tester2",
-      "type": "js",
-      "id": "plpxzecs-xuc8",
-      "code": "//tester 2 code here"
-    },
-    {
-      "name": "Tester3",
-      "type": "js",
-      "id": "rpect97f-rl77",
-      "code": "//tester3"
-    },
-    {
-      "name": "JavaScript Thing 3",
-      "id": "vl2uxx4z-z43b",
-      "type": "js",
-      "code": "console.log(\"thing\");"
-    },
-    {
-      "name": "Elephant",
-      "type": "js",
-      "id": "q20i9b3r-na40",
-      "code": "/*elephant*/"
-    },
-    {
-      "name": "Zebra",
-      "type": "css",
-      "id": "idupt4me-tjjb",
-      "code": "/*zebra*/"
-    },
-    {
-      "name": "Tester1",
-      "type": "css",
-      "id": "10iml5ea-l8z2",
-      "code": "/*tester 1 code here*/"
-    },
-    {
-      "name": "Kitty",
-      "type": "css",
-      "id": "kgv6ivoi-kxxc",
-      "code": "/*kitty*/"
-    },
-    {
-      "name": "Header Section",
-      "type": "css",
-      "id": "mkco5k3s-xa94",
-      "code": ".Skin #HeaderContainer{\n\twidth:100%;\n\tpadding: 0;\n}\n.Skin #Header {\n\tpadding:10px 0 10px 1%;\n\twidth: 100%;\n\ttext-align:left;\n\tbackground-color: lime;\n\tfont-size:30px;\t\n}\n\n.Skin .SkinInner {\n  padding-top:5px;\n}"
-    },
-    {
-      "name": "Jasmine Test",
-      "type": "css",
-      "id": "10l29fo5-sthk",
-      "code": "/*Jasmine Test*/"
+      "id": "t1xve4hb-knu1",
+      "code": "//test3"
     }
   ]
 }
