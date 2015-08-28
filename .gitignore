@@ -1,5 +1,15 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Dependency directory
 node_modules
-src/scripts/main/_.js
-src/scripts/preferences/_.js
-src/styles/main/_.css
-src/styles/preferences/_.css
+
+#Mac
+.DS_Store
