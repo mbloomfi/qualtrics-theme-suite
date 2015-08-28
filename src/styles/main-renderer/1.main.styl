@@ -1,0 +1,235 @@
+$primaryColor = rgb(223,72,72)
+$primaryColor-r = red($primaryColor)
+$primaryColor-g = green($primaryColor)
+$primaryColor-b = blue($primaryColor)
+
+$font-stack = "Source Sans Pro", "Helvetica Neue"
+
+$editorWidth = (100 - 60)
+$editorBarHeight = (100 - 95)
+$codemirrorHeight = (100 - ($editorBarHeight))
+
+$previewWidth = (100 - ($editorWidth))
+
+$heightChange = 2.5
+
+
+// Global Mix-ins
+// lighterShade(_color){
+//   rgb(red(_color) + 12, green(_color) + 12, blue(_color) + 12)
+// }
+// darkerShade(_color){
+//   rgb(red(_color) - 12, green(_color) - 12, blue(_color) - 12)
+// }
+// increaseOpacity(color){
+//   alphaVal = alpha(color)
+//   alpha(color, alphaVal+2)
+// }
+// decreaseOpacity(color){
+//   alphaVal = alpha(color)
+//   alpha(color, alphaVal-2)
+// }
+
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 200;
+  src: url(../fonts/SourceSansPro-ExtraLight.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 200;
+  src: url(../fonts/SourceSansPro-ExtraLight-It.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: url(../fonts/SourceSansPro-Light.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 300;
+  src: url(../fonts/SourceSansPro-Light-It.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/SourceSansPro-Regular.otf);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: url(../fonts/SourceSansPro-It.otf);
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  src: url(../fonts/SourceSansPro-Bold.otf);
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 600;
+  src: url(../fonts/SourceSansPro-BoldIt.otf);
+}
+
+html, body, p, h1, h2, input, textarea, label, a {
+  padding 0
+  margin 0
+  border none
+  outline none
+  font-size 100% 
+  text-decoration none
+  color rgb(70,70,70)
+  text-decoration none
+  font-weight normal
+  font-family $font-stack
+}
+
+pre, xmp, plaintext, listing {
+  font-family: "Source Code Pro", menlo, monospace;
+}
+
+html, body {
+  background rgb(255,255,255)
+  width 100%
+  height 100%
+  min-height: 500px
+  position: relative
+  overflow hidden
+}
+
+div.dimmer {
+  height 100%
+  width 100%
+  position fixed
+  top 0
+  left 0
+  background-color rgba(0,0,0,.4)
+  z-index 1000
+  opacity 0
+  box-shadow inset 0 150px 150px -30px rgba(0,0,0,.25)
+  transition opacity .5s ease
+  
+  &.show {
+    opacity 1
+  }
+  
+}
+
+
+#image_preview_container {
+  position absolute
+  top 50%
+  left 50%
+  transform  translate(-50%, -45%)
+  padding 60px 15px 15px
+  min-width 300px
+  min-height 80px
+  borderRadius 2px
+  user-select none
+  pointer-events none
+  box-shadow 0 4px 20px rgba(0,0,0,.4)
+  &.light {
+    background-color rgb(240,240,240)
+    border 1px solid rgb(200,200,200)
+  }
+  &.dark {
+    background-color rgb(50,50,50)
+    border 1px solid rgb(20,20,20)
+  }
+  img {
+    display block
+    margin 0 auto
+    outline 1px solid rgba(150,150,150, .4)
+  }
+  #resizeImgForm {
+    height 30px
+    width 250px
+    position absolute
+    top 10px
+    left 10px
+    display block
+    // background-color orange
+    pointer-events all
+    #previewImgWidth {
+      height 100%
+      width 50px
+      margin-right 6px
+      padding 0 0 0 2px
+      outline 1px solid rgb(210,210,210)
+    }
+    .x {
+      margin-right 6px
+      color rgb(150,150,150)
+    }
+    #previewImgHeight{
+      height 100%
+      width 50px
+      margin-right 6px
+      padding 0 0 0 2px
+      outline 1px solid rgb(210,210,210)
+    }
+    #resizePreviewImgBtn {
+      height 100%
+      margin-left 10px
+      padding 0 5px
+      background $affirmative-green
+      outline 1px solid darken($affirmative-green, 10%)
+      color white
+    }
+    .readonly {
+      background-color rgb(230,230,230)
+      color rgb(120,120,120)
+    }
+  }
+  .change-image-bg-cont {
+    height 30px
+    width 30px
+    border-radius 50%
+    position absolute
+    top 10px
+    right 10px
+    display block
+    cursor pointer
+    pointer-events all
+    &.light {
+      background-color rgb(240,240,240)
+    }
+    &.dark {
+      background-color rgb(50,50,50)
+    }
+  }
+  .close-img-preview {
+    height 30px
+    width 100%
+    // border-radius 50%
+    position absolute
+    top -50px
+    left 0
+    display block
+    margin 0 auto
+    cursor pointer
+    pointer-events all
+    background red
+    text-align center
+    line-height 30px
+    color white
+    background-color $primaryColor
+    border 1px solid darken($primaryColor, 25%)
+    box-shadow 0 0px 20px rgba(0,0,0,.35) 
+    transition background-color .3s ease
+    &:hover {
+      background-color lighten($primaryColor, 10%)
+    }
+  }
+}

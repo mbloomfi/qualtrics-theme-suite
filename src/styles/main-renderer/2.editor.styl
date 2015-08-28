@@ -1,0 +1,1033 @@
+// $dropdown-menus-color = rgba(90,82,82,.9)
+// $dropdown-menus-color = alpha($primaryColor, 0.9)
+$dropdown-menus-color = alpha(rgb(40,40,40), 0.95)
+
+$dropdown_height = 300px
+$dropdown_width = 200px
+$searchbar_height = 40px
+$newBrand_btn_height = 30px
+$brandsListCont_height = ($dropdown_height - ($searchbar_height + 1))
+$brandsListCont_bottomBtn_height = $brandsListCont_height - ($newBrand_btn_height + 3)
+
+$item-color = rgb(235,235,235)
+$item-color-hover = rgb(255,255,255)
+// $brandsListCont-bottomBtn-height = 227px
+
+
+
+
+
+section#editor {
+	position fixed
+	top 0
+	left 0
+	height 100%
+	width ($editorWidth)%
+	color white
+	background-color rgb(36,36,36)
+	// border-right 4px solid $primaryColor
+	// border-right 4px solid $primaryColor
+	border-right 4px solid rgb(30,30,30)
+	box-sizing border-box
+	overflow-x scroll
+	overflow-y hidden
+	transition left .5s ease
+	
+	&.inactive {
+		pointer-events none
+		&:before {
+			content ""
+			height 100%
+			width 100%
+			display block
+			position absolute
+			top 0
+			left 0
+			background rgba(0,0,0,.7)
+			z-index 1000
+		}
+	}
+	
+	section#sectionInner {
+		min-width 600px
+		max-height 100%
+		min-height 100%
+		height 100%
+		color inherit
+		
+		div#editorBar {
+			background-color rgb(55,55,55)
+			width 100%
+			min-width 600px
+			height ($editorBarHeight)%
+			color inherit
+			position relative
+			box-sizing border-box
+			top 0
+			left 0
+			z-index 10
+			user-select none
+			border 3px dashed alpha($affirmative-green, 0)
+			transition background-color .3s ease, border .3s ease
+
+			@media screen and (max-height:600px) {
+				height ($editorBarHeight + $heightChange)%
+			}
+			
+			@media screen and (min-height:1200px) {
+				height ($editorBarHeight - ($heightChange * 0.5))%
+			}
+
+			&.file_drag {
+				cursor pointer !important
+				background-color darken($affirmative-green, 40%)
+				border 3px dashed lighten($affirmative-green, 5%)
+			}
+			
+			&.img_dragged {
+				background-color darken($affirmative-green, 10%)
+			}
+			
+			&.deleted_file {
+				background-color darken($negative-red, 5%)
+			}
+			
+			&.renamed_file {
+				background-color rgb(200,200,200)
+			}
+			
+			div#editorBarInner {
+				height 30px
+				line-height 30px
+				width 100%
+				position relative
+				top 50%
+				transform translateY(-50%)
+				
+				span.arrow {
+					color inherit
+					display inline-block
+					position relative
+					margin 0 4px
+					height 100%
+					float left
+					opacity 1
+					// background purple
+					transition opacity .3s ease
+					
+					img {
+						height 50%
+						width auto
+						// background lime
+						position relative
+						float left
+						top 50%
+						transform translateY(-50%)
+					}
+					
+					&.inactive {
+						opacity 0.4
+					}
+					
+				}
+				
+				#refreshBtnCont{
+					position absolute
+					display inline-block
+					top 15%
+					right 1%
+					width 30px
+					height 70%
+					text-align right
+					
+					svg#refreshPreviewBtn {
+						height 100%
+						user-selct none
+						transform rotate(0deg)
+						
+						path {
+							fill rgb(90,90,90)
+							transition fill .5s ease
+						}
+						&.active {
+							cursor pointer
+							
+							path {
+								fill rgb(180,180,180)
+							}
+							&:hover {
+								path {
+									fill rgb(225,225,225)
+								}
+							}
+							&.reloading {
+								transform rotate(360deg)
+								transition transform .3s ease
+								path {
+									// fill rgb(255,255,255)
+								}
+							}
+						}
+					}
+				}
+
+				
+				// DROPDOWN MENUS
+				.btn {
+					display block
+					height 100%
+					float left
+					font-size 1.25em
+					padding 0 10px
+					margin 0 10px
+					max-width 300px
+					
+					// overflow hidden
+					position relative
+					letter-spacing 0.25px
+					
+					background-color rgba(255,255,255,0)
+					cursor pointer
+					transition background-color .3s ease, color .3s ease
+					&:hover {
+						background-color rgba(255,255,255,.2)
+					}
+					&.dropdown-active {
+						background-color alpha($primaryColor, .85)
+					}
+					
+					&.inactive {
+						color rgba(255,255,255,.3)
+						&:hover {
+							background-color rgba(255,255,255,0)
+						}
+					}
+					
+					
+					
+					.dirty {
+						color $primaryColor
+					}
+					
+					div.dropdown {
+						overflow hidden
+						height 316px
+						width $dropdown_width
+						cursor default
+						position absolute
+						top 120%
+						left 0
+						opacity 1
+						
+						
+						transition height .2s ease, width .2s ease, top .2s ease, opacity .2s ease
+						
+						.header {
+							font-size 19px
+							padding 5px 0 0
+							border-left 0.5px solid rgba(255,255,255, .05)
+							border-right 0.5px solid rgba(255,255,255, .05)
+							color rgb(160,160,160)
+							font-weight 400
+							letter-spacing .25px
+							text-indent 5px
+							
+							.icon_cont {
+								height 25px
+								// background alpha(lime, .5)
+								// outline 1px solid orange
+								position absolute
+								top 10px
+								right 10px
+								width 90px
+								
+								
+								.icon {
+									display inline-block
+									position absolute
+									height 100%
+									// background purpl
+									padding 2px 5px
+									cursor pointer
+									background-color rgba(255,255,255,0)
+									border-radius 1.5px
+									box-shadow 0 2px 6px rgba(0,0,0,0)
+									transition background-color .3s ease, box-shadow .3s ease
+									svg {
+										width auto
+										height 100%
+										display block
+										// background alpha(lime, .5)
+											path {
+												transition fill .3s ease
+											}
+									}
+									
+									&#assetsIcon {
+										right 63px
+										height 92%
+										top 0
+										padding 2px 2px
+										// background lime
+										svg {
+											path {
+												&.primary {
+													fill rgb(230,230,230)
+												}
+											}
+											circle.secondary {
+												fill $primaryColor
+											}
+										}
+										&:hover {
+											background-color rgba(255,255,255,.4)
+											svg {
+												path {
+													&.primary {
+														fill rgb(30,30,30)
+													}
+												}
+												circle.secondary {
+													fill $primaryColor
+												}
+											}
+										}
+										&.active {
+											background-color rgba(255,255,255,.9)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													&.primary {
+														fill rgb(60,60,60)
+													}
+												}
+												circle.secondary {
+													fill $primaryColor
+												}
+											}
+										}
+									}
+									
+									&#renameFile {
+										right 34px
+										top 0
+										// height 101%
+										svg {
+											path {
+												fill rgb(230,230,230)
+											}
+										}
+										&:hover {
+											background-color rgba(255,255,255,.4)
+											svg {
+												path {
+													fill rgb(30,30,30)
+												}
+											}
+										}
+										&.active {
+											background-color rgba(255,255,255,.9)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													fill rgb(70,70,70)
+												}
+											}
+										}
+									}
+
+									&#deleteFile {
+										right 0
+										top 0
+										svg {
+											
+											path {
+												fill $primaryColor
+											}
+										}
+										&:hover {
+											background-color alpha($primaryColor, .4)
+											
+											svg {
+												path {
+													fill rgb(220,220,220)
+												}
+											}
+										}
+										&.active {
+											background-color alpha($primaryColor, .85)
+											box-shadow 0 2px 6px rgba(0,0,0,.25)
+											svg {
+												path {
+													fill rgb(250,250,250)
+												}
+											}
+										}
+									}
+									
+									
+								}
+							}
+						}
+						
+						.arrow {
+							display block
+							width 0
+							height 0
+							position absolute
+							top 0px
+							left 10px
+							border-left 18px solid transparent
+							border-right 18px solid transparent
+							// border-bottom 16px solid $dropdown-menus-color
+							border-bottom 16px solid alpha($primaryColor, 0.9)
+							z-index 1000
+							opacity 1
+							transition opacity .2s ease .1s
+							
+							&.hide {
+								opacity 0
+								transition opacity .1s ease 0s
+							}
+						}
+						
+						.dropdownBody{
+							height $dropdown_height
+							width 100%
+							// pointer-events none
+							background-color $dropdown-menus-color
+							box-shadow 0 3px 10px rgba(0,0,0,.4)
+							position absolute
+							bottom 0
+							border 1px solid alpha($primaryColor, .8)
+							box-sizing border-box
+							z-index 999
+							border-radius 1px
+							
+							
+							
+							.header {
+								font-size 18px
+								padding 5px 0 0
+								border-left 0.5px solid rgba(255,255,255, .05)
+								border-right 0.5px solid rgba(255,255,255, .05)
+								color rgb(145,145,145)
+								font-weight 400
+								letter-spacing .25px
+								text-indent 5px
+							}
+							
+							.no-recent {
+								padding 5px
+								font-size 17px
+							}
+							
+							
+
+							// BRANDS DROPDOWN BODY
+							div#searchBrandsContainer {
+								padding 0
+								height $searchbar_height
+								border-bottom 1px solid alpha($primaryColor, 0.9)
+								
+								input#searchBrands {
+									display block
+									width 100%
+									background-color rgba(255,255,255,0)
+									height 100%
+									color rgba(255,255,255,1)
+									text-indent 4px
+									user-select text
+									transition color .15s ease
+									
+									&::-webkit-input-placeholder {
+										color rgb(225,225,225)
+										transition color .15s ease
+									}
+									&:focus {
+										&::-webkit-input-placeholder {
+											color rgb(120,120,120)
+										}
+									}
+								}
+								
+								
+							}
+							
+							#brandsListCont {
+								height $brandsListCont_height
+								overflow-y scroll
+								position relative
+								transition border-top .15s ease, border-bottom .15s ease, height .2s ease
+								
+								
+
+								.brand-item {
+									display block
+									width 100%
+									text-align left
+									background-color rgba(0,0,0,0)
+									padding 4px 5px
+									color $item-color
+									cursor pointer
+									transition background-color .3s ease, color .3s ease, padding .25s ease
+									&:hover, &:focus {
+										color $item-color-hover
+										background-color rgba(0,0,0,.3)
+										padding 4px 5px 4px 8px
+									}
+								}
+								
+								.noResultsCont {
+									.noResults {
+										color rgba(255,255,255,.9)
+										font-size 19px;
+										position absolute
+										top 50px
+										font-weight 300
+										text-align center
+										width 100%
+								
+									}
+									#noResult-createBrand {
+										background-color rgb(50,50,50)
+										position absolute
+										bottom 20px
+										box-shadow 0 2px 8px rgba(0,0,0,.2)
+										padding 12px 0
+										cursor pointer
+										text-align center
+										width 90%
+										left 5%
+										overflow hidden
+										transition background-color .15s ease
+										&:hover {
+											background-color rgb(60,60,60)
+										}
+										div {
+											font-size 17px
+											line-height 18px
+											color white
+										}
+										div[data-brandname] {
+											font-size 22px
+											line-height 22px
+											color white
+											letter-spacing 1px
+											&.long {
+												font-size 18px
+											}
+										}
+										
+										&.medium {
+											div[data-brandname] {
+												font-size 19px
+											}
+										}
+										
+										&.large {
+											width 94%
+											left 3%
+											div[data-brandname] {
+												font-size 17px
+												letter-spacing 0.8px
+											}
+										}
+									}
+								}
+								
+								// .emptyCont {
+								// 	font-size 20px
+								// 	padding 5px
+								// }
+								
+								&.showBottomBtn {
+									height $brandsListCont_bottomBtn_height
+								}
+								&.no-results {
+									height $brandsListCont_bottomBtn_height - 19
+								}
+								
+							}
+						
+							button#createBrand {
+								position relative
+								height $newBrand_btn_height
+								width 100%
+								font-size 17px
+								color rgb(230,230,230)
+								background-color alpha($primaryColor, .85)
+								// background-color rgb(70,70,70)
+								cursor pointer
+								overflow hidden
+								transition background-color .15s ease, color .15s ease, height .2s ease
+								
+								&:hover {
+									background-color alpha($primaryColor, 1)
+								}
+								&:focus {
+									background-color lighten(alpha($primaryColor, 1), 5%)
+								}
+								&.disabled {
+									background-color rgba(90,90,90, .9)
+									color rgba(150,150,150, .8)
+									cursor not-allowed
+									// transition background-color 0s ease
+								}
+								&.no-results {
+									height $newBrand_btn_height + 20
+								}
+							
+
+							}
+							
+
+							&.projects {
+								overflow-x visible
+								overflow-y scroll
+								padding-bottom 40px
+								// height 200px
+								
+								
+								.project-item {
+									display block
+									width 100%
+									font-size 17px
+									text-align left
+									background-color rgba(0,0,0,0)
+									padding 5px 5px
+									color $item-color
+									cursor pointer
+									position relative
+									transition background-color .3s ease, color .3s ease, padding .25s ease
+									&:hover, &:focus {
+										color $item-color-hover
+										background-color rgba(0,0,0,.3)
+										padding 5px 5px 5px 8px
+									}
+									&.current {
+										background-color alpha($primaryColor, .8)
+										cursor default
+										img.finder {
+											height 50%
+											width auto
+											position absolute
+											top 50%
+											transform translateY(-50%)
+											right 10px
+											opacity .7
+											cursor context-menu
+											transition opacity .25s ease, height .25s ease
+											&:hover {
+												opacity 1
+											}
+										}
+									}
+									
+								
+
+								}
+								
+								.no-projects {
+									color rgba(255,255,255,.9)
+									font-size 19px;
+									position absolute
+									top 50px
+									font-weight 300
+									text-align center
+									width 100%
+								}
+								
+								&.dim {
+									background-color rgba(15,15,15,.9)
+									transition background-color .2s ease
+									.project-item {
+										color darken($item-color,25%)
+										
+									}
+								}
+								
+
+							}
+							
+							&.files {
+								overflow-y scroll
+								overflow-x hidden
+								user-select text
+								.file-item {
+									font-size 16px
+									font-weight 300
+									display block
+									width 200px
+									overflow-x scroll
+									line-height 17px
+									cursor pointer
+									text-align left
+									background-color rgba(0,0,0,0)
+									padding 7px 5px
+									user-select text
+									color $item-color
+									transition background-color .3s ease, color .3s ease, padding .25s ease
+									&:hover, &:focus {
+										color $item-color-hover
+										background-color rgba(0,0,0,.3)
+										padding 7px 5px 7px 8px
+									}
+									&.current {
+										background-color alpha($primaryColor, .8)
+										font-size 17px
+									}
+									&.bold {
+										font-size 17px
+										font-weight 600
+									}
+									&.deleteFile {
+										background-color rgba(0,0,0,0)
+										cursor not-allowed
+										&:hover, &:focus {
+											outline 1px solid $negative-red
+											background rgb(30, 30, 30)
+											color white
+											cursor not-allowed
+										}
+										
+									}
+									
+									&.renameFile {
+										background-color rgba(0,0,0,0)
+										cursor url('../images/pencil-cursor.svg'), auto
+										&:hover, &:focus {
+											background rgb(230,230,230)
+											color rgb(60,60,60)
+											cursor url('../images/pencil-cursor.svg'), auto
+										}
+										
+										&.renaming {
+											cursor default
+											background rgb(230,230,230)
+											color rgb(60,60,60)
+											border-top 1px solid rgb(210,210,210)
+											border-bottom 1px solid rgb(210,210,210)
+											input {
+												outline 1px solid rgb(120,120,120)
+												width 185px
+												font-size 16px
+												text-indent 2px
+												margin 4px 0 8px
+												display block
+											}
+											
+											button {
+												outline 1px solid rgb(50,50,50)
+												text-indent 2px
+												margin 0 5px 2px 0
+												background-color rgb(60,60,60)
+												padding 2px 5px
+												color white
+												float right
+												cursor pointer
+												transition background-color .3s ease
+												&:hover {
+													background-color rgb(90,90,90)
+												}
+												
+											}
+											&:before {
+												content ""
+												display block
+												clear both
+											}
+
+										}
+										
+									}
+									
+									&.assetsIcon {
+										display none
+									}
+									
+									&.asset-file-item.clicked {
+										background $affirmative-green
+									}
+									
+
+									
+								}
+								
+								&#dropdownBody-files {
+									&.deleteFile {
+										cursor not-allowed
+										
+									}
+									&.renameFile {
+										cursor url('../images/pencil-cursor.svg'), auto
+									}	
+								}
+								
+							}
+							
+								
+							
+							// PROJECTS DROPDOWN BODY
+							//
+							
+
+
+
+						}
+						
+						&.hide {
+							height 0
+							width 0
+							top 110%
+							opacity .5
+							
+							.dropdownBody{
+								
+								// BRANDS DROPDOWN HIDDEN
+								div#searchBrandsContainer {
+									
+									input#searchBrands {
+										color rgba(255,255,255,0)
+										
+										&::-webkit-input-placeholder {
+											color rgba(230,230,230,1)
+										}
+										
+									}
+									
+								}
+
+								#recentBrands {
+									border-top: 1px solid rgba(255,255,255, 0)
+									border-bottom: 1px solid rgba(255,255,255, 0)
+								}
+								#newBrand {
+									color rgba(255,255,255,0)
+								}
+								
+
+								// PROJECTS DROPDOWN HIDDEN
+								//
+							}
+
+						}
+						
+						#addBaseFilesCheck_cont {
+							position absolute
+							bottom 40px
+							left 1px
+							width ($dropdown_width) - (2px)
+							font-size 17px
+							line-height 40px
+							z-index 1001
+							height 40px
+							box-sizing border-box
+							border-top 1px solid rgb(70,70,70)
+							background-color rgb(50,50,50)
+							color white
+							#addBaseFilesCheck_label {
+								color white
+								margin-right 10px
+								padding 0 0 0 6px
+							}
+							#addBaseFilesCheck {
+								visibility hidden
+							}
+							#addBaseFilesCheck_custom {
+								height 20px
+								width 20px
+								background-color rgb(40,40,40)
+								display inline-block
+								vertical-align top
+								position relative
+								top 10px
+								cursor pointer
+								outline 1px solid rgb(90,90,90)
+								img {
+									width 80%
+									height auto
+									position absolute
+									top 50%
+									left 50%
+									opacity 0
+									transform translate(-50%,-50%)
+									transition opacity .15s ease
+								}
+								&.checked {
+									img {
+										opacity 1
+									}
+								}
+							}
+							&.hide {
+								bottom -50px
+							}
+						}
+						
+						#newProjectInput {
+							position absolute
+							bottom 0
+							left 0
+							width 100%
+							font-size 17px
+							line-height 40px
+							text-indent 5px
+							z-index 1001
+							height 40px
+							box-sizing border-box
+							background-color $dropdown-menus-color
+							color white
+							border 1px solid alpha($primaryColor, .8)
+							
+							&::-webkit-input-placeholder {
+								color rgb(210,210,210)
+								text-indent 5px
+								transition color .15s ease
+							}
+							
+							& + #newProject-btn {
+								height 18px
+								width 18px
+								position absolute
+								bottom 11px
+								right 8px
+								z-index 1001
+								cursor pointer
+								.vertical-bar {
+									position absolute
+									top 0
+									left 50%
+									height 100%
+									width 3px
+									transform translateX(-50%)
+									background-color rgb(190,190,190)
+									transition background-color .2s ease
+								}
+								.horizontal-bar {
+									position absolute
+									top 50%
+									left 0
+									height 3px
+									width 100%
+									transform translateY(-50%)
+									background-color rgb(190,190,190)
+									transition background-color .2s ease
+								}
+								&:hover {
+									.vertical-bar {
+										background-color rgb(220,220,220)
+									}
+									.horizontal-bar {
+										background-color rgb(220,220,220)
+									}
+								}
+							}
+							
+							&:focus { // input field focus
+								&::-webkit-input-placeholder {
+									color rgb(120,120,120)
+								}
+								& + #newProject-btn {
+									.vertical-bar {
+										position absolute
+										top 0
+										left 50%
+										height 100%
+										width 3px
+										transform translateX(-50%)
+										background-color rgb(220,220,220)
+										transition background-color .2s ease
+									}
+									.horizontal-bar {
+										position absolute
+										top 50%
+										left 0
+										height 3px
+										width 100%
+										transform translateY(-50%)
+										background-color rgb(220,220,220)
+										transition background-color .2s ease
+									}
+									&:hover {
+										.vertical-bar {
+											background-color rgb(255,255,255)
+										}
+										.horizontal-bar {
+											background-color rgb(255,255,255)
+										}
+									}
+								}
+							}
+						}
+						
+							
+						
+					}
+
+				}
+
+
+			}
+			
+		}
+		
+		#codemirror-wrapper {
+			height ($codemirrorHeight)%
+			width 100%
+			min-width 400px
+			position absolute
+			top ($editorBarHeight)%
+			left 0
+			z-index 5
+			@media screen and (max-height:600px){
+				height ($codemirrorHeight - $heightChange)%
+				top ($editorBarHeight + $heightChange)%
+			}
+			@media screen and (min-height:1200px){
+				height ($codemirrorHeight + ($heightChange * 0.5))%
+				top ($editorBarHeight - ($heightChange * 0.5))%
+			}
+			#codeMirror-cover {
+				position absolute
+				top 0
+				left 0
+				width 100%
+				height 100%
+				background-color rgba(0,0,0,.4)
+				z-index 100
+				transition opacity .2s ease
+				&.hide {
+					opacity 0
+				}
+				&.remove {
+					height 0
+					width 0
+				}
+			}
+		}
+		
+	}
+	
+
+	
+	&.hide {
+		left -100%
+	}
+	
+	@media screen and (max-width:1200px) {
+		section#sectionInner {
+			div#editorBar {
+				font-size 80%
+				div#brandName {
+
+				}
+				
+				div#projectName {
+
+				}
+
+			}
+		}
+	}
+}

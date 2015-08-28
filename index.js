@@ -3,6 +3,7 @@ var fs = require("fs");
 
 
 process.on('uncaughtException', function(err) {
+	console.error("ERROR:", err)
     // handle the error safely
     fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
 })
@@ -830,11 +831,7 @@ app.on("ready", function(){
 			}
 	  });
 
-		//this is where the problem is. there is an issue with the menu
-		// the above few blocks of code were in here in set preview files.
 
-
-		
 		
 		
 

@@ -1,18 +1,58 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
+
 		<meta name="QTS" charset="UTF-8" content="Create, Edit, Preview, and Upload Themes for Qualtrics Surveys">
+
 		<title>QTS</title>
-		<style>
-			//= include ../../styles/main/_.css
-		</style>
+
+		<link rel="stylesheet" href="local/styles/vendor.css">
+		<link rel="stylesheet" href="local/styles/main-renderer.css">
+
 		<style id="editor_preview_ratio"></style>
+
 	</head>
+
+
 	<body id="body">
-		//= include editor.html
-		//= include preview.html
-		<script>
-			//= include ../../scripts/main/_.js
-		</script>
+
+		<section id="editor" class="hide">
+			<section id="sectionInner">
+
+				<div id="editorBar">
+					<div id="editorBarInner">
+						<div id="brandName" class="btn"><span id="brandNameText">Brands</span></div>
+						<span id="projects_arrow" class="arrow inactive"><img src="local/images/arrow_right.svg"></span>
+						<div id="projectName" class="btn inactive"><span id="projectNameText">Projects</span></div>
+						<span id="files_arrow"  class="arrow inactive"><img src="local/images/arrow_right.svg"></span>
+						<div id="fileName" class="btn inactive"><span id="fileNameText">Files</span></div>
+						<div id="refreshBtnCont"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg id="refreshPreviewBtn" width="100%" height="100%" viewBox="0 0 32 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"><path d="M22.607,8.701c-1.741,-1.726 -4.136,-2.793 -6.781,-2.793c-5.318,0 -9.629,4.311 -9.629,9.629c0,5.319 4.311,9.63 9.629,9.63c2.659,0 5.066,-1.078 6.809,-2.821l3.899,3.899c-2.741,2.741 -6.526,4.435 -10.708,4.435c-8.363,0 -15.143,-6.779 -15.143,-15.143c0,-8.363 6.78,-15.143 15.143,-15.143c4.167,0 7.941,1.684 10.679,4.408l3.323,-3.323l1.377,11.857l-11.857,-1.377l3.259,-3.258Z"/></svg></div>
+					</div>
+				</div>
+
+				<div id="codemirror-wrapper"><div id="codeMirror-cover"></div></div>
+
+			</section>
+		</section>
+
+		<webview src="#" id="preview" class="hide" plugins>preview</webview>
+
+		<section id="previewLoader">
+			<?xml version="1.0" standalone="no"?>
+			<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+			<svg id="logo" class="logo hide" width="100%" height="100%" viewBox="0 0 126 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+				<path id="QUALTRICS-LOGO" d="M37.9173,74.0432c6.68848,7.68458 14.6885,11.6327 22.3897,11.5751c4.95345,-0.0370611 9.73569,-1.1885 14.1609,-3.46098c-5.19244,-13.0908 -10.8007,-25.3777 -23.872,-25.0034c-14.299,0.409384 -14.9891,12.3154 -12.6785,16.8893ZM91.9689,82.6168c8.95474,13.2447 17.0121,23.8614 31.322,15.7607c0.770884,1.17637 1.56866,2.03767 2.3827,3.81007c-31.4887,21.409 -40.8065,5.72587 -48.3271,-12.7698c-5.38387,1.62777 -11.0441,2.46135 -16.8531,2.41178c-38.2982,-0.326807 -70.2451,-39.0309 -57.2274,-91.3621c0,0 12.7673,-0.0503319 20.2662,-7.81597e-14c-4.03189,27.9679 0.0501284,49.5572 7.82732,63.9869c1.20683,-5.03507 5.66846,-13.712 19.2363,-13.6796c16.4375,0.0392013 26.6013,10.8233 34.9112,22.4071c11.2196,-13.3616 17.395,-37.5431 13.0168,-72.7144c5.49535,-0.00530837 20.2633,-2.34479e-13 20.2633,-2.34479e-13c9.15318,37.0042 -4.33444,67.575 -26.8182,82.1494Z"/>
+			</svg>
+
+			<h1>Loading<div class="circles_cont"><span class="circle1"></span><span class="circle2"></span><span class="circle3"></span></div></h1>
+
+		</section>
+
+
+		
+		<script src="local/scripts/main-renderer.js"></script>
+		<script src="local/scripts/vendor.js"></script>
+	
 	</body>
+
 </html>

@@ -1,0 +1,481 @@
+$blue = rgb(21,100,245)
+
+section#panel {
+	background-color rgba(40, 180, 50, 0)
+	position absolute
+	top 0
+	right 0
+	height 500px
+	width 75%
+	opacity 1
+	font-size 1.75em
+	transition opacity .3s ease
+	
+	div#preferences_splash {
+		height 100%
+		line-height 500px
+		font-size 2em
+		text-align center
+		color rgb(200,200,200)
+	}
+
+	form {
+		position relative
+		z-index 10
+		width 68%
+		left 10%
+		top 10%
+		height 90%
+		// background red
+		-webkit-app-region no-drag
+		
+		label {
+			display block
+			&:after {
+				content ""
+				display block
+				clear both
+			}
+			&.extraMarginBottom {
+				margin-bottom 35px
+			}
+		}
+		
+		h2 {
+			margin 0 0 5px
+		}
+		
+		div.fieldSet {
+			width 100%
+			margin 0 0 15px 0
+			&:after {
+				content ""
+				display block
+				clear both
+			}
+		}
+
+
+		input {
+			font-size 21px
+			padding 3px 0
+			display block
+			min-width 90%
+			outline 2px solid rgb(215,215,215)
+			margin 0 0 15px
+			text-indent 2px
+			border none
+			transition outline .25s ease
+			
+			&:focus {
+				outline-offset 0
+				outline 2px solid rgb(190,190,190)
+			}
+			
+			&.thumbnailName {
+				width 40%
+				display inline-block
+				min-width 50%
+				margin 0 10px 0 0
+				float left
+			}
+		}
+		label.radioLabel {
+			display block
+			line-height 1
+			padding 0
+			margin 0 0 5px
+			font-size 18px
+			input {
+				padding 0
+				display inline-block
+				margin 0 0 0 10px
+				background transparent
+				outline none
+				height 15px
+				width 15px
+			}
+			span {
+				font-size 14px
+			}
+		}
+		button {
+			font-size 16px
+			background-color rgb(110,110,110)
+			color white
+			padding 5px 10px
+			cursor pointer
+			display block
+			margin 0 0 15px
+			// box-shadow 0 3px 4px rgba(0,0,0,.1)
+			&:hover {
+				background-color rgb(90, 90, 90)
+			}
+		}
+		div.select_cont {
+			width 90%
+			background-color white
+			outline 2px solid rgb(215,215,215)
+			select {
+				display block
+				font-size 18px
+				height 30px
+				width 100%
+				margin 0 0 20px
+				text-indent 2px
+				background transparent
+			}
+			&.inline-block {
+				width 25%
+				float left
+				height 33px
+				display inline-block
+				select {
+					display block
+					font-size 18px
+					height auto
+					width 100%
+					margin 0
+					text-indent 2px
+					background transparent
+				}
+			}
+		}
+		
+		&#preferences_form {
+			padding 50px 0 0 0
+		}
+		
+		label#path-to-brands-label {
+			span#homeDirectory {
+				font-size 14px
+				color rgb(120,120,120)
+				text-style italic
+				display inline-block
+				margin 0 5px 0 0
+				height 35px
+				line-height 35px
+				float left
+			}
+			input#path-to-brands {
+				float left
+				width 50%
+				min-width 0
+				display inline-block
+			}
+		}
+		
+		
+		&#snippetsForm {
+			width 70%
+			left 5%
+			top 5%
+			height 90%
+
+			#snippetsListCont {
+				box-sizing border-box 
+				border 1px solid rgb(200,200,200)
+				background-color rgb(220,220,220)
+				height 170px
+				max-height 170px
+				overflow-y scroll
+				div.snippet-item {
+					font-size 16px
+					background-color rgba(50,50,50,.1)
+					cursor pointer
+					position relative
+					padding 4px
+					box-sizing border-box
+					border-top 1px solid rgb(180,180,180)
+					border-bottom 1px solid rgb(180,180,180)
+					transition background-color .25s ease
+					&:hover {
+						background-color rgba(50,50,50,.25)
+					}
+					&.selected {
+						background-color $blue
+						color white
+					}
+					&.addNew {
+						color white
+						background-color alpha($affirmative-green,.9)
+					}
+					&.top10 {
+						border-left 2px solid lighten($blue,10%)
+						border-right 2px solid lighten($blue,10%)
+						&:nth-child(0n+1) {
+							border-top 3px solid lighten($blue,10%)
+						}
+						&:nth-child(0n+10) {
+							border-bottom 3px solid lighten($blue,10%)
+						}
+					}
+					.snippet-type {
+						position absolute
+						top 50%
+						right 10px
+						// background-color lime
+						transform translateY(-50%)
+					}
+
+				}
+				hr {
+					margin 0
+					padding 0
+					background-color rgb(180,180,180)
+					outline none
+					border none
+					height 1px
+				}
+				
+			}
+			
+			#snippetEditSection {
+				position relative 
+				top 12px
+				height 275px
+				border-top 1px solid rgb(200,200,200)
+				
+				#snippetInfo {
+					position relative
+					height 40px
+					width 100%
+					top 10px
+					input#snippetName {
+						font-size 16px
+						width 150px
+						min-width 0
+						display inline-block
+						position absolute
+						left 0
+						height 100%
+						line-height 30px
+						height 30px
+						padding 0
+						top 5px
+						box-sizing border-box
+						&.error {
+							outline 2px solid $negative-red
+						}
+					}
+					#snippetTypeCont {
+						display inline-block
+						position absolute
+						left 200px
+						
+						label {
+							display inline-block
+							font-size 18px
+							line-height 40px
+							margin-right 10px
+							input {
+								display inline-block
+								outline none
+								border none
+								margin-left 3px
+							}
+						}
+							
+						
+					}
+					
+					#snippetArrowsCont {
+						height 30px
+						position absolute
+						right 0
+						top 5px
+						width 70px
+						div#snippetArrowUp {
+							height 100%
+							position absolute
+							right 0
+							cursor pointer
+							svg {
+								height 100%
+								width auto
+								path {
+									fill alpha($affirmative-green, .7)
+									transition fill .3s ease
+								}
+							}
+							&:hover {
+								svg {
+									path {
+										fill darken($affirmative-green, 5%)
+									}
+								}
+							}
+						}
+						
+						div#snippetArrowDown {
+							height 100%
+							position absolute
+							left 0
+							cursor pointer
+							transform rotate(180deg)
+							svg {
+								height 100%
+								width auto
+								path {
+									fill alpha($negative-red, .75)
+									transition fill .3s ease
+								}
+							}
+							&:hover {
+								svg {
+									path {
+										fill $negative-red
+									}
+								}
+							}
+						}
+					}
+				}
+				
+					
+				#snippetCodemirror {
+					font-size 16px
+					height 215px
+					width 100%
+					position absolute
+					bottom 0
+				}
+				
+				&.inactive-no_snippet {
+					opacity .3
+				}
+			}
+			
+
+			#snippetBtnsCont {
+				background rgba(230,230,230,.6)
+				border 1px solid rgb(210,210,210)
+				border-radius 2px
+				box-sizing border-box
+				height 275px
+				width 90px
+				position absolute
+				bottom -10px
+				
+				right -120px
+				
+				.btn {
+					height 60px 
+					width 100%
+					left 9px
+					width 70px
+					text-align center
+					font-size 18px
+					color white
+					position absolute
+					line-height 60px
+					cursor pointer
+					border-radius 2px
+					transition background-color .25s ease
+					&#saveSnippetBtn {
+						bottom 10px
+						background-color $affirmative-green
+						&:hover {
+							background-color lighten($affirmative-green,10%)
+						}
+					}
+					&#newSnippetBtn {
+						top 10px
+						background-color $blue
+						&:hover {
+							background-color lighten($blue,14%)
+						}
+					}
+					&#deleteSnippetBtn {
+						top 50%
+						transform translateY(-50%)
+						background-color $negative-red
+						&:hover {
+							background-color lighten($negative-red,14%)
+						}
+					}
+					&.inactive-no_snippet {
+						opacity .3
+						pointer default
+					}
+				}
+			}
+			
+			#saveSnippet {
+				position absolute
+				top 165px
+				padding 5px 8px
+				right 0px
+				background-color $blue
+				transition background-color .2s ease
+				&:hover {
+					background-color lighten($blue,15%)
+				}
+			}
+		}
+		
+
+
+	}
+	&.hide {
+		opacity 0
+	}
+	
+	.fileListContainer {
+		background-color rgb(255,255,255)
+		border 2px solid rgb(220,220,220)
+		box-sizing border-box
+		height 250px
+		max-height 250px
+		overflow-y scroll
+		
+		.file-item {
+			border-top 1px solid rgb(240,240,240)
+			background-color rgb(255,255,255)
+			border-bottom 1px solid rgb(240,240,240)
+			font-size 16px
+			position relative
+			padding 5px
+			cursor pointer
+			&:hover {
+				background-color rgba(0,0,0,.1)
+			}
+			
+		}
+	}
+	
+	#editBtnsCont {
+		// background lime
+		width 100%
+		position relative
+		top 15px
+		height 50px
+		.btn {
+			height 100%
+			width 40%
+			text-align center
+			line-height 50px
+			color white
+			position absolute
+			top 0
+			cursor pointer
+			left 0
+			background-color $negative-red
+			transition background-color .25s ease
+			&:hover {
+				background-color lighten($negative-red,12%)
+			}
+
+			// &:last-child {
+			// 	right 0
+			// 	background-color $affirmative-green
+			// 	transition background-color .25s ease
+			// 	&:hover {
+			// 		background-color lighten($affirmative-green,8%)
+			// 	}
+			// }
+		}
+	}
+
+
+}

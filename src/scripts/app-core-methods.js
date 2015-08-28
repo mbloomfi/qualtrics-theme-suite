@@ -336,6 +336,7 @@ var core = Global.coreMethods = {
 		},
 
 		create: function(_brandName, _CALLBACK){
+			console.error("do not use this method");
 			var self = this;
 			// create folder with brands name
 			baton(function(){
@@ -405,6 +406,7 @@ var core = Global.coreMethods = {
 
 
 		hasInfoFile: function(_callback, _brandName){
+			console.error("do not use this method");
 			var self = this;
 			baton(function(){
 				//check if brand exists
@@ -459,7 +461,7 @@ var core = Global.coreMethods = {
 
 			/*Runs a callback, passing it an array of the names of the projects*/
 			list: function(_brandName, _callback){
-				
+				console.error("do not use this method");
 				baton(function(){
 					
 					core.brands.exists(_brandName, this.next);
@@ -493,6 +495,7 @@ var core = Global.coreMethods = {
 			},
 
 			create: function(_brandName, _projectName, _callback){
+				console.error("do not use this method");
 				var self = this;
 				// create folder with brands name
 				baton(function(){
@@ -1223,27 +1226,25 @@ var core = Global.coreMethods = {
 		el("#body").append(flash);
 
 
-		var flashBaton = baton(function(){
-			flash.style.opacity = 1;
-			setTimeout(this.next, 100);
-		})
+		var flashBaton = fang(
+			function(){
+				flash.style.opacity = 1;
+				setTimeout(this.next, 100);
+			},
+			function(){
+				flash.style.transition = "opacity .4s ease";
+				setTimeout(function(){ flash.style.opacity = 0; } ,0);
+				if(typeof pinnacleCallback === "function") pinnacleCallback();
+				setTimeout(this.next, 500);
+			},
+			function(){
+				flash.rm();
+			}
+		);
 
-		.then(function(){
-			flash.style.transition = "opacity .4s ease";
-			setTimeout(function(){ flash.style.opacity = 0; } ,0);
-			if(typeof pinnacleCallback === "function") pinnacleCallback();
-			setTimeout(next, 500);
-		})
+		flashBaton.init();
 
-		.then(function(){
-			flash.rm();
-		})
-
-		flashBaton();
-
-		
-
-
+	
 	},
 
 

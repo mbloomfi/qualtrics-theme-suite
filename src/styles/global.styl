@@ -2,28 +2,9 @@
 // App Colors
 // ----------------------
 $primaryColor = rgb(223,72,72)
-// $affirmative-green = rgb(40,180,50)
 $affirmative-green = rgb(39,176,75)
-// $negative-red = rgb(223,72,72)
 $negative-red = rgb(225,68,68)
 
-// ----------------------
-// Global Mix-ins
-// ----------------------
-lighterShade(_color){
-  rgb(red(_color) + 12, green(_color) + 12, blue(_color) + 12)
-}
-darkerShade(_color){
-  rgb(red(_color) - 12, green(_color) - 12, blue(_color) - 12)
-}
-increaseOpacity(color){
-  alphaVal = alpha(color)
-  alpha(color, (alphaVal) + .2)
-}
-decreaseOpacity(color){
-  alphaVal = alpha(color)
-  alpha(color, (alphaVal) - .2)
-}
 
 // ----------------------
 // FONT STACK
@@ -34,49 +15,49 @@ $font-stack = "Source Sans Pro", "Helvetica Neue"
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 200;
-  src: url(local/fonts/SourceSansPro-ExtraLight.otf);
+  src: url(../fonts/SourceSansPro-ExtraLight.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 200;
-  src: url(local/fonts/SourceSansPro-ExtraLight-It.otf);
+  src: url(../fonts/SourceSansPro-ExtraLight-It.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 300;
-  src: url(local/fonts/SourceSansPro-Light.otf);
+  src: url(../fonts/SourceSansPro-Light.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 300;
-  src: url(local/fonts/SourceSansPro-Light-It.otf);
+  src: url(../fonts/SourceSansPro-Light-It.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: url(local/fonts/SourceSansPro-Regular.otf);
+  src: url(../fonts/SourceSansPro-Regular.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 400;
-  src: url(local/fonts/SourceSansPro-It.otf);
+  src: url(../fonts/SourceSansPro-It.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 600;
-  src: url(local/fonts/SourceSansPro-Bold.otf);
+  src: url(../fonts/SourceSansPro-Bold.otf);
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: italic;
   font-weight: 600;
-  src: url(local/fonts/SourceSansPro-BoldIt.otf);
+  src: url(../fonts/SourceSansPro-BoldIt.otf);
 }
 
 // ----------------------
