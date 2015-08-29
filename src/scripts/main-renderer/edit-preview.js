@@ -1,3 +1,4 @@
+/* eslint-disable */
 core.preview = {
 	active: false,
 	
@@ -835,7 +836,5 @@ core.preview = {
 		}
 		
 	}
-
-	
-
-}
+};
+/* eslint-disable */

@@ -1,32 +1,35 @@
+'use strict';
 // == Electron Natives ==
-var remote = require("remote");
-var app = remote.require("app");
-var ipc = require("ipc");
-var Menu = remote.require('menu');
-var MenuItem = remote.require('menu-item');
-var dialog = remote.require('dialog');
+let remote = require('remote');
+let app = remote.require('app');
+let ipc = require('ipc');
+let Menu = remote.require('menu');
+let MenuItem = remote.require('menu-item');
+let dialog = remote.require('dialog');
 
 // == Node Natives ==
-var path = require("path");
-var https = require('https');
-var Eve = Object.create(new (require('events').EventEmitter)());
+let path = require('path');
+let https = require('https');
+let Eve = Object.create(new (require('events').EventEmitter)());
+let util = require('util')
 
 // == Vendor ==
-var fs = require("fs-extra");
-var lwip = require("lwip");
-var gulp = require("gulp");
-var sass = require("gulp-sass");
-var minifyCss = require('gulp-minify-css');
-// var stylus = require("gulp-stylus");
-var autoprefixer = require("gulp-autoprefixer");
-var shelljs = require("shelljs");
+let fs = require('fs-extra');
+let lwip = require('lwip');
+let gulp = require('gulp');
+let sass = require('gulp-sass');
+let minifyCss = require('gulp-minify-css');
+// let stylus = require('gulp-stylus');
+let autoprefixer = require('gulp-autoprefixer');
+let shelljs = require('shelljs');
 
 // == Local Modules == 
-var loca = require("./local/scripts/modules/loca");
-var fang = require("./local/scripts/modules/fang");
+let loca = require('./local/scripts/modules/loca');
+let fang = require('./local/scripts/modules/fang');
+let dom = require('./local/scripts/modules/dom');
 
 // == Custom ==
-var Global = remote.getGlobal("sharedObject"); //see index.js
-var appRoot = Global.appRoot;
-var template = etc.template;
-var menu; // see core.codeMirror.activate()
+let Global = remote.getGlobal('sharedObject'); //see index.js
+let appRoot = Global.appRoot;
+let template = etc.template;
+let menu; // see core.codeMirror.activate()

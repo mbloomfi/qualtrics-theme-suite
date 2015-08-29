@@ -33,7 +33,6 @@ module.exports = (function(){
 		if(!filePath) return null;
 
 		const _EventEmitter = new EventEmitter();
-
 		const fileInfo = _setFileInfo(filePath, fileEncoding, fileType);
 
 		_EventEmitter.read = function() {

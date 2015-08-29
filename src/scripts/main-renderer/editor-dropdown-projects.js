@@ -1,3 +1,4 @@
+/* eslint-disable */
 editorCore.dropdowns.projects = {
 
 	status: "closed",
@@ -395,3 +396,4 @@ editorCore.dropdowns.projects = {
 
 	updateTextEditor: function(){}
 };
+/* eslint-enable */

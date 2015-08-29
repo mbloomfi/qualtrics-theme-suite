@@ -5,33 +5,32 @@ An OS X app for managing, creating, editing, and uploading Qualtrics survey them
 
 ##Eve API  
 ###About the Eve API  
-Eve is a Pub/Sub system used internally to react to events (e.g. when a user clicks a button or saves their preferences).
-
-There are 2 main methods of note within the Eve library. 
-- `on` - creates an event listener (subscribes to the Pub/Sub)  
-- `emit` - emits an event (publishes a Pub/Sub event)  
-
-For debugging purposes, there is another method called `probeListners`, which will return the location of all of the locations of matching `on` methods.  
-Example
-```javascript
-Eve.on("select brand", function(){});
-
-Eve.probeListeners("select brand"); //returns the location of the previous 'on' method
-```
+Eve is a Pub/Sub implementation of node's native Event Emitter.
 
 ###Eve API List
-####Brand Related
-Eve String | Description | Expected Parameter
+Eve String | Description | Expected Parameter(s)
 ---------- | ----------- | -------------------
-`Create Brand` | Description | -
-`Brand Created` | Description | -
-`Click Brand Menu Button` | Description | -
-`Brand Selected` | Description | -
+`preferencesSaved` | Description | -
+`Local Preferences Updated` | Description | -
+`preferencesFileWritten` | Description | -
+`codeEditorSaved` | Description | -
+`error` | Description | -
+`windowFocused` | Description | -
+`fileRenamed` | Description | -
+`brandSelected` | Description | -
+`projectSelected` | Description | -
+`appStarted` | Description | -
+`appLoaded` | Description | -
+`Local Persistent Data Updated` | Description | -
+`Recent Brands Changed` | Description | -
+`Current Brand Updated` | Description | -
+`Local Brands List Updated` | Description | -
+`Brands Menu Btn Clicked` | Description | -
+`Current Project Updated` | Description | -
+`error` | Description | -
+`error` | Description | -
+`error` | Description | -
 
-####User Preferences
-Eve String | Description | Expected Parameter
----------- | ----------- | -------------------
-`Preferences Saved` | Description | -
 
 
 <br>

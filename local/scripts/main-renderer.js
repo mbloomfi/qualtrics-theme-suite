@@ -1,69 +1,78 @@
+'use strict';
 // == Electron Natives ==
-var remote = require("remote");
-var app = remote.require("app");
-var ipc = require("ipc");
-var Menu = remote.require('menu');
-var MenuItem = remote.require('menu-item');
-var dialog = remote.require('dialog');
+let remote = require('remote');
+let app = remote.require('app');
+let ipc = require('ipc');
+let Menu = remote.require('menu');
+let MenuItem = remote.require('menu-item');
+let dialog = remote.require('dialog');
 
 // == Node Natives ==
-var path = require("path");
-var https = require('https');
-var Eve = Object.create(new (require('events').EventEmitter)());
+let path = require('path');
+let https = require('https');
+let Eve = Object.create(new (require('events').EventEmitter)());
+let util = require('util')
 
 // == Vendor ==
-var fs = require("fs-extra");
-var lwip = require("lwip");
-var gulp = require("gulp");
-var sass = require("gulp-sass");
-var minifyCss = require('gulp-minify-css');
-// var stylus = require("gulp-stylus");
-var autoprefixer = require("gulp-autoprefixer");
-var shelljs = require("shelljs");
+let fs = require('fs-extra');
+let lwip = require('lwip');
+let gulp = require('gulp');
+let sass = require('gulp-sass');
+let minifyCss = require('gulp-minify-css');
+// let stylus = require('gulp-stylus');
+let autoprefixer = require('gulp-autoprefixer');
+let shelljs = require('shelljs');
 
 // == Local Modules == 
-var loca = require("./local/scripts/modules/loca");
-var fang = require("./local/scripts/modules/fang");
+let loca = require('./local/scripts/modules/loca');
+let fang = require('./local/scripts/modules/fang');
+let dom = require('./local/scripts/modules/dom');
 
 // == Custom ==
-var Global = remote.getGlobal("sharedObject"); //see index.js
-var appRoot = Global.appRoot;
-var template = etc.template;
-var menu; // see core.codeMirror.activate()
+let Global = remote.getGlobal('sharedObject'); //see index.js
+let appRoot = Global.appRoot;
+let template = etc.template;
+let menu; // see core.codeMirror.activate()
 
-var QTS = (function(){
-
+let QTS = (function(){
+	"use strict";
 
 	// --------------
 	// Global Eve Listeners
 	// --------------
 
-	Eve.on("Preferences Saved", function(){
+	Eve.on("preferencesSaved", function(){
 		console.log("prefs saved!");
 		core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);
 	});
 
 
-	Eve.on("Code Editor Saved", function(){
+	Eve.on("codeEditorSaved", function(){
 		editorCore.dropdowns.files.setClean();
 		myCodeMirror.markClean();
 		if(core.localData.currentFile.name === "StyleSheet.scss"){
 			core.preview.mode.regular.compileSass();
 		}
-
 	});
 
 	Eve.on("error", function(message){
 		console.error("ERROR:", message);
-		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+message+"\n\n", function(){});
+
+		fs.appendFile(
+			"local/errorlog.txt",
+			"\n~~~~~~~~\n${new Date}\n${message}\n",
+			function(err){
+				console.error("errorlog.txt not found");
+			}
+		);
 	});
 
 	window.addEventListener("focus", function(){
-		Eve.emit("window-focused");
+		Eve.emit("windowFocused");
 	});
 
 
-	
+
 	// ---------------------------------------
 	// User Preferences
 	// 
@@ -94,7 +103,7 @@ var QTS = (function(){
 				return callback(true, null);
 			}
 
-			var jsonData;
+			let jsonData;
 
 			try {
 				jsonData = JSON.parse(data);
@@ -128,12 +137,12 @@ var QTS = (function(){
 
 
 
-	Eve.on("Brand Selected", function(brandName, pathToBrand){
+	Eve.on("brandSelected", function(brandName, pathToBrand){
 		// if(!brandName || !pathToBrand) return;
 	});
 
 
-	Eve.on("Project Selected", function(projectName){
+	Eve.on("projectSelected", function(projectName){
 		if(!projectName) {
 			Eve.emit("error", "Prameters Missing");
 			return;
@@ -159,7 +168,7 @@ var QTS = (function(){
 
 
 
-	Eve.on("Code Editor Saved", function(){
+	Eve.on("codeEditorSaved", function(){
 
 	});
 
@@ -175,17 +184,16 @@ var QTS = (function(){
 // ------------------
 // User Preferences
 // ------------------
-var UserPreferences = (function(){
+let UserPreferences = (function(){
 
-	var _userPreferences = {
+	let _userPreferences = {
 		path: path.normalize(__dirname + "/local/user-settings.json")
 	};
 
-	function _pathToBrands() {
-		return _userPreferences.pathToBrands || null;
-	}
+	// default location if not set in user settings
+	let _pathToBrands = path.resolve(process.env.HOME);
 
-	var UserPreferencesInterface = loca(_userPreferences.path);
+	let UserPreferencesInterface = loca(_userPreferences.path);
 
 	UserPreferencesInterface.on("read", function(data){
 
@@ -211,7 +219,7 @@ var UserPreferences = (function(){
 					mainBtn:{
 						text:"Ok",
 						onClick: function(){
-							var prompterInput = document.getElementById("prompterInput");
+							let prompterInput = document.getElementById("prompterInput");
 
 							if(prompterInput.value.length > 0){
 
@@ -246,7 +254,7 @@ var UserPreferences = (function(){
 					mainBtn:{
 						text:"Ok",
 						onClick: function(){
-							var prompterInput = document.getElementById("prompterInput");
+							let prompterInput = document.getElementById("prompterInput");
 
 							if(prompterInput.value.length > 0){
 
@@ -289,25 +297,25 @@ var UserPreferences = (function(){
 				Eve.emit("error", err);
 			}
 			else {
-				Eve.emit("Preferences File Updated");
+				Eve.emit("preferencesFileWritten");
 			}
 		});
 	}
 
 
 
-	Eve.on("app-started",function(){
+	Eve.on("appStarted",function(){
 		updateLocalUserPrefrences(function(){
 			writeUserPrefrences();
-			Eve.emit("app-loaded");
+			Eve.emit("appLoaded");
 		});
 	});
 
-	Eve.on("window-focused", updateLocalUserPrefrences);
-	// Eve.ignore("window-focused").until("app-loaded");
+	Eve.on("windowFocused", updateLocalUserPrefrences);
+	// Eve.ignore("windowFocused").until("appLoaded");
 
 	Eve.on("Local Preferences Updated", writeUserPrefrences);
-	// Eve.ignore("Local Preferences Updated").until("app-loaded");
+	// Eve.ignore("Local Preferences Updated").until("appLoaded");
 
 	/* 
 	return
@@ -325,47 +333,142 @@ var UserPreferences = (function(){
 
 
 
+
+
 // ------------------
 // Persistent Data
 // ------------------
-var PersistentData = (function(){
-	var _pdLocal = {};
-	var _pdPath = __dirname+"/local/persistent-data.json";
+let PersistentData = (function(){
+	// Get rid of local copy, it just adds confusion. Only read from disk.
+	// let _pdLocal = {};
+	let _pdPath = __dirname+"/local/persistent-data.json";
 
-	function resetLocalPersistentData() {
+	// function resetLocalPersistentData() {
 		
-		fs.readFile(_pdPath, "utf-8", function(err, data){
-			if(err) return Eve.emit("error",err);
+	// 	fs.readFile(_pdPath, "utf-8", function(err, data){
+	// 		if(err) return Eve.emit("error",err);
 
-			var pd = JSON.parse(data);
-			_pdLocal = pd;
+	// 		let pd = JSON.parse(data);
+	// 		_pdLocal = pd;
 
-			Eve.emit("Local Persistent Data Updated");
+	// 		Eve.emit("Local Persistent Data Updated");
 
-		})
-	}
-
-	function updatePersistentDataFile() {
-		console.log("updating persistent data file");
-		fs.writeFile(_pdPath, JSON.stringify(_pdLocal), function(err){
-			if(err) Eve.emit("err", err);
+	// 	})
+	// }
+	function getPersistentData(callback) {
+		fs.readFile(_pdPath, 'utf-8', function(err, data){
+			if(err) return Eve.emit("error", err);
+			callback(JSON.parse(data));
 		});
 	}
 
-	Eve.on("app-started", resetLocalPersistentData);
-	
-	Eve.on("window-focused", resetLocalPersistentData);
+	function addRecentBrand(brandName) {
+		getPersistentData(function(_pData){
+			// first check if brand is already in recent brands
+			var brandIndex = _pData.recentBrands.indexOf(brandName);
+			if (brandIndex !== -1) {
+				_pData.recentBrands.splice(brandIndex, 1);
+			}
+			_pData.recentBrands.shift(brandName);
+			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+				if(err) return Eve.emit("error", err);
+			});
+		});
+	}
 
-	Eve.on("Recent Brands Changed", function(recentBrands){
-		console.log("recent brands changed!");
-		_pdLocal.recentBrands = recentBrands;
-		updatePersistentDataFile();
-	});
+	function resetRecentBrands(brandsList) {
+		getPersistentData(function(_pData){
+			_pData.recentBrands = brandsList;
+			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+				if(err) return Eve.emit("error", err);
+			});
+		});
+	}
+
+	function pruneRecentBrands() {
+		getPersistentData(function(pData){
+
+			let _recentBrands = pData.recentBrands;
+			let brandsPath = UserPreferences.getPathToBrands();
+			let pruneBrands = [];
+			let checkedBrands = 0;
+			let totalRecentBrands = _recentBrands.length;
+			let i = _recentBrands.length;
+
+			function checkFileStatus(err, stats, index) {
+				checkedBrands++;
+
+				// prune brand if not found
+				if(err) {
+					pruneBrands.push(_recentBrands[index]);
+				}
+
+				// after checking all recent brands
+				if(checkedBrands === totalRecentBrands) {
+					if(pruneBrands.length > 0) {
+						pruneBrands.forEach(function(brandToPrune){
+							let brandIndex = _recentBrands.indexOf(brandToPrune);
+							_recentBrands.splice(brandIndex, 1);
+						});
+						// set recent brands to new, pruned list
+						resetRecentBrands(_recentBrands);
+					}
+				}
+			}
+
+			while(i--) {
+				let _i = i;
+				fs.stat(brandsPath + "/" + _recentBrands[i], function(err, stats){
+					checkFileStatus(err, stats, _i);
+				});
+			}	
+		});
+	}
+
+	function addSnippet(snippetObject) {
+		// getPersistentData(function(_pData){
+		// 	// first check if brand is already in recent brands
+		// 	var brandIndex = _pData.recentBrands.indexOf(brandName);
+		// 	if (brandIndex !== -1) {
+		// 		_pData.recentBrands.splice(brandIndex, 1);
+		// 	}
+		// 	_pData.recentBrands.shift(brandName);
+		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+		// 		if(err) return Eve.emit("error", err);
+		// 	});
+		// });
+	}
+
+	function removeSnippet(snippetId) {
+		// getPersistentData(function(_pData){
+		// 	// first check if brand is already in recent brands
+		// 	var brandIndex = _pData.recentBrands.indexOf(brandName);
+		// 	if (brandIndex !== -1) {
+		// 		_pData.recentBrands.splice(brandIndex, 1);
+		// 	}
+		// 	_pData.recentBrands.shift(brandName);
+		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+		// 		if(err) return Eve.emit("error", err);
+		// 	});
+		// });
+	}
+
+	// Eve.on("appStarted", resetLocalPersistentData);
+	
+	// Eve.on("windowFocused", resetLocalPersistentData);
+
+	// Eve.on("Recent Brands Changed", function(recentBrands){
+	// 	console.log("recent brands changed!");
+	// 	// _pdLocal.recentBrands = recentBrands;
+	// 	updatePersistentDataFile();
+	// });
+	Eve.on("appStarted", pruneRecentBrands)
 
 	return {
-		getLocal: function(){
-			return _pdLocal;
-		}
+		get: getPersistentData
+		// getLocal: function(){
+		// 	return _pdLocal;
+		// }
 	}
 
 })();
@@ -376,46 +479,21 @@ var PersistentData = (function(){
 
 
 
+
 // ------------------
 // Brands
 // ------------------
-var Brands = (function(){
-	_brands = {
-		recent: null,
-		list: null
-	};
+let Brands = (function(){
+	// let _brands = {
+	// 	recent: null,
+	// 	list: null
+	// };
 
-	_currentBrand = {
+	let _currentBrand = {
 		name: null,
 		path: null,
 		projectsList: null
 	};
-
-	function pruneRecentBrands() {
-		console.log("pruning brands");
-		var pathToBrands = UserPreferences.getPathToBrands();
-		var recentBrandsAltered = false;
-		var i = _brands.recent.length;
-		while(i--) {
-			fs.stat(pathToBrands + "/" + _brands.recent[i], function(err, stats){
-				if(err) {
-					console.log("removing brand!");
-					_brands.recent.splice(i, 1);
-					recentBrandsAltered = true;
-				}
-			})
-		}
-		setTimeout(function(){
-			if(recentBrandsAltered) {
-				console.log("emitting?");
-				Eve.emit("Recent Brands Changed", _brands.recent);
-			}
-			else {
-				console.log("not emitting?");
-			}
-		}, 400);
-			
-	}
 
 	function setCurrentBrand(brandName) {
 		_currentBrand.name = brandName;
@@ -424,39 +502,79 @@ var Brands = (function(){
 			if(err) return Eve.emit("error",err);
 
 			_currentBrand.projectsList = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
 				if(fsStats.isDirectory()){
 					_currentBrand.projectsList.push(files[i]);
 				}
 			}
 			Eve.emit("Current Brand Updated", _currentBrand);
-
 		});
 	}
 
-	function resetLocalBrandsList() {
-		var brandsPath = UserPreferences.getPathToBrands();
-		fs.readdir(brandsPath, function(err, files){
-			if(err) return Eve.emit("error",err);
-			var brandsList = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(brandsPath+"/"+files[i]);
-				if(fsStats.isDirectory()){
-					brandsList.push(files[i]);
+	function getRecentBrands(callback) {
+		PersistentData.get(function(pData){
+			callback(pData.recentBrands);
+		});
+	}
+
+
+
+	let dropdownMenu = (function(){
+
+		function init() {
+			dom("brandName").addEventListener('click', function(){
+				Eve.emit("Brands Menu Btn Clicked");
+				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+				if(!this.hasClass("inactive")){
+					self.toggle();
+					evt.stopPropagation();
 				}
-			}
-			_brands.list = brandsList;
-			Eve.emit("Local Brands List Updated", _currentBrand);
-		});
-	}
+				dom("brandsDropdown").on("click", function(evt){
+					evt.stopPropagation();
+				});
+			});
+		}
+		function populate() {}
+		function selectBrand() {}
+		function toggle() {}
+		function close() {}
+		function open() {}
+		
+		// function open() {}
+		// function open() {}
+		// function open() {}
 
-	// Eve.on("app-loaded", function(){
+
+
+	})();
+
+
+	// function resetLocalBrandsList() {
+	// 	console.error("dont do this");
+	// 	// let brandsPath = UserPreferences.getPathToBrands();
+	// 	// fs.readdir(brandsPath, function(err, files){
+	// 	// 	if(err) return Eve.emit("error",err);
+	// 	// 	let brandsList = [];
+	// 	// 	for(let i = 0, ii = files.length; i < ii; i++) {
+	// 	// 		let fsStats = fs.statSync(brandsPath+"/"+files[i]);
+	// 	// 		if(fsStats.isDirectory()){
+	// 	// 			brandsList.push(files[i]);
+	// 	// 		}
+	// 	// 	}
+	// 	// 	_brands.list = brandsList;
+	// 	// 	Eve.emit("Local Brands List Updated", _currentBrand);
+	// 	// });
+	// }
+
+	// Eve.on("appLoaded", function(){
 	// 	console.log("app loaded");
 	// 	pruneRecentBrands();
 	// })
 
-	Eve.on("Brand Selected", function(brandName){
+
+	Eve.on("brandSelected", function(brandName){
 		// console.log("selecting brand =>",brandName);
 		setCurrentBrand(brandName);
 	});
@@ -469,22 +587,19 @@ var Brands = (function(){
 		// console.log("SELECTED:",_currentBrand);
 		// console.log("files in brand:",_currentBrand.projectsList);
 	}); 
-	// Eve.ignore("Current Brand Updated").until("app-loaded")
+	// Eve.ignore("Current Brand Updated").until("appLoaded")
 
-	Eve.on("Update Local Recent Brands", function(){
 
-	});
-
-	var initLocalRecentBrands = Eve.on("Local Recent Brands Updated", function(){
+	Eve.once("Local Recent Brands Updated", function(){
 		pruneRecentBrands();
-		initLocalRecentBrands.remove();
 	});
 
-	Eve.on("Local Persistent Data Updated", function(){
-		console.log("local pd updated");
-		_brands.recent = PersistentData.getLocal().recentBrands;
-		Eve.emit("Local Recent Brands Updated");
-	});
+	// // !!!!!!!!! don't need this !!!!!!!!!!!!!!
+	// Eve.on("Local Persistent Data Updated", function(){
+	// 	console.log("local pd updated");
+	// 	_brands.recent = PersistentData.getLocal().recentBrands;
+	// 	Eve.emit("Local Recent Brands Updated");
+	// });
 
 	
 
@@ -495,7 +610,8 @@ var Brands = (function(){
 			return _currentBrand;
 		},
 		getRecent: function(){
-			return _brands.recent || null;
+			console.error("dont do this");
+			// return _brands.recent || null;
 		},
 		getList: function(){
 			return _brands.list || null;
@@ -509,10 +625,10 @@ var Brands = (function(){
 // ------------------
 // Projects
 // ------------------
-var Projects = (function(){
-	_projects = {};
+let Projects = (function(){
+	let _projects = {};
 
-	_currentProject = {
+	let _currentProject = {
 		name: null,
 		path: null,
 		files: null,
@@ -538,8 +654,8 @@ var Projects = (function(){
 		_currentProject.path = Brands.current.path + "/" + projectName;
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -551,8 +667,8 @@ var Projects = (function(){
 	function updateCurrentProjectFiles() {
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -561,7 +677,7 @@ var Projects = (function(){
 		});
 	}
 
-
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Select Project", function(projectName){
 		setCurrentProject(projectName);
 	});
@@ -571,8 +687,10 @@ var Projects = (function(){
 		// console.log("_currentProject =>",_currentProject);
 	});
 
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Update Current Project Files List", updateCurrentProjectFiles);
 
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Rename File", function(data, callback){
 		if(!data.path || !data.newName || !data.oldName) {
 			return Eve.emit("error", "Rename File Error");
@@ -597,11 +715,31 @@ var Projects = (function(){
 
 })();
 
-// ------------------
-// Code Editor
-// ------------------
-var codeEditor = (function(){
 
+
+// ------------------
+// Code Editor (codemirror)
+// ------------------
+let Editor = (function(){
+	function resetContextMenu() {
+
+	}
+
+	function deactive() {
+		
+	}
+
+	function activate() {
+		
+	}
+
+	function setText() {
+
+	}
+
+	function compileStyles() {
+
+	}
 
 
 
@@ -614,6 +752,7 @@ var codeEditor = (function(){
 
 
 
+/* eslint-disable */
 // INIT app
 window.addEventListener("load", function(){
 	//add global reference to editor and preview
@@ -626,7 +765,7 @@ window.addEventListener("load", function(){
 
 	// baton(function(next){
 		
-		Eve.emit("app-started");
+		Eve.emit("appStarted");
 	
 	// })
 
@@ -652,7 +791,7 @@ window.addEventListener("load", function(){
 	// })
 	// .then(function(next) {
 
-	Eve.on("app-loaded", function(){
+	Eve.on("appLoaded", function(){
 		console.log("app loaded!");
 		window.editor = el("#editor");
 		window.preview = el("#preview");
@@ -979,7 +1118,9 @@ function codemirrorInit() {
 	// })
 	// .run();
 });
+/* eslint-enable */
 
+/* eslint-disable */
 var core = Global.coreMethods = {
 	updateApp: {
 		pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
@@ -1194,33 +1335,30 @@ var core = Global.coreMethods = {
 	// ----------------------------
 	persistentDataFile: {
 
-		read: function (_successCallback){
-			fs.readJson(__dirname+"/local/persistent-data.json", function(_err, _data){
-				if(!_err) {
-					if(typeof _successCallback === "function") _successCallback(_data);
-				}
-				else {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					// console.log("readPersistantData ERROR:",_err);
-				}
-			});
+		read: function (cb){
+			console.error("dont use this method (persistentDataFile.read)");
+			// fs.readJson(__dirname+"/local/persistent-data.json", function(err, _data) {
+			// 	if(err) return Eve.emit("error", err);
+			// 	if(util.isFunction(cb)) cb(_data);
+			// });
 		},
 
-		update: function (_successCallback){
-			var _DATA = {};
-			_DATA.recentBrands = Brands.getRecent();
-			_DATA.snippets = core.localData.snippets.list;
-			//_DATA.x = core.localData.x;
-			fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
-				if(err) {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					alert("Error Saving Changes");
-				}
-				else if(_successCallback!==undefined){
-					var args = Array.prototype.splice.call(arguments, 1);
-					_successCallback.apply(null, args);
-				}
-			});
+		update: function (cb){
+			console.error("dont use this method (persistentDataFile.update)");
+			// var _DATA = {};
+			// _DATA.recentBrands = Brands.getRecent();
+			// _DATA.snippets = core.localData.snippets.list;
+			// //_DATA.x = core.localData.x;
+			// fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
+			// 	if(err) {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 		alert("Error Saving Changes");
+			// 	}
+			// 	else if(cb!==undefined){
+			// 		var args = Array.prototype.splice.call(arguments, 1);
+			// 		cb.apply(null, args);
+			// 	}
+			// });
 		}
 		
 	},
@@ -1229,43 +1367,44 @@ var core = Global.coreMethods = {
 	//  User Settings File
 	// ----------------------------
 	userSettingsFile: {
-
 		read: function(_successCallback){
-			fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
-				if(!_err){ 
+			console.error("dont use this method (userSettingsFile.read)");
+			// fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
+			// 	if(!_err){ 
 					
-					if(typeof _successCallback === "function") _successCallback(_data);
-				}
-				else {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					// console.log("User Settings READ ERROR:", _err);
-				}
-			});
+			// 		if(typeof _successCallback === "function") _successCallback(_data);
+			// 	}
+			// 	else {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+			// 		// console.log("User Settings READ ERROR:", _err);
+			// 	}
+			// });
 		},
 
 		update: function(_successCallback){
-			var self = this;
+			console.error("dont use this method (userSettingsFile.update)");
+			// var self = this;
 
-			if(core.localData.userSettings === null){
-				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
-				alert("Error with settings, sucks to be you.");
-				return;
-			}
+			// if(core.localData.userSettings === null){
+			// 	fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
+			// 	alert("Error with settings, sucks to be you.");
+			// 	return;
+			// }
 
-			self.read(function(_data){
-				if(core.localData.userSettings !== _data){
+			// self.read(function(_data){
+			// 	if(core.localData.userSettings !== _data){
 
-					fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
-						if(err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-							alert("Error Saving Changes");
-						} 
+			// 		fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
+			// 			if(err) {
+			// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 				alert("Error Saving Changes");
+			// 			} 
 							
-						else _successCallback();
-					});
+			// 			else _successCallback();
+			// 		});
 
-				}
-			});
+			// 	}
+			// });
 
 			
 
@@ -1274,7 +1413,7 @@ var core = Global.coreMethods = {
 	},
 
 	resetFinder: function(){
-
+		console.error("dont use this method (resetFinder)");
 
 		// Sync call to exec()
 		// var version = exec('node --version', {silent:true}).output;
@@ -1310,41 +1449,42 @@ var core = Global.coreMethods = {
 		},
 
 		select: function(_brandName){
-			
+			console.error("dont use this method (brands.select)");
 			// add brand to recent brands, current brand
-			core.brands.setCurrentBrand(_brandName);
-			core.brands.projects.setCurrentProject(null);
+			// core.brands.setCurrentBrand(_brandName);
+			// core.brands.projects.setCurrentProject(null);
 		},
 
 		create: function(_brandName, _CALLBACK){
-			console.error("do not use this method");
-			var self = this;
-			// create folder with brands name
-			baton(function(){
-				self.exists(_brandName, this.next);
-			})
-			.then(function(exists){
-				var self = this;
-				if(exists) {
-					alert("Brand already exists. Nice try though.");
-				} else {
-					fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
-						if(!err) {
-							core.resetFinder();
-							self.next();
-						} else {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-						}
-					});
-				}
-				
-			})
-			.then(function(){
+			console.error("dont use this method (brands.create)");
 
-				// editorCore.dropdowns.brands.close();
-				self.infoFile.create(_brandName);
-				_CALLBACK();
-			})();
+			// var self = this;
+			// // create folder with brands name
+			// baton(function(){
+			// 	self.exists(_brandName, this.next);
+			// })
+			// .then(function(exists){
+			// 	var self = this;
+			// 	if(exists) {
+			// 		alert("Brand already exists. Nice try though.");
+			// 	} else {
+			// 		fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
+			// 			if(!err) {
+			// 				core.resetFinder();
+			// 				self.next();
+			// 			} else {
+			// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 			}
+			// 		});
+			// 	}
+				
+			// })
+			// .then(function(){
+
+			// 	// editorCore.dropdowns.brands.close();
+			// 	self.infoFile.create(_brandName);
+			// 	_CALLBACK();
+			// })();
 
 		},
 
@@ -1355,83 +1495,90 @@ var core = Global.coreMethods = {
 			Adds the current brand to the front of the recent brands
 		*/
 		updateRecentBrands: function(){
-			var brand = core.localData.currentBrand;
-			var i = Brands.getRecent().indexOf(brand);
-			if(i !== -1) {
-				Brands.getRecent().splice(i, 1);
-			}
-			Brands.getRecent().unshift(brand);
-			core.persistentDataFile.update();
+			console.error("dont use this method (brands.updateRecentBrands)");
+			// var brand = core.localData.currentBrand;
+			// var i = Brands.getRecent().indexOf(brand);
+			// if(i !== -1) {
+			// 	Brands.getRecent().splice(i, 1);
+			// }
+			// Brands.getRecent().unshift(brand);
+			// core.persistentDataFile.update();
 		},	
 
 		setCurrentBrand: function(_brandName){
-			core.localData.currentBrand = _brandName;
-			core.brands.updateRecentBrands();
+			console.error("dont use this method (brands.setCurrentBrand)");
+			// core.localData.currentBrand = _brandName;
+			// core.brands.updateRecentBrands();
 		},
 
 
 		exists: function(_brandName, _callback){
-			var self = this;
-			// console.log(typeof core.localData.brands.path);
-			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
-				if(err) {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					console.warn("brand does not exist:",err)
-					return _callback(false);
-				}
+			console.error("dont use this method (brands.exists)");
+			// var self = this;
+			// // console.log(typeof core.localData.brands.path);
+			// fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
+			// 	if(err) {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 		console.warn("brand does not exist:",err)
+			// 		return _callback(false);
+			// 	}
 
-				return _callback(stats.isDirectory());
+			// 	return _callback(stats.isDirectory());
 
-			});
+			// });
 		},
 
 
 		hasInfoFile: function(_callback, _brandName){
-			console.error("do not use this method");
-			var self = this;
-			baton(function(){
-				//check if brand exists
-				self.exists(_brandName, this.next);
-			})
-			.then(function(_exists){
-				if(_exists){
-					this.next();
-				} 
-				else _callback(false);
-			})
-			.then(function(){
-				//check if brand has file
-				// console.log(typeof core.brands.getFullPathToBrands());
-				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
-					if(err) {
-						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-						return _callback(false);
-					}
+			console.error("dont use this method (brands.hasInfoFile)");
+			// console.error("do not use this method");
+			// var self = this;
+			// baton(function(){
+			// 	//check if brand exists
+			// 	self.exists(_brandName, this.next);
+			// })
+			// .then(function(_exists){
+			// 	if(_exists){
+			// 		this.next();
+			// 	} 
+			// 	else _callback(false);
+			// })
+			// .then(function(){
+			// 	//check if brand has file
+			// 	// console.log(typeof core.brands.getFullPathToBrands());
+			// 	fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+			// 		if(err) {
+			// 			fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 			return _callback(false);
+			// 		}
 
-					return _callback(stats.isFile());
+			// 		return _callback(stats.isFile());
 
-				});
-			})();
+			// 	});
+			// })();
 			
 		},
 
 		projects: {
 
 			setCurrentProject: function(_projectName){
-				core.localData.currentProject.name = _projectName;
-				core.localData.currentProject.path = (_projectName !== null)
-				?
-				(core.brands.getFullPathToBrands()+"/"+
-				core.localData.currentBrand+"/"+
-				core.localData.currentProject.name)
-				:
-				null
-				;
+				console.error("dont use this method (projects.setCurrentProject)");
+				// core.localData.currentProject.name = _projectName;
+				// core.localData.currentProject.path = (_projectName !== null)
+				// ?
+				// (core.brands.getFullPathToBrands()+"/"+
+				// core.localData.currentBrand+"/"+
+				// core.localData.currentProject.name)
+				// :
+				// null
+				// ;
 
 			},
 
 			infoFile: {
+
 				update: function(pathToFile, key, value, callback){
+					console.error("dont use this method (projects.infoFile.update)");
 					fs.readFile(pathToFile, "utf-8", function(err, data){
 						if(err, data){
 
@@ -1442,33 +1589,33 @@ var core = Global.coreMethods = {
 
 			/*Runs a callback, passing it an array of the names of the projects*/
 			list: function(_brandName, _callback){
-				console.error("do not use this method");
-				baton(function(){
+				console.error("dont use this method (projects.list)");
+				// baton(function(){
 					
-					core.brands.exists(_brandName, this.next);
-				})
-				.then(function(exists){
-					if(exists){
-						var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
-						this.next(pathToBrand);
-					}
-				})
-				.then(function(path){
-					var projectList = [];
-					// console.log(typeof path);
-					fs.readdir(path, function(_err, _projects){
-						if(_err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							// console.log("error listing projects");
-						}
-						for(var i = 0, ii = _projects.length; i < ii; i++){
-							var stats = fs.statSync(path+"/"+_projects[i]);
-							if(stats.isDirectory()) projectList.push(_projects[i]);
-						}
-						// currentBrand.projects = projectsList // ADD this
-						if(_callback!==undefined) _callback(projectList);
-					});
-				})();
+				// 	core.brands.exists(_brandName, this.next);
+				// })
+				// .then(function(exists){
+				// 	if(exists){
+				// 		var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
+				// 		this.next(pathToBrand);
+				// 	}
+				// })
+				// .then(function(path){
+				// 	var projectList = [];
+				// 	// console.log(typeof path);
+				// 	fs.readdir(path, function(_err, _projects){
+				// 		if(_err) {
+				// 			fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+				// 			// console.log("error listing projects");
+				// 		}
+				// 		for(var i = 0, ii = _projects.length; i < ii; i++){
+				// 			var stats = fs.statSync(path+"/"+_projects[i]);
+				// 			if(stats.isDirectory()) projectList.push(_projects[i]);
+				// 		}
+				// 		// currentBrand.projects = projectsList // ADD this
+				// 		if(_callback!==undefined) _callback(projectList);
+				// 	});
+				// })();
 				
 				
 				
@@ -1476,44 +1623,46 @@ var core = Global.coreMethods = {
 			},
 
 			create: function(_brandName, _projectName, _callback){
-				console.error("do not use this method");
-				var self = this;
-				// create folder with brands name
-				baton(function(){
-					core.brands.exists(_brandName, this.next);
-				})
-				.then(function(exists){
-					var self = this;
-					if(exists) {
+				console.error("dont use this method (projects.create)");
+				// console.error("do not use this method");
+				// var self = this;
+				// // create folder with brands name
+				// baton(function(){
+				// 	core.brands.exists(_brandName, this.next);
+				// })
+				// .then(function(exists){
+				// 	var self = this;
+				// 	if(exists) {
 
-						// console.log(typeof core.brands.getFullPathToBrands());
-						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
-							if(!err) {
-								self.next();
-							} else {
-								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-							}
-						});
-					} else {
-						alert("Brand doesn't exists. Nice try though.");
-					}
+				// 		// console.log(typeof core.brands.getFullPathToBrands());
+				// 		fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+				// 			if(!err) {
+				// 				self.next();
+				// 			} else {
+				// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				// 			}
+				// 		});
+				// 	} else {
+				// 		alert("Brand doesn't exists. Nice try though.");
+				// 	}
 					
-				})
-				.then(function(){
-					editorCore.dropdowns.projects.close();
-					if(_callback!==undefined) _callback();
-					// self.infoFile.create(_brandName);
-				})();
+				// })
+				// .then(function(){
+				// 	editorCore.dropdowns.projects.close();
+				// 	if(_callback!==undefined) _callback();
+				// 	// self.infoFile.create(_brandName);
+				// })();
 			},
 
 
 			showInFinder: function(){
-				if(Projects.getCurrent().name !== null){
-					shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
-						// console.log('Exit status:', status);
-						// console.log('Program output:', output);
-					});
-				}
+				console.error("dont use this method (projects.showInFinder)");
+				// if(Projects.getCurrent().name !== null){
+				// 	shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
+				// 		// console.log('Exit status:', status);
+				// 		// console.log('Program output:', output);
+				// 	});
+				// }
 			},
 
 			files: {
@@ -1523,6 +1672,7 @@ var core = Global.coreMethods = {
 				},
 
 				assets: function(_callback){
+					console.error("dont use this method (projects.exists)");
 					var projPath = Projects.getCurrent().path;
 					var fileList = [];
 					fs.readdir(projPath+"/assets", function(_err, _files){
@@ -1542,7 +1692,7 @@ var core = Global.coreMethods = {
 
 
 				viewImage: function(imgPath){
-
+					console.error("dont use this method (projects.exists)");
 					function updateImageDimensionsField(_image){
 						var imgWidth = _image.width >= 700 ? "700+" : _image.width;
 						var imgHeight = _image.height >= 650 ? "650+" : _image.height;
@@ -2246,7 +2396,7 @@ var core = Global.coreMethods = {
 		}
 	}
 };
-
+/* eslint-enable */
 
 
 
@@ -2524,6 +2674,7 @@ var dimmer = {
 	};
 })();
 
+/* eslint-disable */
 core.preview = {
 	active: false,
 	
@@ -3361,14 +3512,11 @@ core.preview = {
 		}
 		
 	}
+};
+/* eslint-disable */
 
-	
-
-}
+/* eslint-disable */
 editorCore.dropdowns.brands = {
-
-	
-
 	setGlobalVariables: function(){
 		window.brandSearchInput = el("#searchBrands");
 			brandSearchInput.on("keyup", function(e){
@@ -3523,7 +3671,7 @@ editorCore.dropdowns.brands = {
 	populate: function(){
 		console.log("populating brands dropdown");
 		brandName.append(
-			el("+div").addClass(["dropdown", "hide"]).append(
+			el("+div#brandsDropdown").addClass(["dropdown", "hide"]).append(
 
 				el.join([
 					el("+div").addClass(["arrow", "hide"]),
@@ -3552,6 +3700,7 @@ editorCore.dropdowns.brands = {
 		
 	},
 
+	// **cut this method**
 	refill: function(){
 		console.log("refilling brands dropdown");
 		brandsDropdown.append(
@@ -3825,6 +3974,9 @@ editorCore.dropdowns.brands = {
 	}
 
 };
+/* eslint-enable */
+
+/* eslint-disable */
 editorCore.dropdowns.files = {
 	status: "closed",
 	active: false,
@@ -4421,6 +4573,7 @@ editorCore.dropdowns.files = {
 	}
 
 };
+/* eslint-enable */
 
 
 
@@ -4429,7 +4582,7 @@ editorCore.dropdowns.files = {
 
 
 
-
+/* eslint-disable */
 editorCore.dropdowns.projects = {
 
 	status: "closed",
@@ -4827,3 +4980,4 @@ editorCore.dropdowns.projects = {
 
 	updateTextEditor: function(){}
 };
+/* eslint-enable */

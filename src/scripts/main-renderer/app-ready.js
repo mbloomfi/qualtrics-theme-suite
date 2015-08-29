@@ -1,3 +1,4 @@
+/* eslint-disable */
 // INIT app
 window.addEventListener("load", function(){
 	//add global reference to editor and preview
@@ -10,7 +11,7 @@ window.addEventListener("load", function(){
 
 	// baton(function(next){
 		
-		Eve.emit("app-started");
+		Eve.emit("appStarted");
 	
 	// })
 
@@ -36,7 +37,7 @@ window.addEventListener("load", function(){
 	// })
 	// .then(function(next) {
 
-	Eve.on("app-loaded", function(){
+	Eve.on("appLoaded", function(){
 		console.log("app loaded!");
 		window.editor = el("#editor");
 		window.preview = el("#preview");
@@ -363,3 +364,4 @@ function codemirrorInit() {
 	// })
 	// .run();
 });
+/* eslint-enable */

@@ -1,7 +1,5 @@
+/* eslint-disable */
 editorCore.dropdowns.brands = {
-
-	
-
 	setGlobalVariables: function(){
 		window.brandSearchInput = el("#searchBrands");
 			brandSearchInput.on("keyup", function(e){
@@ -156,7 +154,7 @@ editorCore.dropdowns.brands = {
 	populate: function(){
 		console.log("populating brands dropdown");
 		brandName.append(
-			el("+div").addClass(["dropdown", "hide"]).append(
+			el("+div#brandsDropdown").addClass(["dropdown", "hide"]).append(
 
 				el.join([
 					el("+div").addClass(["arrow", "hide"]),
@@ -185,6 +183,7 @@ editorCore.dropdowns.brands = {
 		
 	},
 
+	// **cut this method**
 	refill: function(){
 		console.log("refilling brands dropdown");
 		brandsDropdown.append(
@@ -458,3 +457,4 @@ editorCore.dropdowns.brands = {
 	}
 
 };
+/* eslint-enable */

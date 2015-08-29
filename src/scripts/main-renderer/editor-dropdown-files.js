@@ -1,3 +1,4 @@
+/* eslint-disable */
 editorCore.dropdowns.files = {
 	status: "closed",
 	active: false,
@@ -594,7 +595,7 @@ editorCore.dropdowns.files = {
 	}
 
 };
-
+/* eslint-enable */
 
 
 

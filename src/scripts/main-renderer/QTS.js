@@ -1,36 +1,42 @@
-var QTS = (function(){
-
+let QTS = (function(){
+	"use strict";
 
 	// --------------
 	// Global Eve Listeners
 	// --------------
 
-	Eve.on("Preferences Saved", function(){
+	Eve.on("preferencesSaved", function(){
 		console.log("prefs saved!");
 		core.localData.snippets.readFromPersistentData(core.codeMirror.resetContextMenu, true);
 	});
 
 
-	Eve.on("Code Editor Saved", function(){
+	Eve.on("codeEditorSaved", function(){
 		editorCore.dropdowns.files.setClean();
 		myCodeMirror.markClean();
 		if(core.localData.currentFile.name === "StyleSheet.scss"){
 			core.preview.mode.regular.compileSass();
 		}
-
 	});
 
 	Eve.on("error", function(message){
 		console.error("ERROR:", message);
-		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~\n"+(new Date)+"\n\t"+message+"\n\n", function(){});
+
+		fs.appendFile(
+			"local/errorlog.txt",
+			"\n~~~~~~~~\n${new Date}\n${message}\n",
+			function(err){
+				console.error("errorlog.txt not found");
+			}
+		);
 	});
 
 	window.addEventListener("focus", function(){
-		Eve.emit("window-focused");
+		Eve.emit("windowFocused");
 	});
 
 
-	
+
 	// ---------------------------------------
 	// User Preferences
 	// 
@@ -61,7 +67,7 @@ var QTS = (function(){
 				return callback(true, null);
 			}
 
-			var jsonData;
+			let jsonData;
 
 			try {
 				jsonData = JSON.parse(data);
@@ -95,12 +101,12 @@ var QTS = (function(){
 
 
 
-	Eve.on("Brand Selected", function(brandName, pathToBrand){
+	Eve.on("brandSelected", function(brandName, pathToBrand){
 		// if(!brandName || !pathToBrand) return;
 	});
 
 
-	Eve.on("Project Selected", function(projectName){
+	Eve.on("projectSelected", function(projectName){
 		if(!projectName) {
 			Eve.emit("error", "Prameters Missing");
 			return;
@@ -126,7 +132,7 @@ var QTS = (function(){
 
 
 
-	Eve.on("Code Editor Saved", function(){
+	Eve.on("codeEditorSaved", function(){
 
 	});
 
@@ -142,17 +148,16 @@ var QTS = (function(){
 // ------------------
 // User Preferences
 // ------------------
-var UserPreferences = (function(){
+let UserPreferences = (function(){
 
-	var _userPreferences = {
+	let _userPreferences = {
 		path: path.normalize(__dirname + "/local/user-settings.json")
 	};
 
-	function _pathToBrands() {
-		return _userPreferences.pathToBrands || null;
-	}
+	// default location if not set in user settings
+	let _pathToBrands = path.resolve(process.env.HOME);
 
-	var UserPreferencesInterface = loca(_userPreferences.path);
+	let UserPreferencesInterface = loca(_userPreferences.path);
 
 	UserPreferencesInterface.on("read", function(data){
 
@@ -178,7 +183,7 @@ var UserPreferences = (function(){
 					mainBtn:{
 						text:"Ok",
 						onClick: function(){
-							var prompterInput = document.getElementById("prompterInput");
+							let prompterInput = document.getElementById("prompterInput");
 
 							if(prompterInput.value.length > 0){
 
@@ -213,7 +218,7 @@ var UserPreferences = (function(){
 					mainBtn:{
 						text:"Ok",
 						onClick: function(){
-							var prompterInput = document.getElementById("prompterInput");
+							let prompterInput = document.getElementById("prompterInput");
 
 							if(prompterInput.value.length > 0){
 
@@ -256,25 +261,25 @@ var UserPreferences = (function(){
 				Eve.emit("error", err);
 			}
 			else {
-				Eve.emit("Preferences File Updated");
+				Eve.emit("preferencesFileWritten");
 			}
 		});
 	}
 
 
 
-	Eve.on("app-started",function(){
+	Eve.on("appStarted",function(){
 		updateLocalUserPrefrences(function(){
 			writeUserPrefrences();
-			Eve.emit("app-loaded");
+			Eve.emit("appLoaded");
 		});
 	});
 
-	Eve.on("window-focused", updateLocalUserPrefrences);
-	// Eve.ignore("window-focused").until("app-loaded");
+	Eve.on("windowFocused", updateLocalUserPrefrences);
+	// Eve.ignore("windowFocused").until("appLoaded");
 
 	Eve.on("Local Preferences Updated", writeUserPrefrences);
-	// Eve.ignore("Local Preferences Updated").until("app-loaded");
+	// Eve.ignore("Local Preferences Updated").until("appLoaded");
 
 	/* 
 	return
@@ -292,47 +297,142 @@ var UserPreferences = (function(){
 
 
 
+
+
 // ------------------
 // Persistent Data
 // ------------------
-var PersistentData = (function(){
-	var _pdLocal = {};
-	var _pdPath = __dirname+"/local/persistent-data.json";
+let PersistentData = (function(){
+	// Get rid of local copy, it just adds confusion. Only read from disk.
+	// let _pdLocal = {};
+	let _pdPath = __dirname+"/local/persistent-data.json";
 
-	function resetLocalPersistentData() {
+	// function resetLocalPersistentData() {
 		
-		fs.readFile(_pdPath, "utf-8", function(err, data){
-			if(err) return Eve.emit("error",err);
+	// 	fs.readFile(_pdPath, "utf-8", function(err, data){
+	// 		if(err) return Eve.emit("error",err);
 
-			var pd = JSON.parse(data);
-			_pdLocal = pd;
+	// 		let pd = JSON.parse(data);
+	// 		_pdLocal = pd;
 
-			Eve.emit("Local Persistent Data Updated");
+	// 		Eve.emit("Local Persistent Data Updated");
 
-		})
-	}
-
-	function updatePersistentDataFile() {
-		console.log("updating persistent data file");
-		fs.writeFile(_pdPath, JSON.stringify(_pdLocal), function(err){
-			if(err) Eve.emit("err", err);
+	// 	})
+	// }
+	function getPersistentData(callback) {
+		fs.readFile(_pdPath, 'utf-8', function(err, data){
+			if(err) return Eve.emit("error", err);
+			callback(JSON.parse(data));
 		});
 	}
 
-	Eve.on("app-started", resetLocalPersistentData);
-	
-	Eve.on("window-focused", resetLocalPersistentData);
+	function addRecentBrand(brandName) {
+		getPersistentData(function(_pData){
+			// first check if brand is already in recent brands
+			var brandIndex = _pData.recentBrands.indexOf(brandName);
+			if (brandIndex !== -1) {
+				_pData.recentBrands.splice(brandIndex, 1);
+			}
+			_pData.recentBrands.shift(brandName);
+			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+				if(err) return Eve.emit("error", err);
+			});
+		});
+	}
 
-	Eve.on("Recent Brands Changed", function(recentBrands){
-		console.log("recent brands changed!");
-		_pdLocal.recentBrands = recentBrands;
-		updatePersistentDataFile();
-	});
+	function resetRecentBrands(brandsList) {
+		getPersistentData(function(_pData){
+			_pData.recentBrands = brandsList;
+			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+				if(err) return Eve.emit("error", err);
+			});
+		});
+	}
+
+	function pruneRecentBrands() {
+		getPersistentData(function(pData){
+
+			let _recentBrands = pData.recentBrands;
+			let brandsPath = UserPreferences.getPathToBrands();
+			let pruneBrands = [];
+			let checkedBrands = 0;
+			let totalRecentBrands = _recentBrands.length;
+			let i = _recentBrands.length;
+
+			function checkFileStatus(err, stats, index) {
+				checkedBrands++;
+
+				// prune brand if not found
+				if(err) {
+					pruneBrands.push(_recentBrands[index]);
+				}
+
+				// after checking all recent brands
+				if(checkedBrands === totalRecentBrands) {
+					if(pruneBrands.length > 0) {
+						pruneBrands.forEach(function(brandToPrune){
+							let brandIndex = _recentBrands.indexOf(brandToPrune);
+							_recentBrands.splice(brandIndex, 1);
+						});
+						// set recent brands to new, pruned list
+						resetRecentBrands(_recentBrands);
+					}
+				}
+			}
+
+			while(i--) {
+				let _i = i;
+				fs.stat(brandsPath + "/" + _recentBrands[i], function(err, stats){
+					checkFileStatus(err, stats, _i);
+				});
+			}	
+		});
+	}
+
+	function addSnippet(snippetObject) {
+		// getPersistentData(function(_pData){
+		// 	// first check if brand is already in recent brands
+		// 	var brandIndex = _pData.recentBrands.indexOf(brandName);
+		// 	if (brandIndex !== -1) {
+		// 		_pData.recentBrands.splice(brandIndex, 1);
+		// 	}
+		// 	_pData.recentBrands.shift(brandName);
+		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+		// 		if(err) return Eve.emit("error", err);
+		// 	});
+		// });
+	}
+
+	function removeSnippet(snippetId) {
+		// getPersistentData(function(_pData){
+		// 	// first check if brand is already in recent brands
+		// 	var brandIndex = _pData.recentBrands.indexOf(brandName);
+		// 	if (brandIndex !== -1) {
+		// 		_pData.recentBrands.splice(brandIndex, 1);
+		// 	}
+		// 	_pData.recentBrands.shift(brandName);
+		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
+		// 		if(err) return Eve.emit("error", err);
+		// 	});
+		// });
+	}
+
+	// Eve.on("appStarted", resetLocalPersistentData);
+	
+	// Eve.on("windowFocused", resetLocalPersistentData);
+
+	// Eve.on("Recent Brands Changed", function(recentBrands){
+	// 	console.log("recent brands changed!");
+	// 	// _pdLocal.recentBrands = recentBrands;
+	// 	updatePersistentDataFile();
+	// });
+	Eve.on("appStarted", pruneRecentBrands)
 
 	return {
-		getLocal: function(){
-			return _pdLocal;
-		}
+		get: getPersistentData
+		// getLocal: function(){
+		// 	return _pdLocal;
+		// }
 	}
 
 })();
@@ -343,46 +443,21 @@ var PersistentData = (function(){
 
 
 
+
 // ------------------
 // Brands
 // ------------------
-var Brands = (function(){
-	_brands = {
-		recent: null,
-		list: null
-	};
+let Brands = (function(){
+	// let _brands = {
+	// 	recent: null,
+	// 	list: null
+	// };
 
-	_currentBrand = {
+	let _currentBrand = {
 		name: null,
 		path: null,
 		projectsList: null
 	};
-
-	function pruneRecentBrands() {
-		console.log("pruning brands");
-		var pathToBrands = UserPreferences.getPathToBrands();
-		var recentBrandsAltered = false;
-		var i = _brands.recent.length;
-		while(i--) {
-			fs.stat(pathToBrands + "/" + _brands.recent[i], function(err, stats){
-				if(err) {
-					console.log("removing brand!");
-					_brands.recent.splice(i, 1);
-					recentBrandsAltered = true;
-				}
-			})
-		}
-		setTimeout(function(){
-			if(recentBrandsAltered) {
-				console.log("emitting?");
-				Eve.emit("Recent Brands Changed", _brands.recent);
-			}
-			else {
-				console.log("not emitting?");
-			}
-		}, 400);
-			
-	}
 
 	function setCurrentBrand(brandName) {
 		_currentBrand.name = brandName;
@@ -391,39 +466,79 @@ var Brands = (function(){
 			if(err) return Eve.emit("error",err);
 
 			_currentBrand.projectsList = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
 				if(fsStats.isDirectory()){
 					_currentBrand.projectsList.push(files[i]);
 				}
 			}
 			Eve.emit("Current Brand Updated", _currentBrand);
-
 		});
 	}
 
-	function resetLocalBrandsList() {
-		var brandsPath = UserPreferences.getPathToBrands();
-		fs.readdir(brandsPath, function(err, files){
-			if(err) return Eve.emit("error",err);
-			var brandsList = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(brandsPath+"/"+files[i]);
-				if(fsStats.isDirectory()){
-					brandsList.push(files[i]);
+	function getRecentBrands(callback) {
+		PersistentData.get(function(pData){
+			callback(pData.recentBrands);
+		});
+	}
+
+
+
+	let dropdownMenu = (function(){
+
+		function init() {
+			dom("brandName").addEventListener('click', function(){
+				Eve.emit("Brands Menu Btn Clicked");
+				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+				if(!this.hasClass("inactive")){
+					self.toggle();
+					evt.stopPropagation();
 				}
-			}
-			_brands.list = brandsList;
-			Eve.emit("Local Brands List Updated", _currentBrand);
-		});
-	}
+				dom("brandsDropdown").on("click", function(evt){
+					evt.stopPropagation();
+				});
+			});
+		}
+		function populate() {}
+		function selectBrand() {}
+		function toggle() {}
+		function close() {}
+		function open() {}
+		
+		// function open() {}
+		// function open() {}
+		// function open() {}
 
-	// Eve.on("app-loaded", function(){
+
+
+	})();
+
+
+	// function resetLocalBrandsList() {
+	// 	console.error("dont do this");
+	// 	// let brandsPath = UserPreferences.getPathToBrands();
+	// 	// fs.readdir(brandsPath, function(err, files){
+	// 	// 	if(err) return Eve.emit("error",err);
+	// 	// 	let brandsList = [];
+	// 	// 	for(let i = 0, ii = files.length; i < ii; i++) {
+	// 	// 		let fsStats = fs.statSync(brandsPath+"/"+files[i]);
+	// 	// 		if(fsStats.isDirectory()){
+	// 	// 			brandsList.push(files[i]);
+	// 	// 		}
+	// 	// 	}
+	// 	// 	_brands.list = brandsList;
+	// 	// 	Eve.emit("Local Brands List Updated", _currentBrand);
+	// 	// });
+	// }
+
+	// Eve.on("appLoaded", function(){
 	// 	console.log("app loaded");
 	// 	pruneRecentBrands();
 	// })
 
-	Eve.on("Brand Selected", function(brandName){
+
+	Eve.on("brandSelected", function(brandName){
 		// console.log("selecting brand =>",brandName);
 		setCurrentBrand(brandName);
 	});
@@ -436,22 +551,19 @@ var Brands = (function(){
 		// console.log("SELECTED:",_currentBrand);
 		// console.log("files in brand:",_currentBrand.projectsList);
 	}); 
-	// Eve.ignore("Current Brand Updated").until("app-loaded")
+	// Eve.ignore("Current Brand Updated").until("appLoaded")
 
-	Eve.on("Update Local Recent Brands", function(){
 
-	});
-
-	var initLocalRecentBrands = Eve.on("Local Recent Brands Updated", function(){
+	Eve.once("Local Recent Brands Updated", function(){
 		pruneRecentBrands();
-		initLocalRecentBrands.remove();
 	});
 
-	Eve.on("Local Persistent Data Updated", function(){
-		console.log("local pd updated");
-		_brands.recent = PersistentData.getLocal().recentBrands;
-		Eve.emit("Local Recent Brands Updated");
-	});
+	// // !!!!!!!!! don't need this !!!!!!!!!!!!!!
+	// Eve.on("Local Persistent Data Updated", function(){
+	// 	console.log("local pd updated");
+	// 	_brands.recent = PersistentData.getLocal().recentBrands;
+	// 	Eve.emit("Local Recent Brands Updated");
+	// });
 
 	
 
@@ -462,7 +574,8 @@ var Brands = (function(){
 			return _currentBrand;
 		},
 		getRecent: function(){
-			return _brands.recent || null;
+			console.error("dont do this");
+			// return _brands.recent || null;
 		},
 		getList: function(){
 			return _brands.list || null;
@@ -476,10 +589,10 @@ var Brands = (function(){
 // ------------------
 // Projects
 // ------------------
-var Projects = (function(){
-	_projects = {};
+let Projects = (function(){
+	let _projects = {};
 
-	_currentProject = {
+	let _currentProject = {
 		name: null,
 		path: null,
 		files: null,
@@ -505,8 +618,8 @@ var Projects = (function(){
 		_currentProject.path = Brands.current.path + "/" + projectName;
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -518,8 +631,8 @@ var Projects = (function(){
 	function updateCurrentProjectFiles() {
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
-			for(var i = 0, ii = files.length; i < ii; i++) {
-				var fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+			for(let i = 0, ii = files.length; i < ii; i++) {
+				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -528,7 +641,7 @@ var Projects = (function(){
 		});
 	}
 
-
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Select Project", function(projectName){
 		setCurrentProject(projectName);
 	});
@@ -538,8 +651,10 @@ var Projects = (function(){
 		// console.log("_currentProject =>",_currentProject);
 	});
 
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Update Current Project Files List", updateCurrentProjectFiles);
 
+	// !!!!!! this is not an event !!!!!!!!
 	Eve.on("Rename File", function(data, callback){
 		if(!data.path || !data.newName || !data.oldName) {
 			return Eve.emit("error", "Rename File Error");
@@ -564,11 +679,31 @@ var Projects = (function(){
 
 })();
 
-// ------------------
-// Code Editor
-// ------------------
-var codeEditor = (function(){
 
+
+// ------------------
+// Code Editor (codemirror)
+// ------------------
+let Editor = (function(){
+	function resetContextMenu() {
+
+	}
+
+	function deactive() {
+		
+	}
+
+	function activate() {
+		
+	}
+
+	function setText() {
+
+	}
+
+	function compileStyles() {
+
+	}
 
 
 
