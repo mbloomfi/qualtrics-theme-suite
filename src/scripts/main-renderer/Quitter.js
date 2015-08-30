@@ -1,3 +1,4 @@
+/* eslint-disable */
 (function(){
 	window.Quitter = {
 		quit: function(){
@@ -30,3 +31,4 @@
 		}
 	};
 })();
+/* eslint-enable */

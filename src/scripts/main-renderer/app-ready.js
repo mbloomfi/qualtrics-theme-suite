@@ -46,8 +46,8 @@ window.addEventListener("load", function(){
 
 		editorCore.dropdowns.bodyClick();
 
-		editorCore.dropdowns.brands.populate();
-		editorCore.dropdowns.brands.init();
+		// editorCore.dropdowns.brands.populate();
+		// editorCore.dropdowns.brands.init();
 		
 		editorCore.dropdowns.projects.populate();
 		editorCore.dropdowns.projects.init();

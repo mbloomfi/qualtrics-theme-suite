@@ -1,9 +1,11 @@
 module.exports = (function(){
-	var _elements = {};
-
+	var util = require("util");
+	var _cache = {};
 	function getElementById(id) {
-		dom[id] = addMethods(document.getElementById(id));
-		return dom[id];
+		var element = document.getElementById(id);
+		if(!element) return console.error("could not find element with id:",id);
+		_cache[id] = addMethods(element);
+		return _cache[id];
 	}
 
 	function createElement(el) {
@@ -11,16 +13,25 @@ module.exports = (function(){
 	}
 
 	function removeElement(el) {
-		if(el.parentNode) 
-			el.parentNode.removeChild(el);
+		var element = el;
+		if(util.isString(el)){
+			element = dom(el);
+		}
+		if(element.parentNode) {
+			element.parentNode.removeChild(element);
+		}
+		if(_cache[element.id]){
+			// console.log("remove from cache:",element.id);
+			delete _cache[element.id];
+		}
 	}
 
 	function addMethods(obj) {
 		obj.append = function() {
 			for(var i = 0, ii = arguments.length; i < ii; i++){
-				self.appendChild(arguments[i]);
+				this.appendChild(arguments[i]);
 			}
-			return self;
+			return this;
 		}
 
 		obj.addClass = function() {
@@ -30,10 +41,18 @@ module.exports = (function(){
 			return this;
 		}
 
+		obj.removeClass = function() {
+			for(var i = 0, ii = arguments.length; i < ii; i++){
+				this.classList.remove(arguments[i]);
+			}
+			return this;
+		}
+
 		obj.setId = function(id) {
 			this.id = id;
-			if(!dom[id]){
-				dom[id] = this;
+			if(!_cache[id]){
+				// console.log("add to cache:",id);
+				_cache[id] = this;
 			};
 			return this;
 		}
@@ -54,15 +73,19 @@ module.exports = (function(){
 			return this;
 		}
 
+		obj.queryByClass = function(className) {
+			return this.getElementsByClassName(className);
+		}
+
 		return obj;
 	}
 
 	function parseDomInput(input) {
 		// if elemnt already cached, return it
-		if(dom[input]) {
-			return dom[input];
+		if(_cache[input]) {
+			// console.log("from cache:",input);
+			return _cache[input];
 		}
-
 		return getElementById(input)
 	}
 

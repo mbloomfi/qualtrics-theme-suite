@@ -24,7 +24,7 @@ let QTS = (function(){
 
 		fs.appendFile(
 			"local/errorlog.txt",
-			"\n~~~~~~~~\n${new Date}\n${message}\n",
+			`\n~~~~~~~~\n${new Date}\n${message}\n`,
 			function(err){
 				console.error("errorlog.txt not found");
 			}
@@ -121,7 +121,7 @@ let QTS = (function(){
 				resetLocalInfoQtheme();
 
 				writeInfoQTheme(
-					_currentProject.path+"/info.qtheme",
+					`${_currentProject.path}/info.qtheme`,
 					_currentProject.infoQTheme
 				);
 
@@ -151,7 +151,7 @@ let QTS = (function(){
 let UserPreferences = (function(){
 
 	let _userPreferences = {
-		path: path.normalize(__dirname + "/local/user-settings.json")
+		path: path.normalize(`${__dirname}/local/user-settings.json`)
 	};
 
 	// default location if not set in user settings
@@ -210,7 +210,7 @@ let UserPreferences = (function(){
 
 			setTimeout(function(){
 				Prompter.prompt({
-					message:"Brands File Path: "+process.env.HOME+"/",
+					message:`Brands File Path: ${process.env.HOME}/`,
 					type: "question",
 					input: {
 						placeholder: "Desktop"
@@ -233,14 +233,14 @@ let UserPreferences = (function(){
 			}, 350);
 
 		} else {
-			_pathToBrands = process.env.HOME + "/" + _userPreferences.files.brands.path;
+			_pathToBrands = `${process.env.HOME}/${_userPreferences.files.brands.path}`;
 			if(typeof callback === "function") callback();
 		}
 	}
 
 
 	function updateLocalUserPrefrences(callback){
-		fs.readFile(__dirname+"/local/user-settings.json", "utf-8", function(err, data){
+		fs.readFile(`${__dirname}/local/user-settings.json`, "utf-8", function(err, data){
 			if(err) return Eve.emit("error", err);
 
 			_userPreferences = JSON.parse(data);
@@ -256,7 +256,7 @@ let UserPreferences = (function(){
 	}
 
 	function writeUserPrefrences(){
-		fs.writeFile(__dirname+"/local/user-settings.json", JSON.stringify(_userPreferences), function(err){
+		fs.writeFile(`${__dirname}/local/user-settings.json`, JSON.stringify(_userPreferences), function(err){
 			if(err) {
 				Eve.emit("error", err);
 			}
@@ -305,7 +305,7 @@ let UserPreferences = (function(){
 let PersistentData = (function(){
 	// Get rid of local copy, it just adds confusion. Only read from disk.
 	// let _pdLocal = {};
-	let _pdPath = __dirname+"/local/persistent-data.json";
+	let _pdPath = `${__dirname}/local/persistent-data.json`;
 
 	// function resetLocalPersistentData() {
 		
@@ -329,7 +329,7 @@ let PersistentData = (function(){
 	function addRecentBrand(brandName) {
 		getPersistentData(function(_pData){
 			// first check if brand is already in recent brands
-			var brandIndex = _pData.recentBrands.indexOf(brandName);
+			let brandIndex = _pData.recentBrands.indexOf(brandName);
 			if (brandIndex !== -1) {
 				_pData.recentBrands.splice(brandIndex, 1);
 			}
@@ -382,9 +382,11 @@ let PersistentData = (function(){
 
 			while(i--) {
 				let _i = i;
-				fs.stat(brandsPath + "/" + _recentBrands[i], function(err, stats){
+				/* eslint-disable no-loop-func */
+				fs.stat(`${brandsPath}/${_recentBrands[i]}`, function(err, stats){
 					checkFileStatus(err, stats, _i);
 				});
+				/* eslint-enable no-loop-func */
 			}	
 		});
 	}
@@ -461,13 +463,13 @@ let Brands = (function(){
 
 	function setCurrentBrand(brandName) {
 		_currentBrand.name = brandName;
-		_currentBrand.path = UserPreferences.getPathToBrands() + "/" + brandName;
+		_currentBrand.path = `${UserPreferences.getPathToBrands()}/${brandName}`;
 		fs.readdir(_currentBrand.path, function(err, files){
 			if(err) return Eve.emit("error",err);
 
 			_currentBrand.projectsList = [];
 			for(let i = 0, ii = files.length; i < ii; i++) {
-				let fsStats = fs.statSync(_currentBrand.path+"/"+files[i]);
+				let fsStats = fs.statSync(`${_currentBrand.path}/${files[i]}`);
 				if(fsStats.isDirectory()){
 					_currentBrand.projectsList.push(files[i]);
 				}
@@ -478,41 +480,14 @@ let Brands = (function(){
 
 	function getRecentBrands(callback) {
 		PersistentData.get(function(pData){
+			console.log("pData:", pData);
 			callback(pData.recentBrands);
 		});
 	}
 
 
 
-	let dropdownMenu = (function(){
-
-		function init() {
-			dom("brandName").addEventListener('click', function(){
-				Eve.emit("Brands Menu Btn Clicked");
-				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
-				if(!this.hasClass("inactive")){
-					self.toggle();
-					evt.stopPropagation();
-				}
-				dom("brandsDropdown").on("click", function(evt){
-					evt.stopPropagation();
-				});
-			});
-		}
-		function populate() {}
-		function selectBrand() {}
-		function toggle() {}
-		function close() {}
-		function open() {}
-		
-		// function open() {}
-		// function open() {}
-		// function open() {}
-
-
-
-	})();
+	
 
 
 	// function resetLocalBrandsList() {
@@ -543,9 +518,7 @@ let Brands = (function(){
 		setCurrentBrand(brandName);
 	});
 
-	Eve.on("Brands Menu Btn Clicked", function(){
-		resetLocalBrandsList();
-	})
+	
 
 	Eve.on("Current Brand Updated", function(_currentBrand){
 		// console.log("SELECTED:",_currentBrand);
@@ -554,9 +527,9 @@ let Brands = (function(){
 	// Eve.ignore("Current Brand Updated").until("appLoaded")
 
 
-	Eve.once("Local Recent Brands Updated", function(){
-		pruneRecentBrands();
-	});
+	// Eve.once("Local Recent Brands Updated", function(){
+	// 	pruneRecentBrands();
+	// });
 
 	// // !!!!!!!!! don't need this !!!!!!!!!!!!!!
 	// Eve.on("Local Persistent Data Updated", function(){
@@ -565,7 +538,157 @@ let Brands = (function(){
 	// 	Eve.emit("Local Recent Brands Updated");
 	// });
 
-	
+	let dropdownMenu = (function(){
+
+		/* _tempBrandsList is ONLY to be used when searching for brands. 
+		That is when the extra speed from caching is needed. 
+		Otherwise, just search manually.*/
+		let _tempBrandsList = [];
+		/* -------------------- */
+
+		let _dropdownStatus = "closed";
+
+		/**/
+		function init() {
+			dom("brandName").append(
+				dom.create('div').setId('brandsDropdown').addClass("dropdown", "hide").append(
+					dom.create("div").addClass("arrow", "hide"),
+					dom.create("div").addClass("dropdownBody").append(
+						dom.create("div").setId("searchBrandsContainer").append(
+							dom.create("input").setId("searchBrands").attr("placeholder", "Search")
+						),
+						dom.create("section").setId("brandsListCont").append(
+							
+						)
+					)
+				)
+			);
+
+			dom("brandName").addEventListener('click', function(evt){
+				Eve.emit("brandsMenuBtnClicked");
+
+				// these methods should be in the project interface, not in the brand
+				// if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+				// if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+				if(!this.classList.contains("inactive")){
+					evt.stopPropagation();
+				}
+			});
+
+			dom("brandsDropdown").addEventListener("click", function(evt){
+				evt.stopPropagation();
+			});
+		}
+
+		/**/
+		function populate(mode, brandsList) {
+			if(mode === "recentBrands"){
+				let brandsListCont = dom("brandsListCont");
+				let recentBrandsCont = dom.create("div").setId("recentBrandsCont");
+
+				console.log("brandsList:", brandsList);
+
+				// add each result
+				if(brandsList.length > 0){
+					recentBrandsCont.append(
+						dom.create("div").addClass("header").text("Recent Brands")
+					)
+					let limit = 20;
+					console.log("show recent brands!");
+					for(let i = 0; i < limit; i++){
+						recentBrandsCont.append(
+							dom.create("button").addClass("brand-item")
+								.attr("data-brandname",brandsList[i]).text(brandsList[i])
+						)
+					}		
+					brandsListCont.append(recentBrandsCont);	
+				} 
+
+				else {
+					brandsListCont.append(
+						recentBrandsCont.addClass("no-recent").text("Search for brands.")
+					);
+				}
+
+
+				// brandsListCont.purge().append( recentBrandsCont );
+				// el(".brand-item").on("click", function(){
+				// 	editorCore.dropdowns.brands.select(this.dataset.brandname);
+				// });
+
+			}
+		}
+
+		/**/
+		function selectBrand() {
+
+		}
+
+		/**/
+		function toggle() {
+			console.log("toggle brand menu");
+			if(_dropdownStatus === "opened") {
+				close();
+			}
+			else if(_dropdownStatus === "closed") {
+				open();
+			}
+		}
+
+		/**/
+		function open() {
+			_dropdownStatus = "opened";
+			dom("brandsDropdown").removeClass("hide")
+				.queryByClass("arrow")[0].classList.remove("hide");
+			dom("brandName").addClass("dropdown-active");
+			dom("searchBrands").focus();
+
+			Eve.emit("brandsDropdownOpened");
+		}
+
+		/**/
+		function close() {
+			_dropdownStatus = "closed";
+
+			fang(
+				function(){
+					// self.search.activated = false;
+					dom("brandsDropdown").addClass("hide")
+						.queryByClass("arrow")[0].addClass("hide");
+					brandName.rmClass("dropdown-active");
+					setTimeout(this.next, 200);
+				},
+				function(){
+					dom("brandsListCont").purge();
+					// editorCore.dropdowns.brands.search.newBrandBtn.remove();
+					// self.purge();
+					this.next();
+				},
+				function(){
+					// self.refill();
+					// dom("brandsDropdown").el(".arrow")[0].addClass("hide");
+				}
+			).init();
+		}
+		
+		
+		// function open() {}
+		// function open() {}
+		// function open() {}
+
+		Eve.on("appLoaded", init);
+
+		Eve.on("brandsMenuBtnClicked", function(){
+			toggle();
+		})
+
+		Eve.on("brandsDropdownOpened", function(){
+			getRecentBrands(function(recentBrandsList){
+				populate("recentBrands", recentBrandsList);
+			});
+		});
+
+	})();
 
 	/* return
 	*/
@@ -576,9 +699,6 @@ let Brands = (function(){
 		getRecent: function(){
 			console.error("dont do this");
 			// return _brands.recent || null;
-		},
-		getList: function(){
-			return _brands.list || null;
 		}
 	};
 
@@ -615,11 +735,11 @@ let Projects = (function(){
 
 	function setCurrentProject(projectName) {
 		_currentProject.name = projectName;
-		_currentProject.path = Brands.current.path + "/" + projectName;
+		_currentProject.path = `${Brands.current.path}/${projectName}`;
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
 			for(let i = 0, ii = files.length; i < ii; i++) {
-				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+				let fsStats = fs.statSync(`${_currentProject.path}/${files[i]}`);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -632,7 +752,7 @@ let Projects = (function(){
 		fs.readdir(_currentProject.path, function(err, files){
 			_currentProject.files = [];
 			for(let i = 0, ii = files.length; i < ii; i++) {
-				let fsStats = fs.statSync(_currentProject.path+"/"+files[i]);
+				let fsStats = fs.statSync(`${_currentProject.path}/${files[i]}`);
 				if(fsStats.isFile() && files[i].charAt(0) !== "."){
 					_currentProject.files.push(files[i]);
 				}
@@ -663,10 +783,8 @@ let Projects = (function(){
 			if(err){ 
 				return Eve.emit("error", "Rename File Error");
 			}
-			else {
-				if(typeof callback === "function") {
-					callback();
-				}
+			if(typeof callback === "function") {
+				callback();
 			}
 		});
 	});

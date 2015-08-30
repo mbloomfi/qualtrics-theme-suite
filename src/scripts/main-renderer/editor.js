@@ -1,3 +1,4 @@
+/* eslint-disable */
 var editorPreviewBar = {
 	editorWidth: "40%",
 	previewWidth: "60%",
@@ -121,7 +122,7 @@ var editorCore = {
 		var currentSize = parseInt(codeMirrorElement.style.fontSize);
 		if( currentSize > 10 ){
 			// console.log("decreasing");
-			codeMirrorElement.style.fontSize = (--currentSize)+"px";
+			codeMirrorElement.style.fontSize = `${--currentSize}px`;
 		}
 	}
 
@@ -129,4 +130,5 @@ var editorCore = {
 };
 
 editorCore.init();
+/* eslint-enable */
 	

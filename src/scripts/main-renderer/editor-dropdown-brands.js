@@ -20,19 +20,20 @@ editorCore.dropdowns.brands = {
 
 	// prepares click listener and behavior
 	init: function(){
-			var self = this;
-			brandName.on("click", function(evt){
-				Eve.emit("Brands Menu Btn Clicked");
-				if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
-				if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
-				if(!this.hasClass("inactive")){
-					self.toggle();
-					evt.stopPropagation();
-				}
-			});
-			brandsDropdown.on("click", function(evt){
-				evt.stopPropagation();
-			});
+		console.error("dont use this method (brands.init)");
+			// var self = this;
+			// brandName.on("click", function(evt){
+			// 	Eve.emit("Brands Menu Btn Clicked");
+			// 	if(editorCore.dropdowns.projects.status === "opened") editorCore.dropdowns.projects.close();
+			// 	if(editorCore.dropdowns.files.status === "opened") editorCore.dropdowns.files.close();
+			// 	if(!this.hasClass("inactive")){
+			// 		self.toggle();
+			// 		evt.stopPropagation();
+			// 	}
+			// });
+			// brandsDropdown.on("click", function(evt){
+			// 	evt.stopPropagation();
+			// });
 	},
 
 	select: function(_brandName){
@@ -152,32 +153,33 @@ editorCore.dropdowns.brands = {
 	},
 
 	populate: function(){
-		console.log("populating brands dropdown");
-		brandName.append(
-			el("+div#brandsDropdown").addClass(["dropdown", "hide"]).append(
+		console.error("dont use this method (brands.populate)");
+		// console.log("populating brands dropdown");
+		// brandName.append(
+		// 	el("+div#brandsDropdown").addClass(["dropdown", "hide"]).append(
 
-				el.join([
-					el("+div").addClass(["arrow", "hide"]),
+		// 		el.join([
+		// 			el("+div").addClass(["arrow", "hide"]),
 
-					el("+div").addClass("dropdownBody").append(
+		// 			el("+div").addClass("dropdownBody").append(
 
-						el.join([
-							el("+div#searchBrandsContainer").append(
-								el("+input#searchBrands").attr("placeholder", "Search")
-							),
-							el("+section#brandsListCont").append(
-								el("+div#recentBrands").text("Recent Brands")
-							)
-						])
+		// 				el.join([
+		// 					el("+div#searchBrandsContainer").append(
+		// 						el("+input#searchBrands").attr("placeholder", "Search")
+		// 					),
+		// 					el("+section#brandsListCont").append(
+		// 						el("+div#recentBrands").text("Recent Brands")
+		// 					)
+		// 				])
 
-					)
-				])
+		// 			)
+		// 		])
 
-			)
+		// 	)
 
-		);
+		// );
 
-		window.brandsDropdown = brandName.el(".dropdown")[0];
+		// window.brandsDropdown = brandName.el(".dropdown")[0];
 
 		// then enable dropdown
 		
@@ -194,7 +196,7 @@ editorCore.dropdowns.brands = {
 
 					el.join([
 						el("+div#searchBrandsContainer").append(
-							el("+input#searchBrands").text("serch brands").attr("placeholder", "Search")
+							el("+input#searchBrands").attr("placeholder", "Search")
 						),
 						el("+section#brandsListCont").append(
 							el("+div#recentBrands").text("recent brands")

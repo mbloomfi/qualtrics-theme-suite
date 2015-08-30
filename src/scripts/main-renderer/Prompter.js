@@ -1,3 +1,4 @@
+/* eslint-disable */
 var dimmer = {
 	on: function() {
 		var _dimmer = el("+div").addClass("dimmer");
@@ -91,7 +92,5 @@ var dimmer = {
 		}
 
 	};
-	
-	
-	
 })();
+/* eslint-enable */
