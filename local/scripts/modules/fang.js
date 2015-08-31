@@ -9,7 +9,7 @@ module.exports = (function() {
 			for(var i = 0, ii = arguments.length; i < ii; i++){
 				args.push(arguments[i]);
 			}
-			console.log("this",this)
+			// console.log("this",this)
 			this.utils.i = -1;
 			return this.next.apply(null, args);
 		},

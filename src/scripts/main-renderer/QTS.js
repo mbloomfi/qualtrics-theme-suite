@@ -540,7 +540,7 @@ let Brands = (function(){
 
 	let dropdownMenu = (function(){
 
-		/* _tempBrandsList is ONLY to be used when searching for brands. 
+		/* _tempBrandsList is ONLY to be used when searching for brands (getBrandsByCriteria). 
 		That is when the extra speed from caching is needed. 
 		Otherwise, just search manually.*/
 		let _tempBrandsList = [];
@@ -578,7 +578,18 @@ let Brands = (function(){
 			dom("brandsDropdown").addEventListener("click", function(evt){
 				evt.stopPropagation();
 			});
+
+			dom("searchBrands").addEventListener('keyup',function(e){
+				if(this.value.trim().length) {
+					getBrandsByCriteria(this.value, function(list){
+						console.log("filteredList:",list);
+						populate("search", list);
+					});
+				}
+					
+			});
 		}
+
 
 		/**/
 		function populate(mode, brandsList) {
@@ -617,6 +628,9 @@ let Brands = (function(){
 				// });
 
 			}
+			else if(mode === "search"){
+				console.log("this is where you update the dropdown with the search results");
+			}
 		}
 
 		/**/
@@ -649,6 +663,8 @@ let Brands = (function(){
 		/**/
 		function close() {
 			_dropdownStatus = "closed";
+			// clear the '_tempBrandsList' from cache
+			_tempBrandsList = [];
 
 			fang(
 				function(){
@@ -669,6 +685,36 @@ let Brands = (function(){
 					// dom("brandsDropdown").el(".arrow")[0].addClass("hide");
 				}
 			).init();
+		}
+
+		/*should only be called by 'getBrandsByCriteria'*/
+		function filterByCriteria(list, criteria) {
+			let filteredList = [];
+			list.forEach(function(file){
+				if(file.toUpperCase().indexOf(criteria.toUpperCase()) !== -1) filteredList.push(file);
+			})
+			// console.log("list?", filteredList);
+			return filteredList;
+		}
+
+		/**/
+		function getBrandsByCriteria(criteria, callback) {
+			if(_tempBrandsList.length) {
+				console.log("cached!!!");
+				callback(filterByCriteria(_tempBrandsList, criteria));
+			}
+			else {
+				fs.readdir(UserPreferences.getPathToBrands(), function(err, files){
+					if(err) return Eve.emit("error", err);
+					_tempBrandsList = files;
+					// make sure to clear the '_tempBrandsList' when the dropdown menu is closed
+					// console.log("files:",files);
+					callback(filterByCriteria(files, criteria));
+				})
+			}
+			// console.log("path:",UserPreferences.getPathToBrands());
+				
+			// console.log("getting brands by criteria:", criteria);
 		}
 		
 		
