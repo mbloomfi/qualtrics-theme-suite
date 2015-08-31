@@ -331,11 +331,15 @@ let PersistentData = (function(){
 			// first check if brand is already in recent brands
 			let brandIndex = _pData.recentBrands.indexOf(brandName);
 			if (brandIndex !== -1) {
+				console.log("brand already in recent!");
+				console.log("_pData.recentBrands before:", _pData.recentBrands);
 				_pData.recentBrands.splice(brandIndex, 1);
 			}
-			_pData.recentBrands.shift(brandName);
+			_pData.recentBrands.unshift(brandName);
+			console.log("_pData.recentBrands after:", _pData.recentBrands);
 			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
 				if(err) return Eve.emit("error", err);
+				// console.log("_pData.recentBrands", _pData.recentBrands)
 			});
 		});
 	}
@@ -398,7 +402,7 @@ let PersistentData = (function(){
 		// 	if (brandIndex !== -1) {
 		// 		_pData.recentBrands.splice(brandIndex, 1);
 		// 	}
-		// 	_pData.recentBrands.shift(brandName);
+		// 	_pData.recentBrands.unshift(brandName);
 		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
 		// 		if(err) return Eve.emit("error", err);
 		// 	});
@@ -412,7 +416,7 @@ let PersistentData = (function(){
 		// 	if (brandIndex !== -1) {
 		// 		_pData.recentBrands.splice(brandIndex, 1);
 		// 	}
-		// 	_pData.recentBrands.shift(brandName);
+		// 	_pData.recentBrands.unshift(brandName);
 		// 	fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
 		// 		if(err) return Eve.emit("error", err);
 		// 	});
@@ -428,8 +432,8 @@ let PersistentData = (function(){
 	// 	// _pdLocal.recentBrands = recentBrands;
 	// 	updatePersistentDataFile();
 	// });
-	Eve.on("appStarted", pruneRecentBrands)
-
+	Eve.on("appStarted", pruneRecentBrands);
+	Eve.on("currentBrandSet", addRecentBrand);
 	return {
 		get: getPersistentData
 		// getLocal: function(){
@@ -557,9 +561,7 @@ let Brands = (function(){
 						dom.create("div").setId("searchBrandsContainer").append(
 							dom.create("input").setId("searchBrands").attr("placeholder", "Search")
 						),
-						dom.create("section").setId("brandsListCont").append(
-							
-						)
+						dom.create("section").setId("brandsListCont")
 					)
 				)
 			);
@@ -579,22 +581,37 @@ let Brands = (function(){
 				evt.stopPropagation();
 			});
 
+
+			let searchTimeout;
 			dom("searchBrands").addEventListener('keyup',function(e){
-				if(this.value.trim().length) {
-					getBrandsByCriteria(this.value, function(list){
-						console.log("filteredList:",list);
-						populate("search", list);
-					});
-				}
-					
+					let self = this;
+					if(searchTimeout) {
+					 clearTimeout(searchTimeout);
+					}
+					searchTimeout = setTimeout(function() {
+						searchTimeout = undefined;
+						let inputValue = self.value;
+						if(inputValue.trim().length){
+
+							getBrandsByCriteria(self.value, function(list){
+								console.log("filteredList:",list);
+								populate("search", list);
+							});
+						}
+						else {
+							Eve.emit("searchFieldEmpty");
+						}
+					}, 300);
 			});
 		}
 
 
 		/**/
 		function populate(mode, brandsList) {
+			let brandsListCont = dom("brandsListCont").purge();
+
 			if(mode === "recentBrands"){
-				let brandsListCont = dom("brandsListCont");
+				console.log("show recent brands",brandsList);
 				let recentBrandsCont = dom.create("div").setId("recentBrandsCont");
 
 				console.log("brandsList:", brandsList);
@@ -626,16 +643,72 @@ let Brands = (function(){
 				// el(".brand-item").on("click", function(){
 				// 	editorCore.dropdowns.brands.select(this.dataset.brandname);
 				// });
+				dom.queryByClass("brand-item").each(function(item){
+					item.addEventListener("click", function(){
+						Eve.emit("selectBrand", item.dataset.brandname);
+						// console.log(`select ${item.dataset.brandname}`);
+						// editorCore.dropdowns.brands.select(this.dataset.brandname);
+					});
+				});
 
 			}
 			else if(mode === "search"){
-				console.log("this is where you update the dropdown with the search results");
+				let searchResultsCont = dom.create("div").setId("searchResultsCont");
+
+				// if(matches.indexOf(criteria) === -1){
+				// 	setTimeout(function(){ // helps with performance
+				// 		editorCore.dropdowns.brands.search.newBrandBtn.add(criteria);
+				// 		editorCore.dropdowns.brands.search.newBrandBtn.enable(criteria);
+				// 		editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+				// 	},0);
+				// } else {
+				// 	setTimeout(function(){ // helps with performance
+				// 		editorCore.dropdowns.brands.search.newBrandBtn.disable(criteria);
+				// 		editorCore.dropdowns.brands.search.newBrandBtn.update(criteria);
+				// 	},0);
+				// }
+
+				
+
+				// header
+				searchResultsCont.append(
+					dom.create("div").addClass("header").text("Search Results")
+				)
+
+				// add each result
+				for(let i = 0, ii = brandsList.length; i < ii; i++){
+					searchResultsCont.append(
+						dom.create("button").addClass("brand-item").attr("data-brandname",brandsList[i]).text(brandsList[i])
+					)
+				}
+
+				// if(matches.length > 6){ // add arrow
+					// searchResultsCont.append( el("+div").addClass("arrow-down") )
+				// }
+
+				brandsListCont.purge().append( searchResultsCont );
+
+				// Add click listeners to each result
+				dom.queryByClass("brand-item").each(function(item){
+					item.addEventListener("click", function(){
+						Eve.emit("selectBrand", item.dataset.brandname);
+						// console.log(`select ${item.dataset.brandname}`);
+						// editorCore.dropdowns.brands.select(this.dataset.brandname);
+					});
+				});
+
+				// brandsListCont.rmClass("no-results");
+				// if(editorCore.dropdowns.brands.search.newBrandBtn.exists) {
+				// 		el("#createBrand").rmClass("no-results");
+				// } 
+				// console.log("this is where you update the dropdown with the search results");
 			}
 		}
 
-		/**/
-		function selectBrand() {
+		/*Remove this function. Selecting a brand should be a set of smaller functions (e.g. project.reset, etc.)*/
+		function selectBrand(brandName) {
 
+			console.log("selecting", brandName);
 		}
 
 		/**/
@@ -707,6 +780,11 @@ let Brands = (function(){
 				fs.readdir(UserPreferences.getPathToBrands(), function(err, files){
 					if(err) return Eve.emit("error", err);
 					_tempBrandsList = files;
+
+					let DS_Store = _tempBrandsList.indexOf(".DS_Store");
+					if(DS_Store !== -1) {
+						_tempBrandsList.splice(DS_Store, 1);
+					}
 					// make sure to clear the '_tempBrandsList' when the dropdown menu is closed
 					// console.log("files:",files);
 					callback(filterByCriteria(files, criteria));
@@ -716,6 +794,48 @@ let Brands = (function(){
 				
 			// console.log("getting brands by criteria:", criteria);
 		}
+
+		/**/
+		function getProjectList(brandPath, callback) {
+			fs.readdir(brandPath, function(err, files){
+				if(err) return Eve.emit("error", err);
+				let DS_Store = files.indexOf(".DS_Store");
+				if(DS_Store !== -1) {
+					files.splice(DS_Store, 1);
+				}
+				callback(files);
+				console.log("got projectsLists:", files);
+			})
+		}
+
+		/**/
+		function setCurrentBrand(brandName) {
+			_currentBrand.name = brandName;
+			_currentBrand.path = UserPreferences.getPathToBrands()+"/"+brandName;
+			getProjectList(_currentBrand.path, function(projects){
+					console.log("got projectsLists:", projects);
+					_currentBrand.projectsList = projects;
+					Eve.emit("currentBrandSet", _currentBrand.name);
+			});
+		}
+
+		// function addRecentBrand(brandName) {
+		// 	PersistentData.get(function(pData){
+		// 		let recentBrands = pData.recentBrands;
+				
+		// 		// remove brand from recent data if exists
+		// 		let brandIndex = recentBrands.indexOf(brandName);
+		// 		if(brandIndex !== -1) {
+		// 			recentBrands.splice(brandIndex, 1);
+		// 		}
+		// 		// add brand to front of array
+		// 		recentBrands.unshift(brandName);
+		// 	});
+
+		// 	console.log("add " +  brandName + " to recent brands");
+		// }
+
+
 		
 		
 		// function open() {}
@@ -726,9 +846,27 @@ let Brands = (function(){
 
 		Eve.on("brandsMenuBtnClicked", function(){
 			toggle();
-		})
+		});
+
+
+
+		Eve.on("selectBrand", selectBrand);
+		Eve.on("selectBrand", close);
+		Eve.on("selectBrand", setCurrentBrand);
+		// rename brand name field
+		Eve.on("selectBrand", function(brandName){
+			dom("brandNameText").text(brandName);
+		});
+
+		
 
 		Eve.on("brandsDropdownOpened", function(){
+			getRecentBrands(function(recentBrandsList){
+				populate("recentBrands", recentBrandsList);
+			});
+		});
+
+		Eve.on("searchFieldEmpty", function(){
 			getRecentBrands(function(recentBrandsList){
 				populate("recentBrands", recentBrandsList);
 			});
@@ -783,6 +921,7 @@ let Projects = (function(){
 		_currentProject.name = projectName;
 		_currentProject.path = `${Brands.current.path}/${projectName}`;
 		fs.readdir(_currentProject.path, function(err, files){
+			if(err) return Eve.emit("error", error);
 			_currentProject.files = [];
 			for(let i = 0, ii = files.length; i < ii; i++) {
 				let fsStats = fs.statSync(`${_currentProject.path}/${files[i]}`);
@@ -796,6 +935,7 @@ let Projects = (function(){
 
 	function updateCurrentProjectFiles() {
 		fs.readdir(_currentProject.path, function(err, files){
+			if(err) return Eve.emit("error", error);
 			_currentProject.files = [];
 			for(let i = 0, ii = files.length; i < ii; i++) {
 				let fsStats = fs.statSync(`${_currentProject.path}/${files[i]}`);
@@ -835,6 +975,20 @@ let Projects = (function(){
 		});
 	});
 
+
+	var dropdown = (function(){
+		function activate() {
+			// var currentBrand = core.localData.currentBrand;
+			// self.reset();
+			dom("projectName").removeClass("inactive");
+			dom("projects_arrow").removeClass("inactive");
+		}
+
+		Eve.on("selectBrand", activate);
+
+
+	})();
+
 	return {
 		getCurrent: function(){
 			return _currentProject;
@@ -849,6 +1003,8 @@ let Projects = (function(){
 // Code Editor (codemirror)
 // ------------------
 let Editor = (function(){
+	let codeMirrorInterface = window.myCodeMirror;
+
 	function resetContextMenu() {
 
 	}
@@ -861,7 +1017,31 @@ let Editor = (function(){
 		
 	}
 
-	function setText() {
+	function setValue(code, ext) {
+
+		codeMirrorInterface.setValue(code);
+
+		var extMap = {
+			".html": "htmlmixed",
+			".css": "css",
+			".scss": "text/x-scss",
+			".styl": "text/x-styl",
+			".js": "javascript",
+			".qtheme": "application/json",
+			".json": "application/json",
+			".md": "markdown"
+		}
+
+		if(extMap.hasOwnProperty(ext.toLowerCase())){
+			if(codeMirrorInterface.getOption("mode") !== extMap[ext]){
+				codeMirrorInterface.setOption("mode", extMap[ext]);
+			}	
+		}
+		else {
+			codeMirrorInterface.setOption("mode", "");
+		}
+
+
 
 	}
 

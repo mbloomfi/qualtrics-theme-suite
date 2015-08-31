@@ -8,6 +8,17 @@ module.exports = (function(){
 		return _cache[id];
 	}
 
+	function getElementsByClassName(parent, className) {
+		var elements = parent.getElementsByClassName(className);
+		elements.each = function(toEach){
+			var self = this;
+			for(var i = 0, ii = self.length; i < ii; i++) {
+				toEach(self[i]);
+			}
+		};
+		return elements;
+	}
+
 	function createElement(el) {
 		return addMethods(document.createElement(el));
 	}
@@ -74,7 +85,8 @@ module.exports = (function(){
 		}
 
 		obj.queryByClass = function(className) {
-			return this.getElementsByClassName(className);
+			console.log("this",this)
+			return getElementsByClassName(this, className);
 		}
 
 		return obj;
@@ -94,6 +106,9 @@ module.exports = (function(){
 	}
 
 	_dom.get = parseDomInput;
+	_dom.queryByClass = function(className){
+		return getElementsByClassName(document.body, className);
+	};
 	_dom.create = createElement;
 	_dom.remove = removeElement;
 

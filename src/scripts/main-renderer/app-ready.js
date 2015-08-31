@@ -1,8 +1,9 @@
 /* eslint-disable */
 // INIT app
+console.log("window loaded?");
 window.addEventListener("load", function(){
 	//add global reference to editor and preview
-	
+	console.log("window loaded");
 
 
 

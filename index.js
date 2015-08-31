@@ -752,8 +752,8 @@ function setPreviewFiles(_callback){
       (function(previewFilesList, i){
 
         // var fileStats = fs.statSync("./local/preview-files/"+previewFilesList[i]);
-          console.log("Object:",OBJECT.files.defaultPreviewFile);
-          console.log("previewFilesList",previewFilesList);
+          // console.log("Object:",OBJECT.files.defaultPreviewFile);
+          // console.log("previewFilesList",previewFilesList);
 
           menuTemplate[4].submenu[0].submenu[i] = {
             label: previewFilesList[i].verboseName,

@@ -156,13 +156,13 @@
 
 		////////// Node.js //////////
 
-		// "handle-callback-err": 1,
-		// "no-mixed-requires": 1,
-		// "no-new-require": 1,
-		// "no-path-concat": 1,
-		// "no-process-exit": 1,
-		// "no-restricted-modules": 1,
-		// "no-sync": 1,
+		"handle-callback-err": 1,
+		"no-mixed-requires": 1,
+		"no-new-require": 1,
+		"no-path-concat": 1,
+		"no-process-exit": 1,
+		"no-restricted-modules": 1,
+		"no-sync": 1,
 
 
 		////////// Stylistic Issues //////////
@@ -232,7 +232,7 @@
 		"prefer-constified": 0,
 		"prefer-spread": 0,
 		"prefer-reflect": 0,
-		"prefer-template": 1,
+		"prefer-template": 0,
 		"require-yield": 0
 
 
