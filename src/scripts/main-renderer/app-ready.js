@@ -45,7 +45,19 @@ window.addEventListener("load", function(){
 
 		editorCore.dropdowns.setDropdownGlobals();
 
-		editorCore.dropdowns.bodyClick();
+		document.body.addEventListener('click', function(){
+			Eve.emit("documentBodyClicked");
+			
+			// if(editorCore.dropdowns.projects.status === "opened"){
+			// 	editorCore.dropdowns.projects.close();
+			// }
+			// if(editorCore.dropdowns.files.status === "opened"){
+			// 	editorCore.dropdowns.files.close();
+			// }
+			// if(document.getElementById("image_preview_container")){
+			// 	document.getElementById("image_preview_container").rm();
+			// }
+		});
 
 		// editorCore.dropdowns.brands.populate();
 		// editorCore.dropdowns.brands.init();

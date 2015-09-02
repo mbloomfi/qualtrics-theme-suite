@@ -383,6 +383,7 @@ let PersistentData = (function(){
 	function resetRecentBrands(brandsList) {
 		getPersistentData(function(_pData){
 			_pData.recentBrands = brandsList;
+			console.log("_pData:", _pData);
 			fs.writeFile(_pdPath, JSON.stringify(_pData), function(err){
 				if(err) return Eve.emit("error", err);
 			});
@@ -415,7 +416,8 @@ let PersistentData = (function(){
 							_recentBrands.splice(brandIndex, 1);
 						});
 						// set recent brands to new, pruned list
-						resetRecentBrands(_recentBrands);
+						console.log("_recentBrands =>",_recentBrands)
+						if(_recentBrands.length) resetRecentBrands(_recentBrands);
 					}
 				}
 			}
@@ -658,7 +660,8 @@ let Brands = (function(){
 						dom.create("div").addClass("header").text("Recent Brands")
 					)
 					let limit = 20;
-					console.log("show recent brands!");
+					if(brandsList.length < limit) limit = brandsList.length;
+
 					for(let i = 0; i < limit; i++){
 						recentBrandsCont.append(
 							dom.create("button").addClass("brand-item")
@@ -908,7 +911,15 @@ let Brands = (function(){
 			});
 		});
 
+		Eve.on("documentBodyClicked", function(){
+			if(_dropdownStatus === "opened") {
+				close();
+			}
+		});
+
 	})();
+
+
 
 	/* return
 	*/
@@ -1013,11 +1024,61 @@ let Projects = (function(){
 
 
 	var dropdown = (function(){
+		let _dropdownStatus = "closed";
 		function activate() {
 			// var currentBrand = core.localData.currentBrand;
 			// self.reset();
 			dom("projectName").removeClass("inactive");
 			dom("projects_arrow").removeClass("inactive");
+		}
+
+		/**/
+		function toggle() {
+			// console.log("toggle brand menu");
+			// if(_dropdownStatus === "opened") {
+			// 	close();
+			// }
+			// else if(_dropdownStatus === "closed") {
+			// 	open();
+			// }
+		}
+
+		/**/
+		function open() {
+			_dropdownStatus = "opened";
+			// dom("brandsDropdown").removeClass("hide")
+			// 	.queryByClass("arrow")[0].classList.remove("hide");
+			// dom("brandName").addClass("dropdown-active");
+			// dom("searchBrands").focus();
+
+			// Eve.emit("brandsDropdownOpened");
+		}
+
+		/**/
+		function close() {
+			_dropdownStatus = "closed";
+			// clear the '_tempBrandsList' from cache
+			// _tempBrandsList = [];
+
+			// fang(
+			// 	function(){
+			// 		// self.search.activated = false;
+			// 		dom("brandsDropdown").addClass("hide")
+			// 			.queryByClass("arrow")[0].addClass("hide");
+			// 		brandName.rmClass("dropdown-active");
+			// 		setTimeout(this.next, 200);
+			// 	},
+			// 	function(){
+			// 		dom("brandsListCont").purge();
+			// 		// editorCore.dropdowns.brands.search.newBrandBtn.remove();
+			// 		// self.purge();
+			// 		this.next();
+			// 	},
+			// 	function(){
+			// 		// self.refill();
+			// 		// dom("brandsDropdown").el(".arrow")[0].addClass("hide");
+			// 	}
+			// ).init();
 		}
 
 		Eve.on("selectBrand", activate);
@@ -1143,7 +1204,19 @@ window.addEventListener("load", function(){
 
 		editorCore.dropdowns.setDropdownGlobals();
 
-		editorCore.dropdowns.bodyClick();
+		document.body.addEventListener('click', function(){
+			Eve.emit("documentBodyClicked");
+			
+			// if(editorCore.dropdowns.projects.status === "opened"){
+			// 	editorCore.dropdowns.projects.close();
+			// }
+			// if(editorCore.dropdowns.files.status === "opened"){
+			// 	editorCore.dropdowns.files.close();
+			// }
+			// if(document.getElementById("image_preview_container")){
+			// 	document.getElementById("image_preview_container").rm();
+			// }
+		});
 
 		// editorCore.dropdowns.brands.populate();
 		// editorCore.dropdowns.brands.init();
@@ -2816,20 +2889,20 @@ var editorCore = {
 		},
 
 		bodyClick: function(){
-			document.body.addEventListener('click', function(){
-				if(editorCore.dropdowns.brands.status === "opened"){
-					editorCore.dropdowns.brands.close();
-				}
-				if(editorCore.dropdowns.projects.status === "opened"){
-					editorCore.dropdowns.projects.close();
-				}
-				if(editorCore.dropdowns.files.status === "opened"){
-					editorCore.dropdowns.files.close();
-				}
-				if(document.getElementById("image_preview_container")){
-					document.getElementById("image_preview_container").rm();
-				}
-			});
+			// document.body.addEventListener('click', function(){
+			// 	if(editorCore.dropdowns.brands.status === "opened"){
+			// 		editorCore.dropdowns.brands.close();
+			// 	}
+			// 	if(editorCore.dropdowns.projects.status === "opened"){
+			// 		editorCore.dropdowns.projects.close();
+			// 	}
+			// 	if(editorCore.dropdowns.files.status === "opened"){
+			// 		editorCore.dropdowns.files.close();
+			// 	}
+			// 	if(document.getElementById("image_preview_container")){
+			// 		document.getElementById("image_preview_container").rm();
+			// 	}
+			// });
 		}
 
 	},

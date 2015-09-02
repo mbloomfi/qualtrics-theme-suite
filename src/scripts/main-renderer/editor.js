@@ -67,20 +67,20 @@ var editorCore = {
 		},
 
 		bodyClick: function(){
-			document.body.addEventListener('click', function(){
-				if(editorCore.dropdowns.brands.status === "opened"){
-					editorCore.dropdowns.brands.close();
-				}
-				if(editorCore.dropdowns.projects.status === "opened"){
-					editorCore.dropdowns.projects.close();
-				}
-				if(editorCore.dropdowns.files.status === "opened"){
-					editorCore.dropdowns.files.close();
-				}
-				if(document.getElementById("image_preview_container")){
-					document.getElementById("image_preview_container").rm();
-				}
-			});
+			// document.body.addEventListener('click', function(){
+			// 	if(editorCore.dropdowns.brands.status === "opened"){
+			// 		editorCore.dropdowns.brands.close();
+			// 	}
+			// 	if(editorCore.dropdowns.projects.status === "opened"){
+			// 		editorCore.dropdowns.projects.close();
+			// 	}
+			// 	if(editorCore.dropdowns.files.status === "opened"){
+			// 		editorCore.dropdowns.files.close();
+			// 	}
+			// 	if(document.getElementById("image_preview_container")){
+			// 		document.getElementById("image_preview_container").rm();
+			// 	}
+			// });
 		}
 
 	},

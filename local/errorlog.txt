@@ -301,3 +301,7 @@ Sat Aug 22 2015 22:07:00 GMT-0600 (MDT)
 Sun Aug 23 2015 00:49:43 GMT-0600 (MDT)
 	Error: ENOENT: no such file or directory, stat 'undefined/tester'
 
+
+~~~~~~~~
+Wed Sep 02 2015 07:25:59 GMT-0600 (MDT)
+Error: ENOENT: no such file or directory, scandir '/Users/same/Brands/undefined'
