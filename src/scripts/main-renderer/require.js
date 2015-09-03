@@ -22,6 +22,7 @@ let fs = require('fs-extra');
 // let stylus = require('gulp-stylus');
 // let autoprefixer = require('gulp-autoprefixer');
 let shelljs = require('shelljs');
+let _ = require('lodash');
 
 // == Local Modules == 
 let loca = require('./local/scripts/modules/loca');

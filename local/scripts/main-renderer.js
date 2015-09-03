@@ -22,6 +22,7 @@ let fs = require('fs-extra');
 // let stylus = require('gulp-stylus');
 // let autoprefixer = require('gulp-autoprefixer');
 let shelljs = require('shelljs');
+let _ = require('lodash');
 
 // == Local Modules == 
 let loca = require('./local/scripts/modules/loca');
@@ -410,15 +411,18 @@ let PersistentData = (function(){
 
 				// after checking all recent brands
 				if(checkedBrands === totalRecentBrands) {
-					if(pruneBrands.length > 0) {
-						pruneBrands.forEach(function(brandToPrune){
-							let brandIndex = _recentBrands.indexOf(brandToPrune);
-							_recentBrands.splice(brandIndex, 1);
-						});
-						// set recent brands to new, pruned list
-						console.log("_recentBrands =>",_recentBrands)
-						if(_recentBrands.length) resetRecentBrands(_recentBrands);
-					}
+					let pruned = _.difference(_recentBrands, pruneBrands);
+					console.log("pruned");
+					console.log(pruned);
+					// if(pruneBrands.length > 0) {
+					// 	pruneBrands.forEach(function(brandToPrune){
+					// 		let brandIndex = _recentBrands.indexOf(brandToPrune);
+					// 		_recentBrands.splice(brandIndex, 1);
+					// 	});
+					// 	// set recent brands to new, pruned list
+					// 	console.log("_recentBrands =>",_recentBrands)
+					// 	if(_recentBrands.length) resetRecentBrands(_recentBrands);
+					// }
 				}
 			}
 
