@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 var core = Global.coreMethods = {
 	updateApp: {
 		pathToRepo: "/repos/qualtrics-themes-team/qualtrics-theme-suite/contents/",
@@ -213,33 +213,30 @@ var core = Global.coreMethods = {
 	// ----------------------------
 	persistentDataFile: {
 
-		read: function (_successCallback){
-			fs.readJson(__dirname+"/local/persistent-data.json", function(_err, _data){
-				if(!_err) {
-					if(typeof _successCallback === "function") _successCallback(_data);
-				}
-				else {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					// console.log("readPersistantData ERROR:",_err);
-				}
-			});
+		read: function (cb){
+			console.error("dont use this method (persistentDataFile.read)");
+			// fs.readJson(__dirname+"/local/persistent-data.json", function(err, _data) {
+			// 	if(err) return Eve.emit("error", err);
+			// 	if(util.isFunction(cb)) cb(_data);
+			// });
 		},
 
-		update: function (_successCallback){
-			var _DATA = {};
-			_DATA.recentBrands = Brands.getRecent();
-			_DATA.snippets = core.localData.snippets.list;
-			//_DATA.x = core.localData.x;
-			fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
-				if(err) {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					alert("Error Saving Changes");
-				}
-				else if(_successCallback!==undefined){
-					var args = Array.prototype.splice.call(arguments, 1);
-					_successCallback.apply(null, args);
-				}
-			});
+		update: function (cb){
+			console.error("dont use this method (persistentDataFile.update)");
+			// var _DATA = {};
+			// _DATA.recentBrands = Brands.getRecent();
+			// _DATA.snippets = core.localData.snippets.list;
+			// //_DATA.x = core.localData.x;
+			// fs.writeJson(__dirname+"/local/persistent-data.json", _DATA, function(err){
+			// 	if(err) {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 		alert("Error Saving Changes");
+			// 	}
+			// 	else if(cb!==undefined){
+			// 		var args = Array.prototype.splice.call(arguments, 1);
+			// 		cb.apply(null, args);
+			// 	}
+			// });
 		}
 		
 	},
@@ -248,43 +245,44 @@ var core = Global.coreMethods = {
 	//  User Settings File
 	// ----------------------------
 	userSettingsFile: {
-
 		read: function(_successCallback){
-			fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
-				if(!_err){ 
+			console.error("dont use this method (userSettingsFile.read)");
+			// fs.readJson(__dirname+"/local/user-settings.json", function(_err, _data){
+			// 	if(!_err){ 
 					
-					if(typeof _successCallback === "function") _successCallback(_data);
-				}
-				else {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-					// console.log("User Settings READ ERROR:", _err);
-				}
-			});
+			// 		if(typeof _successCallback === "function") _successCallback(_data);
+			// 	}
+			// 	else {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+			// 		// console.log("User Settings READ ERROR:", _err);
+			// 	}
+			// });
 		},
 
 		update: function(_successCallback){
-			var self = this;
+			console.error("dont use this method (userSettingsFile.update)");
+			// var self = this;
 
-			if(core.localData.userSettings === null){
-				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
-				alert("Error with settings, sucks to be you.");
-				return;
-			}
+			// if(core.localData.userSettings === null){
+			// 	fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+"USER SETTEING ARE NULL?"+"\n\n", function(){});
+			// 	alert("Error with settings, sucks to be you.");
+			// 	return;
+			// }
 
-			self.read(function(_data){
-				if(core.localData.userSettings !== _data){
+			// self.read(function(_data){
+			// 	if(core.localData.userSettings !== _data){
 
-					fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
-						if(err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-							alert("Error Saving Changes");
-						} 
+			// 		fs.writeJson(__dirname+"/local/user-settings.json", core.localData.userSettings, function(err){
+			// 			if(err) {
+			// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 				alert("Error Saving Changes");
+			// 			} 
 							
-						else _successCallback();
-					});
+			// 			else _successCallback();
+			// 		});
 
-				}
-			});
+			// 	}
+			// });
 
 			
 
@@ -293,7 +291,7 @@ var core = Global.coreMethods = {
 	},
 
 	resetFinder: function(){
-
+		console.error("dont use this method (resetFinder)");
 
 		// Sync call to exec()
 		// var version = exec('node --version', {silent:true}).output;
@@ -329,40 +327,42 @@ var core = Global.coreMethods = {
 		},
 
 		select: function(_brandName){
-			
+			console.error("dont use this method (brands.select)");
 			// add brand to recent brands, current brand
-			core.brands.setCurrentBrand(_brandName);
-			core.brands.projects.setCurrentProject(null);
+			// core.brands.setCurrentBrand(_brandName);
+			// core.brands.projects.setCurrentProject(null);
 		},
 
 		create: function(_brandName, _CALLBACK){
-			var self = this;
-			// create folder with brands name
-			baton(function(){
-				self.exists(_brandName, this.next);
-			})
-			.then(function(exists){
-				var self = this;
-				if(exists) {
-					alert("Brand already exists. Nice try though.");
-				} else {
-					fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
-						if(!err) {
-							core.resetFinder();
-							self.next();
-						} else {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-						}
-					});
-				}
-				
-			})
-			.then(function(){
+			console.error("dont use this method (brands.create)");
 
-				// editorCore.dropdowns.brands.close();
-				self.infoFile.create(_brandName);
-				_CALLBACK();
-			})();
+			// var self = this;
+			// // create folder with brands name
+			// baton(function(){
+			// 	self.exists(_brandName, this.next);
+			// })
+			// .then(function(exists){
+			// 	var self = this;
+			// 	if(exists) {
+			// 		alert("Brand already exists. Nice try though.");
+			// 	} else {
+			// 		fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName, function(err){
+			// 			if(!err) {
+			// 				core.resetFinder();
+			// 				self.next();
+			// 			} else {
+			// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 			}
+			// 		});
+			// 	}
+				
+			// })
+			// .then(function(){
+
+			// 	// editorCore.dropdowns.brands.close();
+			// 	self.infoFile.create(_brandName);
+			// 	_CALLBACK();
+			// })();
 
 		},
 
@@ -373,82 +373,90 @@ var core = Global.coreMethods = {
 			Adds the current brand to the front of the recent brands
 		*/
 		updateRecentBrands: function(){
-			var brand = core.localData.currentBrand;
-			var i = Brands.getRecent().indexOf(brand);
-			if(i !== -1) {
-				Brands.getRecent().splice(i, 1);
-			}
-			Brands.getRecent().unshift(brand);
-			core.persistentDataFile.update();
+			console.error("dont use this method (brands.updateRecentBrands)");
+			// var brand = core.localData.currentBrand;
+			// var i = Brands.getRecent().indexOf(brand);
+			// if(i !== -1) {
+			// 	Brands.getRecent().splice(i, 1);
+			// }
+			// Brands.getRecent().unshift(brand);
+			// core.persistentDataFile.update();
 		},	
 
 		setCurrentBrand: function(_brandName){
-			core.localData.currentBrand = _brandName;
-			core.brands.updateRecentBrands();
+			console.error("dont use this method (brands.setCurrentBrand)");
+			// core.localData.currentBrand = _brandName;
+			// core.brands.updateRecentBrands();
 		},
 
 
 		exists: function(_brandName, _callback){
-			var self = this;
-			// console.log(typeof core.localData.brands.path);
-			fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
-				if(err) {
-					fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-					console.warn("brand does not exist:",err)
-					return _callback(false);
-				}
+			console.error("dont use this method (brands.exists)");
+			// var self = this;
+			// // console.log(typeof core.localData.brands.path);
+			// fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName, function(err, stats){
+			// 	if(err) {
+			// 		fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 		console.warn("brand does not exist:",err)
+			// 		return _callback(false);
+			// 	}
 
-				return _callback(stats.isDirectory());
+			// 	return _callback(stats.isDirectory());
 
-			});
+			// });
 		},
 
 
 		hasInfoFile: function(_callback, _brandName){
-			var self = this;
-			baton(function(){
-				//check if brand exists
-				self.exists(_brandName, this.next);
-			})
-			.then(function(_exists){
-				if(_exists){
-					this.next();
-				} 
-				else _callback(false);
-			})
-			.then(function(){
-				//check if brand has file
-				// console.log(typeof core.brands.getFullPathToBrands());
-				fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
-					if(err) {
-						fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-						return _callback(false);
-					}
+			console.error("dont use this method (brands.hasInfoFile)");
+			// console.error("do not use this method");
+			// var self = this;
+			// baton(function(){
+			// 	//check if brand exists
+			// 	self.exists(_brandName, this.next);
+			// })
+			// .then(function(_exists){
+			// 	if(_exists){
+			// 		this.next();
+			// 	} 
+			// 	else _callback(false);
+			// })
+			// .then(function(){
+			// 	//check if brand has file
+			// 	// console.log(typeof core.brands.getFullPathToBrands());
+			// 	fs.stat(core.brands.getFullPathToBrands()+"/"+_brandName+"/"+self.infoFile.ext, function(err, stats){
+			// 		if(err) {
+			// 			fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+			// 			return _callback(false);
+			// 		}
 
-					return _callback(stats.isFile());
+			// 		return _callback(stats.isFile());
 
-				});
-			})();
+			// 	});
+			// })();
 			
 		},
 
 		projects: {
 
 			setCurrentProject: function(_projectName){
-				core.localData.currentProject.name = _projectName;
-				core.localData.currentProject.path = (_projectName !== null)
-				?
-				(core.brands.getFullPathToBrands()+"/"+
-				core.localData.currentBrand+"/"+
-				core.localData.currentProject.name)
-				:
-				null
-				;
+				console.error("dont use this method (projects.setCurrentProject)");
+				// core.localData.currentProject.name = _projectName;
+				// core.localData.currentProject.path = (_projectName !== null)
+				// ?
+				// (core.brands.getFullPathToBrands()+"/"+
+				// core.localData.currentBrand+"/"+
+				// core.localData.currentProject.name)
+				// :
+				// null
+				// ;
 
 			},
 
 			infoFile: {
+
 				update: function(pathToFile, key, value, callback){
+					console.error("dont use this method (projects.infoFile.update)");
 					fs.readFile(pathToFile, "utf-8", function(err, data){
 						if(err, data){
 
@@ -459,33 +467,33 @@ var core = Global.coreMethods = {
 
 			/*Runs a callback, passing it an array of the names of the projects*/
 			list: function(_brandName, _callback){
-				
-				baton(function(){
+				console.error("dont use this method (projects.list)");
+				// baton(function(){
 					
-					core.brands.exists(_brandName, this.next);
-				})
-				.then(function(exists){
-					if(exists){
-						var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
-						this.next(pathToBrand);
-					}
-				})
-				.then(function(path){
-					var projectList = [];
-					// console.log(typeof path);
-					fs.readdir(path, function(_err, _projects){
-						if(_err) {
-							fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
-							// console.log("error listing projects");
-						}
-						for(var i = 0, ii = _projects.length; i < ii; i++){
-							var stats = fs.statSync(path+"/"+_projects[i]);
-							if(stats.isDirectory()) projectList.push(_projects[i]);
-						}
-						// currentBrand.projects = projectsList // ADD this
-						if(_callback!==undefined) _callback(projectList);
-					});
-				})();
+				// 	core.brands.exists(_brandName, this.next);
+				// })
+				// .then(function(exists){
+				// 	if(exists){
+				// 		var pathToBrand = core.brands.getFullPathToBrands() + "/" + _brandName;
+				// 		this.next(pathToBrand);
+				// 	}
+				// })
+				// .then(function(path){
+				// 	var projectList = [];
+				// 	// console.log(typeof path);
+				// 	fs.readdir(path, function(_err, _projects){
+				// 		if(_err) {
+				// 			fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+_err+"\n\n", function(){});
+				// 			// console.log("error listing projects");
+				// 		}
+				// 		for(var i = 0, ii = _projects.length; i < ii; i++){
+				// 			var stats = fs.statSync(path+"/"+_projects[i]);
+				// 			if(stats.isDirectory()) projectList.push(_projects[i]);
+				// 		}
+				// 		// currentBrand.projects = projectsList // ADD this
+				// 		if(_callback!==undefined) _callback(projectList);
+				// 	});
+				// })();
 				
 				
 				
@@ -493,43 +501,46 @@ var core = Global.coreMethods = {
 			},
 
 			create: function(_brandName, _projectName, _callback){
-				var self = this;
-				// create folder with brands name
-				baton(function(){
-					core.brands.exists(_brandName, this.next);
-				})
-				.then(function(exists){
-					var self = this;
-					if(exists) {
+				console.error("dont use this method (projects.create)");
+				// console.error("do not use this method");
+				// var self = this;
+				// // create folder with brands name
+				// baton(function(){
+				// 	core.brands.exists(_brandName, this.next);
+				// })
+				// .then(function(exists){
+				// 	var self = this;
+				// 	if(exists) {
 
-						// console.log(typeof core.brands.getFullPathToBrands());
-						fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
-							if(!err) {
-								self.next();
-							} else {
-								fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
-							}
-						});
-					} else {
-						alert("Brand doesn't exists. Nice try though.");
-					}
+				// 		// console.log(typeof core.brands.getFullPathToBrands());
+				// 		fs.mkdirp(core.brands.getFullPathToBrands()+"/"+_brandName + "/" + _projectName, function(err){
+				// 			if(!err) {
+				// 				self.next();
+				// 			} else {
+				// 				fs.appendFile(__dirname+"/local/errorlog.txt", "~~~~~~~~~~~~~~~~~~~~~~~~\n"+(new Date)+"\n\t"+err+"\n\n", function(){});
+				// 			}
+				// 		});
+				// 	} else {
+				// 		alert("Brand doesn't exists. Nice try though.");
+				// 	}
 					
-				})
-				.then(function(){
-					editorCore.dropdowns.projects.close();
-					if(_callback!==undefined) _callback();
-					// self.infoFile.create(_brandName);
-				})();
+				// })
+				// .then(function(){
+				// 	editorCore.dropdowns.projects.close();
+				// 	if(_callback!==undefined) _callback();
+				// 	// self.infoFile.create(_brandName);
+				// })();
 			},
 
 
 			showInFinder: function(){
-				if(Projects.getCurrent().name !== null){
-					shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
-						// console.log('Exit status:', status);
-						// console.log('Program output:', output);
-					});
-				}
+				console.error("dont use this method (projects.showInFinder)");
+				// if(Projects.getCurrent().name !== null){
+				// 	shelljs.exec('open '+core.localData.currentProject.path, function(status, output) {
+				// 		// console.log('Exit status:', status);
+				// 		// console.log('Program output:', output);
+				// 	});
+				// }
 			},
 
 			files: {
@@ -539,6 +550,7 @@ var core = Global.coreMethods = {
 				},
 
 				assets: function(_callback){
+					console.error("dont use this method (projects.exists)");
 					var projPath = Projects.getCurrent().path;
 					var fileList = [];
 					fs.readdir(projPath+"/assets", function(_err, _files){
@@ -558,7 +570,7 @@ var core = Global.coreMethods = {
 
 
 				viewImage: function(imgPath){
-
+					console.error("dont use this method (projects.exists)");
 					function updateImageDimensionsField(_image){
 						var imgWidth = _image.width >= 700 ? "700+" : _image.width;
 						var imgHeight = _image.height >= 650 ? "650+" : _image.height;
@@ -1223,27 +1235,25 @@ var core = Global.coreMethods = {
 		el("#body").append(flash);
 
 
-		var flashBaton = baton(function(){
-			flash.style.opacity = 1;
-			setTimeout(this.next, 100);
-		})
+		var flashBaton = fang(
+			function(){
+				flash.style.opacity = 1;
+				setTimeout(this.next, 100);
+			},
+			function(){
+				flash.style.transition = "opacity .4s ease";
+				setTimeout(function(){ flash.style.opacity = 0; } ,0);
+				if(typeof pinnacleCallback === "function") pinnacleCallback();
+				setTimeout(this.next, 500);
+			},
+			function(){
+				flash.rm();
+			}
+		);
 
-		.then(function(){
-			flash.style.transition = "opacity .4s ease";
-			setTimeout(function(){ flash.style.opacity = 0; } ,0);
-			if(typeof pinnacleCallback === "function") pinnacleCallback();
-			setTimeout(next, 500);
-		})
+		flashBaton.init();
 
-		.then(function(){
-			flash.rm();
-		})
-
-		flashBaton();
-
-		
-
-
+	
 	},
 
 
@@ -1264,7 +1274,7 @@ var core = Global.coreMethods = {
 		}
 	}
 };
-
+/* eslint-enable */
 
 
 
