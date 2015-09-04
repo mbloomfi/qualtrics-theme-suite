@@ -120,7 +120,7 @@ var UserPreferences = (function(){
 		return _userPreferences.pathToBrands || null;
 	}
 
-	var UserPreferencesInterface = Loca(_userPreferences.path);
+	var UserPreferencesInterface = loca(_userPreferences.path);
 
 	UserPreferencesInterface.on("read", function(data){
 
@@ -239,10 +239,10 @@ var UserPreferences = (function(){
 	});
 
 	Eve.on("window-focused", updateLocalUserPrefrences);
-	Eve.ignore("window-focused").until("app-loaded");
+	// Eve.ignore("window-focused").until("app-loaded");
 
 	Eve.on("Local Preferences Updated", writeUserPrefrences);
-	Eve.ignore("Local Preferences Updated").until("app-loaded");
+	// Eve.ignore("Local Preferences Updated").until("app-loaded");
 
 	/* 
 	return
@@ -404,7 +404,7 @@ var Brands = (function(){
 		// console.log("SELECTED:",_currentBrand);
 		// console.log("files in brand:",_currentBrand.projectsList);
 	}); 
-	Eve.ignore("Current Brand Updated").until("app-loaded")
+	// Eve.ignore("Current Brand Updated").until("app-loaded")
 
 	Eve.on("Update Local Recent Brands", function(){
 

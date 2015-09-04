@@ -2327,246 +2327,6 @@
 				}
 			
 			};
-			// Eve.js by Sam Eaton (samueleaton)
-			// Source Code
-			// MIT License
-			
-			var Eve = (function() {
-				var _events = {};
-			
-				var _eventInfo = {};
-				
-				var eventObserver = {
-					add: function(evtName, fn) {
-						var eventObject = {
-							fn: fn
-						};
-						_events[evtName] = _events[evtName] || [];
-						_events[evtName].push(eventObject);
-			
-						return {
-							evt: evtName,
-							fn: fn,
-							ignore: function() {
-								return Eve.ignore(this.evt);
-							},
-							remove: function() {
-								return Eve.remove(this.evt, this.fn);
-							},
-							removeAll: function() {
-								return Eve.removeAll(this.evt);
-							},
-							defer: function() {
-								return Eve.defer(this.evt);
-							},
-							observe: function() {
-								Eve.observe(this.evt);
-							}
-						};
-					},
-			
-					remove: function(evtName, fn) {
-						if (_events[evtName]) {
-							for (var i = 0; i < _events[evtName].length; i++) {
-								if (_events[evtName][i].fn === fn || _events[evtName][i].fn.toString() === fn.toString()) {
-									_events[evtName].splice(i, 1);
-									break;
-								}
-							}
-						}
-					},
-			
-					removeAll: function(evtName) {
-						delete _events[evtName];
-						_eventInfo[evtName] = _eventInfo[evtName] || {};
-						delete _eventInfo[evtName];
-					}
-				};
-			
-			
-				var eventEmitter = {
-					count: function(evtName) {
-						return (_eventInfo[evtName] && _eventInfo[evtName].emitCount) || 0;
-					},
-			
-					checkInactive: function(evtName) {
-						if (!_eventInfo[evtName]) return;
-			
-						if (_eventInfo[evtName].ignore) {
-							delete _eventInfo[evtName].ignore;
-						}
-						if (_eventInfo[evtName].defer) {
-							delete _eventInfo[evtName].defer;
-							Eve.emit(evtName);
-						}
-					},
-			
-					checkTriggers: function(evtName) {
-						if (!_eventInfo[evtName]) return;
-			
-						function ifIsTrigger(triggerObj) {
-							while (triggerObj.length) {
-								var emitter = triggerObj.shift();
-								eventEmitter.checkInactive(emitter);
-							}
-							triggerObj = null;
-						}
-			
-						if (_eventInfo[evtName].ignoreTrigger) {
-							ifIsTrigger(_eventInfo[evtName].ignoreTrigger);
-						}
-						if (_eventInfo[evtName].deferTrigger) {
-							ifIsTrigger(_eventInfo[evtName].deferTrigger);
-						}
-					},
-			
-					emit: function() {
-						var args = [];
-						for (var i = 0, ii = arguments.length; i < ii; i++) {
-							args[i] = arguments[i];
-						}
-						var evtName = args.shift();
-						
-						_eventInfo[evtName] = _eventInfo[evtName] || {};
-						if (_eventInfo[evtName].ignore || _eventInfo[evtName].defer) return;
-			
-						_eventInfo[evtName].emitCount = _eventInfo[evtName].emitCount || 0;
-						_eventInfo[evtName].emitCount++;
-			
-						function regularEmitter() {
-							if (_events[evtName]) {
-								for (var j = 0, jj = _events[evtName].length; j < jj; j++) {
-									_events[evtName][j].fn.apply(null, args);
-								}
-							}
-						}
-			
-						if (_events[evtName]) regularEmitter();
-						eventEmitter.checkTriggers(evtName);
-					},
-			
-			
-			
-					ignore: function(evtName) {
-						_eventInfo[evtName] = _eventInfo[evtName] || {};
-						_eventInfo[evtName].ignore = true;
-						// _eventInfo[evtName].ignore = true;
-						var _evtName = evtName;
-			
-						return {
-							getEvt: function() {
-								return _evtName;
-							},
-							until: function(triggerName) {
-								_eventInfo[triggerName] = _eventInfo[triggerName] || {};
-								_eventInfo[triggerName].ignoreTrigger = _eventInfo[triggerName].ignoreTrigger || [];
-								_eventInfo[triggerName].ignoreTrigger.push(this.getEvt());
-							}
-						};
-					},
-			
-			
-			
-					defer: function(evtName) {
-						_eventInfo[evtName] = _eventInfo[evtName] || {};
-						_eventInfo[evtName].defer = true;
-						var _evtName = evtName;
-			
-						return {
-							getEvt: function() {
-								return _evtName;
-							},
-							until: function(triggerName) {
-								_eventInfo[triggerName] = _eventInfo[triggerName] || {};
-								_eventInfo[triggerName].deferTrigger = _eventInfo[triggerName].deferTrigger || [];
-								_eventInfo[triggerName].deferTrigger.push(this.getEvt());
-							}
-						};
-					},
-			
-			
-					/*
-					Removes an event from _inactive.ignoredEvents and _inactive.deferredEvents
-					*/
-					observe: function(evtName) {
-						_eventInfo[evtName] = _eventInfo[evtName] || {};
-						delete _eventInfo[evtName].ignore;
-						delete _eventInfo[evtName].defer;
-					}
-			
-			
-			
-				};
-			
-				return {
-					on: eventObserver.add,
-					remove: eventObserver.remove,
-					removeAll: eventObserver.removeAll,
-					emit: eventEmitter.emit,
-					emitCount: eventEmitter.count,
-					ignore: eventEmitter.ignore,
-					observe: eventEmitter.observe,
-					defer: eventEmitter.defer
-				};
-			})();
-			
-			var fang = (function() {
-				'use strict';
-			
-				// Initiates Fang Series
-				var _fang = {
-					// Adds Function to Fang Series
-					then: function(_callback) {
-						if (typeof _callback === 'function') _fang.utils.queue.push(_callback);
-						return _fang;
-					},
-			
-					// Runs the Next Function in the Series
-					next: function() {
-						// converts all incoming arguments into array
-						var args = Array.prototype.splice.call(arguments, 0);
-			
-						// if a proceeding function has been defined (using the 'then' method)
-						if (typeof _fang.utils.queue[_fang.utils.i + 1] !== 'undefined') {
-							// increment the current call index
-							_fang.utils.i++;
-			
-							// run the next function
-							return _fang.utils.queue[_fang.utils.i].apply({ next: _fang.next }, args);
-						}
-					},
-			
-					utils: {
-						// the queue that will hold all of the function in the series
-						queue: [],
-			
-						// index starts at -1 so that the first item is index zero
-						i: -1
-					}
-				};
-				
-			
-				return function() {
-					var newFang = Object.create(_fang);
-					
-					for (var k = 0, kk = arguments.length; k < kk; k++) {
-						if (typeof arguments[k] === 'function') newFang.then(arguments[k]);
-					}
-			
-					function run() {
-						var args = [];
-						for (var i = 0, ii = arguments.length; i < ii; i++) {
-							args.push(arguments[i]);
-						}
-						newFang.utils.i = -1;
-						return newFang.next.apply(null, args);
-					}
-			
-					// run.append = newFang.then;
-			
-					return run;
-				};
-			})();
 			
 			// CodeMirror, copyright (c) by Marijn Haverbeke and others
 			// Distributed under an MIT license: http://codemirror.net/LICENSE
@@ -16372,6 +16132,7 @@
 			  CodeMirror.normalizeKeyMap(map);
 			});
 			
+			console.log("*INIT INCLUDES*");
 			// == Electron Natives ==
 			var remote = require("remote");
 			var app = remote.require("app");
@@ -16379,11 +16140,13 @@
 			var Menu = remote.require('menu');
 			var MenuItem = remote.require('menu-item');
 			var dialog = remote.require('dialog');
+			console.log("Loaded: Electron Native Modules");
 			
 			// == Node Natives ==
 			var path = require("path");
 			var https = require('https');
-			
+			var Eve = Object.create(new (require("events").EventEmitter)());
+			console.log("Loaded: Node Native Modules");
 			// == Vendor ==
 			var fs = require("fs-extra");
 			var lwip = require("lwip");
@@ -16393,16 +16156,23 @@
 			// var stylus = require("gulp-stylus");
 			var autoprefixer = require("gulp-autoprefixer");
 			var shelljs = require("shelljs");
+			console.log("Loaded: Vendor Modules");
 			
-			// == Local == 
-			var Loca = require("./local/modules/loca");
+			// == Local Modules == 
+			var loca = require("./local/modules/loca");
+			var fang = require("./local/modules/fang");
+			// var etc = require("./local/modules/etc");
+			console.log("Loaded: Local Modules");
 			
 			// == Custom ==
 			var Global = remote.getGlobal("sharedObject"); //see index.js
 			var appRoot = Global.appRoot;
 			var template = etc.template;
 			var menu; // see core.codeMirror.activate()
+			console.log("Loaded: Custom Electron Global Object");
 			
+			console.log("*FINISHED INCLUDES*");
+			console.log("-----------------");
 			var QTS = (function(){
 				// ---------------------------------------
 				// User Preferences
@@ -16525,7 +16295,7 @@
 					return _userPreferences.pathToBrands || null;
 				}
 			
-				var UserPreferencesInterface = Loca(_userPreferences.path);
+				var UserPreferencesInterface = loca(_userPreferences.path);
 			
 				UserPreferencesInterface.on("read", function(data){
 			
@@ -16644,10 +16414,10 @@
 				});
 			
 				Eve.on("window-focused", updateLocalUserPrefrences);
-				Eve.ignore("window-focused").until("app-loaded");
+				// Eve.ignore("window-focused").until("app-loaded");
 			
 				Eve.on("Local Preferences Updated", writeUserPrefrences);
-				Eve.ignore("Local Preferences Updated").until("app-loaded");
+				// Eve.ignore("Local Preferences Updated").until("app-loaded");
 			
 				/* 
 				return
@@ -16809,7 +16579,7 @@
 					// console.log("SELECTED:",_currentBrand);
 					// console.log("files in brand:",_currentBrand.projectsList);
 				}); 
-				Eve.ignore("Current Brand Updated").until("app-loaded")
+				// Eve.ignore("Current Brand Updated").until("app-loaded")
 			
 				Eve.on("Update Local Recent Brands", function(){
 			

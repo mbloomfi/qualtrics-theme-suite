@@ -63,7 +63,7 @@ gulp.task("compile-stylus", function(){
 
 var scriptFiles = [
 		//include
-		"src/scripts/main/main.js",
+		"src/scripts/main/require.js",
 		"src/scripts/main/QTS.js",
 		"src/scripts/main/eve-listeners.js",
 		"src/scripts/main/app-ready.js",

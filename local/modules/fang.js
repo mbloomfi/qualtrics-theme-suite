@@ -1,4 +1,4 @@
-var fang = (function() {
+module.exports = (function() {
 	'use strict';
 
 	// Initiates Fang Series

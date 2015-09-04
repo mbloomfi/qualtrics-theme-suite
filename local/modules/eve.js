@@ -2,7 +2,7 @@
 // Source Code
 // MIT License
 
-var Eve = (function() {
+module.exports = (function() {
 	var _events = {};
 
 	var _eventInfo = {};
