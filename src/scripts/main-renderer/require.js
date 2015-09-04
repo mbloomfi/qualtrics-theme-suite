@@ -11,7 +11,7 @@ let dialog = remote.require('dialog');
 let path = require('path');
 let https = require('https');
 let Eve = Object.create(new (require('events').EventEmitter)());
-let util = require('util')
+let util = require('util');
 
 // == Vendor ==
 let fs = require('fs-extra');
@@ -24,7 +24,7 @@ let fs = require('fs-extra');
 let shelljs = require('shelljs');
 let _ = require('lodash');
 
-// == Local Modules == 
+// == Local Modules ==
 let loca = require('./local/scripts/modules/loca');
 let fang = require('./local/scripts/modules/fang');
 let dom = require('./local/scripts/modules/dom');

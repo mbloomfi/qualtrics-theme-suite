@@ -102,6 +102,7 @@ editorCore.dropdowns.projects = {
 
 
 	init: function(){
+		console.error('remove this method: project init');
 		var self = this;
 
 		projectName.on("click", function(evt){
@@ -125,6 +126,7 @@ editorCore.dropdowns.projects = {
 
 	/*resets the title name and closes dropdown*/
 	reset: function(){
+		console.error('remove this method: project reset');
 		var self = this;
 		if(self.status === "opened") self.close();
 		el("#projectNameText").purge().text("Projects");
@@ -132,6 +134,7 @@ editorCore.dropdowns.projects = {
 
 	/**/
 	activate: function() {
+		console.error('remove this method: project activate');
 		var self = this;
 		// read current brand from localData
 		var currentBrand = core.localData.currentBrand;
@@ -142,6 +145,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	toggle: function(){
+		console.error('remove this method: project toggle');
 		if(this.status === "opened") {
 			this.close();
 		}
@@ -153,6 +157,7 @@ editorCore.dropdowns.projects = {
 
 
 	open: function(){
+		console.error('remove this method: project open');
 		var self = this;
 		self.status = "opened";
 
@@ -163,6 +168,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	close: function(){
+		console.error('remove this method: project close');
 		var self = this;
 		self.status = "closed";
 
@@ -183,6 +189,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	populate: function(){
+		console.error('remove this method: project populate');
 		// initial populate; for individual projects, see refill
 		projectName.append(
 
@@ -210,6 +217,7 @@ editorCore.dropdowns.projects = {
 	},
 
 	refill: function(){
+		console.error('remove this method: project refill');
 		var self = this;
 		core.brands.projects.list(core.localData.currentBrand, function(projects){
 

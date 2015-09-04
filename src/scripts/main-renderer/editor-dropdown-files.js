@@ -596,10 +596,3 @@ editorCore.dropdowns.files = {
 
 };
 /* eslint-enable */
-
-
-
-
-
-
-

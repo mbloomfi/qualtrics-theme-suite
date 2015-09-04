@@ -1,3 +1,4 @@
+/* eslint-disable */
 (function(){
 	window.Saver = {
 		prompt: function(){
@@ -8,3 +9,4 @@
 		}
 	};
 })();
+/* eslint-enable */

@@ -131,4 +131,3 @@ var editorCore = {
 
 editorCore.init();
 /* eslint-enable */
-	

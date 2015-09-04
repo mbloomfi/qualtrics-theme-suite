@@ -85,7 +85,7 @@ module.exports = (function(){
 		}
 
 		obj.queryByClass = function(className) {
-			console.log("this",this)
+			// console.log("this",this)
 			return getElementsByClassName(this, className);
 		}
 

@@ -62,8 +62,8 @@ window.addEventListener("load", function(){
 		// editorCore.dropdowns.brands.populate();
 		// editorCore.dropdowns.brands.init();
 		
-		editorCore.dropdowns.projects.populate();
-		editorCore.dropdowns.projects.init();
+		// editorCore.dropdowns.projects.populate();
+		// editorCore.dropdowns.projects.init();
 
 		editorCore.dropdowns.files.prepare();
 		editorCore.dropdowns.files.addFileDragListener();
