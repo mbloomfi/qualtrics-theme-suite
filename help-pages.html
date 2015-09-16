@@ -1,0 +1,240 @@
+<head>
+	<title>QTS | Getting Started</title>
+    <script>
+    var toggleTOC = function() {
+        var button = document.getElementById('tocButton');
+        var box = document.getElementById('tocBox');
+        var container = document.getElementById('tocContainer');
+        if ( box.style.display === "none" ) {
+            box.style.display = "block";
+            container.style.height = "200px";
+            button.setAttribute("class", "upside-down");
+        } else {
+            box.style.display = "none";
+            container.style.height = "15px";
+            button.setAttribute("class", " ");
+        }
+    };
+    </script>
+</head>
+
+<body>
+	<div class="Header">
+        <div class="title">Getting Started with Qualtrics Themes Suite</div>
+    </div>
+    <div class="wrapper">
+        <div id='tocContainer'>
+            <div id='toc'>Table of Contents</div><div id='tocButton' onclick='toggleTOC()'></div>
+            <div id='tocBox' style='display:none;'>
+            <a class='tocLink' href='#install'>Installation and Setup</a><br>
+            <a class='tocLink' href='#create'>Creating and Editing Themes</a><br>
+            <a class='tocLink' href='#hotkeys'>Hotkeys</a><br>
+            <a class='tocLink' href='#screenshots'>Screenshots and Thumbnails</a><br>
+            <a class='tocLink' href='#other'>Other Information</a><br>
+            </div>
+        </div>
+		<div class="subtitle" id='install'>Installation and Setup</div>
+
+		<div class="bodytext">To install QTS, please visit the <a href='https://github.com/qualtrics-themes-team/qualtrics-theme-suite-app' target='_blank'>GitHub</a> and click <a href='https://github.com/qualtrics-themes-team/qualtrics-theme-suite-app/archive/master.zip' target='_blank'>Download Zip</a>. After downloading the Zip file, you'll need to unzip it, then unzip the zip file within it. Finally, move the QTS app from that folder into your applications. 
+        <br>
+        <br>
+        After firing up the app, you'll need to set your preferences before you see anything but a blank screen.
+		</div>
+		<div class="bodytext">
+			<ol>
+				<li>Click on "QTS" in the top menu and select "Preferences"</li>
+				<li>Click "Files", and you'll be presented with a filepath. This is the location of your Theme files. You'll need to fill this, and it's more than likely something like: Google Drive/Design Team/Themes</li>
+				<li>Click "Save Changes" and then Quit the app (completely)</li>
+                <li>Reboot the app, and you should see a screen like the following: </li>
+                <li>Now click "QTS" one last time and select "Check for Updates"</li>
+			</ol>
+		</div>
+		<div class="subtitle" id='create'>Creating and Editing Themes</div>
+
+        <div class="topic">Creating New Brands and Themes</div>
+
+		<div class="bodytext2">QTS makes building themes easy! Gone are the days of having a SASS compressor open or needing to copy and paste endless HTML files. To get started building a theme, use the Brand dropdown to search for an existing brand or create a new one. Type in the BrandID, then select the brand or click Create (or press enter).</div>
+
+		<div class="bodytext2">After selecting the brand, use the Projects dropdown to either select an existing theme or create a new one. To create a new project, click the text at the bottom, type the name, then click the "+". Immediately upon creation, you'll see the default theme load on the right hand side preview pane and the SCSS variable sheet on the left. To change the file you are looking at, use the files dropdown.</div>
+
+        <div class="topic">Editing Themes</div>
+
+        <div class="bodytext2">Editing the SCSS variables is exactly the same as you would experience within Sublime or another text editor. Upon each save (command+ s), the theme will recompress and show you the updated preview on the right. Awesome, right? </div>
+
+        <div class="topic">Editing Files</div>
+
+        <div class="bodytext2">Although you can't make heavy duty edits to files, there are a few things you can do within QTS. If you click the files menu, you'll see 3 icons at the top-right in the menu. If you use the pencil, you can click files to edit their names (useful for logo files). If you use the red circle, then you can delete files the same way.</div>
+
+        <div class="bodytext2">Apart from editing names, you can also click the image files to change their size or simply see their dimensions. This is useful when adding the sizes to the SCSS variables. You can also use the image icon to see screenshots that have been taken.</div>
+
+		<div class="subtitle" id='hotkeys'>Hotkeys</div>
+
+		<div class="bodytext">
+            <h3>Thumbnail Mode</h3>
+            <div class='indent-left'>
+                <h5>Move Box</h5>
+                <h6>Arrow Keys</h6>
+                <h5>Move Box (large increment)</h5>
+                <h6>Command + Arrow Keys</h6>
+                <h5>Take Screenshot</h5>
+                <h6>Enter</h6>
+                <h5>Adjust Thumbnail Box Size</h5>
+                <h6>Command + - or Command + =</h6>
+            </div>
+            <h3>Code Editor</h3>
+            <div class='indent-left'>
+                <h5>Adjust Text Size</h5>
+                <h6>Command + - or Command + =</h6>
+            </div>
+        </div>
+        <div class="subtitle" id='screenshots'>Taking Screenshots</div>
+
+        <div class="topic">Screenshots and Thumbnails</div>
+
+		<div class="bodytext2">
+        Screenshots are much easier within the product. To bring up the screenshot view, hit command + 2, or use the Preview dropdown in the top-menu and select Screenshot. In this screen, you can screenshot your preview. To change the width of the preview, use command + option + right or left arrow key. To get a good mobile screenshot, you can make it about the width of a phone, pull up the bottom of the screen, and then take a screenshot. A better screenshot view is on the way, but this is great as well.
+
+        <br><br>
+
+        One awesome thing about this approach is that QTS actually saves these screenshots in your Assets folder within the theme folder itself! No more digging through your desktop!       
+        </div>
+
+        <div class="topic">Thumbnail</div>
+
+        <div class="bodytext2">Thumbnails are similar to Screenshots, except you use command + 3, or use the Preview dropdown in the top-menu and select Thumbnail. You can either drag and drop the screenshot box with your mouse or use your arrow keys to move it around. Enter will take the screenshot, and save it as Thumb.gif in your folder. It will always be the correct size. </div>
+
+        <div class="subtitle" id='other'>Other information</div>
+
+        <div class="topic">Headers</div>
+
+        <div class="bodytext2">Headers by default don't show up in QTS. If you want them to, go to Preview and toggle it on. </div>
+
+        <div class="topic">Viewing the theme in the browser</div>
+
+        <div class="bodytext2">Sometimes it's necessary to view your theme in a browser. To do so, click command + shift + p. It will open in your native browser, and you can use that link in other browsers locally.</div>
+
+        <div class="topic">Bugs</div>
+
+        <div class="bodytext2">QTS is great, but it's not perfect. To submit bugs, please <a href='https://github.com/qualtrics-themes-team/qualtrics-theme-suite/issues'>click here</a>. you'll need a GitHub account.</div>
+	</div>
+</body>
+    <style>
+    	body {
+            margin:0px;
+            height: 100%;
+            width: 100%;
+        }
+        a {
+            color: #8bc3c3;
+            transition: all .3s ease-in-out;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #9bd3d3;
+        }
+        .Header {
+            background:#007ac0;
+            width:100%;
+            height:70px;
+        }
+        .title {
+            font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight:100;
+            color:#fff;
+            font-size:32px;
+            display:inline-block;
+            margin-left:20px;
+            margin-right:40px;
+            float:left;
+            margin-top:15px;       
+        }
+        .wrapper {
+        	max-width: 80%;
+        	min-width: 40em;
+        	margin: 2em auto;
+        }
+        #tocContainer {
+            position: relative;
+            width: 50%;
+            height: 15px;
+            font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight: 200;
+        }
+        #toc {
+            position: absolute;
+            left: 0;
+            top:0;
+        }
+        #tocButton {
+            position: absolute;
+            top: -4px;
+            left: 150px;
+            background: url(https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_keyboard_arrow_down_48px-128.png) center no-repeat;
+            background-size: contain;
+            height: 25px;
+            width: 25px;
+            cursor: pointer;
+        }
+        #tocBox {
+            position: absolute;
+            bottom:0;
+            height: 150px;
+            border: 1px solid #eaeaea;
+            width: 100%;
+            padding: .2em;
+            border-radius: .2em;
+            overflow: scroll;
+            transition: .2s ease-in-out;
+        }
+        .tocLink {
+            padding: .2em .8em;
+        }
+        .subtitle {
+            font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight:200;
+            color:#c32432;
+            font-size:1.5em;
+            margin-top:15px;       
+        }
+        .topic {
+            font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight:200;
+            color:#5b9393;
+            font-size:1.2em;
+            margin-top:15px; 
+            margin-left: 1em;
+        }
+        .bodytext {
+        	font-family:"Source Sans Pro", Arial,sans-serif;
+            font-weight:100;
+            color:111;
+            font-size:1.1em;
+            margin-top:15px; 
+        }
+        .bodytext2 {
+            font-family:"Source Sans Pro", Arial,sans-serif;
+            font-weight:100;
+            color:111;
+            font-size:1.1em;
+            margin-top:15px; 
+            margin-left: 2em;
+        }
+        .img {
+            width: 30%;
+            height: auto;
+            transition: all 1s ease-in-out;
+            margin-top: 1em;
+        }
+        .img:hover {
+            width: 100%;
+            height: auto;
+        }
+        .indent-left {
+            margin-left: .8em;
+        }
+        .upside-down {
+            transform: rotate(180deg);
+            transition: .2s;
+        }
+
+    </style>
